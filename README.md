@@ -9,7 +9,7 @@ It comes with following features:
 #Include in your project
 ##Using Maven
 ```javascript
-compile('com.mikepenz:fastadapter:0.0.1-SNAPSHOT@aar') {
+compile('com.mikepenz:fastadapter:0.0.2-SNAPSHOT@aar') {
 	transitive = true
 }
 
