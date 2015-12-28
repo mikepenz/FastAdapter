@@ -23,6 +23,8 @@ import java.util.List;
 public class SampleActivity extends AppCompatActivity {
     //save our header or result
     private Drawer result = null;
+    //save our FastAdapter
+    private FastAdapter fastAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,12 +82,17 @@ public class SampleActivity extends AppCompatActivity {
             items.add(new SampleItem().withName("Test " + i).withIdentifier(100 + i));
         }
         itemAdapter.add(items);
+
+        //restore selections
+        fastAdapter.withSavedInstanceState(savedInstanceState);
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //add the values which need to be saved from the drawer to the bundle
         outState = result.saveInstanceState(outState);
+        //add the values which need to be saved from the adapter to the bundel
+        outState = fastAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 

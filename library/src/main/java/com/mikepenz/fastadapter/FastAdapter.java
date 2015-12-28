@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter;
 
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +17,7 @@ import java.util.TreeMap;
  * Created by mikepenz on 27.12.15.
  */
 public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    protected static final String BUNDLE_SELECTIONS = "bundle_selections";
 
     // we remember all adapters
     private SortedMap<Integer, IAdapter> mAdapters = new TreeMap<>();
@@ -73,6 +75,24 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public FastAdapter withMultiSelect(boolean multiSelect) {
         mMultiSelect = multiSelect;
+        return this;
+    }
+
+
+    /**
+     * re-selects all elements stored in the savedInstanceState
+     * IMPORTANT! Call this method only after all items where added to the adapters again. Otherwise it may select wrong items!
+     *
+     * @param savedInstanceState
+     * @return
+     */
+    public FastAdapter withSavedInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            ArrayList<Integer> selections = savedInstanceState.getIntegerArrayList(BUNDLE_SELECTIONS);
+            for (Integer selection : selections) {
+                select(selection);
+            }
+        }
         return this;
     }
 
@@ -334,6 +354,21 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         for (Map.Entry<Integer, IItem> entry : mSelections.entrySet()) {
             deselect(entry.getKey());
         }
+    }
+
+    /**
+     * add the values to the bundle for saveInstanceState
+     *
+     * @param savedInstanceState
+     * @return
+     */
+    public Bundle saveInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            ArrayList<Integer> selections = new ArrayList<>();
+            selections.addAll(mSelections.keySet());
+            savedInstanceState.putIntegerArrayList(BUNDLE_SELECTIONS, selections);
+        }
+        return savedInstanceState;
     }
 
     //-------------------------
