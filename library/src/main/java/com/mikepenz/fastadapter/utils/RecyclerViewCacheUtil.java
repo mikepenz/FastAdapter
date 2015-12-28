@@ -74,7 +74,7 @@ public class RecyclerViewCacheUtil {
      * @param type
      * @return
      */
-    public RecyclerView.ViewHolder obtain(String type) {
+    public RecyclerView.ViewHolder obtain(int type) {
         if (CACHE.containsKey(type)) {
             if (CACHE.get(type).size() > 0) {
                 return CACHE.get(type).pop();
