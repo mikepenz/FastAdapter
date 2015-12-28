@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.adapters;
 
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.utils.IdDistributor;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -16,6 +17,20 @@ import java.util.List;
 public class ItemAdapter extends AbstractAdapter {
     //the items handled and managed by this item
     private List<IItem> mItems = new ArrayList<>();
+
+    //defines if the IdDistributor is used to set ID's to all added items
+    private boolean mUseIdDistributor = true;
+
+    /**
+     * defines if the IdDistributor is used to provide an ID to all added items which do not yet define an id
+     *
+     * @param useIdDistributor false if the IdDistributor shouldn't be used
+     * @return this
+     */
+    public ItemAdapter withUseIdDistributor(boolean useIdDistributor) {
+        this.mUseIdDistributor = useIdDistributor;
+        return this;
+    }
 
     /**
      * @return the order of the items within the FastAdapter
@@ -55,6 +70,9 @@ public class ItemAdapter extends AbstractAdapter {
      * @param items
      */
     public void set(List<IItem> items) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkIds(items);
+        }
         mItems = items;
         mapPossibleTypes(mItems);
         getBaseAdapter().notifyAdapterItemRangeChanged(getBaseAdapter().getItemCount(getOrder()), getAdapterItemCount());
@@ -67,6 +85,9 @@ public class ItemAdapter extends AbstractAdapter {
      */
     public void add(IItem... items) {
         if (items != null) {
+            if (mUseIdDistributor) {
+                IdDistributor.checkIds(items);
+            }
             Collections.addAll(mItems, items);
             mapPossibleTypes(Arrays.asList(items));
             getBaseAdapter().notifyAdapterItemRangeInserted(getBaseAdapter().getItemCount(getOrder()), items.length);
@@ -80,6 +101,9 @@ public class ItemAdapter extends AbstractAdapter {
      */
     public void add(List<IItem> items) {
         if (items != null) {
+            if (mUseIdDistributor) {
+                IdDistributor.checkIds(items);
+            }
             mItems.addAll(items);
             mapPossibleTypes(items);
             getBaseAdapter().notifyAdapterItemRangeInserted(getBaseAdapter().getItemCount(getOrder()), items.size());
@@ -93,6 +117,9 @@ public class ItemAdapter extends AbstractAdapter {
      * @param items
      */
     public void add(int position, IItem... items) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkIds(items);
+        }
         if (items != null) {
             mItems.addAll(position, Arrays.asList(items));
             mapPossibleTypes(Arrays.asList(items));
@@ -107,6 +134,9 @@ public class ItemAdapter extends AbstractAdapter {
      * @param items
      */
     public void add(int position, List<IItem> items) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkIds(items);
+        }
         if (items != null) {
             mItems.addAll(position, items);
             mapPossibleTypes(items);
@@ -121,6 +151,9 @@ public class ItemAdapter extends AbstractAdapter {
      * @param item
      */
     public void set(int position, IItem item) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkId(item);
+        }
         mItems.set(position, item);
         mapPossibleType(item);
         getBaseAdapter().notifyAdapterItemChanged(getBaseAdapter().getItemCount(getOrder()) + position);
@@ -132,6 +165,9 @@ public class ItemAdapter extends AbstractAdapter {
      * @param item
      */
     public void add(IItem item) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkId(item);
+        }
         mItems.add(item);
         mapPossibleType(item);
         getBaseAdapter().notifyAdapterItemInserted(getBaseAdapter().getItemCount(getOrder()) + mItems.size());
@@ -144,6 +180,9 @@ public class ItemAdapter extends AbstractAdapter {
      * @param item
      */
     public void add(int position, IItem item) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkId(item);
+        }
         mItems.add(position, item);
         mapPossibleType(item);
         getBaseAdapter().notifyAdapterItemInserted(getBaseAdapter().getItemCount(getOrder()) + position);
