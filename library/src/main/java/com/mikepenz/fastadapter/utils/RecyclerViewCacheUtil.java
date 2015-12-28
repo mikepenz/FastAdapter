@@ -20,6 +20,9 @@ public class RecyclerViewCacheUtil {
 
     }
 
+    /**
+     * @return
+     */
     public static RecyclerViewCacheUtil getInstance() {
         if (SINGLETON == null) {
             SINGLETON = new RecyclerViewCacheUtil();
