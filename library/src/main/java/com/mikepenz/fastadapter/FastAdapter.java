@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import com.mikepenz.fastadapter.utils.RecyclerViewCacheUtil;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
@@ -100,7 +101,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public FastAdapter wrap(AbstractAdapter abstractAdapter) {
         if (abstractAdapter != null) {
             registerAdapter(abstractAdapter);
-            abstractAdapter.setBaseAdapter(this);
+            abstractAdapter.setFastAdapter(this);
             wrap(abstractAdapter.getParentAdapter());
         }
         return this;

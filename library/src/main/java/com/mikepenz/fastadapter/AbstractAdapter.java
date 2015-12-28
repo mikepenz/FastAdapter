@@ -8,19 +8,19 @@ import android.view.ViewGroup;
  */
 public abstract class AbstractAdapter extends RecyclerView.Adapter implements IAdapter {
     //private AbstractAdapter mParentAdapter;
-    //keep a reference to the BaseAdapter which contains the base logic
-    private FastAdapter mBaseAdapter;
+    //keep a reference to the FastAdapter which contains the base logic
+    private FastAdapter mFastAdapter;
 
     /**
      * Wrap the FastAdapter with this AbstractAdapter and keep it's reference to forward all events correctly
      *
-     * @param baseAdapter the FastAdapter which contains the base logic
+     * @param fastAdapter the FastAdapter which contains the base logic
      * @return this
      */
-    public AbstractAdapter wrap(FastAdapter baseAdapter) {
+    public AbstractAdapter wrap(FastAdapter fastAdapter) {
         //this.mParentAdapter = abstractAdapter;
-        this.mBaseAdapter = baseAdapter;
-        this.mBaseAdapter.registerAdapter(this);
+        this.mFastAdapter = fastAdapter;
+        this.mFastAdapter.registerAdapter(this);
         return this;
     }
 
@@ -32,8 +32,8 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
      */
     public AbstractAdapter wrap(AbstractAdapter abstractAdapter) {
         //this.mParentAdapter = abstractAdapter;
-        this.mBaseAdapter = abstractAdapter.getBaseAdapter();
-        this.mBaseAdapter.registerAdapter(this);
+        this.mFastAdapter = abstractAdapter.getFastAdapter();
+        this.mFastAdapter.registerAdapter(this);
         return this;
     }
 
@@ -45,8 +45,8 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
     @Override
     public void registerAdapterDataObserver(RecyclerView.AdapterDataObserver observer) {
         super.registerAdapterDataObserver(observer);
-        if (mBaseAdapter != null) {
-            mBaseAdapter.registerAdapterDataObserver(observer);
+        if (mFastAdapter != null) {
+            mFastAdapter.registerAdapterDataObserver(observer);
         }
     }
 
@@ -58,8 +58,8 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
     @Override
     public void unregisterAdapterDataObserver(RecyclerView.AdapterDataObserver observer) {
         super.unregisterAdapterDataObserver(observer);
-        if (mBaseAdapter != null) {
-            mBaseAdapter.unregisterAdapterDataObserver(observer);
+        if (mFastAdapter != null) {
+            mFastAdapter.unregisterAdapterDataObserver(observer);
         }
     }
 
@@ -71,7 +71,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
      */
     @Override
     public int getItemViewType(int position) {
-        return mBaseAdapter.getItemViewType(position);
+        return mFastAdapter.getItemViewType(position);
     }
 
     /**
@@ -82,7 +82,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
      */
     @Override
     public long getItemId(int position) {
-        return mBaseAdapter.getItemId(position);
+        return mFastAdapter.getItemId(position);
     }
 
     /*
@@ -97,8 +97,8 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
      * @return the reference to the FastAdapter
      */
     @Override
-    public FastAdapter getBaseAdapter() {
-        return mBaseAdapter;
+    public FastAdapter getFastAdapter() {
+        return mFastAdapter;
     }
 
     /**
@@ -109,7 +109,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
      */
     @Override
     public IItem getItem(int position) {
-        return mBaseAdapter.getItem(position);
+        return mFastAdapter.getItem(position);
     }
 
     /**
@@ -119,7 +119,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
      */
     @Override
     public int getItemCount() {
-        return mBaseAdapter.getItemCount();
+        return mFastAdapter.getItemCount();
     }
 
     /**
@@ -131,7 +131,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
      */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return mBaseAdapter.onCreateViewHolder(parent, viewType);
+        return mFastAdapter.onCreateViewHolder(parent, viewType);
     }
 
     /**
@@ -142,7 +142,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        mBaseAdapter.onBindViewHolder(holder, position);
+        mFastAdapter.onBindViewHolder(holder, position);
     }
 
     /**
@@ -164,6 +164,6 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
      * @param item
      */
     public void mapPossibleType(IItem item) {
-        mBaseAdapter.registerTypeInstance(item);
+        mFastAdapter.registerTypeInstance(item);
     }
 }

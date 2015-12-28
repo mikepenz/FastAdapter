@@ -75,7 +75,7 @@ public class ItemAdapter extends AbstractAdapter {
         }
         mItems = items;
         mapPossibleTypes(mItems);
-        getBaseAdapter().notifyAdapterItemRangeChanged(getBaseAdapter().getItemCount(getOrder()), getAdapterItemCount());
+        getFastAdapter().notifyAdapterItemRangeChanged(getFastAdapter().getItemCount(getOrder()), getAdapterItemCount());
     }
 
     /**
@@ -90,7 +90,7 @@ public class ItemAdapter extends AbstractAdapter {
             }
             Collections.addAll(mItems, items);
             mapPossibleTypes(Arrays.asList(items));
-            getBaseAdapter().notifyAdapterItemRangeInserted(getBaseAdapter().getItemCount(getOrder()), items.length);
+            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()), items.length);
         }
     }
 
@@ -106,7 +106,7 @@ public class ItemAdapter extends AbstractAdapter {
             }
             mItems.addAll(items);
             mapPossibleTypes(items);
-            getBaseAdapter().notifyAdapterItemRangeInserted(getBaseAdapter().getItemCount(getOrder()), items.size());
+            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()), items.size());
         }
     }
 
@@ -123,7 +123,7 @@ public class ItemAdapter extends AbstractAdapter {
         if (items != null) {
             mItems.addAll(position, Arrays.asList(items));
             mapPossibleTypes(Arrays.asList(items));
-            getBaseAdapter().notifyAdapterItemRangeInserted(getBaseAdapter().getItemCount(getOrder()) + position + 1, items.length);
+            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()) + position + 1, items.length);
         }
     }
 
@@ -140,7 +140,7 @@ public class ItemAdapter extends AbstractAdapter {
         if (items != null) {
             mItems.addAll(position, items);
             mapPossibleTypes(items);
-            getBaseAdapter().notifyAdapterItemRangeInserted(getBaseAdapter().getItemCount(getOrder()) + position + 1, items.size());
+            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()) + position + 1, items.size());
         }
     }
 
@@ -156,7 +156,7 @@ public class ItemAdapter extends AbstractAdapter {
         }
         mItems.set(position, item);
         mapPossibleType(item);
-        getBaseAdapter().notifyAdapterItemChanged(getBaseAdapter().getItemCount(getOrder()) + position);
+        getFastAdapter().notifyAdapterItemChanged(getFastAdapter().getItemCount(getOrder()) + position);
     }
 
     /**
@@ -170,7 +170,7 @@ public class ItemAdapter extends AbstractAdapter {
         }
         mItems.add(item);
         mapPossibleType(item);
-        getBaseAdapter().notifyAdapterItemInserted(getBaseAdapter().getItemCount(getOrder()) + mItems.size());
+        getFastAdapter().notifyAdapterItemInserted(getFastAdapter().getItemCount(getOrder()) + mItems.size());
     }
 
     /**
@@ -185,7 +185,7 @@ public class ItemAdapter extends AbstractAdapter {
         }
         mItems.add(position, item);
         mapPossibleType(item);
-        getBaseAdapter().notifyAdapterItemInserted(getBaseAdapter().getItemCount(getOrder()) + position);
+        getFastAdapter().notifyAdapterItemInserted(getFastAdapter().getItemCount(getOrder()) + position);
     }
 
     /**
@@ -195,7 +195,7 @@ public class ItemAdapter extends AbstractAdapter {
      */
     public void remove(int position) {
         mItems.remove(position);
-        getBaseAdapter().notifyAdapterItemRemoved(getBaseAdapter().getItemCount(getOrder()) + position);
+        getFastAdapter().notifyAdapterItemRemoved(getFastAdapter().getItemCount(getOrder()) + position);
     }
 
     /**
@@ -213,7 +213,7 @@ public class ItemAdapter extends AbstractAdapter {
             mItems.remove(position);
         }
 
-        getBaseAdapter().notifyAdapterItemRangeRemoved(getBaseAdapter().getItemCount(getOrder()) + position, saveItemCount);
+        getFastAdapter().notifyAdapterItemRangeRemoved(getFastAdapter().getItemCount(getOrder()) + position, saveItemCount);
     }
 
     /**
@@ -222,6 +222,6 @@ public class ItemAdapter extends AbstractAdapter {
     public void clear() {
         int count = mItems.size();
         mItems.clear();
-        getBaseAdapter().notifyAdapterItemRangeRemoved(getBaseAdapter().getItemCount(getOrder()), count);
+        getFastAdapter().notifyAdapterItemRangeRemoved(getFastAdapter().getItemCount(getOrder()), count);
     }
 }

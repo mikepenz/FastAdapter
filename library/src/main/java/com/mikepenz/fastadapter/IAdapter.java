@@ -9,7 +9,7 @@ public interface IAdapter {
      *
      * @return the FastAdapter specified for this IAdapter
      */
-    FastAdapter getBaseAdapter();
+    FastAdapter getFastAdapter();
 
     /**
      * defines in which order this adapter should be hooked into the FastAdapter

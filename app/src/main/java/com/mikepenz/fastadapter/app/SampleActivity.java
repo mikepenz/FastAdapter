@@ -48,21 +48,21 @@ public class SampleActivity extends AppCompatActivity {
         //make sure to init the cache after the DrawerBuilder was created as this will first clear the cache to make sure no old elements are in
         RecyclerViewCacheUtil.getInstance().withCacheSize(2).init(result);
 
-        final FastAdapter baseAdapter = new FastAdapter();
-        baseAdapter.setHasStableIds(true);
+        fastAdapter = new FastAdapter();
+        fastAdapter.setHasStableIds(true);
 
         final HeaderAdapter headerAdapter = new HeaderAdapter();
         final ItemAdapter itemAdapter = new ItemAdapter();
-        baseAdapter.withMultiSelect(true);
-        baseAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
+        fastAdapter.withMultiSelect(true);
+        fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v, int position, int relativePosition, IItem item) {
                 itemAdapter.removeItemRange(relativePosition, 5);
-                //itemAdapter.add(position, new PrimaryItem().withName("Awesome :D").withLevel(2).withIdentifier(baseAdapter.getItemCount() + 1000));
+                //itemAdapter.add(position, new PrimaryItem().withName("Awesome :D").withLevel(2).withIdentifier(fastAdapter.getItemCount() + 1000));
                 return true;
             }
         });
-        baseAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
+        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
             @Override
             public boolean onClick(View v, int position, int relativePosition, IItem item) {
                 //Toast.makeText(v.getContext(), ((SectionItem) item).getName().getText(v.getContext()), Toast.LENGTH_SHORT).show();
@@ -73,7 +73,7 @@ public class SampleActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
-        rv.setAdapter(itemAdapter.wrap(headerAdapter.wrap(baseAdapter)));
+        rv.setAdapter(itemAdapter.wrap(headerAdapter.wrap(fastAdapter)));
 
         headerAdapter.add(new SampleItem().withName("Header").withIdentifier(1));
 
