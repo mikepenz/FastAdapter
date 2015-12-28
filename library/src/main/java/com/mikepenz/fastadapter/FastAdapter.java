@@ -381,7 +381,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
      * wraps notifyItemInserted
      *
-     * @param position
+     * @param position the global position
      */
     public void notifyAdapterItemInserted(int position) {
         //we have to update all current stored selection in our map
@@ -392,7 +392,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
      * wraps notifyItemRangeInserted
      *
-     * @param position
+     * @param position  the global position
      * @param itemCount
      */
     public void notifyAdapterItemRangeInserted(int position, int itemCount) {
@@ -404,7 +404,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
      * wraps notifyItemRemoved
      *
-     * @param position
+     * @param position the global position
      */
     public void notifyAdapterItemRemoved(int position) {
         //we have to update all current stored selection in our map
@@ -415,7 +415,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
      * wraps notifyItemRangeRemoved
      *
-     * @param position
+     * @param position  the global position
      * @param itemCount
      */
     public void notifyAdapterItemRangeRemoved(int position, int itemCount) {
@@ -427,7 +427,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
      * internal method to handle the selections if items are added / removed
      *
-     * @param position
+     * @param position the global position
      * @param adjustBy
      */
     private void adjustSelectionsAfter(int position, int adjustBy) {
@@ -450,8 +450,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
      * wraps notifyItemMoved
      *
-     * @param fromPosition
-     * @param toPosition
+     * @param fromPosition the global fromPosition
+     * @param toPosition   the global toPosition
      */
     public void notifyAdapterItemMoved(int fromPosition, int toPosition) {
         if (mSelections.containsKey(fromPosition)) {
@@ -465,7 +465,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
      * wraps notifyItemChanged
      *
-     * @param position
+     * @param position the global position
      */
     public void notifyAdapterItemChanged(int position) {
         notifyAdapterItemChanged(position, null);
@@ -474,7 +474,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
      * wraps notifyItemChanged
      *
-     * @param position
+     * @param position the global position
      * @param payload
      */
     public void notifyAdapterItemChanged(int position, Object payload) {
@@ -495,7 +495,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
      * wraps notifyItemRangeChanged
      *
-     * @param position
+     * @param position  the global position
      * @param itemCount
      */
     public void notifyAdapterItemRangeChanged(int position, int itemCount) {
@@ -505,7 +505,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
      * wraps notifyItemRangeChanged
      *
-     * @param position
+     * @param position  the global position
      * @param itemCount
      * @param payload
      */
@@ -533,10 +533,10 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
          *
          * @param v
          * @param event
-         * @param position
-         * @param relativePosition
-         * @param item
-         * @return
+         * @param position         the global position
+         * @param relativePosition the relative position of this item in it's adapter
+         * @param item             the IItem which was clicked
+         * @return return true if the event was consumed, otherwise false
          */
         boolean onTouch(View v, MotionEvent event, int position, int relativePosition, IItem item);
     }
@@ -546,10 +546,10 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
          * the onClick event of a specific item inside the RecyclerView
          *
          * @param v
-         * @param position
-         * @param relativePosition
-         * @param item
-         * @return
+         * @param position         the global position
+         * @param relativePosition the relative position of this item in it's adapter
+         * @param item             the IItem which was clicked
+         * @return return true if the event was consumed, otherwise false
          */
         boolean onClick(View v, int position, int relativePosition, IItem item);
     }
@@ -559,10 +559,10 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
          * the onLongClick event of a specific item inside the RecyclerView
          *
          * @param v
-         * @param position
-         * @param relativePosition
-         * @param item
-         * @return
+         * @param position         the global position
+         * @param relativePosition the relative position of this item in it's adapter
+         * @param item             the IItem which was clicked
+         * @return return true if the event was consumed, otherwise false
          */
         boolean onLongClick(View v, int position, int relativePosition, IItem item);
     }
