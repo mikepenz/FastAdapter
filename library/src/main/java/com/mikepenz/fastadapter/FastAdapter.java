@@ -142,11 +142,61 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {//first check if we (probably) have this item in the cache
         RecyclerView.ViewHolder vh = RecyclerViewCacheUtil.getInstance().obtain(viewType);
         if (vh == null) {
-            return mTypeInstances.get(viewType).getViewHolder(parent);
-        } else {
-            return vh;
+            vh = mTypeInstances.get(viewType).getViewHolder(parent);
         }
 
+        //the final holder used inside the listener
+        final RecyclerView.ViewHolder holder = vh;
+
+        //handle click behavior
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos = holder.getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    ItemHolder itemHolder = getInternalItem(pos);
+
+                    boolean consumed = false;
+                    if (mOnClickListener != null) {
+                        consumed = mOnClickListener.onClick(v, pos, itemHolder.relativePosition, itemHolder.item);
+                    }
+
+                    if (!consumed) {
+                        handleSelection(pos);
+                    }
+                }
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                if (mOnLongClickListener != null) {
+                    int pos = holder.getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        ItemHolder itemHolder = getInternalItem(pos);
+                        return mOnLongClickListener.onLongClick(v, pos, itemHolder.relativePosition, itemHolder.item);
+                    }
+                }
+                return false;
+            }
+        });
+
+        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (mOnTouchListener != null) {
+                    int pos = holder.getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        ItemHolder itemHolder = getInternalItem(pos);
+                        return mOnTouchListener.onTouch(v, event, pos, itemHolder.relativePosition, itemHolder.item);
+                    }
+                }
+                return false;
+            }
+        });
+
+        return holder;
     }
 
     /**
@@ -158,48 +208,6 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         getItem(position).bindView(holder);
-
-        //handle click behavior
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int pos = holder.getAdapterPosition();
-                ItemHolder itemHolder = getInternalItem(pos);
-
-                boolean consumed = false;
-                if (mOnClickListener != null) {
-                    consumed = mOnClickListener.onClick(v, pos, itemHolder.relativePosition, itemHolder.item);
-                }
-
-                if (!consumed) {
-                    handleSelection(pos);
-                }
-            }
-        });
-
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (mOnLongClickListener != null) {
-                    int pos = holder.getAdapterPosition();
-                    ItemHolder itemHolder = getInternalItem(pos);
-                    return mOnLongClickListener.onLongClick(v, pos, itemHolder.relativePosition, itemHolder.item);
-                }
-                return false;
-            }
-        });
-
-        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (mOnTouchListener != null) {
-                    int pos = holder.getAdapterPosition();
-                    ItemHolder itemHolder = getInternalItem(pos);
-                    return mOnTouchListener.onTouch(v, event, pos, itemHolder.relativePosition, itemHolder.item);
-                }
-                return false;
-            }
-        });
     }
 
     /**
