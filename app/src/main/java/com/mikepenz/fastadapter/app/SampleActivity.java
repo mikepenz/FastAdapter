@@ -13,9 +13,9 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.utils.RecyclerViewCacheUtil;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.util.RecyclerViewCacheUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +44,6 @@ public class SampleActivity extends AppCompatActivity {
                 .withShowDrawerOnFirstLaunch(true)
                 .build();
 
-        //if you have many different types of DrawerItems you can magically pre-cache those items to get a better scroll performance
-        //make sure to init the cache after the DrawerBuilder was created as this will first clear the cache to make sure no old elements are in
-        RecyclerViewCacheUtil.getInstance().withCacheSize(2).init(result);
-
         fastAdapter = new FastAdapter();
         fastAdapter.setHasStableIds(true);
 
@@ -70,10 +66,12 @@ public class SampleActivity extends AppCompatActivity {
             }
         });
 
+
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
         rv.setAdapter(itemAdapter.wrap(headerAdapter.wrap(fastAdapter)));
+
 
         headerAdapter.add(new SampleItem().withName("Header").withIdentifier(1));
 
@@ -83,8 +81,15 @@ public class SampleActivity extends AppCompatActivity {
         }
         itemAdapter.add(items);
 
+        //init cache
+        new RecyclerViewCacheUtil().withCacheSize(2).apply(rv, items);
+
         //restore selections
         fastAdapter.withSavedInstanceState(savedInstanceState);
+    }
+
+    public class CustomRecyclerViewPool extends RecyclerView.RecycledViewPool {
+
     }
 
     @Override

@@ -6,8 +6,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mikepenz.fastadapter.utils.RecyclerViewCacheUtil;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -139,14 +137,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @return
      */
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {//first check if we (probably) have this item in the cache
-        RecyclerView.ViewHolder vh = RecyclerViewCacheUtil.getInstance().obtain(viewType);
-        if (vh == null) {
-            vh = mTypeInstances.get(viewType).getViewHolder(parent);
-        }
-
-        //the final holder used inside the listener
-        final RecyclerView.ViewHolder holder = vh;
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final RecyclerView.ViewHolder holder = mTypeInstances.get(viewType).getViewHolder(parent);
 
         //handle click behavior
         holder.itemView.setOnClickListener(new View.OnClickListener() {
