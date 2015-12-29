@@ -50,12 +50,13 @@ public class SampleActivity extends AppCompatActivity {
         final HeaderAdapter headerAdapter = new HeaderAdapter();
         final ItemAdapter itemAdapter = new ItemAdapter();
         fastAdapter.withMultiSelect(true);
+        fastAdapter.withMultiSelectOnLongClick(false);
         fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v, int position, int relativePosition, IItem item) {
-                itemAdapter.removeItemRange(relativePosition, 5);
+                //itemAdapter.removeItemRange(relativePosition, 5);
                 //itemAdapter.add(position, new PrimaryItem().withName("Awesome :D").withLevel(2).withIdentifier(fastAdapter.getItemCount() + 1000));
-                return true;
+                return false;
             }
         });
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {

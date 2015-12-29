@@ -25,6 +25,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     // if we want multiSelect enabled
     private boolean mMultiSelect = false;
+    // if we want the multiSelect only on longClick
+    private boolean mMultiSelectOnLongClick = true;
+
     // we need to remember all selections to recreate them after orientation change
     private SortedMap<Integer, IItem> mSelections = new TreeMap<>();
 
@@ -77,6 +80,16 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return this;
     }
 
+    /**
+     * Disable this if you want the multiSelection on a single tap (note you have to enable multiSelect for this to make a difference)
+     *
+     * @param multiSelectOnLongClick false to do multiSelect via single click
+     * @return this
+     */
+    public FastAdapter withMultiSelectOnLongClick(boolean multiSelectOnLongClick) {
+        mMultiSelectOnLongClick = multiSelectOnLongClick;
+        return this;
+    }
 
     /**
      * re-selects all elements stored in the savedInstanceState
@@ -146,14 +159,13 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             public void onClick(View v) {
                 int pos = holder.getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
-                    ItemHolder itemHolder = getInternalItem(pos);
-
                     boolean consumed = false;
                     if (mOnClickListener != null) {
+                        ItemHolder itemHolder = getInternalItem(pos);
                         consumed = mOnClickListener.onClick(v, pos, itemHolder.relativePosition, itemHolder.item);
                     }
 
-                    if (!consumed) {
+                    if (!consumed && (!(mMultiSelect && mMultiSelectOnLongClick) || !mMultiSelect)) {
                         handleSelection(pos);
                     }
                 }
@@ -163,11 +175,16 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                if (mOnLongClickListener != null) {
-                    int pos = holder.getAdapterPosition();
-                    if (pos != RecyclerView.NO_POSITION) {
+                int pos = holder.getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    boolean consumed = false;
+                    if (mOnLongClickListener != null) {
                         ItemHolder itemHolder = getInternalItem(pos);
-                        return mOnLongClickListener.onLongClick(v, pos, itemHolder.relativePosition, itemHolder.item);
+                        consumed = mOnLongClickListener.onLongClick(v, pos, itemHolder.relativePosition, itemHolder.item);
+                    }
+
+                    if (!consumed && (mMultiSelect && mMultiSelectOnLongClick)) {
+                        handleSelection(pos);
                     }
                 }
                 return false;
