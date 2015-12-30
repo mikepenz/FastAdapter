@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -578,6 +580,26 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 }
             }
         }
+    }
+
+    /**
+     * deletes all current selected items
+     *
+     * @return a list of the IItem elements which were deleted
+     */
+    public List<IItem> deleteAllSelectedItems() {
+        List<IItem> deletedItems = new LinkedList<>();
+        //we have to refetch the selections array again and again as the position will change after one item is deleted
+        Set<Integer> selections = getSelections();
+        while (selections.size() > 0) {
+            AdapterHolder adapterHolder = getRelativePosition(selections.iterator().next());
+            if (adapterHolder.adapter instanceof IItemAdapter) {
+                deletedItems.add(adapterHolder.adapter.getAdapterItem(adapterHolder.relativePosition));
+                ((IItemAdapter) adapterHolder.adapter).remove(adapterHolder.relativePosition);
+            }
+            selections = getSelections();
+        }
+        return deletedItems;
     }
 
     /**
