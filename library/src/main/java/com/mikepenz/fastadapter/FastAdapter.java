@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -355,12 +356,27 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      */
     public void deselect(int position) {
+        deselect(position, null);
+    }
+
+    /**
+     * deselects an item and removes it's position in the selections list
+     * also takes an iterator to remove items from the map
+     *
+     * @param position the global position
+     * @param entries  the iterator which is used to deselect all
+     */
+    private void deselect(int position, Iterator<Map.Entry<Integer, IItem>> entries) {
         IItem item = getItem(position);
         if (item != null) {
             item.withSetSelected(false);
         }
-        if (mSelections.containsKey(position)) {
-            mSelections.remove(position);
+        if (entries == null) {
+            if (mSelections.containsKey(position)) {
+                mSelections.remove(position);
+            }
+        } else {
+            entries.remove();
         }
         notifyItemChanged(position);
     }
@@ -369,8 +385,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * deselects all selections
      */
     public void deselect() {
-        for (Map.Entry<Integer, IItem> entry : mSelections.entrySet()) {
-            deselect(entry.getKey());
+        Iterator<Map.Entry<Integer, IItem>> entries = mSelections.entrySet().iterator();
+        while (entries.hasNext()) {
+            deselect(entries.next().getKey(), entries);
         }
     }
 
