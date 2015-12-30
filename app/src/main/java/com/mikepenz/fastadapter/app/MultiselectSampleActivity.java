@@ -19,7 +19,6 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
-import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialize.MaterializeBuilder;
 import com.mikepenz.materialize.util.UIUtils;
 
@@ -27,8 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MultiselectSampleActivity extends AppCompatActivity {
-    //save our header or result
-    private Drawer result = null;
     //save our FastAdapter
     private FastAdapter fastAdapter;
 
@@ -97,8 +94,6 @@ public class MultiselectSampleActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //add the values which need to be saved from the drawer to the bundle
-        outState = result.saveInstanceState(outState);
         //add the values which need to be saved from the adapter to the bundel
         outState = fastAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);

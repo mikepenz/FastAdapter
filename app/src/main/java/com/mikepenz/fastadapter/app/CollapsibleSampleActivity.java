@@ -13,7 +13,6 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
-import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
@@ -21,8 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class CollapsibleSampleActivity extends AppCompatActivity {
-    //save our header or result
-    private Drawer result = null;
     //save our FastAdapter
     private FastAdapter fastAdapter;
 
@@ -94,8 +91,6 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //add the values which need to be saved from the drawer to the bundle
-        outState = result.saveInstanceState(outState);
         //add the values which need to be saved from the adapter to the bundel
         outState = fastAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);

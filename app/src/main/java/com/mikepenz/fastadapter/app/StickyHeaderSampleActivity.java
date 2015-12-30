@@ -14,7 +14,6 @@ import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapter.StickyHeaderAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
-import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialize.MaterializeBuilder;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
@@ -28,8 +27,6 @@ import java.util.List;
 public class StickyHeaderSampleActivity extends AppCompatActivity {
     private static final String[] headers = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
-    //save our header or result
-    private Drawer result = null;
     //save our FastAdapter
     private FastAdapter fastAdapter;
 
@@ -94,8 +91,6 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //add the values which need to be saved from the drawer to the bundle
-        outState = result.saveInstanceState(outState);
         //add the values which need to be saved from the adapter to the bundel
         outState = fastAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
