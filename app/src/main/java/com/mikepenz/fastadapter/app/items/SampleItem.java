@@ -23,11 +23,17 @@ import java.util.List;
  */
 public class SampleItem extends AbstractItem<SampleItem> implements ICollapsible<SampleItem> {
 
-    private StringHolder name;
-    private StringHolder description;
+    public String header;
+    public StringHolder name;
+    public StringHolder description;
 
     private List<IItem> mSubItems;
     private boolean mCollapsed = true;
+
+    public SampleItem withHeader(String header) {
+        this.header = header;
+        return this;
+    }
 
     public SampleItem withName(String Name) {
         this.name = new StringHolder(Name);
@@ -48,7 +54,6 @@ public class SampleItem extends AbstractItem<SampleItem> implements ICollapsible
         this.description = new StringHolder(descriptionRes);
         return this;
     }
-
 
     @Override
     public boolean isCollapsed() {

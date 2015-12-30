@@ -1,29 +1,25 @@
 package com.mikepenz.fastadapter.app;
 
-import android.graphics.Color;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialize.util.UIUtils;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
 public class SampleActivity extends AppCompatActivity {
@@ -48,42 +44,49 @@ public class SampleActivity extends AppCompatActivity {
                 .withHasStableIds(true)
                 .withSavedInstance(savedInstanceState)
                 .withShowDrawerOnFirstLaunch(true)
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName(R.string.sample_multi_select).withSelectable(false).withIdentifier(1),
+                        new PrimaryDrawerItem().withName(R.string.sample_collapsible).withSelectable(false).withIdentifier(2),
+                        new PrimaryDrawerItem().withName(R.string.sample_sticky_header).withSelectable(false).withIdentifier(3),
+                        new PrimaryDrawerItem().withName(R.string.sample_advanced).withSelectable(false).withDescription(R.string.sample_advanced_descr).withIdentifier(4)
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        if (drawerItem != null) {
+                            Intent intent = null;
+                            if (drawerItem.getIdentifier() == 1) {
+                                intent = new Intent(SampleActivity.this, MultiselectSampleActivity.class);
+                            } else if (drawerItem.getIdentifier() == 2) {
+                                intent = new Intent(SampleActivity.this, CollapsibleSampleActivity.class);
+                            } else if (drawerItem.getIdentifier() == 3) {
+                                intent = new Intent(SampleActivity.this, StickyHeaderSampleActivity.class);
+                            } else if (drawerItem.getIdentifier() == 4) {
+                                intent = new Intent(SampleActivity.this, AdvancedSampleActivity.class);
+                            }
+                            if (intent != null) {
+                                SampleActivity.this.startActivity(intent);
+                            }
+                        }
+                        return false;
+                    }
+                })
+                .withSelectedItemByPosition(-1)
                 .build();
 
-        //create our FastAdapter
+        //create our FastAdapter which will manage everything
         fastAdapter = new FastAdapter();
 
-        //create our adapters
-        final HeaderAdapter headerAdapter = new HeaderAdapter();
+        //create our ItemAdapter which will host our items
         final ItemAdapter itemAdapter = new ItemAdapter();
 
         //configure our fastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         fastAdapter.setHasStableIds(true);
-        fastAdapter.withMultiSelect(true);
-        fastAdapter.withMultiSelectOnLongClick(true);
-        fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v, int position, int relativePosition, IItem item) {
-                //may check if actionMode is already displayed
-                startSupportActionMode(new ActionBarCallBack());
-                findViewById(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(SampleActivity.this, R.attr.colorPrimary, R.color.material_drawer_primary));
-
-                //itemAdapter.removeItemRange(relativePosition, 5);
-                //itemAdapter.add(position, new PrimaryItem().withName("Awesome :D").withLevel(2).withIdentifier(fastAdapter.getItemCount() + 1000));
-                return false;
-            }
-        });
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
             @Override
             public boolean onClick(View v, int position, int relativePosition, IItem item) {
-                if (item instanceof SampleItem) {
-                    if (((SampleItem) item).getSubItems() != null) {
-                        fastAdapter.toggleCollapsible(position);
-                        return true;
-                    }
-                }
-                //Toast.makeText(v.getContext(), ((SectionItem) item).getName().getText(v.getContext()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), ((SampleItem) item).name.getText(v.getContext()), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -92,22 +95,12 @@ public class SampleActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
-        rv.setAdapter(itemAdapter.wrap(headerAdapter.wrap(fastAdapter)));
+        rv.setAdapter(itemAdapter.wrap(fastAdapter));
 
         //fill with some sample data
-        headerAdapter.add(new SampleItem().withName("Header").withIdentifier(1));
         List<IItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
-            SampleItem sampleItem = new SampleItem().withName("Test " + i).withIdentifier(100 + i);
-
-            if (i % 10 == 0) {
-                List<IItem> subItems = new LinkedList<>();
-                for (int ii = 1; ii <= 5; ii++) {
-                    subItems.add(new SampleItem().withName("-- Test " + ii).withIdentifier(1000 + ii));
-                }
-                sampleItem.withSubItems(subItems);
-            }
-            items.add(sampleItem);
+            items.add(new SampleItem().withName("Test " + i).withIdentifier(100 + i));
         }
         itemAdapter.add(items);
 
@@ -134,48 +127,6 @@ public class SampleActivity extends AppCompatActivity {
             result.closeDrawer();
         } else {
             super.onBackPressed();
-        }
-    }
-
-    /**
-     * Our ActionBarCallBack to showcase the CAB
-     */
-    class ActionBarCallBack implements ActionMode.Callback {
-
-        @Override
-        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            //at the moment just one item which removes selection
-            fastAdapter.deselect();
-            //after selection is removed we probably want finish the actionMode
-            mode.finish();
-            return true;
-        }
-
-        @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(UIUtils.getThemeColorFromAttrOrRes(SampleActivity.this, R.attr.colorPrimaryDark, R.color.material_drawer_primary_dark));
-            }
-            mode.getMenuInflater().inflate(R.menu.cab, menu);
-
-            //as we are now in the actionMode a single click is fine for multiSelection
-            fastAdapter.withMultiSelectOnLongClick(false);
-            return true;
-        }
-
-        @Override
-        public void onDestroyActionMode(ActionMode mode) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(Color.TRANSPARENT);
-            }
-
-            //after we are done with the actionMode we fallback to longClick for multiselect
-            fastAdapter.withMultiSelectOnLongClick(true);
-        }
-
-        @Override
-        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-            return false;
         }
     }
 }
