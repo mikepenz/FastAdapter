@@ -8,7 +8,7 @@
 #Include in your project
 ##Using Maven
 ```javascript
-compile('com.mikepenz:fastadapter:0.0.5-SNAPSHOT@aar') {
+compile('com.mikepenz:fastadapter:0.0.6-SNAPSHOT@aar') {
 	transitive = true
 }
 
