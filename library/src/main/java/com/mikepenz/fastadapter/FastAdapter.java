@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -202,6 +203,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                     if (!consumed && (mMultiSelect && mMultiSelectOnLongClick)) {
                         handleSelection(pos);
                     }
+                    return consumed;
                 }
                 return false;
             }
@@ -284,9 +286,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return new ItemHolder();
         }
 
-
         //try to find the adapter for this position
-        AdapterHolder adapterHolder = getInternalAdapterForPosition(position);
+        AdapterHolder adapterHolder = getRelativePosition(position);
 
         //if found return the itemHolder
         if (adapterHolder.adapter != null) {
@@ -304,7 +305,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      * @return the adapter which is responsible for this position
      */
-    private AdapterHolder getInternalAdapterForPosition(int position) {
+    public AdapterHolder getRelativePosition(int position) {
         if (position < 0) {
             return new AdapterHolder();
         }
@@ -418,6 +419,13 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     //-------------------------
 
     /**
+     * @return a set with the global positions of all selected items
+     */
+    public Set<Integer> getSelections() {
+        return mSelections.keySet();
+    }
+
+    /**
      * toggles the selection of the item at the given position
      *
      * @param position the global position
@@ -518,6 +526,13 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     //-------------------------
 
     /**
+     * @return a set with the global positions of all opened collapsible items
+     */
+    public Set<Integer> getOpenedCollapsibleItems() {
+        return mCollapsibleOpened.keySet();
+    }
+
+    /**
      * toggles the collapse state of the given collapsible item at the given position
      *
      * @param position the global position
@@ -542,7 +557,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             //if this item is not already callapsed and has sub items we go on
             if (!collapsible.isCollapsed() && collapsible.getSubItems() != null && collapsible.getSubItems().size() > 0) {
-                AdapterHolder adapterHolder = getInternalAdapterForPosition(position);
+                AdapterHolder adapterHolder = getRelativePosition(position);
 
                 //get all positions which are opened or selected and collapse them starting with the biggest number
 
@@ -577,7 +592,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
             //if this item is not already callapsed and has sub items we go on
             if (collapsible.isCollapsed() && collapsible.getSubItems() != null && collapsible.getSubItems().size() > 0) {
-                AdapterHolder adapterHolder = getInternalAdapterForPosition(position);
+                AdapterHolder adapterHolder = getRelativePosition(position);
 
                 //if we find the adapter for this item we add the sub items
                 if (adapterHolder.adapter != null && adapterHolder.adapter instanceof IItemAdapter) {
@@ -606,8 +621,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public void notifyAdapterItemInserted(int position) {
         //we have to update all current stored selection and collapsed states in our map
-        mSelections = adjustPositionAfter(mSelections, position, 1);
-        mCollapsibleOpened = adjustPositionAfter(mCollapsibleOpened, position, 1);
+        mSelections = adjustPosition(mSelections, position, Integer.MAX_VALUE, 1);
+        mCollapsibleOpened = adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, 1);
         notifyItemInserted(position);
     }
 
@@ -619,8 +634,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public void notifyAdapterItemRangeInserted(int position, int itemCount) {
         //we have to update all current stored selection and collapsed states in our map
-        mSelections = adjustPositionAfter(mSelections, position, itemCount);
-        mCollapsibleOpened = adjustPositionAfter(mCollapsibleOpened, position, itemCount);
+        mSelections = adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount);
+        mCollapsibleOpened = adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, itemCount);
         notifyItemRangeInserted(position, itemCount);
     }
 
@@ -631,8 +646,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public void notifyAdapterItemRemoved(int position) {
         //we have to update all current stored selection and collapsed states in our map
-        mSelections = adjustPositionAfter(mSelections, position, -1);
-        mCollapsibleOpened = adjustPositionAfter(mCollapsibleOpened, position, -1);
+        mSelections = adjustPosition(mSelections, position, Integer.MAX_VALUE, -1);
+        mCollapsibleOpened = adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, -1);
         notifyItemRemoved(position);
     }
 
@@ -644,31 +659,45 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public void notifyAdapterItemRangeRemoved(int position, int itemCount) {
         //we have to update all current stored selection and collapsed states in our map
-        mSelections = adjustPositionAfter(mSelections, position, itemCount * (-1));
-        mCollapsibleOpened = adjustPositionAfter(mCollapsibleOpened, position, itemCount * (-1));
+        mSelections = adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount * (-1));
+        mCollapsibleOpened = adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, itemCount * (-1));
         notifyItemRangeRemoved(position, itemCount);
     }
+
 
     /**
      * internal method to handle the selections if items are added / removed
      *
-     * @param position the global position
-     * @param adjustBy
+     * @param positions     the positions map which should be adjusted
+     * @param startPosition the global index of the first element modified
+     * @param endPosition   the global index up to which the modification changed the indices (should be MAX_INT if we check til the end)
+     * @param adjustBy      the value by which the data was shifted
+     * @return the adjusted map
      */
-    private SortedMap<Integer, IItem> adjustPositionAfter(Map<Integer, IItem> positions, int position, int adjustBy) {
+    private SortedMap<Integer, IItem> adjustPosition(Map<Integer, IItem> positions, int startPosition, int endPosition, int adjustBy) {
         SortedMap<Integer, IItem> newPositions = new TreeMap<>();
 
         for (Map.Entry<Integer, IItem> entry : positions.entrySet()) {
-            if (entry.getKey() < position) {
-                newPositions.put(entry.getKey(), entry.getValue());
+            int position = entry.getKey();
+
+            //if our current position is not within the bounds to check for we can add it
+            if (position < startPosition || position > endPosition) {
+                newPositions.put(position, entry.getValue());
             } else if (adjustBy > 0) {
-                newPositions.put(entry.getKey() + adjustBy, entry.getValue());
-            } else if (adjustBy < 0 && entry.getKey() > (position + (-1) * adjustBy)) {
-                newPositions.put(entry.getKey() + adjustBy, entry.getValue());
-            } else if (adjustBy < 0 && entry.getKey() < (position + (-1) * adjustBy)) {
-                ;//we do not add them anymore. they were removed
+                //if we added items and we are within the bounds we can simply add the adjustBy to our entry
+                newPositions.put(position + adjustBy, entry.getValue());
+            } else if (adjustBy < 0) {
+                //if we removed items and we are within the bounds we have to check if the item was removed
+                //adjustBy is negative in this case
+                if (position > startPosition + adjustBy && position <= startPosition) {
+                    ;//we are within the removed items range we don't add this item anymore
+                } else {
+                    //otherwise we adjust our position
+                    newPositions.put(position + adjustBy, entry.getValue());
+                }
             }
         }
+
         return newPositions;
     }
 
@@ -807,7 +836,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
      * an internal class to return the IAdapter and relativePosition at once. used to save one iteration
      */
-    private class AdapterHolder {
+    public class AdapterHolder {
         public IAdapter adapter = null;
         public int relativePosition = -1;
     }
