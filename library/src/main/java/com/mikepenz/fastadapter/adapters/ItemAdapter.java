@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.adapters;
 
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.utils.IdDistributor;
 
 import java.util.ArrayList;
@@ -14,7 +15,7 @@ import java.util.List;
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  * This adapter has the order of 500 which is the centered order
  */
-public class ItemAdapter extends AbstractAdapter {
+public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
     //the items handled and managed by this item
     private List<IItem> mItems = new ArrayList<>();
 
@@ -48,6 +49,31 @@ public class ItemAdapter extends AbstractAdapter {
         return mItems.size();
     }
 
+
+    /**
+     * @return the items within this adapter
+     */
+    @Override
+    public List<IItem> getAdapterItems() {
+        return mItems;
+    }
+
+    /**
+     * Searches for the given item and calculates it's relative position
+     *
+     * @param item the item which is searched for
+     * @return the relative position
+     */
+    @Override
+    public int getAdapterPosition(IItem item) {
+        for (int i = 0; i < mItems.size(); i++) {
+            if (mItems.get(i).getIdentifier() == item.getIdentifier()) {
+                return i;
+            }
+        }
+        return -1;
+    }
+
     /**
      * @param position the relative position
      * @return the item inside this adapter
@@ -55,13 +81,6 @@ public class ItemAdapter extends AbstractAdapter {
     @Override
     public IItem getAdapterItem(int position) {
         return mItems.get(position);
-    }
-
-    /**
-     * @return the items defined in this adapter
-     */
-    public List<IItem> getItems() {
-        return mItems;
     }
 
     /**
@@ -123,7 +142,7 @@ public class ItemAdapter extends AbstractAdapter {
         if (items != null) {
             mItems.addAll(position, Arrays.asList(items));
             mapPossibleTypes(Arrays.asList(items));
-            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()) + position + 1, items.length);
+            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()) + position, items.length);
         }
     }
 
@@ -140,7 +159,7 @@ public class ItemAdapter extends AbstractAdapter {
         if (items != null) {
             mItems.addAll(position, items);
             mapPossibleTypes(items);
-            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()) + position + 1, items.size());
+            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()) + position, items.size());
         }
     }
 

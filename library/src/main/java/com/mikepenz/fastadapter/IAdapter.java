@@ -1,5 +1,7 @@
 package com.mikepenz.fastadapter;
 
+import java.util.List;
+
 /**
  * Created by mikepenz on 27.12.15.
  */
@@ -26,10 +28,23 @@ public interface IAdapter {
     int getAdapterItemCount();
 
     /**
+     * @return the list of defined items within THIS adapter
+     */
+    List<IItem> getAdapterItems();
+
+    /**
      * @param position the relative position
      * @return the item at the given relative position within this adapter
      */
     IItem getAdapterItem(int position);
+
+    /**
+     * Searches for the given item and calculates it's relative position
+     *
+     * @param item the item which is searched for
+     * @return the relative position
+     */
+    int getAdapterPosition(IItem item);
 
     /**
      * @return the global item count
