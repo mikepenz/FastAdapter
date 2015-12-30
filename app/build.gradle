@@ -51,13 +51,16 @@ android {
 dependencies {
     compile project(':library')
 
+    //used to generate the drawer on the left
     compile('com.mikepenz:materialdrawer:4.6.3@aar') {
         transitive = true
     }
+    //used to generate the Open Source section
     compile('com.mikepenz:aboutlibraries:5.3.4@aar') {
         transitive = true
     }
-    compile 'com.mikepenz:google-material-typeface:2.2.0.1@aar'
+    //used to display the icons in the drawer
+    compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
 
     //Used for the StickyHeaderSample
     //https://github.com/timehop/sticky-headers-recyclerview
