@@ -1,3 +1,10 @@
 <resources>
     <string name="app_name">FastAdapter</string>
+
+    <string name="sample_multi_select">MultiSelect Sample</string>
+    <string name="sample_collapsible">Collapsible Sample</string>
+    <string name="sample_sticky_header">Sticky Header Sample</string>
+    <string name="sample_advanced">Advanced Sample</string>
+    <string name="sample_advanced_descr">This showcases all functions in one</string>
+    <string name="open_source">Open Source</string>
 </resources>

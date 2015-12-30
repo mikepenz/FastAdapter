@@ -14,6 +14,7 @@ public interface IIdentifyable<T> {
 
     /**
      * returns the identifier of this item
+     * -1 is the default not set state
      *
      * @return
      */

@@ -5,30 +5,15 @@ import android.support.v7.widget.RecyclerView;
 import com.mikepenz.fastadapter.IItem;
 
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Stack;
 
 /**
  * Created by mikepenz on 18.09.15.
+ * This util prefills the cache of the RecyclerView to allow fast lag-free scrolling with many different views
  */
 public class RecyclerViewCacheUtil {
-    private static RecyclerViewCacheUtil SINGLETON = null;
-
-    private int CACHE_SIZE = 3;
-    private HashMap<Integer, Stack<RecyclerView.ViewHolder>> CACHE = new HashMap<>();
-
-    private RecyclerViewCacheUtil() {
-
-    }
-
-    /**
-     * @return
-     */
-    public static RecyclerViewCacheUtil getInstance() {
-        if (SINGLETON == null) {
-            SINGLETON = new RecyclerViewCacheUtil();
-        }
-        return SINGLETON;
-    }
+    private int mCacheSize = 2;
 
     /**
      * define the amount of elements which should be cached for a specific drawerItem type
@@ -37,15 +22,8 @@ public class RecyclerViewCacheUtil {
      * @return
      */
     public RecyclerViewCacheUtil withCacheSize(int cacheSize) {
-        CACHE_SIZE = cacheSize;
+        mCacheSize = cacheSize;
         return this;
-    }
-
-    /**
-     * clear the CACHE
-     */
-    public void clear() {
-        CACHE.clear();
     }
 
     /**
@@ -54,32 +32,38 @@ public class RecyclerViewCacheUtil {
      * @param recyclerView
      * @param items
      */
-    public void init(RecyclerView recyclerView, IItem... items) {
+    public void apply(RecyclerView recyclerView, Iterable<IItem> items) {
         if (items != null) {
+            //we pre-create the views for our cache
+            HashMap<Integer, Stack<RecyclerView.ViewHolder>> cache = new HashMap<>();
             for (IItem d : items) {
-                if (!CACHE.containsKey(d.getType())) {
-                    CACHE.put(d.getType(), new Stack<RecyclerView.ViewHolder>());
+                if (!cache.containsKey(d.getType())) {
+                    cache.put(d.getType(), new Stack<RecyclerView.ViewHolder>());
                 }
 
-                if (CACHE_SIZE == -1 || CACHE.get(d.getType()).size() <= CACHE_SIZE) {
-                    CACHE.get(d.getType()).push(d.getViewHolder(recyclerView));
+                if (mCacheSize == -1 || cache.get(d.getType()).size() <= mCacheSize) {
+                    cache.get(d.getType()).push(d.getViewHolder(recyclerView));
                 }
-            }
-        }
-    }
 
-    /**
-     * this is used to get a cached drawerItem from the cache or null
-     *
-     * @param type
-     * @return
-     */
-    public RecyclerView.ViewHolder obtain(int type) {
-        if (CACHE.containsKey(type)) {
-            if (CACHE.get(type).size() > 0) {
-                return CACHE.get(type).pop();
+                RecyclerView.RecycledViewPool recyclerViewPool = new RecyclerView.RecycledViewPool();
+
+                //we fill the pool
+                for (Map.Entry<Integer, Stack<RecyclerView.ViewHolder>> entry : cache.entrySet()) {
+                    recyclerViewPool.setMaxRecycledViews(entry.getKey(), mCacheSize);
+
+                    for (RecyclerView.ViewHolder holder : entry.getValue()) {
+                        recyclerViewPool.putRecycledView(holder);
+                    }
+
+                    //make sure to clear the stack
+                    entry.getValue().clear();
+                }
+
+                //make sure to clear the cache
+                cache.clear();
+
+                recyclerView.setRecycledViewPool(recyclerViewPool);
             }
         }
-        return null;
     }
 }

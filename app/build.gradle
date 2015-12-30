@@ -11,10 +11,10 @@ android {
 
     defaultConfig {
         applicationId "com.mikepenz.crossfader.app"
-        minSdkVersion 10
+        minSdkVersion 11
         targetSdkVersion 23
-        versionCode 2
-        versionName '0.0.2-SNAPSHOT'
+        versionCode 5
+        versionName '0.0.5-SNAPSHOT'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
@@ -51,14 +51,18 @@ android {
 dependencies {
     compile project(':library')
 
-    compile('com.mikepenz:materialdrawer:4.4.6@aar') {
+    //used to generate the drawer on the left
+    compile('com.mikepenz:materialdrawer:4.6.3@aar') {
         transitive = true
     }
-    compile('com.mikepenz:aboutlibraries:5.3.2@aar') {
+    //used to generate the Open Source section
+    compile('com.mikepenz:aboutlibraries:5.3.4@aar') {
         transitive = true
     }
-    compile 'com.mikepenz:google-material-typeface:2.2.0.1@aar'
-    compile 'com.mikepenz:fontawesome-typeface:4.4.0.1@aar'
+    //used to display the icons in the drawer
+    compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
 
-    compile 'com.squareup.picasso:picasso:2.5.2'
+    //Used for the StickyHeaderSample
+    //https://github.com/timehop/sticky-headers-recyclerview
+    compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3@aar'
 }

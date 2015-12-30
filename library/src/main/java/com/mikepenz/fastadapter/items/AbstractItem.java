@@ -127,16 +127,20 @@ public abstract class AbstractItem<T> implements IItem<T> {
     }
 
     /**
-     * the abstract method to retrieve the ViewHolder factory
-     * The ViewHolder factory implementation should look like
+     * @Override
      * public ViewHolderFactory getFactory() {
-     * return new ItemFactory();
+     *      return new ItemFactory();
      * }
+     *
      * public static class ItemFactory implements ViewHolderFactory<ViewHolder> {
-     * public ViewHolder factory(View v) {
-     * return new ViewHolder(v);
+     *      public ViewHolder factory(View v) {
+     *          return new ViewHolder(v);
+     *      }
      * }
-     * }
+     */
+    /**
+     * the abstract method to retrieve the ViewHolder factory
+     * The ViewHolder factory implementation should look like (see the commented code above)
      *
      * @return
      */

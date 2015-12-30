@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter.app;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -7,15 +8,20 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.Toast;
 
+import com.mikepenz.aboutlibraries.Libs;
+import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.util.RecyclerViewCacheUtil;
+import com.mikepenz.materialdrawer.model.DividerDrawerItem;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,48 +48,78 @@ public class SampleActivity extends AppCompatActivity {
                 .withHasStableIds(true)
                 .withSavedInstance(savedInstanceState)
                 .withShowDrawerOnFirstLaunch(true)
+                .addDrawerItems(
+                        new PrimaryDrawerItem().withName(R.string.sample_multi_select).withSelectable(false).withIdentifier(1).withIcon(MaterialDesignIconic.Icon.gmi_select_all),
+                        new PrimaryDrawerItem().withName(R.string.sample_collapsible).withSelectable(false).withIdentifier(2).withIcon(MaterialDesignIconic.Icon.gmi_check_all),
+                        new PrimaryDrawerItem().withName(R.string.sample_sticky_header).withSelectable(false).withIdentifier(3).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
+                        new PrimaryDrawerItem().withName(R.string.sample_advanced).withSelectable(false).withDescription(R.string.sample_advanced_descr).withIdentifier(4).withIcon(MaterialDesignIconic.Icon.gmi_coffee),
+                        new DividerDrawerItem(),
+                        new PrimaryDrawerItem().withName(R.string.open_source).withSelectable(false).withIdentifier(100).withIcon(MaterialDesignIconic.Icon.gmi_github)
+                )
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
+                        if (drawerItem != null) {
+                            Intent intent = null;
+                            if (drawerItem.getIdentifier() == 1) {
+                                intent = new Intent(SampleActivity.this, MultiselectSampleActivity.class);
+                            } else if (drawerItem.getIdentifier() == 2) {
+                                intent = new Intent(SampleActivity.this, CollapsibleSampleActivity.class);
+                            } else if (drawerItem.getIdentifier() == 3) {
+                                intent = new Intent(SampleActivity.this, StickyHeaderSampleActivity.class);
+                            } else if (drawerItem.getIdentifier() == 4) {
+                                intent = new Intent(SampleActivity.this, AdvancedSampleActivity.class);
+                            } else if (drawerItem.getIdentifier() == 100) {
+                                intent = new LibsBuilder()
+                                        .withFields(R.string.class.getFields())
+                                        .withActivityTitle(getString(R.string.open_source))
+                                        .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                                        .intent(SampleActivity.this);
+                            }
+                            if (intent != null) {
+                                SampleActivity.this.startActivity(intent);
+                            }
+                        }
+                        return false;
+                    }
+                })
+                .withSelectedItemByPosition(-1)
                 .build();
 
-        //if you have many different types of DrawerItems you can magically pre-cache those items to get a better scroll performance
-        //make sure to init the cache after the DrawerBuilder was created as this will first clear the cache to make sure no old elements are in
-        RecyclerViewCacheUtil.getInstance().withCacheSize(2).init(result);
-
+        //create our FastAdapter which will manage everything
         fastAdapter = new FastAdapter();
-        fastAdapter.setHasStableIds(true);
 
-        final HeaderAdapter headerAdapter = new HeaderAdapter();
+        //create our ItemAdapter which will host our items
         final ItemAdapter itemAdapter = new ItemAdapter();
-        fastAdapter.withMultiSelect(true);
-        fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v, int position, int relativePosition, IItem item) {
-                itemAdapter.removeItemRange(relativePosition, 5);
-                //itemAdapter.add(position, new PrimaryItem().withName("Awesome :D").withLevel(2).withIdentifier(fastAdapter.getItemCount() + 1000));
-                return true;
-            }
-        });
+
+        //configure our fastAdapter
+        //as we provide id's for the items we want the hasStableIds enabled to speed up things
+        fastAdapter.setHasStableIds(true);
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
             @Override
             public boolean onClick(View v, int position, int relativePosition, IItem item) {
-                //Toast.makeText(v.getContext(), ((SectionItem) item).getName().getText(v.getContext()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), ((SampleItem) item).name.getText(v.getContext()), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
 
+        //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
-        rv.setAdapter(itemAdapter.wrap(headerAdapter.wrap(fastAdapter)));
+        rv.setAdapter(itemAdapter.wrap(fastAdapter));
 
-        headerAdapter.add(new SampleItem().withName("Header").withIdentifier(1));
-
+        //fill with some sample data
         List<IItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
             items.add(new SampleItem().withName("Test " + i).withIdentifier(100 + i));
         }
         itemAdapter.add(items);
 
-        //restore selections
+        //init cache with the added items, this is useful for shorter lists with many many different view types (at least 4 or more
+        //new RecyclerViewCacheUtil().withCacheSize(2).apply(rv, items);
+
+        //restore selections (this has to be done after the items were added
         fastAdapter.withSavedInstanceState(savedInstanceState);
     }
 
@@ -105,5 +141,4 @@ public class SampleActivity extends AppCompatActivity {
             super.onBackPressed();
         }
     }
-
 }

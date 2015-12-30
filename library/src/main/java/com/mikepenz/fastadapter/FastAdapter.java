@@ -2,14 +2,14 @@ package com.mikepenz.fastadapter;
 
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mikepenz.fastadapter.utils.RecyclerViewCacheUtil;
-
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -19,6 +19,7 @@ import java.util.TreeMap;
  */
 public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     protected static final String BUNDLE_SELECTIONS = "bundle_selections";
+    protected static final String BUNDLE_COLLAPSIBLE = "bundle_collapsible";
 
     // we remember all adapters
     private SortedMap<Integer, IAdapter> mAdapters = new TreeMap<>();
@@ -27,8 +28,13 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
     // if we want multiSelect enabled
     private boolean mMultiSelect = false;
+    // if we want the multiSelect only on longClick
+    private boolean mMultiSelectOnLongClick = true;
+
     // we need to remember all selections to recreate them after orientation change
     private SortedMap<Integer, IItem> mSelections = new TreeMap<>();
+    // we need to remember all opened collapse items to recreate them after orientation change
+    private SortedMap<Integer, IItem> mCollapsibleOpened = new TreeMap<>();
 
     // the listeners which can be hooked on an item
     private OnClickListener mOnClickListener;
@@ -79,6 +85,16 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         return this;
     }
 
+    /**
+     * Disable this if you want the multiSelection on a single tap (note you have to enable multiSelect for this to make a difference)
+     *
+     * @param multiSelectOnLongClick false to do multiSelect via single click
+     * @return this
+     */
+    public FastAdapter withMultiSelectOnLongClick(boolean multiSelectOnLongClick) {
+        mMultiSelectOnLongClick = multiSelectOnLongClick;
+        return this;
+    }
 
     /**
      * re-selects all elements stored in the savedInstanceState
@@ -89,9 +105,20 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public FastAdapter withSavedInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
+            //first restore opened collasable items, as otherwise may not all selections could be restored
+            ArrayList<Integer> collapsibles = savedInstanceState.getIntegerArrayList(BUNDLE_COLLAPSIBLE);
+            if (collapsibles != null) {
+                for (Integer collapsible : collapsibles) {
+                    open(collapsible);
+                }
+            }
+
+            //restore the selections
             ArrayList<Integer> selections = savedInstanceState.getIntegerArrayList(BUNDLE_SELECTIONS);
-            for (Integer selection : selections) {
-                select(selection);
+            if (selections != null) {
+                for (Integer selection : selections) {
+                    select(selection);
+                }
             }
         }
         return this;
@@ -139,14 +166,62 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @return
      */
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {//first check if we (probably) have this item in the cache
-        RecyclerView.ViewHolder vh = RecyclerViewCacheUtil.getInstance().obtain(viewType);
-        if (vh == null) {
-            return mTypeInstances.get(viewType).getViewHolder(parent);
-        } else {
-            return vh;
-        }
+    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final RecyclerView.ViewHolder holder = mTypeInstances.get(viewType).getViewHolder(parent);
 
+        //handle click behavior
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int pos = holder.getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    boolean consumed = false;
+                    if (mOnClickListener != null) {
+                        ItemHolder itemHolder = getInternalItem(pos);
+                        consumed = mOnClickListener.onClick(v, pos, itemHolder.relativePosition, itemHolder.item);
+                    }
+
+                    if (!consumed && (!(mMultiSelect && mMultiSelectOnLongClick) || !mMultiSelect)) {
+                        handleSelection(pos);
+                    }
+                }
+            }
+        });
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                int pos = holder.getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    boolean consumed = false;
+                    if (mOnLongClickListener != null) {
+                        ItemHolder itemHolder = getInternalItem(pos);
+                        consumed = mOnLongClickListener.onLongClick(v, pos, itemHolder.relativePosition, itemHolder.item);
+                    }
+
+                    if (!consumed && (mMultiSelect && mMultiSelectOnLongClick)) {
+                        handleSelection(pos);
+                    }
+                }
+                return false;
+            }
+        });
+
+        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if (mOnTouchListener != null) {
+                    int pos = holder.getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        ItemHolder itemHolder = getInternalItem(pos);
+                        return mOnTouchListener.onTouch(v, event, pos, itemHolder.relativePosition, itemHolder.item);
+                    }
+                }
+                return false;
+            }
+        });
+
+        return holder;
     }
 
     /**
@@ -158,48 +233,34 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         getItem(position).bindView(holder);
+    }
 
-        //handle click behavior
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int pos = holder.getAdapterPosition();
-                ItemHolder itemHolder = getInternalItem(pos);
+    /**
+     * Searches for the given item and calculates it's global position
+     *
+     * @param item the item which is searched for
+     * @return the global position, or -1 if not found
+     */
+    public int getPosition(IItem item) {
+        if (item.getIdentifier() == -1) {
+            Log.e("FastAdapter", "You have to define an identifier for your item to retrieve the position via this method");
+            return -1;
+        }
 
-                boolean consumed = false;
-                if (mOnClickListener != null) {
-                    consumed = mOnClickListener.onClick(v, pos, itemHolder.relativePosition, itemHolder.item);
-                }
-
-                if (!consumed) {
-                    handleSelection(pos);
-                }
+        int position = 0;
+        for (IAdapter adapter : mAdapters.values()) {
+            if (adapter.getOrder() < 0) {
+                continue;
             }
-        });
 
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                if (mOnLongClickListener != null) {
-                    int pos = holder.getAdapterPosition();
-                    ItemHolder itemHolder = getInternalItem(pos);
-                    return mOnLongClickListener.onLongClick(v, pos, itemHolder.relativePosition, itemHolder.item);
-                }
-                return false;
+            int relativePosition = adapter.getAdapterPosition(item);
+            if (relativePosition != -1) {
+                return position + relativePosition;
             }
-        });
+            position = adapter.getAdapterItemCount();
+        }
 
-        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (mOnTouchListener != null) {
-                    int pos = holder.getAdapterPosition();
-                    ItemHolder itemHolder = getInternalItem(pos);
-                    return mOnTouchListener.onTouch(v, event, pos, itemHolder.relativePosition, itemHolder.item);
-                }
-                return false;
-            }
-        });
+        return -1;
     }
 
     /**
@@ -223,17 +284,46 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             return new ItemHolder();
         }
 
+
+        //try to find the adapter for this position
+        AdapterHolder adapterHolder = getInternalAdapterForPosition(position);
+
+        //if found return the itemHolder
+        if (adapterHolder.adapter != null) {
+            ItemHolder itemHolder = new ItemHolder();
+            itemHolder.item = adapterHolder.adapter.getAdapterItem(adapterHolder.relativePosition);
+            itemHolder.relativePosition = adapterHolder.relativePosition;
+            return itemHolder;
+        }
+        return new ItemHolder();
+    }
+
+    /**
+     * Finds the responsible adapter for the given position
+     *
+     * @param position the global position
+     * @return the adapter which is responsible for this position
+     */
+    private AdapterHolder getInternalAdapterForPosition(int position) {
+        if (position < 0) {
+            return new AdapterHolder();
+        }
+
         int currentCount = 0;
         for (IAdapter adapter : mAdapters.values()) {
+            if (adapter.getOrder() < 0) {
+                continue;
+            }
+
             if (currentCount <= position && currentCount + adapter.getAdapterItemCount() > position) {
-                ItemHolder itemHolder = new ItemHolder();
-                itemHolder.item = adapter.getAdapterItem(position - currentCount);
-                itemHolder.relativePosition = position - currentCount;
-                return itemHolder;
+                AdapterHolder adapterHolder = new AdapterHolder();
+                adapterHolder.adapter = adapter;
+                adapterHolder.relativePosition = position - currentCount;
+                return adapterHolder;
             }
             currentCount = currentCount + adapter.getAdapterItemCount();
         }
-        return new ItemHolder();
+        return new AdapterHolder();
     }
 
     /**
@@ -268,6 +358,10 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         //we go over all adapters and fetch all item sizes
         int size = 0;
         for (IAdapter adapter : mAdapters.values()) {
+            if (adapter.getOrder() < 0) {
+                continue;
+            }
+
             size = adapter.getAdapterItemCount();
         }
         return size;
@@ -283,6 +377,10 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         //we go over all adapters and fetch all item sizes
         int size = 0;
         for (IAdapter adapter : mAdapters.values()) {
+            if (adapter.getOrder() < 0) {
+                continue;
+            }
+
             if (adapter.getOrder() < order) {
                 size = adapter.getAdapterItemCount();
             } else {
@@ -290,6 +388,46 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
         }
         return size;
+    }
+
+    /**
+     * add the values to the bundle for saveInstanceState
+     *
+     * @param savedInstanceState
+     * @return
+     */
+    public Bundle saveInstanceState(Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
+            //remember the selections
+            ArrayList<Integer> selections = new ArrayList<>();
+            selections.addAll(mSelections.keySet());
+            savedInstanceState.putIntegerArrayList(BUNDLE_SELECTIONS, selections);
+
+            //remember the collapsed states
+            ArrayList<Integer> collapsibles = new ArrayList<>();
+            collapsibles.addAll(mCollapsibleOpened.keySet());
+            savedInstanceState.putIntegerArrayList(BUNDLE_COLLAPSIBLE, collapsibles);
+        }
+        return savedInstanceState;
+    }
+
+    //-------------------------
+    //-------------------------
+    //Selection stuff
+    //-------------------------
+    //-------------------------
+
+    /**
+     * toggles the selection of the item at the given position
+     *
+     * @param position the global position
+     */
+    public void toggleSelection(int position) {
+        if (mSelections.containsKey(position)) {
+            deselect(position);
+        } else {
+            select(position);
+        }
     }
 
     /**
@@ -338,12 +476,27 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      */
     public void deselect(int position) {
+        deselect(position, null);
+    }
+
+    /**
+     * deselects an item and removes it's position in the selections list
+     * also takes an iterator to remove items from the map
+     *
+     * @param position the global position
+     * @param entries  the iterator which is used to deselect all
+     */
+    private void deselect(int position, Iterator<Map.Entry<Integer, IItem>> entries) {
         IItem item = getItem(position);
         if (item != null) {
             item.withSetSelected(false);
         }
-        if (mSelections.containsKey(position)) {
-            mSelections.remove(position);
+        if (entries == null) {
+            if (mSelections.containsKey(position)) {
+                mSelections.remove(position);
+            }
+        } else {
+            entries.remove();
         }
         notifyItemChanged(position);
     }
@@ -352,24 +505,92 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * deselects all selections
      */
     public void deselect() {
-        for (Map.Entry<Integer, IItem> entry : mSelections.entrySet()) {
-            deselect(entry.getKey());
+        Iterator<Map.Entry<Integer, IItem>> entries = mSelections.entrySet().iterator();
+        while (entries.hasNext()) {
+            deselect(entries.next().getKey(), entries);
+        }
+    }
+
+    //-------------------------
+    //-------------------------
+    //Collapse stuff
+    //-------------------------
+    //-------------------------
+
+    /**
+     * toggles the collapse state of the given collapsible item at the given position
+     *
+     * @param position the global position
+     */
+    public void toggleCollapsible(int position) {
+        if (mCollapsibleOpened.containsKey(position)) {
+            collapse(position);
+        } else {
+            open(position);
         }
     }
 
     /**
-     * add the values to the bundle for saveInstanceState
+     * collapses (closes) the given collapsible item at the given position
      *
-     * @param savedInstanceState
-     * @return
+     * @param position the global position
      */
-    public Bundle saveInstanceState(Bundle savedInstanceState) {
-        if (savedInstanceState != null) {
-            ArrayList<Integer> selections = new ArrayList<>();
-            selections.addAll(mSelections.keySet());
-            savedInstanceState.putIntegerArrayList(BUNDLE_SELECTIONS, selections);
+    public void collapse(int position) {
+        IItem item = getItem(position);
+        if (item != null && item instanceof ICollapsible) {
+            ICollapsible collapsible = (ICollapsible) item;
+
+            //if this item is not already callapsed and has sub items we go on
+            if (!collapsible.isCollapsed() && collapsible.getSubItems() != null && collapsible.getSubItems().size() > 0) {
+                AdapterHolder adapterHolder = getInternalAdapterForPosition(position);
+
+                //get all positions which are opened or selected and collapse them starting with the biggest number
+
+                //TODO BEFORE WE REMOVE THE ITEMS WE HAVE TO MAKE SURE THERE ARE NO SUB COLLAPSIBLES OPEN?! SHOULD WE HANDLE THIS CASE, OR KEEP IT TO THE DEV?! ...
+                //TODO IF THE SUBITEMS ARE SELECTED WE SHOULD ALSO DESELECT THEM!!
+
+                //if we find the adapter for this item we will remove all of its subitems
+                if (adapterHolder.adapter != null && adapterHolder.adapter instanceof IItemAdapter) {
+                    IItemAdapter itemAdapter = (IItemAdapter) adapterHolder.adapter;
+                    itemAdapter.removeItemRange(adapterHolder.relativePosition + 1, collapsible.getSubItems().size());
+                }
+
+                //remember that this item is now collapsed again
+                collapsible.withCollapsed(true);
+                //remove the information that this item was opened
+                if (mCollapsibleOpened.containsKey(position)) {
+                    mCollapsibleOpened.remove(position);
+                }
+            }
         }
-        return savedInstanceState;
+    }
+
+    /**
+     * opens the collapsible item at the given position
+     *
+     * @param position the global position
+     */
+    public void open(int position) {
+        IItem item = getItem(position);
+        if (item != null && item instanceof ICollapsible) {
+            ICollapsible collapsible = (ICollapsible) item;
+
+            //if this item is not already callapsed and has sub items we go on
+            if (collapsible.isCollapsed() && collapsible.getSubItems() != null && collapsible.getSubItems().size() > 0) {
+                AdapterHolder adapterHolder = getInternalAdapterForPosition(position);
+
+                //if we find the adapter for this item we add the sub items
+                if (adapterHolder.adapter != null && adapterHolder.adapter instanceof IItemAdapter) {
+                    IItemAdapter itemAdapter = (IItemAdapter) adapterHolder.adapter;
+                    itemAdapter.add(adapterHolder.relativePosition + 1, collapsible.getSubItems());
+                }
+
+                //remember that this item is now opened (not collapsed)
+                collapsible.withCollapsed(false);
+                //store it in the list of opened collapsible items
+                mCollapsibleOpened.put(position, item);
+            }
+        }
     }
 
     //-------------------------
@@ -384,8 +605,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      */
     public void notifyAdapterItemInserted(int position) {
-        //we have to update all current stored selection in our map
-        adjustSelectionsAfter(position, 1);
+        //we have to update all current stored selection and collapsed states in our map
+        mSelections = adjustPositionAfter(mSelections, position, 1);
+        mCollapsibleOpened = adjustPositionAfter(mCollapsibleOpened, position, 1);
         notifyItemInserted(position);
     }
 
@@ -396,8 +618,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param itemCount
      */
     public void notifyAdapterItemRangeInserted(int position, int itemCount) {
-        //we have to update all current stored selection in our map
-        adjustSelectionsAfter(position, itemCount);
+        //we have to update all current stored selection and collapsed states in our map
+        mSelections = adjustPositionAfter(mSelections, position, itemCount);
+        mCollapsibleOpened = adjustPositionAfter(mCollapsibleOpened, position, itemCount);
         notifyItemRangeInserted(position, itemCount);
     }
 
@@ -407,8 +630,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      */
     public void notifyAdapterItemRemoved(int position) {
-        //we have to update all current stored selection in our map
-        adjustSelectionsAfter(position, -1);
+        //we have to update all current stored selection and collapsed states in our map
+        mSelections = adjustPositionAfter(mSelections, position, -1);
+        mCollapsibleOpened = adjustPositionAfter(mCollapsibleOpened, position, -1);
         notifyItemRemoved(position);
     }
 
@@ -419,8 +643,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param itemCount
      */
     public void notifyAdapterItemRangeRemoved(int position, int itemCount) {
-        //we have to update all current stored selection in our map
-        adjustSelectionsAfter(position, itemCount * (-1));
+        //we have to update all current stored selection and collapsed states in our map
+        mSelections = adjustPositionAfter(mSelections, position, itemCount * (-1));
+        mCollapsibleOpened = adjustPositionAfter(mCollapsibleOpened, position, itemCount * (-1));
         notifyItemRangeRemoved(position, itemCount);
     }
 
@@ -430,21 +655,21 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      * @param adjustBy
      */
-    private void adjustSelectionsAfter(int position, int adjustBy) {
-        SortedMap<Integer, IItem> selections = new TreeMap<>();
+    private SortedMap<Integer, IItem> adjustPositionAfter(Map<Integer, IItem> positions, int position, int adjustBy) {
+        SortedMap<Integer, IItem> newPositions = new TreeMap<>();
 
-        for (Map.Entry<Integer, IItem> entry : mSelections.entrySet()) {
+        for (Map.Entry<Integer, IItem> entry : positions.entrySet()) {
             if (entry.getKey() < position) {
-                selections.put(entry.getKey(), entry.getValue());
+                newPositions.put(entry.getKey(), entry.getValue());
             } else if (adjustBy > 0) {
-                selections.put(entry.getKey() + adjustBy, entry.getValue());
+                newPositions.put(entry.getKey() + adjustBy, entry.getValue());
             } else if (adjustBy < 0 && entry.getKey() > (position + (-1) * adjustBy)) {
-                selections.put(entry.getKey() + adjustBy, entry.getValue());
+                newPositions.put(entry.getKey() + adjustBy, entry.getValue());
             } else if (adjustBy < 0 && entry.getKey() < (position + (-1) * adjustBy)) {
                 ;//we do not add them anymore. they were removed
             }
         }
-        mSelections = selections;
+        return newPositions;
     }
 
     /**
@@ -459,6 +684,10 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mSelections.remove(fromPosition);
             mSelections.put(toPosition, item);
         }
+
+        //TODO if an item moved it may moves other selections
+        //TODO the same is also possible for collapsed items
+
         notifyItemMoved(fromPosition, toPosition);
     }
 
@@ -572,6 +801,14 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     private class ItemHolder {
         public IItem item = null;
+        public int relativePosition = -1;
+    }
+
+    /**
+     * an internal class to return the IAdapter and relativePosition at once. used to save one iteration
+     */
+    private class AdapterHolder {
+        public IAdapter adapter = null;
         public int relativePosition = -1;
     }
 }

@@ -3,6 +3,8 @@ package com.mikepenz.fastadapter;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 /**
  * Created by mikepenz on 27.12.15.
  */
@@ -143,6 +145,89 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
         mFastAdapter.onBindViewHolder(holder, position);
+    }
+
+    /**
+     * the onBindViewHolder is managed by the FastAdapter so forward this correctly
+     *
+     * @param holder
+     * @param position
+     * @param payloads
+     */
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads) {
+        mFastAdapter.onBindViewHolder(holder, position, payloads);
+    }
+
+    /**
+     * the setHasStableIds is managed by the FastAdapter so forward this correctly
+     *
+     * @param hasStableIds
+     */
+    @Override
+    public void setHasStableIds(boolean hasStableIds) {
+        mFastAdapter.setHasStableIds(hasStableIds);
+    }
+
+    /**
+     * the onViewRecycled is managed by the FastAdapter so forward this correctly
+     *
+     * @param holder
+     */
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        mFastAdapter.onViewRecycled(holder);
+    }
+
+    /**
+     * the onFailedToRecycleView is managed by the FastAdapter so forward this correctly
+     *
+     * @param holder
+     * @return
+     */
+    @Override
+    public boolean onFailedToRecycleView(RecyclerView.ViewHolder holder) {
+        return mFastAdapter.onFailedToRecycleView(holder);
+    }
+
+    /**
+     * the onViewDetachedFromWindow is managed by the FastAdapter so forward this correctly
+     *
+     * @param holder
+     */
+    @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        mFastAdapter.onViewDetachedFromWindow(holder);
+    }
+
+    /**
+     * the onViewAttachedToWindow is managed by the FastAdapter so forward this correctly
+     *
+     * @param holder
+     */
+    @Override
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        mFastAdapter.onViewAttachedToWindow(holder);
+    }
+
+    /**
+     * the onAttachedToRecyclerView is managed by the FastAdapter so forward this correctly
+     *
+     * @param recyclerView
+     */
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        mFastAdapter.onAttachedToRecyclerView(recyclerView);
+    }
+
+    /**
+     * the onDetachedFromRecyclerView is managed by the FastAdapter so forward this correctly
+     *
+     * @param recyclerView
+     */
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        mFastAdapter.onDetachedFromRecyclerView(recyclerView);
     }
 
     /**
