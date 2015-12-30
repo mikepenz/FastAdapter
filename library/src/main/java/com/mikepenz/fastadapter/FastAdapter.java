@@ -249,6 +249,10 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         int position = 0;
         for (IAdapter adapter : mAdapters.values()) {
+            if (adapter.getOrder() < 0) {
+                continue;
+            }
+
             int relativePosition = adapter.getAdapterPosition(item);
             if (relativePosition != -1) {
                 return position + relativePosition;
@@ -307,6 +311,10 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         int currentCount = 0;
         for (IAdapter adapter : mAdapters.values()) {
+            if (adapter.getOrder() < 0) {
+                continue;
+            }
+
             if (currentCount <= position && currentCount + adapter.getAdapterItemCount() > position) {
                 AdapterHolder adapterHolder = new AdapterHolder();
                 adapterHolder.adapter = adapter;
@@ -350,6 +358,10 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         //we go over all adapters and fetch all item sizes
         int size = 0;
         for (IAdapter adapter : mAdapters.values()) {
+            if (adapter.getOrder() < 0) {
+                continue;
+            }
+
             size = adapter.getAdapterItemCount();
         }
         return size;
@@ -365,6 +377,10 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         //we go over all adapters and fetch all item sizes
         int size = 0;
         for (IAdapter adapter : mAdapters.values()) {
+            if (adapter.getOrder() < 0) {
+                continue;
+            }
+
             if (adapter.getOrder() < order) {
                 size = adapter.getAdapterItemCount();
             } else {
