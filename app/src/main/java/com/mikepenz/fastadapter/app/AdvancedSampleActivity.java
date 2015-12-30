@@ -26,6 +26,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This sample showcases compatibility the awesome Sticky-Headers library by timehop
@@ -36,6 +37,10 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
     //save our FastAdapter
     private FastAdapter fastAdapter;
+    private ItemAdapter itemAdapter;
+
+    //the ActionMode
+    private ActionMode actionMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,26 +60,14 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         //create our adapters
         final StickyHeaderAdapter stickyHeaderAdapter = new StickyHeaderAdapter();
+        itemAdapter = new ItemAdapter();
         final HeaderAdapter headerAdapter = new HeaderAdapter();
-        final ItemAdapter itemAdapter = new ItemAdapter();
 
         //configure our fastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         fastAdapter.setHasStableIds(true);
         fastAdapter.withMultiSelect(true);
         fastAdapter.withMultiSelectOnLongClick(true);
-        fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v, int position, int relativePosition, IItem item) {
-                //may check if actionMode is already displayed
-                startSupportActionMode(new ActionBarCallBack());
-                findViewById(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(AdvancedSampleActivity.this, R.attr.colorPrimary, R.color.material_drawer_primary));
-
-                //itemAdapter.removeItemRange(relativePosition, 5);
-                //itemAdapter.add(position, new PrimaryItem().withName("Awesome :D").withLevel(2).withIdentifier(fastAdapter.getItemCount() + 1000));
-                return false;
-            }
-        });
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
             @Override
             public boolean onClick(View v, int position, int relativePosition, IItem item) {
@@ -84,7 +77,27 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                         return true;
                     }
                 }
-                //Toast.makeText(v.getContext(), ((SectionItem) item).getName().getText(v.getContext()), Toast.LENGTH_SHORT).show();
+                //if we are current in CAB mode, and we remove the last selection, we want to finish the actionMode
+                if (actionMode != null && fastAdapter.getSelections().size() == 1 && item.isSelected()) {
+                    actionMode.finish();
+                }
+                return false;
+            }
+        });
+        fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v, int position, int relativePosition, IItem item) {
+                if (actionMode == null) {
+                    //may check if actionMode is already displayed
+                    actionMode = startSupportActionMode(new ActionBarCallBack());
+                    findViewById(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(AdvancedSampleActivity.this, R.attr.colorPrimary, R.color.material_drawer_primary));
+
+                    //we have to select this on our own as we will consume the event
+                    fastAdapter.select(position);
+                    //we consume this event so the normal onClick isn't called anymore
+                    return true;
+                }
+
                 return false;
             }
         });
@@ -162,9 +175,14 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            //at the moment just one item which removes selection
-            fastAdapter.deselect();
-            //after selection is removed we probably want finish the actionMode
+            //we have to refetch the selections array again and again as the position will change after one item is deleted
+            Set<Integer> selections = fastAdapter.getSelections();
+            while (selections.size() > 0) {
+                itemAdapter.remove(fastAdapter.getRelativePosition(selections.iterator().next()).relativePosition);
+                selections = fastAdapter.getSelections();
+            }
+
+            //finish the actionMode
             mode.finish();
             return true;
         }
@@ -183,12 +201,17 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
+            actionMode = null;
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setStatusBarColor(Color.TRANSPARENT);
             }
 
             //after we are done with the actionMode we fallback to longClick for multiselect
             fastAdapter.withMultiSelectOnLongClick(true);
+
+            //actionMode end. deselect everything
+            fastAdapter.deselect();
         }
 
         @Override
