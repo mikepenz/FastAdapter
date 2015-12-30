@@ -23,6 +23,7 @@ import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialize.util.UIUtils;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class SampleActivity extends AppCompatActivity {
@@ -76,6 +77,12 @@ public class SampleActivity extends AppCompatActivity {
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
             @Override
             public boolean onClick(View v, int position, int relativePosition, IItem item) {
+                if (item instanceof SampleItem) {
+                    if (((SampleItem) item).getSubItems() != null) {
+                        fastAdapter.toggleCollapsible(position);
+                        return true;
+                    }
+                }
                 //Toast.makeText(v.getContext(), ((SectionItem) item).getName().getText(v.getContext()), Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -91,7 +98,16 @@ public class SampleActivity extends AppCompatActivity {
         headerAdapter.add(new SampleItem().withName("Header").withIdentifier(1));
         List<IItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
-            items.add(new SampleItem().withName("Test " + i).withIdentifier(100 + i));
+            SampleItem sampleItem = new SampleItem().withName("Test " + i).withIdentifier(100 + i);
+
+            if (i % 10 == 0) {
+                List<IItem> subItems = new LinkedList<>();
+                for (int ii = 1; ii <= 5; ii++) {
+                    subItems.add(new SampleItem().withName("-- Test " + ii).withIdentifier(1000 + ii));
+                }
+                sampleItem.withSubItems(subItems);
+            }
+            items.add(sampleItem);
         }
         itemAdapter.add(items);
 
