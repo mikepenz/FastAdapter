@@ -105,9 +105,20 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public FastAdapter withSavedInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
+            //first restore opened collasable items, as otherwise may not all selections could be restored
+            ArrayList<Integer> collapsibles = savedInstanceState.getIntegerArrayList(BUNDLE_COLLAPSIBLE);
+            if (collapsibles != null) {
+                for (Integer collapsible : collapsibles) {
+                    open(collapsible);
+                }
+            }
+
+            //restore the selections
             ArrayList<Integer> selections = savedInstanceState.getIntegerArrayList(BUNDLE_SELECTIONS);
-            for (Integer selection : selections) {
-                select(selection);
+            if (selections != null) {
+                for (Integer selection : selections) {
+                    select(selection);
+                }
             }
         }
         return this;
