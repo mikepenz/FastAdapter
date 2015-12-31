@@ -742,8 +742,16 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mSelections.add(toPosition);
         }
 
-        //TODO if an item moved it may moves other selections
-        //TODO the same is also possible for collapsed items
+        //TODO TEST THIS ONE ;D
+
+        //we have to update all current stored selection and collapsed states in our map
+        if (fromPosition < toPosition) {
+            mSelections = AdapterUtil.adjustPosition(mSelections, fromPosition, toPosition, -1);
+            mCollapsibleOpened = AdapterUtil.adjustPosition(mCollapsibleOpened, fromPosition, toPosition, -1);
+        } else {
+            mSelections = AdapterUtil.adjustPosition(mSelections, toPosition, fromPosition, 1);
+            mCollapsibleOpened = AdapterUtil.adjustPosition(mCollapsibleOpened, toPosition, fromPosition, 1);
+        }
 
         notifyItemMoved(fromPosition, toPosition);
     }
