@@ -365,7 +365,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 continue;
             }
 
-            size = adapter.getAdapterItemCount();
+            size = size + adapter.getAdapterItemCount();
         }
         return size;
     }
