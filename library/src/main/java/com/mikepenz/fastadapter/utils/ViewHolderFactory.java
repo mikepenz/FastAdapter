@@ -9,5 +9,5 @@ import android.view.View;
  * @param <T>
  */
 public interface ViewHolderFactory<T extends RecyclerView.ViewHolder> {
-    T factory(View v);
+    T create(View v);
 }

@@ -26,7 +26,6 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * This sample showcases compatibility the awesome Sticky-Headers library by timehop
@@ -74,6 +73,12 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 if (item instanceof SampleItem) {
                     if (((SampleItem) item).getSubItems() != null) {
                         fastAdapter.toggleCollapsible(position);
+
+                        //if we are in CAB mode and there are no selections afterwards we end the CAB mode
+                        if (actionMode != null && fastAdapter.getSelections().size() == 0) {
+                            actionMode.finish();
+                        }
+
                         return true;
                     }
                 }
@@ -84,6 +89,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 return false;
             }
         });
+
         fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v, int position, int relativePosition, IItem item) {
@@ -114,13 +120,21 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         //fill with some sample data
         headerAdapter.add(new SampleItem().withName("Header").withIdentifier(1));
         List<IItem> items = new ArrayList<>();
-        for (int i = 1; i <= 100; i++) {
+        for (int i = 1; i <= 10; i++) {
             SampleItem sampleItem = new SampleItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(100 + i);
 
             if (i % 10 == 0) {
                 List<IItem> subItems = new LinkedList<>();
-                for (int ii = 1; ii <= 5; ii++) {
-                    subItems.add(new SampleItem().withName("-- Test " + ii).withHeader(headers[i / 5]).withIdentifier(1000 + ii));
+                for (int ii = 1; ii <= 3; ii++) {
+                    SampleItem subItem = new SampleItem().withName("-- SubTest " + ii).withHeader(headers[i / 5]).withIdentifier(1000 + ii);
+
+                    List<IItem> subSubItems = new LinkedList<>();
+                    for (int iii = 1; iii <= 3; iii++) {
+                        subSubItems.add(new SampleItem().withName("---- SubSubTest " + iii).withHeader(headers[i / 5]).withIdentifier(10000 + iii));
+                    }
+                    subItem.withSubItems(subSubItems);
+
+                    subItems.add(subItem);
                 }
                 sampleItem.withSubItems(subItems);
             }
@@ -175,12 +189,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            //we have to refetch the selections array again and again as the position will change after one item is deleted
-            Set<Integer> selections = fastAdapter.getSelections();
-            while (selections.size() > 0) {
-                itemAdapter.remove(fastAdapter.getRelativePosition(selections.iterator().next()).relativePosition);
-                selections = fastAdapter.getSelections();
-            }
+            fastAdapter.deleteAllSelectedItems();
 
             //finish the actionMode
             mode.finish();

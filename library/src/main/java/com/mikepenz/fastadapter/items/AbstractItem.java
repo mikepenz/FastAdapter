@@ -9,11 +9,13 @@ import android.view.ViewGroup;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 
+import java.lang.reflect.ParameterizedType;
+
 /**
  * Created by mikepenz on 14.07.15.
  * Implements the general methods of the IItem interface to speed up development.
  */
-public abstract class AbstractItem<T> implements IItem<T> {
+public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implements IItem<T> {
     // the identifier for this item
     protected int mIdentifier = -1;
 
@@ -127,6 +129,45 @@ public abstract class AbstractItem<T> implements IItem<T> {
     }
 
     /**
+     * generates a view by the defined LayoutRes
+     *
+     * @param ctx
+     * @return
+     */
+    @Override
+    public View generateView(Context ctx) {
+        RecyclerView.ViewHolder viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), null, false));
+        bindView(viewHolder);
+        return viewHolder.itemView;
+    }
+
+    /**
+     * generates a view by the defined LayoutRes and pass the LayoutParams from the parent
+     *
+     * @param ctx
+     * @param parent
+     * @return
+     */
+    @Override
+    public View generateView(Context ctx, ViewGroup parent) {
+        RecyclerView.ViewHolder viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), parent, false));
+        bindView(viewHolder);
+        return viewHolder.itemView;
+    }
+
+    /**
+     * Generates a ViewHolder from this Item with the given parent
+     *
+     * @param parent
+     * @return
+     */
+    @Override
+    public RecyclerView.ViewHolder getViewHolder(ViewGroup parent) {
+        return getViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutRes(), parent, false));
+    }
+
+
+    /**
      * @Override
      * public ViewHolderFactory getFactory() {
      *      return new ItemFactory();
@@ -144,44 +185,29 @@ public abstract class AbstractItem<T> implements IItem<T> {
      *
      * @return
      */
-    public abstract ViewHolderFactory getFactory();
-
-    /**
-     * generates a view by the defined LayoutRes
-     *
-     * @param ctx
-     * @return
-     */
-    @Override
-    public View generateView(Context ctx) {
-        RecyclerView.ViewHolder viewHolder = getFactory().factory(LayoutInflater.from(ctx).inflate(getLayoutRes(), null, false));
-        bindView(viewHolder);
-        return viewHolder.itemView;
+    public ViewHolderFactory getFactory() {
+        return null;
     }
 
     /**
-     * generates a view by the defined LayoutRes and pass the LayoutParams from the parent
+     * This method returns the ViewHolder for our item, using the provided View.
+     * By default it will try to get the ViewHolder from the ViewHolderFactory. If this one is not implemented it will go over the generic way, wasting ~5ms
      *
-     * @param ctx
-     * @param parent
-     * @return
+     * @param v
+     * @return the ViewHolder for this Item
      */
-    @Override
-    public View generateView(Context ctx, ViewGroup parent) {
-        RecyclerView.ViewHolder viewHolder = getFactory().factory(LayoutInflater.from(ctx).inflate(getLayoutRes(), parent, false));
-        bindView(viewHolder);
-        return viewHolder.itemView;
-    }
+    public VH getViewHolder(View v) {
+        ViewHolderFactory viewHolderFactory = getFactory();
 
-    /**
-     * Generates a ViewHolder from this Item with the given parent
-     *
-     * @param parent
-     * @return
-     */
-    @Override
-    public RecyclerView.ViewHolder getViewHolder(ViewGroup parent) {
-        return getFactory().factory(LayoutInflater.from(parent.getContext()).inflate(getLayoutRes(), parent, false));
+        if (viewHolderFactory != null) {
+            return (VH) viewHolderFactory.create(v);
+        } else {
+            try {
+                return (VH) ((Class) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1]).getDeclaredConstructor(View.class).newInstance(v);
+            } catch (Exception e) {
+                throw new RuntimeException("something really bad happened. if this happens more often, head over to GitHub and read how to switch to the ViewHolderFactory");
+            }
+        }
     }
 
     /**
@@ -205,7 +231,7 @@ public abstract class AbstractItem<T> implements IItem<T> {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AbstractItem<?> that = (AbstractItem<?>) o;
+        AbstractItem<?, ?> that = (AbstractItem<?, ?>) o;
         return mIdentifier == that.mIdentifier;
     }
 

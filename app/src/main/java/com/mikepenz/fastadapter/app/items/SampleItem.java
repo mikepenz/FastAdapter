@@ -21,7 +21,7 @@ import java.util.List;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class SampleItem extends AbstractItem<SampleItem> implements ICollapsible<SampleItem> {
+public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> implements ICollapsible<SampleItem> {
 
     public String header;
     public StringHolder name;
@@ -110,9 +110,8 @@ public class SampleItem extends AbstractItem<SampleItem> implements ICollapsible
         return new ItemFactory();
     }
 
-
     public static class ItemFactory implements ViewHolderFactory<ViewHolder> {
-        public ViewHolder factory(View v) {
+        public ViewHolder create(View v) {
             return new ViewHolder(v);
         }
     }

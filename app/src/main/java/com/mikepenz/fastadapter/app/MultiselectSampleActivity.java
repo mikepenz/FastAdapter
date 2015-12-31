@@ -24,7 +24,6 @@ import com.mikepenz.materialize.util.UIUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class MultiselectSampleActivity extends AppCompatActivity {
     //save our FastAdapter
@@ -139,12 +138,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            //we have to refetch the selections array again and again as the position will change after one item is deleted
-            Set<Integer> selections = fastAdapter.getSelections();
-            while (selections.size() > 0) {
-                itemAdapter.remove(fastAdapter.getRelativePosition(selections.iterator().next()).relativePosition);
-                selections = fastAdapter.getSelections();
-            }
+            fastAdapter.deleteAllSelectedItems();
 
             //finish the actionMode
             mode.finish();

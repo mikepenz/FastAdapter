@@ -7,13 +7,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mikepenz.fastadapter.utils.AdapterUtil;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 /**
  * Created by mikepenz on 27.12.15.
@@ -33,9 +38,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private boolean mMultiSelectOnLongClick = true;
 
     // we need to remember all selections to recreate them after orientation change
-    private SortedMap<Integer, IItem> mSelections = new TreeMap<>();
+    private Set<Integer> mSelections = new TreeSet<>();
     // we need to remember all opened collapse items to recreate them after orientation change
-    private SortedMap<Integer, IItem> mCollapsibleOpened = new TreeMap<>();
+    private SortedMap<Integer, Integer> mCollapsibleOpened = new TreeMap<>();
 
     // the listeners which can be hooked on an item
     private OnClickListener mOnClickListener;
@@ -363,7 +368,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 continue;
             }
 
-            size = adapter.getAdapterItemCount();
+            size = size + adapter.getAdapterItemCount();
         }
         return size;
     }
@@ -401,7 +406,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (savedInstanceState != null) {
             //remember the selections
             ArrayList<Integer> selections = new ArrayList<>();
-            selections.addAll(mSelections.keySet());
+            selections.addAll(mSelections);
             savedInstanceState.putIntegerArrayList(BUNDLE_SELECTIONS, selections);
 
             //remember the collapsed states
@@ -422,7 +427,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @return a set with the global positions of all selected items
      */
     public Set<Integer> getSelections() {
-        return mSelections.keySet();
+        return mSelections;
     }
 
     /**
@@ -431,7 +436,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      */
     public void toggleSelection(int position) {
-        if (mSelections.containsKey(position)) {
+        if (mSelections.contains(position)) {
             deselect(position);
         } else {
             select(position);
@@ -450,14 +455,14 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         if (!mMultiSelect) {
-            for (Map.Entry<Integer, IItem> entry : mSelections.entrySet()) {
-                if (entry.getKey() != position) {
-                    deselect(entry.getKey());
+            for (Integer entry : mSelections) {
+                if (entry != position) {
+                    deselect(entry);
                 }
             }
         }
 
-        if (mSelections.containsKey(position)) {
+        if (mSelections.contains(position)) {
             deselect(position);
         } else {
             select(position);
@@ -473,7 +478,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         IItem item = getItem(position);
         if (item != null) {
             item.withSetSelected(true);
-            mSelections.put(position, item);
+            mSelections.add(position);
         }
         notifyItemChanged(position);
     }
@@ -494,13 +499,13 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      * @param entries  the iterator which is used to deselect all
      */
-    private void deselect(int position, Iterator<Map.Entry<Integer, IItem>> entries) {
+    private void deselect(int position, Iterator<Integer> entries) {
         IItem item = getItem(position);
         if (item != null) {
             item.withSetSelected(false);
         }
         if (entries == null) {
-            if (mSelections.containsKey(position)) {
+            if (mSelections.contains(position)) {
                 mSelections.remove(position);
             }
         } else {
@@ -513,9 +518,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * deselects all selections
      */
     public void deselect() {
-        Iterator<Map.Entry<Integer, IItem>> entries = mSelections.entrySet().iterator();
+        Iterator<Integer> entries = mSelections.iterator();
         while (entries.hasNext()) {
-            deselect(entries.next().getKey(), entries);
+            deselect(entries.next(), entries);
         }
     }
 
@@ -555,29 +560,90 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         if (item != null && item instanceof ICollapsible) {
             ICollapsible collapsible = (ICollapsible) item;
 
+            //as we now know the item we will collapse we can collapse all subitems
             //if this item is not already callapsed and has sub items we go on
             if (!collapsible.isCollapsed() && collapsible.getSubItems() != null && collapsible.getSubItems().size() > 0) {
-                AdapterHolder adapterHolder = getRelativePosition(position);
+                ArrayList<Integer> collapsibleKeys = new ArrayList<>(mCollapsibleOpened.keySet());
 
-                //get all positions which are opened or selected and collapse them starting with the biggest number
-
-                //TODO BEFORE WE REMOVE THE ITEMS WE HAVE TO MAKE SURE THERE ARE NO SUB COLLAPSIBLES OPEN?! SHOULD WE HANDLE THIS CASE, OR KEEP IT TO THE DEV?! ...
-                //TODO IF THE SUBITEMS ARE SELECTED WE SHOULD ALSO DESELECT THEM!!
-
-                //if we find the adapter for this item we will remove all of its subitems
-                if (adapterHolder.adapter != null && adapterHolder.adapter instanceof IItemAdapter) {
-                    IItemAdapter itemAdapter = (IItemAdapter) adapterHolder.adapter;
-                    itemAdapter.removeItemRange(adapterHolder.relativePosition + 1, collapsible.getSubItems().size());
+                //first we find out how many items were added in total
+                int totalAddedItems = collapsible.getSubItems().size();
+                for (Integer key : collapsibleKeys) {
+                    if (key > position && key <= position + totalAddedItems) {
+                        totalAddedItems = totalAddedItems + mCollapsibleOpened.get(key);
+                    }
                 }
 
-                //remember that this item is now collapsed again
-                collapsible.withCollapsed(true);
-                //remove the information that this item was opened
-                if (mCollapsibleOpened.containsKey(position)) {
-                    mCollapsibleOpened.remove(position);
+                //we will deselect starting with the lowest one
+                ArrayList<Integer> selectedKeys = new ArrayList<>(mSelections);
+                for (int i = selectedKeys.size() - 1; i >= 0; i--) {
+                    if (selectedKeys.get(i) > position && selectedKeys.get(i) <= position + totalAddedItems) {
+                        deselect(selectedKeys.get(i));
+                    }
                 }
+
+                //now we start to collapse them
+                for (int i = collapsibleKeys.size() - 1; i >= 0; i--) {
+                    if (collapsibleKeys.get(i) > position && collapsibleKeys.get(i) <= position + totalAddedItems) {
+                        //we collapsed those items now we remove update the added items
+                        totalAddedItems = totalAddedItems - mCollapsibleOpened.get(collapsibleKeys.get(i));
+
+                        //we collapse the item
+                        internalCollapse(collapsibleKeys.get(i));
+                    }
+                }
+
+                //we collapse our root element
+                internalCollapse(collapsible, position);
             }
         }
+    }
+
+    private void internalCollapse(int position) {
+        IItem item = getItem(position);
+        if (item != null && item instanceof ICollapsible) {
+            ICollapsible collapsible = (ICollapsible) item;
+            //if this item is not already callapsed and has sub items we go on
+            if (!collapsible.isCollapsed() && collapsible.getSubItems() != null && collapsible.getSubItems().size() > 0) {
+                internalCollapse(collapsible, position);
+            }
+        }
+    }
+
+    private void internalCollapse(ICollapsible collapsible, int position) {
+        AdapterHolder adapterHolder = getRelativePosition(position);
+
+        //if we find the adapter for this item we will remove all of its subitems
+        if (adapterHolder.adapter != null && adapterHolder.adapter instanceof IItemAdapter) {
+            IItemAdapter itemAdapter = (IItemAdapter) adapterHolder.adapter;
+            itemAdapter.removeItemRange(adapterHolder.relativePosition + 1, collapsible.getSubItems().size());
+        }
+
+        //remember that this item is now collapsed again
+        collapsible.withCollapsed(true);
+        //remove the information that this item was opened
+        if (mCollapsibleOpened.containsKey(position)) {
+            mCollapsibleOpened.remove(position);
+        }
+    }
+
+    /**
+     * deletes all current selected items
+     *
+     * @return a list of the IItem elements which were deleted
+     */
+    public List<IItem> deleteAllSelectedItems() {
+        List<IItem> deletedItems = new LinkedList<>();
+        //we have to refetch the selections array again and again as the position will change after one item is deleted
+        Set<Integer> selections = getSelections();
+        while (selections.size() > 0) {
+            AdapterHolder adapterHolder = getRelativePosition(selections.iterator().next());
+            if (adapterHolder.adapter instanceof IItemAdapter) {
+                deletedItems.add(adapterHolder.adapter.getAdapterItem(adapterHolder.relativePosition));
+                ((IItemAdapter) adapterHolder.adapter).remove(adapterHolder.relativePosition);
+            }
+            selections = getSelections();
+        }
+        return deletedItems;
     }
 
     /**
@@ -603,7 +669,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 //remember that this item is now opened (not collapsed)
                 collapsible.withCollapsed(false);
                 //store it in the list of opened collapsible items
-                mCollapsibleOpened.put(position, item);
+                mCollapsibleOpened.put(position, collapsible.getSubItems() != null ? collapsible.getSubItems().size() : 0);
             }
         }
     }
@@ -621,8 +687,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public void notifyAdapterItemInserted(int position) {
         //we have to update all current stored selection and collapsed states in our map
-        mSelections = adjustPosition(mSelections, position, Integer.MAX_VALUE, 1);
-        mCollapsibleOpened = adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, 1);
+        mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, 1);
+        mCollapsibleOpened = AdapterUtil.adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, 1);
         notifyItemInserted(position);
     }
 
@@ -634,8 +700,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public void notifyAdapterItemRangeInserted(int position, int itemCount) {
         //we have to update all current stored selection and collapsed states in our map
-        mSelections = adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount);
-        mCollapsibleOpened = adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, itemCount);
+        mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount);
+        mCollapsibleOpened = AdapterUtil.adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, itemCount);
         notifyItemRangeInserted(position, itemCount);
     }
 
@@ -646,8 +712,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public void notifyAdapterItemRemoved(int position) {
         //we have to update all current stored selection and collapsed states in our map
-        mSelections = adjustPosition(mSelections, position, Integer.MAX_VALUE, -1);
-        mCollapsibleOpened = adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, -1);
+        mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, -1);
+        mCollapsibleOpened = AdapterUtil.adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, -1);
         notifyItemRemoved(position);
     }
 
@@ -659,46 +725,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public void notifyAdapterItemRangeRemoved(int position, int itemCount) {
         //we have to update all current stored selection and collapsed states in our map
-        mSelections = adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount * (-1));
-        mCollapsibleOpened = adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, itemCount * (-1));
+        mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount * (-1));
+        mCollapsibleOpened = AdapterUtil.adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, itemCount * (-1));
         notifyItemRangeRemoved(position, itemCount);
-    }
-
-
-    /**
-     * internal method to handle the selections if items are added / removed
-     *
-     * @param positions     the positions map which should be adjusted
-     * @param startPosition the global index of the first element modified
-     * @param endPosition   the global index up to which the modification changed the indices (should be MAX_INT if we check til the end)
-     * @param adjustBy      the value by which the data was shifted
-     * @return the adjusted map
-     */
-    private SortedMap<Integer, IItem> adjustPosition(Map<Integer, IItem> positions, int startPosition, int endPosition, int adjustBy) {
-        SortedMap<Integer, IItem> newPositions = new TreeMap<>();
-
-        for (Map.Entry<Integer, IItem> entry : positions.entrySet()) {
-            int position = entry.getKey();
-
-            //if our current position is not within the bounds to check for we can add it
-            if (position < startPosition || position > endPosition) {
-                newPositions.put(position, entry.getValue());
-            } else if (adjustBy > 0) {
-                //if we added items and we are within the bounds we can simply add the adjustBy to our entry
-                newPositions.put(position + adjustBy, entry.getValue());
-            } else if (adjustBy < 0) {
-                //if we removed items and we are within the bounds we have to check if the item was removed
-                //adjustBy is negative in this case
-                if (position > startPosition + adjustBy && position <= startPosition) {
-                    ;//we are within the removed items range we don't add this item anymore
-                } else {
-                    //otherwise we adjust our position
-                    newPositions.put(position + adjustBy, entry.getValue());
-                }
-            }
-        }
-
-        return newPositions;
     }
 
     /**
@@ -708,14 +737,21 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param toPosition   the global toPosition
      */
     public void notifyAdapterItemMoved(int fromPosition, int toPosition) {
-        if (mSelections.containsKey(fromPosition)) {
-            IItem item = mSelections.get(fromPosition);
+        if (mSelections.contains(fromPosition)) {
             mSelections.remove(fromPosition);
-            mSelections.put(toPosition, item);
+            mSelections.add(toPosition);
         }
 
-        //TODO if an item moved it may moves other selections
-        //TODO the same is also possible for collapsed items
+        //TODO TEST THIS ONE ;D
+
+        //we have to update all current stored selection and collapsed states in our map
+        if (fromPosition < toPosition) {
+            mSelections = AdapterUtil.adjustPosition(mSelections, fromPosition, toPosition, -1);
+            mCollapsibleOpened = AdapterUtil.adjustPosition(mCollapsibleOpened, fromPosition, toPosition, -1);
+        } else {
+            mSelections = AdapterUtil.adjustPosition(mSelections, toPosition, fromPosition, 1);
+            mCollapsibleOpened = AdapterUtil.adjustPosition(mCollapsibleOpened, toPosition, fromPosition, 1);
+        }
 
         notifyItemMoved(fromPosition, toPosition);
     }
@@ -738,8 +774,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public void notifyAdapterItemChanged(int position, Object payload) {
         IItem updateItem = getItem(position);
         if (updateItem.isSelected()) {
-            mSelections.put(position, updateItem);
-        } else if (mSelections.containsKey(position)) {
+            mSelections.add(position);
+        } else if (mSelections.contains(position)) {
             mSelections.remove(position);
         }
 
@@ -771,8 +807,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         for (int i = position; i < position + itemCount; i++) {
             IItem updateItem = getItem(position);
             if (updateItem.isSelected()) {
-                mSelections.put(position, updateItem);
-            } else if (mSelections.containsKey(position)) {
+                mSelections.add(position);
+            } else if (mSelections.contains(position)) {
                 mSelections.remove(position);
             }
         }

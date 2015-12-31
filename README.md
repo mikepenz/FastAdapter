@@ -8,7 +8,7 @@
 #Include in your project
 ##Using Maven
 ```javascript
-compile('com.mikepenz:fastadapter:0.0.6-SNAPSHOT@aar') {
+compile('com.mikepenz:fastadapter:0.1.0-SNAPSHOT@aar') {
 	transitive = true
 }
 
@@ -22,7 +22,7 @@ repositories {
 ###1. Implement your item (the easy way)
 Just create a class which extends the `AbstractItem` as shown below. Implement the methods, and your item is ready.
 ```java
-public class SampleItem extends AbstractItem<SampleItem> {
+public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> {
     public String name;
     public String description;
 
@@ -65,19 +65,6 @@ public class SampleItem extends AbstractItem<SampleItem> {
             this.view = view;
             this.name = (TextView) view.findViewById(com.mikepenz.materialdrawer.R.id.material_drawer_name);
             this.description = (TextView) view.findViewById(com.mikepenz.materialdrawer.R.id.material_drawer_description);
-        }
-    }
-
-    //required to generate the ViewHolder for this type of item inside the adapter (just copy and paste this)
-    @Override
-    public ViewHolderFactory getFactory() {
-        return new ItemFactory();
-    }
-
-    //required to generate the ViewHolder for this type of item inside the adapter (just copy and paste this)
-    public static class ItemFactory implements ViewHolderFactory<ViewHolder> {
-        public ViewHolder factory(View v) {
-            return new ViewHolder(v);
         }
     }
 }

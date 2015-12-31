@@ -226,7 +226,7 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
     public void removeItemRange(int position, int itemCount) {
         int length = mItems.size();
         //make sure we do not delete to many items
-        int saveItemCount = Math.min(itemCount, length - position - 1);
+        int saveItemCount = Math.min(itemCount, length - position);
 
         for (int i = 0; i < saveItemCount; i++) {
             mItems.remove(position);
