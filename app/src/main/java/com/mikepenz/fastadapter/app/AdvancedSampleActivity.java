@@ -93,7 +93,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v, int position, int relativePosition, IItem item) {
-                if (actionMode == null) {
+                if (actionMode == null && fastAdapter.getItem(position).isSelectable()) {
                     //may check if actionMode is already displayed
                     actionMode = startSupportActionMode(new ActionBarCallBack());
                     findViewById(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(AdvancedSampleActivity.this, R.attr.colorPrimary, R.color.material_drawer_primary));
@@ -118,7 +118,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         rv.addItemDecoration(decoration);
 
         //fill with some sample data
-        headerAdapter.add(new SampleItem().withName("Header").withIdentifier(1));
+        headerAdapter.add(new SampleItem().withName("Header").withSelectable(false).withIdentifier(1));
         List<IItem> items = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
             SampleItem sampleItem = new SampleItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(100 + i);
