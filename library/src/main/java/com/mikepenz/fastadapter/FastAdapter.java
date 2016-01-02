@@ -1,23 +1,21 @@
 package com.mikepenz.fastadapter;
 
 import android.os.Bundle;
+import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mikepenz.fastadapter.utils.AdapterUtil;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
@@ -28,9 +26,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     protected static final String BUNDLE_COLLAPSIBLE = "bundle_collapsible";
 
     // we remember all adapters
-    private SortedMap<Integer, IAdapter> mAdapters = new TreeMap<>();
+    private ArrayMap<Integer, IAdapter> mAdapters = new ArrayMap<>();
     // we remember all possible types so we can create a new view efficiently
-    private Map<Integer, IItem> mTypeInstances = new HashMap<>();
+    private ArrayMap<Integer, IItem> mTypeInstances = new ArrayMap<>();
 
     // if we want multiSelect enabled
     private boolean mMultiSelect = false;
@@ -38,9 +36,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private boolean mMultiSelectOnLongClick = true;
 
     // we need to remember all selections to recreate them after orientation change
-    private Set<Integer> mSelections = new TreeSet<>();
+    private SortedSet<Integer> mSelections = new TreeSet<>();
     // we need to remember all opened collapse items to recreate them after orientation change
-    private SortedMap<Integer, Integer> mCollapsibleOpened = new TreeMap<>();
+    private SparseIntArray mCollapsibleOpened = new SparseIntArray();
 
     // the listeners which can be hooked on an item
     private OnClickListener mOnClickListener;
@@ -112,7 +110,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public FastAdapter withSavedInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             //first restore opened collasable items, as otherwise may not all selections could be restored
-            ArrayList<Integer> collapsibles = savedInstanceState.getIntegerArrayList(BUNDLE_COLLAPSIBLE);
+            int[] collapsibles = savedInstanceState.getIntArray(BUNDLE_COLLAPSIBLE);
             if (collapsibles != null) {
                 for (Integer collapsible : collapsibles) {
                     open(collapsible);
@@ -120,7 +118,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
 
             //restore the selections
-            ArrayList<Integer> selections = savedInstanceState.getIntegerArrayList(BUNDLE_SELECTIONS);
+            int[] selections = savedInstanceState.getIntArray(BUNDLE_SELECTIONS);
             if (selections != null) {
                 for (Integer selection : selections) {
                     select(selection);
@@ -255,7 +253,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         int position = 0;
-        for (IAdapter adapter : mAdapters.values()) {
+        int length = mAdapters.size();
+        for (int i = 0; i < length; i++) {
+            IAdapter adapter = mAdapters.valueAt(i);
             if (adapter.getOrder() < 0) {
                 continue;
             }
@@ -316,7 +316,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         }
 
         int currentCount = 0;
-        for (IAdapter adapter : mAdapters.values()) {
+        int length = mAdapters.size();
+        for (int i = 0; i < length; i++) {
+            IAdapter adapter = mAdapters.valueAt(i);
             if (adapter.getOrder() < 0) {
                 continue;
             }
@@ -363,7 +365,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemCount() {
         //we go over all adapters and fetch all item sizes
         int size = 0;
-        for (IAdapter adapter : mAdapters.values()) {
+        int length = mAdapters.size();
+        for (int i = 0; i < length; i++) {
+            IAdapter adapter = mAdapters.valueAt(i);
             if (adapter.getOrder() < 0) {
                 continue;
             }
@@ -382,7 +386,10 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public int getItemCount(int order) {
         //we go over all adapters and fetch all item sizes
         int size = 0;
-        for (IAdapter adapter : mAdapters.values()) {
+
+        int length = mAdapters.size();
+        for (int i = 0; i < length; i++) {
+            IAdapter adapter = mAdapters.valueAt(i);
             if (adapter.getOrder() < 0) {
                 continue;
             }
@@ -405,14 +412,16 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     public Bundle saveInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             //remember the selections
-            ArrayList<Integer> selections = new ArrayList<>();
-            selections.addAll(mSelections);
-            savedInstanceState.putIntegerArrayList(BUNDLE_SELECTIONS, selections);
+            int[] selections = new int[mSelections.size()];
+            int index = 0;
+            for (Integer selection : mSelections) {
+                selections[index] = selection;
+                index++;
+            }
+            savedInstanceState.putIntArray(BUNDLE_SELECTIONS, selections);
 
             //remember the collapsed states
-            ArrayList<Integer> collapsibles = new ArrayList<>();
-            collapsibles.addAll(mCollapsibleOpened.keySet());
-            savedInstanceState.putIntegerArrayList(BUNDLE_COLLAPSIBLE, collapsibles);
+            savedInstanceState.putIntArray(BUNDLE_COLLAPSIBLE, getOpenedCollapsibleItems());
         }
         return savedInstanceState;
     }
@@ -533,8 +542,13 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
      * @return a set with the global positions of all opened collapsible items
      */
-    public Set<Integer> getOpenedCollapsibleItems() {
-        return mCollapsibleOpened.keySet();
+    public int[] getOpenedCollapsibleItems() {
+        int[] collapsibleItems = new int[mCollapsibleOpened.size()];
+        int length = mCollapsibleOpened.size();
+        for (int i = 0; i < length; i++) {
+            collapsibleItems[i] = mCollapsibleOpened.keyAt(i);
+        }
+        return collapsibleItems;
     }
 
     /**
@@ -543,7 +557,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      */
     public void toggleCollapsible(int position) {
-        if (mCollapsibleOpened.containsKey(position)) {
+        if (mCollapsibleOpened.indexOfKey(position) >= 0) {
             collapse(position);
         } else {
             open(position);
@@ -563,32 +577,31 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             //as we now know the item we will collapse we can collapse all subitems
             //if this item is not already callapsed and has sub items we go on
             if (!collapsible.isCollapsed() && collapsible.getSubItems() != null && collapsible.getSubItems().size() > 0) {
-                ArrayList<Integer> collapsibleKeys = new ArrayList<>(mCollapsibleOpened.keySet());
-
                 //first we find out how many items were added in total
                 int totalAddedItems = collapsible.getSubItems().size();
-                for (Integer key : collapsibleKeys) {
-                    if (key > position && key <= position + totalAddedItems) {
-                        totalAddedItems = totalAddedItems + mCollapsibleOpened.get(key);
+
+                int length = mCollapsibleOpened.size();
+                for (int i = 0; i < length; i++) {
+                    if (mCollapsibleOpened.keyAt(i) > position && mCollapsibleOpened.keyAt(i) <= position + totalAddedItems) {
+                        totalAddedItems = totalAddedItems + mCollapsibleOpened.get(mCollapsibleOpened.keyAt(i));
                     }
                 }
 
                 //we will deselect starting with the lowest one
-                ArrayList<Integer> selectedKeys = new ArrayList<>(mSelections);
-                for (int i = selectedKeys.size() - 1; i >= 0; i--) {
-                    if (selectedKeys.get(i) > position && selectedKeys.get(i) <= position + totalAddedItems) {
-                        deselect(selectedKeys.get(i));
+                for (Integer value : mSelections) {
+                    if (value > position && value <= position + totalAddedItems) {
+                        deselect(value);
                     }
                 }
 
                 //now we start to collapse them
-                for (int i = collapsibleKeys.size() - 1; i >= 0; i--) {
-                    if (collapsibleKeys.get(i) > position && collapsibleKeys.get(i) <= position + totalAddedItems) {
+                for (int i = length - 1; i >= 0; i--) {
+                    if (mCollapsibleOpened.keyAt(i) > position && mCollapsibleOpened.keyAt(i) <= position + totalAddedItems) {
                         //we collapsed those items now we remove update the added items
-                        totalAddedItems = totalAddedItems - mCollapsibleOpened.get(collapsibleKeys.get(i));
+                        totalAddedItems = totalAddedItems - mCollapsibleOpened.get(mCollapsibleOpened.keyAt(i));
 
                         //we collapse the item
-                        internalCollapse(collapsibleKeys.get(i));
+                        internalCollapse(mCollapsibleOpened.keyAt(i));
                     }
                 }
 
@@ -621,8 +634,9 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
         //remember that this item is now collapsed again
         collapsible.withCollapsed(true);
         //remove the information that this item was opened
-        if (mCollapsibleOpened.containsKey(position)) {
-            mCollapsibleOpened.remove(position);
+        int indexOfKey = mCollapsibleOpened.indexOfKey(position);
+        if (indexOfKey >= 0) {
+            mCollapsibleOpened.removeAt(indexOfKey);
         }
     }
 
