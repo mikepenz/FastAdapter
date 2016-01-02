@@ -19,6 +19,7 @@ import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapter.StickyHeaderAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.helpers.ActionModeHelper;
 import com.mikepenz.materialize.MaterializeBuilder;
 import com.mikepenz.materialize.util.UIUtils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
@@ -35,11 +36,9 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     private static final String[] headers = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     //save our FastAdapter
-    private FastAdapter fastAdapter;
-    private ItemAdapter itemAdapter;
+    private FastAdapter mFastAdapter;
 
-    //the ActionMode
-    private ActionMode actionMode;
+    private ActionModeHelper mActionModeHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,56 +54,42 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         new MaterializeBuilder().withActivity(this).build();
 
         //create our FastAdapter
-        fastAdapter = new FastAdapter();
+        mFastAdapter = new FastAdapter();
+
+        //we init our ActionModeHelper
+        mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
 
         //create our adapters
         final StickyHeaderAdapter stickyHeaderAdapter = new StickyHeaderAdapter();
-        itemAdapter = new ItemAdapter();
+        ItemAdapter itemAdapter = new ItemAdapter();
         final HeaderAdapter headerAdapter = new HeaderAdapter();
 
-        //configure our fastAdapter
+        //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
-        fastAdapter.setHasStableIds(true);
-        fastAdapter.withMultiSelect(true);
-        fastAdapter.withMultiSelectOnLongClick(true);
-        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
+        mFastAdapter.setHasStableIds(true);
+        mFastAdapter.withMultiSelect(true);
+        mFastAdapter.withMultiSelectOnLongClick(true);
+        mFastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
             @Override
             public boolean onClick(View v, int position, int relativePosition, IItem item) {
-                if (item instanceof SampleItem) {
-                    if (((SampleItem) item).getSubItems() != null) {
-                        fastAdapter.toggleCollapsible(position);
-
-                        //if we are in CAB mode and there are no selections afterwards we end the CAB mode
-                        if (actionMode != null && fastAdapter.getSelections().size() == 0) {
-                            actionMode.finish();
-                        }
-
-                        return true;
-                    }
-                }
-                //if we are current in CAB mode, and we remove the last selection, we want to finish the actionMode
-                if (actionMode != null && fastAdapter.getSelections().size() == 1 && item.isSelected()) {
-                    actionMode.finish();
-                }
-                return false;
+                //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
+                Boolean res = mActionModeHelper.onClick(item, position);
+                return res != null ? res : false;
             }
         });
 
-        fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
+        mFastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v, int position, int relativePosition, IItem item) {
-                if (actionMode == null) {
-                    //may check if actionMode is already displayed
-                    actionMode = startSupportActionMode(new ActionBarCallBack());
-                    findViewById(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(AdvancedSampleActivity.this, R.attr.colorPrimary, R.color.material_drawer_primary));
+                ActionMode actionMode = mActionModeHelper.onLongClick(AdvancedSampleActivity.this, position);
 
-                    //we have to select this on our own as we will consume the event
-                    fastAdapter.select(position);
-                    //we consume this event so the normal onClick isn't called anymore
-                    return true;
+                if (actionMode != null) {
+                    //we want color our CAB
+                    findViewById(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(AdvancedSampleActivity.this, R.attr.colorPrimary, R.color.material_drawer_primary));
                 }
 
-                return false;
+                //if we have no actionMode we do not consume the event
+                return actionMode != null;
             }
         });
 
@@ -112,13 +97,13 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
-        rv.setAdapter(stickyHeaderAdapter.wrap(itemAdapter.wrap(headerAdapter.wrap(fastAdapter))));
+        rv.setAdapter(stickyHeaderAdapter.wrap(itemAdapter.wrap(headerAdapter.wrap(mFastAdapter))));
 
         final StickyRecyclerHeadersDecoration decoration = new StickyRecyclerHeadersDecoration(stickyHeaderAdapter);
         rv.addItemDecoration(decoration);
 
         //fill with some sample data
-        headerAdapter.add(new SampleItem().withName("Header").withIdentifier(1));
+        headerAdapter.add(new SampleItem().withName("Header").withSelectable(false).withIdentifier(1));
         List<IItem> items = new ArrayList<>();
         for (int i = 1; i <= 10; i++) {
             SampleItem sampleItem = new SampleItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(100 + i);
@@ -154,7 +139,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         //new RecyclerViewCacheUtil().withCacheSize(2).apply(rv, items);
 
         //restore selections (this has to be done after the items were added
-        fastAdapter.withSavedInstanceState(savedInstanceState);
+        mFastAdapter.withSavedInstanceState(savedInstanceState);
 
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -164,7 +149,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //add the values which need to be saved from the adapter to the bundel
-        outState = fastAdapter.saveInstanceState(outState);
+        outState = mFastAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
@@ -189,11 +174,10 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            fastAdapter.deleteAllSelectedItems();
+            //logic if an item was clicked
 
-            //finish the actionMode
-            mode.finish();
-            return true;
+            //return false as we want default behavior to go on
+            return false;
         }
 
         @Override
@@ -201,26 +185,14 @@ public class AdvancedSampleActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setStatusBarColor(UIUtils.getThemeColorFromAttrOrRes(AdvancedSampleActivity.this, R.attr.colorPrimaryDark, R.color.material_drawer_primary_dark));
             }
-            mode.getMenuInflater().inflate(R.menu.cab, menu);
-
-            //as we are now in the actionMode a single click is fine for multiSelection
-            fastAdapter.withMultiSelectOnLongClick(false);
             return true;
         }
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            actionMode = null;
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setStatusBarColor(Color.TRANSPARENT);
             }
-
-            //after we are done with the actionMode we fallback to longClick for multiselect
-            fastAdapter.withMultiSelectOnLongClick(true);
-
-            //actionMode end. deselect everything
-            fastAdapter.deselect();
         }
 
         @Override

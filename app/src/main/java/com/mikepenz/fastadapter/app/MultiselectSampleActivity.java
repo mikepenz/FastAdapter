@@ -19,6 +19,7 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.helpers.ActionModeHelper;
 import com.mikepenz.materialize.MaterializeBuilder;
 import com.mikepenz.materialize.util.UIUtils;
 
@@ -27,11 +28,9 @@ import java.util.List;
 
 public class MultiselectSampleActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastAdapter fastAdapter;
-    private ItemAdapter itemAdapter;
+    private FastAdapter mFastAdapter;
 
-    //the ActionMode
-    private ActionMode actionMode;
+    private ActionModeHelper mActionModeHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,42 +46,40 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         new MaterializeBuilder().withActivity(this).build();
 
         //create our FastAdapter
-        fastAdapter = new FastAdapter();
+        mFastAdapter = new FastAdapter();
+
+        //we init our ActionModeHelper
+        mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
 
         //create our adapters
-        itemAdapter = new ItemAdapter();
+        ItemAdapter itemAdapter = new ItemAdapter();
         final HeaderAdapter headerAdapter = new HeaderAdapter();
 
-        //configure our fastAdapter
+        //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
-        fastAdapter.setHasStableIds(true);
-        fastAdapter.withMultiSelect(true);
-        fastAdapter.withMultiSelectOnLongClick(true);
-        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
+        mFastAdapter.setHasStableIds(true);
+        mFastAdapter.withMultiSelect(true);
+        mFastAdapter.withMultiSelectOnLongClick(true);
+        mFastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
             @Override
             public boolean onClick(View v, int position, int relativePosition, IItem item) {
-                //if we are current in CAB mode, and we remove the last selection, we want to finish the actionMode
-                if (actionMode != null && fastAdapter.getSelections().size() == 1 && item.isSelected()) {
-                    actionMode.finish();
-                }
-                return false;
+                //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
+                Boolean res = mActionModeHelper.onClick(item, position);
+                return res != null ? res : false;
             }
         });
-        fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
+        mFastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v, int position, int relativePosition, IItem item) {
-                if (actionMode == null) {
-                    //may check if actionMode is already displayed
-                    actionMode = startSupportActionMode(new ActionBarCallBack());
-                    findViewById(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(MultiselectSampleActivity.this, R.attr.colorPrimary, R.color.material_drawer_primary));
+                ActionMode actionMode = mActionModeHelper.onLongClick(MultiselectSampleActivity.this, position);
 
-                    //we have to select this on our own as we will consume the event
-                    fastAdapter.select(position);
-                    //we consume this event so the normal onClick isn't called anymore
-                    return true;
+                if (actionMode != null) {
+                    //we want color our CAB
+                    findViewById(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(MultiselectSampleActivity.this, R.attr.colorPrimary, R.color.material_drawer_primary));
                 }
 
-                return false;
+                //if we have no actionMode we do not consume the event
+                return actionMode != null;
             }
         });
 
@@ -90,7 +87,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
-        rv.setAdapter(itemAdapter.wrap(headerAdapter.wrap(fastAdapter)));
+        rv.setAdapter(itemAdapter.wrap(headerAdapter.wrap(mFastAdapter)));
 
         //fill with some sample data
         headerAdapter.add(new SampleItem().withName("Header").withIdentifier(1));
@@ -101,7 +98,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         itemAdapter.add(items);
 
         //restore selections (this has to be done after the items were added
-        fastAdapter.withSavedInstanceState(savedInstanceState);
+        mFastAdapter.withSavedInstanceState(savedInstanceState);
 
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -114,7 +111,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //add the values which need to be saved from the adapter to the bundel
-        outState = fastAdapter.saveInstanceState(outState);
+        outState = mFastAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
@@ -138,11 +135,10 @@ public class MultiselectSampleActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            fastAdapter.deleteAllSelectedItems();
+            //logic if an item was clicked
 
-            //finish the actionMode
-            mode.finish();
-            return true;
+            //return false as we want default behavior to go on
+            return false;
         }
 
         @Override
@@ -150,26 +146,14 @@ public class MultiselectSampleActivity extends AppCompatActivity {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setStatusBarColor(UIUtils.getThemeColorFromAttrOrRes(MultiselectSampleActivity.this, R.attr.colorPrimaryDark, R.color.material_drawer_primary_dark));
             }
-            mode.getMenuInflater().inflate(R.menu.cab, menu);
-
-            //as we are now in the actionMode a single click is fine for multiSelection
-            fastAdapter.withMultiSelectOnLongClick(false);
             return true;
         }
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            actionMode = null;
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 getWindow().setStatusBarColor(Color.TRANSPARENT);
             }
-
-            //after we are done with the actionMode we fallback to longClick for multiselect
-            fastAdapter.withMultiSelectOnLongClick(true);
-
-            //actionMode end. deselect everything
-            fastAdapter.deselect();
         }
 
         @Override

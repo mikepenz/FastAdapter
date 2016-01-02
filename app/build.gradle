@@ -13,8 +13,8 @@ android {
         applicationId "com.mikepenz.crossfader.app"
         minSdkVersion 11
         targetSdkVersion 23
-        versionCode 10
-        versionName '0.1.0-SNAPSHOT'
+        versionCode 20
+        versionName '0.2.0-SNAPSHOT'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
@@ -67,5 +67,7 @@ dependencies {
 
     //Used for the StickyHeaderSample
     //https://github.com/timehop/sticky-headers-recyclerview
-    compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3@aar'
+    //original dependency: compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3@aar'
+    //customized version to allow minimal header animation
+    compile 'com.mikepenz.thirdparty:stickyheadersrecyclerview:0.4.4-SNAPSHOT@aar'
 }

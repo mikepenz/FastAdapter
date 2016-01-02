@@ -1,9 +1,9 @@
 package com.mikepenz.fastadapter.utils;
 
-import java.util.Map;
+import android.util.SparseIntArray;
+
 import java.util.Set;
-import java.util.SortedMap;
-import java.util.TreeMap;
+import java.util.SortedSet;
 import java.util.TreeSet;
 
 /**
@@ -20,8 +20,8 @@ public class AdapterUtil {
      * @param adjustBy      the value by which the data was shifted
      * @return the adjusted set
      */
-    public static Set<Integer> adjustPosition(Set<Integer> positions, int startPosition, int endPosition, int adjustBy) {
-        Set<Integer> newPositions = new TreeSet<>();
+    public static SortedSet<Integer> adjustPosition(Set<Integer> positions, int startPosition, int endPosition, int adjustBy) {
+        SortedSet<Integer> newPositions = new TreeSet<>();
 
         for (Integer entry : positions) {
             int position = entry;
@@ -56,18 +56,18 @@ public class AdapterUtil {
      * @param adjustBy      the value by which the data was shifted
      * @return the adjusted map
      */
-    public static SortedMap<Integer, Integer> adjustPosition(Map<Integer, Integer> positions, int startPosition, int endPosition, int adjustBy) {
-        SortedMap<Integer, Integer> newPositions = new TreeMap<>();
+    public static SparseIntArray adjustPosition(SparseIntArray positions, int startPosition, int endPosition, int adjustBy) {
+        SparseIntArray newPositions = new SparseIntArray();
 
-        for (Map.Entry<Integer, Integer> entry : positions.entrySet()) {
-            int position = entry.getKey();
+        for (int i = 0; i < positions.size(); i++) {
+            int position = positions.keyAt(i);
 
             //if our current position is not within the bounds to check for we can add it
             if (position < startPosition || position > endPosition) {
-                newPositions.put(position, entry.getValue());
+                newPositions.put(position, positions.valueAt(i));
             } else if (adjustBy > 0) {
                 //if we added items and we are within the bounds we can simply add the adjustBy to our entry
-                newPositions.put(position + adjustBy, entry.getValue());
+                newPositions.put(position + adjustBy, positions.valueAt(i));
             } else if (adjustBy < 0) {
                 //if we removed items and we are within the bounds we have to check if the item was removed
                 //adjustBy is negative in this case
@@ -75,7 +75,7 @@ public class AdapterUtil {
                     ;//we are within the removed items range we don't add this item anymore
                 } else {
                     //otherwise we adjust our position
-                    newPositions.put(position + adjustBy, entry.getValue());
+                    newPositions.put(position + adjustBy, positions.valueAt(i));
                 }
             }
         }
