@@ -128,8 +128,6 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
             super(view);
             ButterKnife.bind(this, view);
             this.view = view;
-            this.name = (TextView) view.findViewById(com.mikepenz.materialdrawer.R.id.material_drawer_name);
-            this.description = (TextView) view.findViewById(com.mikepenz.materialdrawer.R.id.material_drawer_description);
         }
     }
 }
