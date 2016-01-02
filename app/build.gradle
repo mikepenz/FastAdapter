@@ -70,4 +70,7 @@ dependencies {
     //original dependency: compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3@aar'
     //customized version to allow minimal header animation
     compile 'com.mikepenz.thirdparty:stickyheadersrecyclerview:0.4.4-SNAPSHOT@aar'
+
+    //https://github.com/JakeWharton/butterknife
+    compile 'com.jakewharton:butterknife:7.0.1'
 }
