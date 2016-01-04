@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by mikepenz on 30.12.15.
  */
-public interface IItemAdapter {
+public interface IItemAdapter extends IAdapter {
 
     /**
      * set a new list of items for this adapter
