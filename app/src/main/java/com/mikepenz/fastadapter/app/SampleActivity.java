@@ -7,6 +7,7 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -16,6 +17,7 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.helpers.UndoHelper;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
@@ -31,6 +33,8 @@ public class SampleActivity extends AppCompatActivity {
     private Drawer result = null;
     //save our FastAdapter
     private FastAdapter fastAdapter;
+
+    private UndoHelper undoHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,14 +96,31 @@ public class SampleActivity extends AppCompatActivity {
         //create our ItemAdapter which will host our items
         final ItemAdapter itemAdapter = new ItemAdapter();
 
+        //
+        undoHelper = new UndoHelper(itemAdapter, new UndoHelper.UndoListener() {
+            @Override
+            public void commitRemove(int position, ArrayList<IItem> removed) {
+                Log.e("UndoHelper", "Pos: " + position + " Removed: " + removed.size());
+                //remember that the items were removed
+            }
+        });
+
         //configure our fastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         fastAdapter.setHasStableIds(true);
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
             @Override
             public boolean onClick(View v, int position, int relativePosition, IItem item) {
-                Toast.makeText(v.getContext(), ((SampleItem) item).name.getText(v.getContext()), Toast.LENGTH_SHORT).show();
+
+                Toast.makeText(v.getContext(), ((SampleItem) item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
                 return false;
+            }
+        });
+        fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v, int position, int relativePosition, IItem item) {
+                undoHelper.remove(SampleActivity.this.findViewById(android.R.id.content), "Item removed", "Undo", relativePosition, 1);
+                return true;
             }
         });
 
