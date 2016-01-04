@@ -1,6 +1,23 @@
 #FastAdapter  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.mikepenz/fastadapter/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.mikepenz/fastadapter) [![Join the chat at https://gitter.im/mikepenz/fastadapter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mikepenz/fastadapter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-**IN PROGRESS**
+> The RecyclerView is one of the most used widgets in the Android world, and with it you have to implement an Adapter which provides the items for the view. Most use cases require the same base logic, but require you to write everything again and again.
+
+The FastAdapter is here to simplify this process. You don't have to worry about the adapter anymore. Just write the logic for how your view should look like, and you are done.
+This library has a fast and highly optimized core which provides core functionality, most apps require. It also prevents common mistakes by taking away those steps from the devs. 
+Not only is is blazing fast, and minimizes the code you need to write, it is also really easy to extend. Just provide another Adapter implementation, hook into the adapter chain, custom select / deselection behaviors. Everything is possible.
+
+##A quick overview:
+- Click / Long-Click listeners
+- Selection / Multi-Selection
+- Write less code, get better results
+- Headers
+- Footers
+- Highly optimized code
+- Includes suggestions from the Android Team
+- Easily extensible
+- Comes with useful Helpers
+ - ActionModeHelper
+ - More to come...
 
 #Preview
 ##Screenshots
@@ -8,7 +25,7 @@
 #Include in your project
 ##Using Maven
 ```javascript
-compile('com.mikepenz:fastadapter:0.2.0-SNAPSHOT@aar') {
+compile('com.mikepenz:fastadapter:0.2.1-SNAPSHOT@aar') {
 	transitive = true
 }
 
@@ -90,7 +107,6 @@ rv.setAdapter(itemAdapter.wrap(fastAdapter));
 
 //set the items to your ItemAdapter
 itemAdapter.add(ITEMS);
-
 ```
 
 

@@ -13,8 +13,8 @@ android {
         applicationId "com.mikepenz.crossfader.app"
         minSdkVersion 11
         targetSdkVersion 23
-        versionCode 20
-        versionName '0.2.0-SNAPSHOT'
+        versionCode 21
+        versionName '0.2.1-SNAPSHOT'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
@@ -70,4 +70,7 @@ dependencies {
     //original dependency: compile 'com.timehop.stickyheadersrecyclerview:library:0.4.3@aar'
     //customized version to allow minimal header animation
     compile 'com.mikepenz.thirdparty:stickyheadersrecyclerview:0.4.4-SNAPSHOT@aar'
+
+    //https://github.com/JakeWharton/butterknife
+    compile 'com.jakewharton:butterknife:7.0.1'
 }
