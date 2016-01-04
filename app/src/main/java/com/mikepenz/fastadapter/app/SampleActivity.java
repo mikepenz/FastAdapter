@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -119,7 +120,7 @@ public class SampleActivity extends AppCompatActivity {
         fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v, int position, int relativePosition, IItem item) {
-                undoHelper.remove(SampleActivity.this.findViewById(android.R.id.content), "Item removed", "Undo", relativePosition, 1);
+                undoHelper.remove(SampleActivity.this.findViewById(android.R.id.content), "Item removed", "Undo", Snackbar.LENGTH_LONG, relativePosition, 1);
                 return true;
             }
         });
