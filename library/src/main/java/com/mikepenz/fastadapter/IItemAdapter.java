@@ -6,7 +6,6 @@ import java.util.List;
  * Created by mikepenz on 30.12.15.
  */
 public interface IItemAdapter extends IAdapter {
-
     /**
      * set a new list of items for this adapter
      *
@@ -86,4 +85,17 @@ public interface IItemAdapter extends IAdapter {
      * removes all items of this adapter
      */
     void clear();
+
+
+    /**
+     * the interface used to filter the list inside the ItemFilter
+     */
+    interface Predicate<Item extends IItem> {
+        /**
+         * @param item       the item which is checked if it should get filtered
+         * @param constraint the string constraint used to filter items away
+         * @return false if it should stay. true if it should get filtered away
+         */
+        boolean filter(Item item, CharSequence constraint);
+    }
 }

@@ -1,5 +1,7 @@
 package com.mikepenz.fastadapter.adapters;
 
+import android.widget.Filter;
+
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
@@ -31,6 +33,39 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
     public ItemAdapter withUseIdDistributor(boolean useIdDistributor) {
         this.mUseIdDistributor = useIdDistributor;
         return this;
+    }
+
+    //filters the items
+    private ItemFilter mItemFilter = new ItemFilter();
+
+    /**
+     * @return the filter used to filter items
+     */
+    public ItemFilter getItemFilter() {
+        return mItemFilter;
+    }
+
+    //the filter predicate which is used in the ItemFilter
+    private Predicate<IItem> mFilterPredicate;
+
+    /**
+     * define the predicate used to filter the list inside the ItemFilter
+     *
+     * @param filterPredicate the predicate used to filter the list inside the ItemFilter
+     * @return this
+     */
+    public ItemAdapter withFilterPredicate(Predicate<IItem> filterPredicate) {
+        this.mFilterPredicate = filterPredicate;
+        return this;
+    }
+
+    /**
+     * filters the items with the constraint using the provided Predicate
+     *
+     * @param constraint the string used to filter the list
+     */
+    public void filter(CharSequence constraint) {
+        mItemFilter.filter(constraint);
     }
 
     /**
@@ -242,5 +277,92 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
         int count = mItems.size();
         mItems.clear();
         getFastAdapter().notifyAdapterItemRangeRemoved(getFastAdapter().getItemCount(getOrder()), count);
+    }
+
+    /**
+     * ItemFilter which extends the Filter api provided by Android
+     * This calls automatically all required methods, just overwrite the filterItems method
+     */
+    public class ItemFilter extends Filter {
+        private List<? extends IItem> mOriginalItems;
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            if (mOriginalItems == null) {
+                mOriginalItems = new ArrayList<>(mItems);
+            }
+
+            FilterResults results = new FilterResults();
+            // We implement here the filter logic
+            if (constraint == null || constraint.length() == 0) {
+                // No filter implemented we return all the list
+                results.values = mOriginalItems;
+                results.count = mOriginalItems.size();
+            } else {
+                List<IItem> filteredItems = new ArrayList<>();
+
+                // We perform filtering operation
+                if (mFilterPredicate != null) {
+                    for (IItem item : mOriginalItems) {
+                        if (!mFilterPredicate.filter(item, constraint)) {
+                            filteredItems.add(item);
+                        }
+                    }
+                } else {
+                    filteredItems = mItems;
+                }
+
+                results.values = filteredItems;
+                results.count = filteredItems.size();
+            }
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            // Now we have to inform the adapter about the new list filtered
+            animateTo(mItems, (List<? extends IItem>) results.values);
+        }
+
+        /**
+         * helper class to animate from one list to the other
+         *
+         * @param from
+         * @param models
+         */
+        private void animateTo(List<? extends IItem> from, List<? extends IItem> models) {
+            applyAndAnimateRemovals(from, models);
+            applyAndAnimateAdditions(from, models);
+        }
+
+        /**
+         * find out all removed items and animate them
+         *
+         * @param from
+         * @param newModels
+         */
+        private void applyAndAnimateRemovals(List<? extends IItem> from, List<? extends IItem> newModels) {
+            for (int i = from.size() - 1; i >= 0; i--) {
+                final IItem model = from.get(i);
+                if (!newModels.contains(model)) {
+                    remove(i);
+                }
+            }
+        }
+
+        /**
+         * find out all added items and animate them
+         *
+         * @param from
+         * @param newModels
+         */
+        private void applyAndAnimateAdditions(List<? extends IItem> from, List<? extends IItem> newModels) {
+            for (int i = 0, count = newModels.size(); i < count; i++) {
+                final IItem model = newModels.get(i);
+                if (!from.contains(model)) {
+                    add(i, model);
+                }
+            }
+        }
     }
 }
