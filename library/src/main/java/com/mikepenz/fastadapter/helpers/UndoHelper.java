@@ -37,8 +37,9 @@ public class UndoHelper {
      * @param actionText the text to show for the Undo Action
      * @param position   the position where the item was removed
      * @param itemCount  the amount of items which were removed at the given position
+     * @return the generated Snackbar
      */
-    public void remove(View view, String text, String actionText, @Snackbar.Duration int duration, int position, int itemCount) {
+    public Snackbar remove(View view, String text, String actionText, @Snackbar.Duration int duration, int position, int itemCount) {
         if (mHistory != null) {
             notifyCommit();
         }
@@ -51,7 +52,7 @@ public class UndoHelper {
         }
         mHistory = history;
 
-        Snackbar.make(view, text, duration).setCallback(new Snackbar.Callback() {
+        Snackbar snackbar = Snackbar.make(view, text, duration).setCallback(new Snackbar.Callback() {
             @Override
             public void onDismissed(Snackbar snackbar, int event) {
                 super.onDismissed(snackbar, event);
@@ -76,7 +77,9 @@ public class UndoHelper {
             public void onClick(View v) {
                 undoChange();
             }
-        }).show();
+        });
+        snackbar.show();
+        return snackbar;
     }
 
     private void notifyCommit() {
