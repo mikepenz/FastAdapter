@@ -11,7 +11,7 @@ public interface IItemAdapter extends IAdapter {
      *
      * @param items
      */
-    void set(List<IItem> items);
+    void set(List<? extends IItem> items);
 
     /**
      * add an array of items to the end of the existing items
@@ -25,7 +25,7 @@ public interface IItemAdapter extends IAdapter {
      *
      * @param items
      */
-    void add(List<IItem> items);
+    void add(List<? extends IItem> items);
 
     /**
      * add an array of items at the given position within the existing items
@@ -41,7 +41,7 @@ public interface IItemAdapter extends IAdapter {
      * @param position the relative position (position of this adapter)
      * @param items
      */
-    void add(int position, List<IItem> items);
+    void add(int position, List<? extends IItem> items);
 
     /**
      * sets an item at the given position, overwriting the previous item

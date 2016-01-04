@@ -123,11 +123,11 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      *
      * @param items
      */
-    public void set(List<IItem> items) {
+    public void set(List<? extends IItem> items) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
-        mItems = items;
+        mItems = (List<IItem>) items;
         mapPossibleTypes(mItems);
         getFastAdapter().notifyAdapterItemRangeChanged(getFastAdapter().getItemCount(getOrder()), getAdapterItemCount());
     }
@@ -153,13 +153,13 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      *
      * @param items
      */
-    public void add(List<IItem> items) {
+    public void add(List<? extends IItem> items) {
         if (items != null) {
             if (mUseIdDistributor) {
                 IdDistributor.checkIds(items);
             }
             mItems.addAll(items);
-            mapPossibleTypes(items);
+            mapPossibleTypes((Iterable<IItem>) items);
             getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()), items.size());
         }
     }
@@ -187,13 +187,13 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      * @param position the relative position (position of this adapter)
      * @param items
      */
-    public void add(int position, List<IItem> items) {
+    public void add(int position, List<? extends IItem> items) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
         if (items != null) {
             mItems.addAll(position, items);
-            mapPossibleTypes(items);
+            mapPossibleTypes((Iterable<IItem>) items);
             getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()) + position, items.size());
         }
     }
