@@ -756,8 +756,6 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             mSelections.add(toPosition);
         }
 
-        //TODO TEST THIS ONE ;D
-
         //we have to update all current stored selection and collapsed states in our map
         if (fromPosition < toPosition) {
             mSelections = AdapterUtil.adjustPosition(mSelections, fromPosition, toPosition, -1);
