@@ -108,9 +108,21 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return
      */
     public FastAdapter withSavedInstanceState(Bundle savedInstanceState) {
+        return withSavedInstanceState(savedInstanceState, "");
+    }
+
+    /**
+     * re-selects all elements stored in the savedInstanceState
+     * IMPORTANT! Call this method only after all items where added to the adapters again. Otherwise it may select wrong items!
+     *
+     * @param savedInstanceState
+     * @param prefix             a prefix added to the savedInstance key so we can store multiple states
+     * @return
+     */
+    public FastAdapter withSavedInstanceState(Bundle savedInstanceState, String prefix) {
         if (savedInstanceState != null) {
             //first restore opened collasable items, as otherwise may not all selections could be restored
-            int[] collapsibles = savedInstanceState.getIntArray(BUNDLE_COLLAPSIBLE);
+            int[] collapsibles = savedInstanceState.getIntArray(BUNDLE_COLLAPSIBLE + prefix);
             if (collapsibles != null) {
                 for (Integer collapsible : collapsibles) {
                     open(collapsible);
@@ -118,7 +130,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             }
 
             //restore the selections
-            int[] selections = savedInstanceState.getIntArray(BUNDLE_SELECTIONS);
+            int[] selections = savedInstanceState.getIntArray(BUNDLE_SELECTIONS + prefix);
             if (selections != null) {
                 for (Integer selection : selections) {
                     select(selection);
@@ -388,6 +400,17 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return
      */
     public Bundle saveInstanceState(Bundle savedInstanceState) {
+        return saveInstanceState(savedInstanceState, "");
+    }
+
+    /**
+     * add the values to the bundle for saveInstanceState
+     *
+     * @param savedInstanceState
+     * @param prefix             a prefix added to the savedInstance key so we can store multiple states
+     * @return
+     */
+    public Bundle saveInstanceState(Bundle savedInstanceState, String prefix) {
         if (savedInstanceState != null) {
             //remember the selections
             int[] selections = new int[mSelections.size()];
@@ -396,10 +419,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 selections[index] = selection;
                 index++;
             }
-            savedInstanceState.putIntArray(BUNDLE_SELECTIONS, selections);
+            savedInstanceState.putIntArray(BUNDLE_SELECTIONS + prefix, selections);
 
             //remember the collapsed states
-            savedInstanceState.putIntArray(BUNDLE_COLLAPSIBLE, getOpenedCollapsibleItems());
+            savedInstanceState.putIntArray(BUNDLE_COLLAPSIBLE + prefix, getOpenedCollapsibleItems());
         }
         return savedInstanceState;
     }
