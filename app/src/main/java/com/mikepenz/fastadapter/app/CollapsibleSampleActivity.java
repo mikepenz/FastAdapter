@@ -10,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
@@ -47,7 +48,7 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
         fastAdapter.setHasStableIds(true);
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
             @Override
-            public boolean onClick(View v, int position, IItem item, FastAdapter.RelativeInfo relativeInfo) {
+            public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
                 if (item instanceof SampleItem) {
                     if (((SampleItem) item).getSubItems() != null) {
                         fastAdapter.toggleCollapsible(position);

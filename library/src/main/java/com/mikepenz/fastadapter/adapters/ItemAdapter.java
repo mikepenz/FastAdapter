@@ -110,6 +110,16 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     /**
+     * returns the global position if the relative position within this adapter was given
+     *
+     * @param position
+     * @return
+     */
+    public int getGlobalPosition(int position) {
+        return position + getFastAdapter().getItemCount(getOrder());
+    }
+
+    /**
      * @param position the relative position
      * @return the item inside this adapter
      */
@@ -167,7 +177,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     /**
      * add an array of items at the given position within the existing items
      *
-     * @param position the relative position (position of this adapter)
+     * @param position the global position
      * @param items
      */
     public void add(int position, Item... items) {
@@ -175,16 +185,16 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             IdDistributor.checkIds(items);
         }
         if (items != null) {
-            mItems.addAll(position, Arrays.asList(items));
+            mItems.addAll(position - getFastAdapter().getItemCount(getOrder()), Arrays.asList(items));
             mapPossibleTypes(Arrays.asList(items));
-            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()) + position, items.length);
+            getFastAdapter().notifyAdapterItemRangeInserted(position, items.length);
         }
     }
 
     /**
      * add a list of items at the given position within the existing items
      *
-     * @param position the relative position (position of this adapter)
+     * @param position the global position
      * @param items
      */
     public void add(int position, List<Item> items) {
@@ -192,25 +202,25 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             IdDistributor.checkIds(items);
         }
         if (items != null) {
-            mItems.addAll(position, items);
-            mapPossibleTypes((Iterable<Item>) items);
-            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()) + position, items.size());
+            mItems.addAll(position - getFastAdapter().getItemCount(getOrder()), items);
+            mapPossibleTypes(items);
+            getFastAdapter().notifyAdapterItemRangeInserted(position, items.size());
         }
     }
 
     /**
      * sets an item at the given position, overwriting the previous item
      *
-     * @param position the relative position (position of this adapter)
+     * @param position the global position
      * @param item
      */
     public void set(int position, Item item) {
         if (mUseIdDistributor) {
             IdDistributor.checkId(item);
         }
-        mItems.set(position, item);
+        mItems.set(position - getFastAdapter().getItemCount(getOrder()), item);
         mapPossibleType(item);
-        getFastAdapter().notifyAdapterItemChanged(getFastAdapter().getItemCount(getOrder()) + position);
+        getFastAdapter().notifyAdapterItemChanged(position);
     }
 
     /**
@@ -230,44 +240,45 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     /**
      * add an item at the given position within the existing icons
      *
-     * @param position the relative position (position of this adapter)
+     * @param position the global position
      * @param item
      */
     public void add(int position, Item item) {
         if (mUseIdDistributor) {
             IdDistributor.checkId(item);
         }
-        mItems.add(position, item);
+        mItems.add(position - getFastAdapter().getItemCount(getOrder()), item);
         mapPossibleType(item);
-        getFastAdapter().notifyAdapterItemInserted(getFastAdapter().getItemCount(getOrder()) + position);
+        getFastAdapter().notifyAdapterItemInserted(position);
     }
 
     /**
      * removes an item at the given position within the existing icons
      *
-     * @param position the relative position (position of this adapter)
+     * @param position the global position
      */
     public void remove(int position) {
-        mItems.remove(position);
-        getFastAdapter().notifyAdapterItemRemoved(getFastAdapter().getItemCount(getOrder()) + position);
+        mItems.remove(position - getFastAdapter().getItemCount(getOrder()));
+        getFastAdapter().notifyAdapterItemRemoved(position);
     }
 
     /**
      * removes a range of items starting with the given position within the existing icons
      *
-     * @param position  the relative position (position of this adapter)
+     * @param position  the global position
      * @param itemCount
      */
     public void removeItemRange(int position, int itemCount) {
+        //global position to relative
         int length = mItems.size();
         //make sure we do not delete to many items
-        int saveItemCount = Math.min(itemCount, length - position);
+        int saveItemCount = Math.min(itemCount, length - position - getFastAdapter().getItemCount(getOrder()));
 
         for (int i = 0; i < saveItemCount; i++) {
-            mItems.remove(position);
+            mItems.remove(position - getFastAdapter().getItemCount(getOrder()));
         }
 
-        getFastAdapter().notifyAdapterItemRangeRemoved(getFastAdapter().getItemCount(getOrder()) + position, saveItemCount);
+        getFastAdapter().notifyAdapterItemRangeRemoved(position, saveItemCount);
     }
 
     /**
@@ -304,8 +315,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 // We perform filtering operation
                 if (mFilterPredicate != null) {
                     for (Item item : mOriginalItems) {
-                        if (!mFilterPredicate.filter((Item) item, constraint)) {
-                            filteredItems.add((Item) item);
+                        if (!mFilterPredicate.filter(item, constraint)) {
+                            filteredItems.add(item);
                         }
                     }
                 } else {
@@ -345,7 +356,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             for (int i = from.size() - 1; i >= 0; i--) {
                 final Item model = from.get(i);
                 if (!newModels.contains(model)) {
-                    remove(i);
+                    //our methods work only with the global position
+                    remove(i + getFastAdapter().getItemCount(getOrder()));
                 }
             }
         }
@@ -360,7 +372,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             for (int i = 0, count = newModels.size(); i < count; i++) {
                 final Item model = newModels.get(i);
                 if (!from.contains(model)) {
-                    add(i, model);
+                    //our methods work only with the global position
+                    add(i + getFastAdapter().getItemCount(getOrder()), model);
                 }
             }
         }

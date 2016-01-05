@@ -46,6 +46,15 @@ public interface IAdapter<Item extends IItem> {
      */
     int getAdapterPosition(Item item);
 
+
+    /**
+     * Returns the global position based on the relative position given
+     *
+     * @param position the relative position within this adapter
+     * @return the global position used for all methods
+     */
+    int getGlobalPosition(int position);
+
     /**
      * @return the global item count
      */
