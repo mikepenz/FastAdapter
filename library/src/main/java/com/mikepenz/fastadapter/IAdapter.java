@@ -30,7 +30,7 @@ public interface IAdapter<Item extends IItem> {
     /**
      * @return the list of defined items within THIS adapter
      */
-    List<? extends IItem> getAdapterItems();
+    List<Item> getAdapterItems();
 
     /**
      * @param position the relative position

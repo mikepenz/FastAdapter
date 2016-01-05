@@ -11,7 +11,7 @@ import java.util.List;
 public abstract class AbstractAdapter<Item extends IItem> extends RecyclerView.Adapter implements IAdapter<Item> {
     //private AbstractAdapter mParentAdapter;
     //keep a reference to the FastAdapter which contains the base logic
-    private FastAdapter mFastAdapter;
+    private FastAdapter<Item> mFastAdapter;
 
     /**
      * Wrap the FastAdapter with this AbstractAdapter and keep it's reference to forward all events correctly
@@ -237,7 +237,7 @@ public abstract class AbstractAdapter<Item extends IItem> extends RecyclerView.A
      */
     public void mapPossibleTypes(Iterable<Item> items) {
         if (items != null) {
-            for (IItem item : items) {
+            for (Item item : items) {
                 mapPossibleType(item);
             }
         }
@@ -248,7 +248,7 @@ public abstract class AbstractAdapter<Item extends IItem> extends RecyclerView.A
      *
      * @param item
      */
-    public void mapPossibleType(IItem item) {
+    public void mapPossibleType(Item item) {
         mFastAdapter.registerTypeInstance(item);
     }
 }
