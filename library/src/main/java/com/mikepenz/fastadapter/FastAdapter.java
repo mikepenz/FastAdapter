@@ -462,12 +462,26 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      */
     public void select(int position) {
-        IItem item = getItem(position);
+        select(position, false);
+    }
+
+    /**
+     * selects an item and remembers it's position in the selections list
+     *
+     * @param position  the global position
+     * @param fireEvent true if the onClick listener should be called
+     */
+    public void select(int position, boolean fireEvent) {
+        Item item = getItem(position);
         if (item != null) {
             item.withSetSelected(true);
             mSelections.add(position);
         }
         notifyItemChanged(position);
+
+        if (mOnClickListener != null && fireEvent) {
+            mOnClickListener.onClick(null, position, item, getRelativePosition(position));
+        }
     }
 
     /**
