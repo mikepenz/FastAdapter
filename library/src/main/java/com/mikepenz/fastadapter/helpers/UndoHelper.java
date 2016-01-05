@@ -110,8 +110,8 @@ public class UndoHelper<Item extends IItem> {
         mHistory = null;
     }
 
-    public interface UndoListener<Item> {
-        void commitRemove(int position, ArrayList<Item> removed);
+    public interface UndoListener {
+        void commitRemove(int position, ArrayList<? extends IItem> removed);
     }
 
     private class History {

@@ -101,7 +101,7 @@ public class SampleActivity extends AppCompatActivity {
         //
         undoHelper = new UndoHelper(itemAdapter, new UndoHelper.UndoListener() {
             @Override
-            public void commitRemove(int position, ArrayList<IItem> removed) {
+            public void commitRemove(int position, ArrayList<? extends IItem> removed) {
                 Log.e("UndoHelper", "Pos: " + position + " Removed: " + removed.size());
                 //remember that the items were removed
             }
