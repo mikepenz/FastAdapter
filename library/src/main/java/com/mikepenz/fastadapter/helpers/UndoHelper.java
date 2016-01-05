@@ -11,10 +11,10 @@ import java.util.ArrayList;
 /**
  * Created by mikepenz on 04.01.16.
  */
-public class UndoHelper {
+public class UndoHelper<Item extends IItem> {
     private static final int ACTION_REMOVE = 2;
 
-    private IItemAdapter mItemAdapter;
+    private IItemAdapter<Item> mItemAdapter;
     private UndoListener mUndoListener;
     private History mHistory = null;
 
@@ -110,13 +110,13 @@ public class UndoHelper {
         mHistory = null;
     }
 
-    public interface UndoListener {
-        void commitRemove(int position, ArrayList<IItem> removed);
+    public interface UndoListener<Item> {
+        void commitRemove(int position, ArrayList<Item> removed);
     }
 
     private class History {
         public int action;
         public int position;
-        public ArrayList<IItem> items = new ArrayList<>();
+        public ArrayList<Item> items = new ArrayList<>();
     }
 }
