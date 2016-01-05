@@ -110,6 +110,16 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     /**
+     * returns the global position if the relative position within this adapter was given
+     *
+     * @param position
+     * @return
+     */
+    public int getGlobalPosition(int position) {
+        return position + getFastAdapter().getItemCount(getOrder());
+    }
+
+    /**
      * @param position the relative position
      * @return the item inside this adapter
      */
