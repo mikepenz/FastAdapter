@@ -111,16 +111,15 @@ public class SampleActivity extends AppCompatActivity {
         fastAdapter.setHasStableIds(true);
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
             @Override
-            public boolean onClick(View v, int position, int relativePosition, IItem item) {
-
+            public boolean onClick(View v, int position, IItem item, FastAdapter.RelativeInfo relativeInfo) {
                 Toast.makeText(v.getContext(), ((SampleItem) item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
                 return false;
             }
         });
         fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v, int position, int relativePosition, IItem item) {
-                undoHelper.remove(SampleActivity.this.findViewById(android.R.id.content), "Item removed", "Undo", Snackbar.LENGTH_LONG, relativePosition, 1);
+            public boolean onLongClick(View v, int position, IItem item, FastAdapter.RelativeInfo relativeInfo) {
+                undoHelper.remove(SampleActivity.this.findViewById(android.R.id.content), "Item removed", "Undo", Snackbar.LENGTH_LONG, relativeInfo.relativePosition, 1);
                 return true;
             }
         });

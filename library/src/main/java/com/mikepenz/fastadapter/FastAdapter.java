@@ -21,14 +21,14 @@ import java.util.TreeSet;
 /**
  * Created by mikepenz on 27.12.15.
  */
-public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     protected static final String BUNDLE_SELECTIONS = "bundle_selections";
     protected static final String BUNDLE_COLLAPSIBLE = "bundle_collapsible";
 
     // we remember all adapters
     private ArrayMap<Integer, IAdapter> mAdapters = new ArrayMap<>();
     // we remember all possible types so we can create a new view efficiently
-    private ArrayMap<Integer, IItem> mTypeInstances = new ArrayMap<>();
+    private ArrayMap<Integer, Item> mTypeInstances = new ArrayMap<>();
 
     // if we want multiSelect enabled
     private boolean mMultiSelect = false;
@@ -156,7 +156,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      *
      * @param item an IItem which will be shown in the list
      */
-    public void registerTypeInstance(IItem item) {
+    public void registerTypeInstance(Item item) {
         if (!mTypeInstances.containsKey(item.getType())) {
             mTypeInstances.put(item.getType(), item);
         }
@@ -181,8 +181,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if (pos != RecyclerView.NO_POSITION) {
                     boolean consumed = false;
                     if (mOnClickListener != null) {
-                        ItemHolder itemHolder = getInternalItem(pos);
-                        consumed = mOnClickListener.onClick(v, pos, itemHolder.relativePosition, itemHolder.item);
+                        RelativeInfo relativeInfo = getRelativePosition(pos);
+                        consumed = mOnClickListener.onClick(v, pos, (IItem) relativeInfo.item, relativeInfo);
                     }
 
                     if (!consumed && (!(mMultiSelect && mMultiSelectOnLongClick) || !mMultiSelect)) {
@@ -199,8 +199,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if (pos != RecyclerView.NO_POSITION) {
                     boolean consumed = false;
                     if (mOnLongClickListener != null) {
-                        ItemHolder itemHolder = getInternalItem(pos);
-                        consumed = mOnLongClickListener.onLongClick(v, pos, itemHolder.relativePosition, itemHolder.item);
+                        RelativeInfo relativeInfo = getRelativePosition(pos);
+                        consumed = mOnLongClickListener.onLongClick(v, pos, (IItem) relativeInfo.item, relativeInfo);
                     }
 
                     if (!consumed && (mMultiSelect && mMultiSelectOnLongClick)) {
@@ -218,8 +218,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
                 if (mOnTouchListener != null) {
                     int pos = holder.getAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION) {
-                        ItemHolder itemHolder = getInternalItem(pos);
-                        return mOnTouchListener.onTouch(v, event, pos, itemHolder.relativePosition, itemHolder.item);
+                        RelativeInfo relativeInfo = getRelativePosition(pos);
+                        return mOnTouchListener.onTouch(v, event, pos, (IItem) relativeInfo.item, relativeInfo);
                     }
                 }
                 return false;
@@ -246,7 +246,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param item the item which is searched for
      * @return the global position, or -1 if not found
      */
-    public int getPosition(IItem item) {
+    public int getPosition(Item item) {
         if (item.getIdentifier() == -1) {
             Log.e("FastAdapter", "You have to define an identifier for your item to retrieve the position via this method");
             return -1;
@@ -276,43 +276,20 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      * @return the found IItem or null
      */
-    public IItem getItem(int position) {
-        return getInternalItem(position).item;
+    public Item getItem(int position) {
+        return getRelativePosition(position).item;
     }
 
     /**
      * Internal method to get the Item as ItemHolder which comes with the relative position within it's adapter
-     *
-     * @param position the global position
-     * @return an ItemHolder with the Item, and the relative position
-     */
-    private ItemHolder getInternalItem(int position) {
-        if (position < 0) {
-            return new ItemHolder();
-        }
-
-        //try to find the adapter for this position
-        AdapterHolder adapterHolder = getRelativePosition(position);
-
-        //if found return the itemHolder
-        if (adapterHolder.adapter != null) {
-            ItemHolder itemHolder = new ItemHolder();
-            itemHolder.item = adapterHolder.adapter.getAdapterItem(adapterHolder.relativePosition);
-            itemHolder.relativePosition = adapterHolder.relativePosition;
-            return itemHolder;
-        }
-        return new ItemHolder();
-    }
-
-    /**
      * Finds the responsible adapter for the given position
      *
      * @param position the global position
      * @return the adapter which is responsible for this position
      */
-    public AdapterHolder getRelativePosition(int position) {
+    public RelativeInfo<Item> getRelativePosition(int position) {
         if (position < 0) {
-            return new AdapterHolder();
+            return new RelativeInfo<>();
         }
 
         int currentCount = 0;
@@ -324,14 +301,15 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
             }
 
             if (currentCount <= position && currentCount + adapter.getAdapterItemCount() > position) {
-                AdapterHolder adapterHolder = new AdapterHolder();
-                adapterHolder.adapter = adapter;
-                adapterHolder.relativePosition = position - currentCount;
-                return adapterHolder;
+                RelativeInfo relativeInfo = new RelativeInfo();
+                relativeInfo.adapter = adapter;
+                relativeInfo.relativePosition = position - currentCount;
+                relativeInfo.item = adapter.getAdapterItem(position - currentCount);
+                return relativeInfo;
             }
             currentCount = currentCount + adapter.getAdapterItemCount();
         }
-        return new AdapterHolder();
+        return new RelativeInfo<>();
     }
 
     /**
@@ -458,7 +436,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      */
     private void handleSelection(int position) {
-        IItem item = getItem(position);
+        Item item = getItem(position);
         if (!item.isSelectable()) {
             return;
         }
@@ -484,12 +462,26 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      */
     public void select(int position) {
-        IItem item = getItem(position);
+        select(position, false);
+    }
+
+    /**
+     * selects an item and remembers it's position in the selections list
+     *
+     * @param position  the global position
+     * @param fireEvent true if the onClick listener should be called
+     */
+    public void select(int position, boolean fireEvent) {
+        Item item = getItem(position);
         if (item != null) {
             item.withSetSelected(true);
             mSelections.add(position);
         }
         notifyItemChanged(position);
+
+        if (mOnClickListener != null && fireEvent) {
+            mOnClickListener.onClick(null, position, item, getRelativePosition(position));
+        }
     }
 
     /**
@@ -509,7 +501,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param entries  the iterator which is used to deselect all
      */
     private void deselect(int position, Iterator<Integer> entries) {
-        IItem item = getItem(position);
+        Item item = getItem(position);
         if (item != null) {
             item.withSetSelected(false);
         }
@@ -570,7 +562,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      */
     public void collapse(int position) {
-        IItem item = getItem(position);
+        Item item = getItem(position);
         if (item != null && item instanceof ICollapsible) {
             ICollapsible collapsible = (ICollapsible) item;
 
@@ -612,7 +604,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void internalCollapse(int position) {
-        IItem item = getItem(position);
+        Item item = getItem(position);
         if (item != null && item instanceof ICollapsible) {
             ICollapsible collapsible = (ICollapsible) item;
             //if this item is not already callapsed and has sub items we go on
@@ -623,7 +615,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     }
 
     private void internalCollapse(ICollapsible collapsible, int position) {
-        AdapterHolder adapterHolder = getRelativePosition(position);
+        RelativeInfo adapterHolder = getRelativePosition(position);
 
         //if we find the adapter for this item we will remove all of its subitems
         if (adapterHolder.adapter != null && adapterHolder.adapter instanceof IItemAdapter) {
@@ -645,15 +637,15 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      *
      * @return a list of the IItem elements which were deleted
      */
-    public List<IItem> deleteAllSelectedItems() {
-        List<IItem> deletedItems = new LinkedList<>();
+    public List<Item> deleteAllSelectedItems() {
+        List<Item> deletedItems = new LinkedList<>();
         //we have to refetch the selections array again and again as the position will change after one item is deleted
         Set<Integer> selections = getSelections();
         while (selections.size() > 0) {
-            AdapterHolder adapterHolder = getRelativePosition(selections.iterator().next());
-            if (adapterHolder.adapter instanceof IItemAdapter) {
-                deletedItems.add(adapterHolder.adapter.getAdapterItem(adapterHolder.relativePosition));
-                ((IItemAdapter) adapterHolder.adapter).remove(adapterHolder.relativePosition);
+            RelativeInfo relativeInfo = getRelativePosition(selections.iterator().next());
+            if (relativeInfo.adapter instanceof IItemAdapter) {
+                deletedItems.add((Item) relativeInfo.adapter.getAdapterItem(relativeInfo.relativePosition));
+                ((IItemAdapter) relativeInfo.adapter).remove(relativeInfo.relativePosition);
             }
             selections = getSelections();
         }
@@ -666,18 +658,18 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      */
     public void open(int position) {
-        IItem item = getItem(position);
+        Item item = getItem(position);
         if (item != null && item instanceof ICollapsible) {
             ICollapsible collapsible = (ICollapsible) item;
 
             //if this item is not already callapsed and has sub items we go on
             if (collapsible.isCollapsed() && collapsible.getSubItems() != null && collapsible.getSubItems().size() > 0) {
-                AdapterHolder adapterHolder = getRelativePosition(position);
+                RelativeInfo relativeInfo = getRelativePosition(position);
 
                 //if we find the adapter for this item we add the sub items
-                if (adapterHolder.adapter != null && adapterHolder.adapter instanceof IItemAdapter) {
-                    IItemAdapter itemAdapter = (IItemAdapter) adapterHolder.adapter;
-                    itemAdapter.add(adapterHolder.relativePosition + 1, collapsible.getSubItems());
+                if (relativeInfo.adapter != null && relativeInfo.adapter instanceof IItemAdapter) {
+                    IItemAdapter itemAdapter = (IItemAdapter) relativeInfo.adapter;
+                    itemAdapter.add(relativeInfo.relativePosition + 1, collapsible.getSubItems());
                 }
 
                 //remember that this item is now opened (not collapsed)
@@ -784,7 +776,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param payload
      */
     public void notifyAdapterItemChanged(int position, Object payload) {
-        IItem updateItem = getItem(position);
+        Item updateItem = getItem(position);
         if (updateItem.isSelected()) {
             mSelections.add(position);
         } else if (mSelections.contains(position)) {
@@ -817,7 +809,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      */
     public void notifyAdapterItemRangeChanged(int position, int itemCount, Object payload) {
         for (int i = position; i < position + itemCount; i++) {
-            IItem updateItem = getItem(position);
+            Item updateItem = getItem(position);
             if (updateItem.isSelected()) {
                 mSelections.add(position);
             } else if (mSelections.contains(position)) {
@@ -839,12 +831,12 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
          *
          * @param v
          * @param event
-         * @param position         the global position
-         * @param relativePosition the relative position of this item in it's adapter
-         * @param item             the IItem which was clicked
+         * @param position     the global position
+         * @param item         the IItem which was clicked
+         * @param relativeInfo the relative position of this item and adapter within the AdapterHolder
          * @return return true if the event was consumed, otherwise false
          */
-        boolean onTouch(View v, MotionEvent event, int position, int relativePosition, IItem item);
+        boolean onTouch(View v, MotionEvent event, int position, IItem item, RelativeInfo relativeInfo);
     }
 
     public interface OnClickListener {
@@ -852,12 +844,12 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
          * the onClick event of a specific item inside the RecyclerView
          *
          * @param v
-         * @param position         the global position
-         * @param relativePosition the relative position of this item in it's adapter
-         * @param item             the IItem which was clicked
+         * @param position     the global position
+         * @param item         the IItem which was clicked
+         * @param relativeInfo the relative position of this item and adapter within the AdapterHolder
          * @return return true if the event was consumed, otherwise false
          */
-        boolean onClick(View v, int position, int relativePosition, IItem item);
+        boolean onClick(View v, int position, IItem item, RelativeInfo relativeInfo);
     }
 
     public interface OnLongClickListener {
@@ -865,27 +857,20 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
          * the onLongClick event of a specific item inside the RecyclerView
          *
          * @param v
-         * @param position         the global position
-         * @param relativePosition the relative position of this item in it's adapter
-         * @param item             the IItem which was clicked
+         * @param position     the global position
+         * @param item         the IItem which was clicked
+         * @param relativeInfo the relative position of this item and adapter within the AdapterHolder
          * @return return true if the event was consumed, otherwise false
          */
-        boolean onLongClick(View v, int position, int relativePosition, IItem item);
+        boolean onLongClick(View v, int position, IItem item, RelativeInfo relativeInfo);
     }
 
     /**
-     * an internal class to return the IItem and relativePosition at once. used to save one iteration inside the getInternalItem method
+     * an internal class to return the IItem and relativePosition and it's adapter at once. used to save one iteration inside the getInternalItem method
      */
-    private class ItemHolder {
-        public IItem item = null;
-        public int relativePosition = -1;
-    }
-
-    /**
-     * an internal class to return the IAdapter and relativePosition at once. used to save one iteration
-     */
-    public class AdapterHolder {
+    public static class RelativeInfo<Item> {
         public IAdapter adapter = null;
+        public Item item = null;
         public int relativePosition = -1;
     }
 }

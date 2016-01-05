@@ -8,10 +8,10 @@ import java.util.List;
 /**
  * Created by mikepenz on 27.12.15.
  */
-public abstract class AbstractAdapter extends RecyclerView.Adapter implements IAdapter {
+public abstract class AbstractAdapter<Item extends IItem> extends RecyclerView.Adapter implements IAdapter<Item> {
     //private AbstractAdapter mParentAdapter;
     //keep a reference to the FastAdapter which contains the base logic
-    private FastAdapter mFastAdapter;
+    private FastAdapter<Item> mFastAdapter;
 
     /**
      * Wrap the FastAdapter with this AbstractAdapter and keep it's reference to forward all events correctly
@@ -110,7 +110,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
      * @return
      */
     @Override
-    public IItem getItem(int position) {
+    public Item getItem(int position) {
         return mFastAdapter.getItem(position);
     }
 
@@ -235,9 +235,9 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
      *
      * @param items
      */
-    public void mapPossibleTypes(Iterable<IItem> items) {
+    public void mapPossibleTypes(Iterable<Item> items) {
         if (items != null) {
-            for (IItem item : items) {
+            for (Item item : items) {
                 mapPossibleType(item);
             }
         }
@@ -248,7 +248,7 @@ public abstract class AbstractAdapter extends RecyclerView.Adapter implements IA
      *
      * @param item
      */
-    public void mapPossibleType(IItem item) {
+    public void mapPossibleType(Item item) {
         mFastAdapter.registerTypeInstance(item);
     }
 }

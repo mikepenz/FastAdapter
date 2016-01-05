@@ -40,14 +40,14 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
         fastAdapter = new FastAdapter();
 
         //create our adapters
-        final ItemAdapter itemAdapter = new ItemAdapter();
+        final ItemAdapter<SampleItem> itemAdapter = new ItemAdapter<>();
 
         //configure our fastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         fastAdapter.setHasStableIds(true);
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
             @Override
-            public boolean onClick(View v, int position, int relativePosition, IItem item) {
+            public boolean onClick(View v, int position, IItem item, FastAdapter.RelativeInfo relativeInfo) {
                 if (item instanceof SampleItem) {
                     if (((SampleItem) item).getSubItems() != null) {
                         fastAdapter.toggleCollapsible(position);
@@ -65,7 +65,7 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
         rv.setAdapter(itemAdapter.wrap(fastAdapter));
 
         //fill with some sample data
-        List<IItem> items = new ArrayList<>();
+        List<SampleItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
             SampleItem sampleItem = new SampleItem().withName("Test " + i + (i % 10 == 0 ? "(Collapsible)" : "")).withIdentifier(100 + i);
 

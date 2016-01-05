@@ -4,7 +4,7 @@
 
 The FastAdapter is here to simplify this process. You don't have to worry about the adapter anymore. Just write the logic for how your view should look like, and you are done.
 This library has a fast and highly optimized core which provides core functionality, most apps require. It also prevents common mistakes by taking away those steps from the devs. 
-Not only is is blazing fast, and minimizes the code you need to write, it is also really easy to extend. Just provide another Adapter implementation, hook into the adapter chain, custom select / deselection behaviors. Everything is possible.
+Beside being blazing fast, minimizing the code you need to write, it is also really easy to extend. Just provide another Adapter implementation, hook into the adapter chain, custom select / deselection behaviors. Everything is possible.
 
 ##A quick overview:
 - Click / Long-Click listeners
@@ -25,7 +25,7 @@ Not only is is blazing fast, and minimizes the code you need to write, it is als
 #Include in your project
 ##Using Maven
 ```javascript
-compile('com.mikepenz:fastadapter:0.3.0-SNAPSHOT@aar') {
+compile('com.mikepenz:fastadapter:0.3.1-SNAPSHOT@aar') {
 	transitive = true
 }
 

@@ -5,27 +5,27 @@ import java.util.List;
 /**
  * Created by mikepenz on 30.12.15.
  */
-public interface IItemAdapter extends IAdapter {
+public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
     /**
      * set a new list of items for this adapter
      *
      * @param items
      */
-    void set(List<? extends IItem> items);
+    void set(List<Item> items);
 
     /**
      * add an array of items to the end of the existing items
      *
      * @param items
      */
-    void add(IItem... items);
+    void add(Item... items);
 
     /**
      * add a list of items to the end of the existing items
      *
      * @param items
      */
-    void add(List<? extends IItem> items);
+    void add(List<Item> items);
 
     /**
      * add an array of items at the given position within the existing items
@@ -33,7 +33,7 @@ public interface IItemAdapter extends IAdapter {
      * @param position the relative position (position of this adapter)
      * @param items
      */
-    void add(int position, IItem... items);
+    void add(int position, Item... items);
 
     /**
      * add a list of items at the given position within the existing items
@@ -41,7 +41,7 @@ public interface IItemAdapter extends IAdapter {
      * @param position the relative position (position of this adapter)
      * @param items
      */
-    void add(int position, List<? extends IItem> items);
+    void add(int position, List<Item> items);
 
     /**
      * sets an item at the given position, overwriting the previous item
@@ -49,14 +49,14 @@ public interface IItemAdapter extends IAdapter {
      * @param position the relative position (position of this adapter)
      * @param item
      */
-    void set(int position, IItem item);
+    void set(int position, Item item);
 
     /**
      * add an item at the end of the existing items
      *
      * @param item
      */
-    void add(IItem item);
+    void add(Item item);
 
     /**
      * add an item at the given position within the existing icons
@@ -64,7 +64,7 @@ public interface IItemAdapter extends IAdapter {
      * @param position the relative position (position of this adapter)
      * @param item
      */
-    void add(int position, IItem item);
+    void add(int position, Item item);
 
     /**
      * removes an item at the given position within the existing icons
