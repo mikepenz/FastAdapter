@@ -664,10 +664,14 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         //we have to refetch the selections array again and again as the position will change after one item is deleted
         Set<Integer> selections = getSelections();
         while (selections.size() > 0) {
-            RelativeInfo relativeInfo = getRelativePosition(selections.iterator().next());
+            Iterator<Integer> iterator = selections.iterator();
+            RelativeInfo relativeInfo = getRelativePosition(iterator.next());
             if (relativeInfo.adapter instanceof IItemAdapter) {
                 deletedItems.add((Item) relativeInfo.adapter.getAdapterItem(relativeInfo.relativePosition));
                 ((IItemAdapter) relativeInfo.adapter).remove(relativeInfo.relativePosition);
+            } else {
+                //if not found we remove the selection
+                iterator.remove();
             }
             selections = getSelections();
         }
