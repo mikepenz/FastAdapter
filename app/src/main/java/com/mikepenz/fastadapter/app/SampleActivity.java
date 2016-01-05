@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
@@ -111,15 +112,15 @@ public class SampleActivity extends AppCompatActivity {
         fastAdapter.setHasStableIds(true);
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
             @Override
-            public boolean onClick(View v, int position, IItem item, FastAdapter.RelativeInfo relativeInfo) {
+            public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
                 Toast.makeText(v.getContext(), ((SampleItem) item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
                 return false;
             }
         });
         fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v, int position, IItem item, FastAdapter.RelativeInfo relativeInfo) {
-                undoHelper.remove(SampleActivity.this.findViewById(android.R.id.content), "Item removed", "Undo", Snackbar.LENGTH_LONG, relativeInfo.relativePosition, 1);
+            public boolean onLongClick(View v, IAdapter adapter, IItem item, int position) {
+                undoHelper.remove(SampleActivity.this.findViewById(android.R.id.content), "Item removed", "Undo", Snackbar.LENGTH_LONG, position, 1);
                 return true;
             }
         });
