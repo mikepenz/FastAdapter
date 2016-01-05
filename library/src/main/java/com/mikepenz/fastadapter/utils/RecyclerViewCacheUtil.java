@@ -12,7 +12,7 @@ import java.util.Stack;
  * Created by mikepenz on 18.09.15.
  * This util prefills the cache of the RecyclerView to allow fast lag-free scrolling with many different views
  */
-public class RecyclerViewCacheUtil {
+public class RecyclerViewCacheUtil<Item extends IItem> {
     private int mCacheSize = 2;
 
     /**
@@ -32,11 +32,11 @@ public class RecyclerViewCacheUtil {
      * @param recyclerView
      * @param items
      */
-    public void apply(RecyclerView recyclerView, Iterable<IItem> items) {
+    public void apply(RecyclerView recyclerView, Iterable<Item> items) {
         if (items != null) {
             //we pre-create the views for our cache
             HashMap<Integer, Stack<RecyclerView.ViewHolder>> cache = new HashMap<>();
-            for (IItem d : items) {
+            for (Item d : items) {
                 if (!cache.containsKey(d.getType())) {
                     cache.put(d.getType(), new Stack<RecyclerView.ViewHolder>());
                 }

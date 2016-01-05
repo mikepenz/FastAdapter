@@ -121,6 +121,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public FastAdapter withSavedInstanceState(Bundle savedInstanceState, String prefix) {
         if (savedInstanceState != null) {
+            //make sure already done selections are removed
+            deselect();
+
             //first restore opened collasable items, as otherwise may not all selections could be restored
             int[] collapsibles = savedInstanceState.getIntArray(BUNDLE_COLLAPSIBLE + prefix);
             if (collapsibles != null) {
@@ -304,11 +307,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             return new RelativeInfo<>();
         }
 
-        IAdapter adapter = getAdapter(position);
-        Item item = (Item) adapter.getAdapterItem(position - getItemCount(adapter.getOrder()));
         RelativeInfo<Item> relativeInfo = new RelativeInfo<>();
-        relativeInfo.item = item;
-        relativeInfo.adapter = adapter;
+        IAdapter adapter = getAdapter(position);
+        if (adapter != null) {
+            Item item = (Item) adapter.getAdapterItem(position - getItemCount(adapter.getOrder()));
+            relativeInfo.item = item;
+            relativeInfo.adapter = adapter;
+        }
         return relativeInfo;
     }
 
