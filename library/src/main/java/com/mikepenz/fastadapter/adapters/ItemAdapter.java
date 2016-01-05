@@ -17,9 +17,9 @@ import java.util.List;
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  * This adapter has the order of 500 which is the centered order
  */
-public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
+public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> implements IItemAdapter<Item> {
     //the items handled and managed by this item
-    private List<IItem> mItems = new ArrayList<>();
+    private List<Item> mItems = new ArrayList<>();
 
     //defines if the IdDistributor is used to set ID's to all added items
     private boolean mUseIdDistributor = true;
@@ -46,7 +46,7 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
     }
 
     //the filter predicate which is used in the ItemFilter
-    private Predicate<IItem> mFilterPredicate;
+    private Predicate<Item> mFilterPredicate;
 
     /**
      * define the predicate used to filter the list inside the ItemFilter
@@ -54,7 +54,7 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      * @param filterPredicate the predicate used to filter the list inside the ItemFilter
      * @return this
      */
-    public ItemAdapter withFilterPredicate(Predicate<IItem> filterPredicate) {
+    public ItemAdapter withFilterPredicate(Predicate<Item> filterPredicate) {
         this.mFilterPredicate = filterPredicate;
         return this;
     }
@@ -89,7 +89,7 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      * @return the items within this adapter
      */
     @Override
-    public List<IItem> getAdapterItems() {
+    public List<Item> getAdapterItems() {
         return mItems;
     }
 
@@ -100,7 +100,7 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      * @return the relative position
      */
     @Override
-    public int getAdapterPosition(IItem item) {
+    public int getAdapterPosition(Item item) {
         for (int i = 0; i < mItems.size(); i++) {
             if (mItems.get(i).getIdentifier() == item.getIdentifier()) {
                 return i;
@@ -114,7 +114,7 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      * @return the item inside this adapter
      */
     @Override
-    public IItem getAdapterItem(int position) {
+    public Item getAdapterItem(int position) {
         return mItems.get(position);
     }
 
@@ -123,11 +123,11 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      *
      * @param items
      */
-    public void set(List<? extends IItem> items) {
+    public void set(List<Item> items) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
-        mItems = (List<IItem>) items;
+        mItems = (List<Item>) items;
         mapPossibleTypes(mItems);
         getFastAdapter().notifyAdapterItemRangeChanged(getFastAdapter().getItemCount(getOrder()), getAdapterItemCount());
     }
@@ -137,7 +137,7 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      *
      * @param items
      */
-    public void add(IItem... items) {
+    public void add(Item... items) {
         if (items != null) {
             if (mUseIdDistributor) {
                 IdDistributor.checkIds(items);
@@ -153,13 +153,13 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      *
      * @param items
      */
-    public void add(List<? extends IItem> items) {
+    public void add(List<Item> items) {
         if (items != null) {
             if (mUseIdDistributor) {
                 IdDistributor.checkIds(items);
             }
             mItems.addAll(items);
-            mapPossibleTypes((Iterable<IItem>) items);
+            mapPossibleTypes((Iterable<Item>) items);
             getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()), items.size());
         }
     }
@@ -170,7 +170,7 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      * @param position the relative position (position of this adapter)
      * @param items
      */
-    public void add(int position, IItem... items) {
+    public void add(int position, Item... items) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
@@ -187,13 +187,13 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      * @param position the relative position (position of this adapter)
      * @param items
      */
-    public void add(int position, List<? extends IItem> items) {
+    public void add(int position, List<Item> items) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
         if (items != null) {
             mItems.addAll(position, items);
-            mapPossibleTypes((Iterable<IItem>) items);
+            mapPossibleTypes((Iterable<Item>) items);
             getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()) + position, items.size());
         }
     }
@@ -204,7 +204,7 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      * @param position the relative position (position of this adapter)
      * @param item
      */
-    public void set(int position, IItem item) {
+    public void set(int position, Item item) {
         if (mUseIdDistributor) {
             IdDistributor.checkId(item);
         }
@@ -218,7 +218,7 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      *
      * @param item
      */
-    public void add(IItem item) {
+    public void add(Item item) {
         if (mUseIdDistributor) {
             IdDistributor.checkId(item);
         }
@@ -233,7 +233,7 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      * @param position the relative position (position of this adapter)
      * @param item
      */
-    public void add(int position, IItem item) {
+    public void add(int position, Item item) {
         if (mUseIdDistributor) {
             IdDistributor.checkId(item);
         }
@@ -284,7 +284,7 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
      * This calls automatically all required methods, just overwrite the filterItems method
      */
     public class ItemFilter extends Filter {
-        private List<? extends IItem> mOriginalItems;
+        private List<Item> mOriginalItems;
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
@@ -299,13 +299,13 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
                 results.values = mOriginalItems;
                 results.count = mOriginalItems.size();
             } else {
-                List<IItem> filteredItems = new ArrayList<>();
+                List<Item> filteredItems = new ArrayList<>();
 
                 // We perform filtering operation
                 if (mFilterPredicate != null) {
-                    for (IItem item : mOriginalItems) {
-                        if (!mFilterPredicate.filter(item, constraint)) {
-                            filteredItems.add(item);
+                    for (Item item : mOriginalItems) {
+                        if (!mFilterPredicate.filter((Item) item, constraint)) {
+                            filteredItems.add((Item) item);
                         }
                     }
                 } else {
@@ -321,7 +321,7 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // Now we have to inform the adapter about the new list filtered
-            animateTo(mItems, (List<? extends IItem>) results.values);
+            animateTo(mItems, (List<Item>) results.values);
         }
 
         /**
@@ -330,7 +330,7 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
          * @param from
          * @param models
          */
-        private void animateTo(List<? extends IItem> from, List<? extends IItem> models) {
+        private void animateTo(List<Item> from, List<Item> models) {
             applyAndAnimateRemovals(from, models);
             applyAndAnimateAdditions(from, models);
         }
@@ -341,9 +341,9 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
          * @param from
          * @param newModels
          */
-        private void applyAndAnimateRemovals(List<? extends IItem> from, List<? extends IItem> newModels) {
+        private void applyAndAnimateRemovals(List<Item> from, List<Item> newModels) {
             for (int i = from.size() - 1; i >= 0; i--) {
-                final IItem model = from.get(i);
+                final Item model = from.get(i);
                 if (!newModels.contains(model)) {
                     remove(i);
                 }
@@ -356,9 +356,9 @@ public class ItemAdapter extends AbstractAdapter implements IItemAdapter {
          * @param from
          * @param newModels
          */
-        private void applyAndAnimateAdditions(List<? extends IItem> from, List<? extends IItem> newModels) {
+        private void applyAndAnimateAdditions(List<Item> from, List<Item> newModels) {
             for (int i = 0, count = newModels.size(); i < count; i++) {
-                final IItem model = newModels.get(i);
+                final Item model = newModels.get(i);
                 if (!from.contains(model)) {
                     add(i, model);
                 }

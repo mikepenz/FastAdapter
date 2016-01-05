@@ -276,8 +276,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      * @return the found IItem or null
      */
-    public IItem getItem(int position) {
-        return getInternalItem(position).item;
+    public <Item extends IItem> Item getItem(int position) {
+        return (Item) getInternalItem(position).item;
     }
 
     /**
@@ -286,7 +286,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      * @param position the global position
      * @return an ItemHolder with the Item, and the relative position
      */
-    private ItemHolder getInternalItem(int position) {
+    private ItemHolder<? extends IItem> getInternalItem(int position) {
         if (position < 0) {
             return new ItemHolder();
         }
@@ -645,7 +645,7 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
      *
      * @return a list of the IItem elements which were deleted
      */
-    public List<IItem> deleteAllSelectedItems() {
+    public List<? extends IItem> deleteAllSelectedItems() {
         List<IItem> deletedItems = new LinkedList<>();
         //we have to refetch the selections array again and again as the position will change after one item is deleted
         Set<Integer> selections = getSelections();
@@ -876,8 +876,8 @@ public class FastAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     /**
      * an internal class to return the IItem and relativePosition at once. used to save one iteration inside the getInternalItem method
      */
-    private class ItemHolder {
-        public IItem item = null;
+    private class ItemHolder<Item extends IItem> {
+        public Item item = null;
         public int relativePosition = -1;
     }
 
