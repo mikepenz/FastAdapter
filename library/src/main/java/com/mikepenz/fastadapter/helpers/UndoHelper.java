@@ -83,28 +83,34 @@ public class UndoHelper<Item extends IItem> {
     }
 
     private void notifyCommit() {
-        if (mHistory.action == ACTION_REMOVE) {
-            mUndoListener.commitRemove(mHistory.position, mHistory.items);
-            mHistory = null;
+        if (mHistory != null) {
+            if (mHistory.action == ACTION_REMOVE) {
+                mUndoListener.commitRemove(mHistory.position, mHistory.items);
+                mHistory = null;
+            }
         }
     }
 
     private void doChange() {
-        if (mHistory.action == ACTION_REMOVE) {
-            if (mHistory.items.size() == 1) {
-                mItemAdapter.remove(mHistory.position);
-            } else {
-                mItemAdapter.removeItemRange(mHistory.position, mHistory.items.size());
+        if (mHistory != null) {
+            if (mHistory.action == ACTION_REMOVE) {
+                if (mHistory.items.size() == 1) {
+                    mItemAdapter.remove(mHistory.position);
+                } else {
+                    mItemAdapter.removeItemRange(mHistory.position, mHistory.items.size());
+                }
             }
         }
     }
 
     private void undoChange() {
-        if (mHistory.action == ACTION_REMOVE) {
-            if (mHistory.items.size() == 1) {
-                mItemAdapter.add(mHistory.position, mHistory.items.get(0));
-            } else {
-                mItemAdapter.add(mHistory.position, mHistory.items);
+        if (mHistory != null) {
+            if (mHistory.action == ACTION_REMOVE) {
+                if (mHistory.items.size() == 1) {
+                    mItemAdapter.add(mHistory.position, mHistory.items.get(0));
+                } else {
+                    mItemAdapter.add(mHistory.position, mHistory.items);
+                }
             }
         }
         mHistory = null;

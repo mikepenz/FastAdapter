@@ -195,13 +195,15 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 int pos = holder.getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
                     boolean consumed = false;
-                    if (mOnClickListener != null) {
-                        RelativeInfo relativeInfo = getRelativeInfo(pos);
-                        consumed = mOnClickListener.onClick(v, relativeInfo.adapter, (IItem) relativeInfo.item, pos);
-                    }
+                    RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
+                    if (relativeInfo.item != null && relativeInfo.item.isEnabled()) {
+                        if (mOnClickListener != null) {
+                            consumed = mOnClickListener.onClick(v, relativeInfo.adapter, relativeInfo.item, pos);
+                        }
 
-                    if (!consumed && (!(mMultiSelect && mMultiSelectOnLongClick) || !mMultiSelect)) {
-                        handleSelection(pos);
+                        if (!consumed && (!(mMultiSelect && mMultiSelectOnLongClick) || !mMultiSelect)) {
+                            handleSelection(relativeInfo.item, pos);
+                        }
                     }
                 }
             }
@@ -213,13 +215,15 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 int pos = holder.getAdapterPosition();
                 if (pos != RecyclerView.NO_POSITION) {
                     boolean consumed = false;
-                    if (mOnLongClickListener != null) {
-                        RelativeInfo relativeInfo = getRelativeInfo(pos);
-                        consumed = mOnLongClickListener.onLongClick(v, relativeInfo.adapter, (IItem) relativeInfo.item, pos);
-                    }
+                    RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
+                    if (relativeInfo.item != null && relativeInfo.item.isEnabled()) {
+                        if (mOnLongClickListener != null) {
+                            consumed = mOnLongClickListener.onLongClick(v, relativeInfo.adapter, relativeInfo.item, pos);
+                        }
 
-                    if (!consumed && (mMultiSelect && mMultiSelectOnLongClick)) {
-                        handleSelection(pos);
+                        if (!consumed && (mMultiSelect && mMultiSelectOnLongClick)) {
+                            handleSelection(relativeInfo.item, pos);
+                        }
                     }
                     return consumed;
                 }
@@ -233,8 +237,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 if (mOnTouchListener != null) {
                     int pos = holder.getAdapterPosition();
                     if (pos != RecyclerView.NO_POSITION) {
-                        RelativeInfo relativeInfo = getRelativeInfo(pos);
-                        return mOnTouchListener.onTouch(v, event, relativeInfo.adapter, (IItem) relativeInfo.item, pos);
+                        RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
+                        return mOnTouchListener.onTouch(v, event, relativeInfo.adapter, relativeInfo.item, pos);
                     }
                 }
                 return false;
@@ -310,8 +314,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         RelativeInfo<Item> relativeInfo = new RelativeInfo<>();
         IAdapter adapter = getAdapter(position);
         if (adapter != null) {
-            Item item = (Item) adapter.getAdapterItem(position - getItemCount(adapter.getOrder()));
-            relativeInfo.item = item;
+            relativeInfo.item = (Item) adapter.getAdapterItem(position - getItemCount(adapter.getOrder()));
             relativeInfo.adapter = adapter;
         }
         return relativeInfo;
@@ -474,8 +477,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      *
      * @param position the global position
      */
-    private void handleSelection(int position) {
-        Item item = getItem(position);
+    private void handleSelection(Item item, int position) {
         if (!item.isSelectable()) {
             return;
         }
