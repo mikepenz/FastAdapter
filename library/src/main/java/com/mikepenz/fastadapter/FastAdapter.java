@@ -476,7 +476,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     private void handleSelection(int position) {
         Item item = getItem(position);
-        if (!item.isSelectable()) {
+        if (!item.isSelectable() || !item.isEnabled()) {
             return;
         }
 
