@@ -288,7 +288,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         //global position to relative
         int length = mItems.size();
         //make sure we do not delete to many items
-        int saveItemCount = Math.min(itemCount, length - position - getFastAdapter().getItemCount(getOrder()));
+        int saveItemCount = Math.min(itemCount, length - position + getFastAdapter().getItemCount(getOrder()));
 
         for (int i = 0; i < saveItemCount; i++) {
             mItems.remove(position - getFastAdapter().getItemCount(getOrder()));
