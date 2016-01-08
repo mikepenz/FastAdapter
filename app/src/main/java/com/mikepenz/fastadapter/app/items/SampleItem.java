@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> implements ICollapsible<SampleItem> {
+public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> implements ICollapsible<SampleItem, IItem> {
 
     public String header;
     public StringHolder name;
@@ -121,8 +121,10 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
 
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         protected View view;
-        @Bind(R.id.material_drawer_name) TextView name;
-        @Bind(R.id.material_drawer_description) TextView description;
+        @Bind(R.id.material_drawer_name)
+        TextView name;
+        @Bind(R.id.material_drawer_description)
+        TextView description;
 
         public ViewHolder(View view) {
             super(view);

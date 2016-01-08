@@ -68,7 +68,7 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
         //fill with some sample data
         List<SampleItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
-            SampleItem sampleItem = new SampleItem().withName("Test " + i + (i % 10 == 0 ? "(Collapsible)" : "")).withIdentifier(100 + i);
+            SampleItem sampleItem = new SampleItem().withName("Test " + i + (i % 10 == 0 ? " (Collapsible)" : "")).withIdentifier(100 + i);
 
             //add subitems so we can showcase the collapsible functionality
             if (i % 10 == 0) {
