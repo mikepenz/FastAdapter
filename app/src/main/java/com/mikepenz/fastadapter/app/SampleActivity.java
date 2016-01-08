@@ -55,6 +55,7 @@ public class SampleActivity extends AppCompatActivity {
                 .withSavedInstance(savedInstanceState)
                 .withShowDrawerOnFirstLaunch(true)
                 .addDrawerItems(
+                        new PrimaryDrawerItem().withName(R.string.sample_image_list).withSelectable(false).withIdentifier(5).withIcon(MaterialDesignIconic.Icon.gmi_wallpaper),
                         new PrimaryDrawerItem().withName(R.string.sample_multi_select).withSelectable(false).withIdentifier(1).withIcon(MaterialDesignIconic.Icon.gmi_select_all),
                         new PrimaryDrawerItem().withName(R.string.sample_collapsible).withSelectable(false).withIdentifier(2).withIcon(MaterialDesignIconic.Icon.gmi_check_all),
                         new PrimaryDrawerItem().withName(R.string.sample_sticky_header).withSelectable(false).withIdentifier(3).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
@@ -75,6 +76,8 @@ public class SampleActivity extends AppCompatActivity {
                                 intent = new Intent(SampleActivity.this, StickyHeaderSampleActivity.class);
                             } else if (drawerItem.getIdentifier() == 4) {
                                 intent = new Intent(SampleActivity.this, AdvancedSampleActivity.class);
+                            } else if (drawerItem.getIdentifier() == 5) {
+                                intent = new Intent(SampleActivity.this, ImageListActivity.class);
                             } else if (drawerItem.getIdentifier() == 100) {
                                 intent = new LibsBuilder()
                                         .withFields(R.string.class.getFields())

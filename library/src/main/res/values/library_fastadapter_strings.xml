@@ -10,7 +10,7 @@
         The <b>FastAdapter</b> is here to simplify this process. You do not have to worry about the adapter anymore. Just write the logic for how your view should look like, and you are done. This library has a fast and highly optimized core which provides core functionality, most apps require. It also prevents common mistakes by taking away those steps from the devs. Beside being blazing fast, minimizing the code you need to write, it is also really easy to extend. Just provide another Adapter implementation, hook into the adapter chain, custom select / deselection behaviors. Everything is possible.
         ]]>
     </string>
-    <string name="library_fastadapter_libraryVersion">0.4.2-SNAPSHOT</string>
+    <string name="library_fastadapter_libraryVersion">0.5.0-SNAPSHOT</string>
     <string name="library_fastadapter_libraryWebsite">https://github.com/mikepenz/FastAdapter</string>
     <string name="library_fastadapter_licenseId">apache_2_0</string>
     <string name="library_fastadapter_isOpenSource">true</string>

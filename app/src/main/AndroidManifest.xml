@@ -18,6 +18,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ImageListActivity"
+            android:label="@string/sample_image_list" />
+        <activity
             android:name=".MultiselectSampleActivity"
             android:label="@string/sample_multi_select" />
         <activity
