@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by mikepenz on 30.12.15.
  */
-public interface ICollapsible<T> {
+public interface ICollapsible<T, Item extends IItem> {
     /**
      * @return true if collapsed (closed)
      */
@@ -22,5 +22,5 @@ public interface ICollapsible<T> {
     /**
      * @return the list of subItems
      */
-    List<IItem> getSubItems();
+    List<Item> getSubItems();
 }
