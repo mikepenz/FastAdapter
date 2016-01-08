@@ -56,6 +56,9 @@ dependencies {
         transitive = true
         exclude module: "fastadapter"
     }
+    //used to provide different itemAnimators for the RecyclerView
+    //TBR
+    compile 'com.mikepenz:itemanimators:0.0.1-SNAPSHOT@aar'
     //used to generate the Open Source section
     //https://github.com/mikepenz/AboutLibraries
     compile('com.mikepenz:aboutlibraries:5.3.4@aar') {
