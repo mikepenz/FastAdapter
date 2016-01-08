@@ -46,6 +46,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private OnTouchListener mOnTouchListener;
 
     /**
+     * default CTOR
+     */
+    public FastAdapter() {
+        setHasStableIds(true);
+    }
+
+    /**
      * Define the OnClickListener which will be used for a single item
      *
      * @param mOnClickListener the OnClickListener which will be used for a single item
