@@ -12,8 +12,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 23
-        versionCode 42
-        versionName '0.4.2-SNAPSHOT'
+        versionCode 50
+        versionName '0.5.0-SNAPSHOT'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
