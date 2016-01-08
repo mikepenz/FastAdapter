@@ -2,4 +2,5 @@
 
 <resources>
     <item name="fastadapter_sampleitem_id" type="id" />
+    <item name="fastadapter_image_item_id" type="id" />
 </resources>

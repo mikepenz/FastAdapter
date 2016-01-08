@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <integer name="anim_alpha_duration_millis">300</integer>
+
+    <!-- the number of columns to display -->
+    <integer name="wall_splash_columns">1</integer>
+</resources>
