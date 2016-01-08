@@ -6,6 +6,16 @@ import java.util.List;
  * Created by mikepenz on 30.12.15.
  */
 public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
+
+    /**
+     * sets the subItems of the given collapsible
+     *
+     * @param collapsible the collapsible which gets the subItems set
+     * @param subItems    the subItems for this collapsible item
+     * @return the item type of the collapsible
+     */
+    <T> T setSubItems(ICollapsible<T, Item> collapsible, List<Item> subItems);
+
     /**
      * set a new list of items for this adapter
      *
@@ -85,7 +95,6 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
      * removes all items of this adapter
      */
     void clear();
-
 
     /**
      * the interface used to filter the list inside the ItemFilter

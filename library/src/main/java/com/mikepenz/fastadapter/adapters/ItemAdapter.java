@@ -3,6 +3,7 @@ package com.mikepenz.fastadapter.adapters;
 import android.widget.Filter;
 
 import com.mikepenz.fastadapter.AbstractAdapter;
+import com.mikepenz.fastadapter.ICollapsible;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.utils.IdDistributor;
@@ -126,6 +127,21 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     @Override
     public Item getAdapterItem(int position) {
         return mItems.get(position);
+    }
+
+    /**
+     * sets the subItems of the given collapsible
+     * This method also makes sure identifiers are set if we use the IdDistributor
+     *
+     * @param collapsible the collapsible which gets the subItems set
+     * @param subItems    the subItems for this collapsible item
+     * @return the item type of the collapsible
+     */
+    public <T> T setSubItems(ICollapsible<T, Item> collapsible, List<Item> subItems) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkIds(subItems);
+        }
+        return collapsible.withSubItems(subItems);
     }
 
     /**
