@@ -28,11 +28,6 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 compile('com.mikepenz:fastadapter:0.5.5@aar') {
 	transitive = true
 }
-
-//only on the SNAPSHOT repo right now:
-repositories {
-    maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-}
 ```
 
 ##How to use
