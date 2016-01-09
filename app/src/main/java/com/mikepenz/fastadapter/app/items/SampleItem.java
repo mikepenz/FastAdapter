@@ -81,7 +81,7 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
 
     @Override
     public int getType() {
-        return R.id.fastadapter_sampleitem_id;
+        return R.id.fastadapter_sample_item_id;
     }
 
     @Override
