@@ -492,7 +492,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (!mMultiSelect) {
             Iterator<Integer> entries = mSelections.iterator();
             while (entries.hasNext()) {
-                deselect(entries.next(), entries);
+                Integer pos = entries.next();
+                if (pos != position) {
+                    deselect(pos, entries);
+                }
             }
         }
 
