@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by mikepenz on 27.12.15.
  */
-public interface IAdapter {
+public interface IAdapter<Item extends IItem> {
     /**
      * defines the FastAdapter which manages all the core logic
      *
@@ -30,13 +30,13 @@ public interface IAdapter {
     /**
      * @return the list of defined items within THIS adapter
      */
-    List<IItem> getAdapterItems();
+    List<Item> getAdapterItems();
 
     /**
      * @param position the relative position
      * @return the item at the given relative position within this adapter
      */
-    IItem getAdapterItem(int position);
+    Item getAdapterItem(int position);
 
     /**
      * Searches for the given item and calculates it's relative position
@@ -44,7 +44,16 @@ public interface IAdapter {
      * @param item the item which is searched for
      * @return the relative position
      */
-    int getAdapterPosition(IItem item);
+    int getAdapterPosition(Item item);
+
+
+    /**
+     * Returns the global position based on the relative position given
+     *
+     * @param position the relative position within this adapter
+     * @return the global position used for all methods
+     */
+    int getGlobalPosition(int position);
 
     /**
      * @return the global item count
@@ -55,5 +64,5 @@ public interface IAdapter {
      * @param position the global position
      * @return the global item based on the global position
      */
-    IItem getItem(int position);
+    <Item extends IItem> Item getItem(int position);
 }

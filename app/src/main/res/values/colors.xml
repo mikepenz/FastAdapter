@@ -10,4 +10,9 @@
     <color name="colorPrimaryDark">#2F3E9E</color>
     <color name="colorPrimaryLight">#C4C9E8</color>
     <color name="colorAccent">#02A8F3</color>
+
+    <!-- general colors for drawer -->
+    <color name="list_background">#F2F2F2</color>
+    <!-- primary colors for drawer -->
+    <color name="list_background_normal">#FCFCFC</color>
 </resources>

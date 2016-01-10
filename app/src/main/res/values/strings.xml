@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">FastAdapter</string>
 
+    <string name="sample_simple">Simple Sample</string>
+    <string name="sample_icon_grid">IconGrid Sample</string>
+    <string name="sample_image_list">ImageList Sample</string>
     <string name="sample_multi_select">MultiSelect Sample</string>
     <string name="sample_collapsible">Collapsible Sample</string>
     <string name="sample_sticky_header">Sticky Header Sample</string>

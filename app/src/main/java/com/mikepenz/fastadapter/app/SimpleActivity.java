@@ -1,28 +1,33 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
-import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
+import com.mikepenz.fastadapter.helpers.UndoHelper;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 import java.util.List;
 
-public class CollapsibleSampleActivity extends AppCompatActivity {
+public class SimpleActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastAdapter fastAdapter;
+    private FastAdapter<SampleItem> fastAdapter;
+
+    private UndoHelper undoHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +37,25 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.sample_collapsible);
+
 
         //style our ui
         new MaterializeBuilder().withActivity(this).build();
 
-        //create our FastAdapter
-        fastAdapter = new FastAdapter();
+        //create our FastAdapter which will manage everything
+        fastAdapter = new FastAdapter<>();
 
-        //create our adapters
+        //create our ItemAdapter which will host our items
         final ItemAdapter<SampleItem> itemAdapter = new ItemAdapter<>();
+
+        //
+        undoHelper = new UndoHelper(itemAdapter, new UndoHelper.UndoListener() {
+            @Override
+            public void commitRemove(int position, ArrayList<? extends IItem> removed) {
+                Log.e("UndoHelper", "Pos: " + position + " Removed: " + removed.size());
+                //remember that the items were removed
+            }
+        });
 
         //configure our fastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
@@ -49,36 +63,28 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
             @Override
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
-                if (item instanceof SampleItem) {
-                    if (((SampleItem) item).getSubItems() != null) {
-                        fastAdapter.toggleCollapsible(position);
-                        return true;
-                    }
-                }
+                Toast.makeText(v.getContext(), ((SampleItem) item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
                 return false;
+            }
+        });
+        fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v, IAdapter adapter, IItem item, int position) {
+                undoHelper.remove(SimpleActivity.this.findViewById(android.R.id.content), "Item removed", "Undo", Snackbar.LENGTH_LONG, position, 1);
+                return true;
             }
         });
 
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setItemAnimator(new SlideDownAlphaAnimator());
+        rv.setItemAnimator(new DefaultItemAnimator());
         rv.setAdapter(itemAdapter.wrap(fastAdapter));
 
         //fill with some sample data
         List<SampleItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
-            SampleItem sampleItem = new SampleItem().withName("Test " + i + (i % 10 == 0 ? " (Collapsible)" : "")).withIdentifier(100 + i);
-
-            //add subitems so we can showcase the collapsible functionality
-            if (i % 10 == 0) {
-                List<IItem> subItems = new LinkedList<>();
-                for (int ii = 1; ii <= 5; ii++) {
-                    subItems.add(new SampleItem().withName("-- Test " + ii).withIdentifier(1000 + ii));
-                }
-                sampleItem.withSubItems(subItems);
-            }
-            items.add(sampleItem);
+            items.add(new SampleItem().withName("Test " + i).withIdentifier(100 + i));
         }
         itemAdapter.add(items);
 

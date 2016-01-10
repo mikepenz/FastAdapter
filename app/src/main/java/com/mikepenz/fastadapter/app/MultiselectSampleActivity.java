@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
@@ -62,7 +63,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         mFastAdapter.withMultiSelectOnLongClick(true);
         mFastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
             @Override
-            public boolean onClick(View v, int position, int relativePosition, IItem item) {
+            public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
                 Boolean res = mActionModeHelper.onClick(item, position);
                 return res != null ? res : false;
@@ -70,7 +71,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         });
         mFastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v, int position, int relativePosition, IItem item) {
+            public boolean onLongClick(View v, IAdapter adapter, IItem item, int position) {
                 ActionMode actionMode = mActionModeHelper.onLongClick(MultiselectSampleActivity.this, position);
 
                 if (actionMode != null) {
