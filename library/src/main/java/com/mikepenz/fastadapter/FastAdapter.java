@@ -92,9 +92,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     /**
      * select between the different selection behaviors.
-     * there are now 2 different variants of selection. you can toggle this via `withSelectWithItemUpdate(boolean)` (where false == default --> variant 1)
+     * there are now 2 different variants of selection. you can toggle this via `withSelectWithItemUpdate(boolean)` (where false == default - variant 1)
      * 1.) direct selection via the view "selected" state, we also make sure we do not animate here so no notifyItemChanged is called if we repeatly press the same item
-     * 2.) we select the items via a notifyItemChanged. -> this will allow custom selected logics within your views (isSelected() --> do something...) and it will also animate the change via the provided itemAnimator. because of the animation of the itemAnimator the selection will have a small delay (time of animating)
+     * 2.) we select the items via a notifyItemChanged. this will allow custom selected logics within your views (isSelected() - do something...) and it will also animate the change via the provided itemAnimator. because of the animation of the itemAnimator the selection will have a small delay (time of animating)
      *
      * @param selectWithItemUpdate true if notifyItemChanged should be called upon select
      * @return this
@@ -869,18 +869,16 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param toPosition   the global toPosition
      */
     public void notifyAdapterItemMoved(int fromPosition, int toPosition) {
-        if (mSelections.contains(fromPosition)) {
+        //collapse items we move. just in case :D
+        collapse(fromPosition);
+        collapse(toPosition);
+
+        if (!mSelections.contains(fromPosition) && mSelections.contains(toPosition)) {
+            mSelections.remove(toPosition);
+            mSelections.add(fromPosition);
+        } else if (mSelections.contains(fromPosition) && !mSelections.contains(toPosition)) {
             mSelections.remove(fromPosition);
             mSelections.add(toPosition);
-        }
-
-        //we have to update all current stored selection and expandable states in our map
-        if (fromPosition < toPosition) {
-            mSelections = AdapterUtil.adjustPosition(mSelections, fromPosition, toPosition, -1);
-            mExpanded = AdapterUtil.adjustPosition(mExpanded, fromPosition, toPosition, -1);
-        } else {
-            mSelections = AdapterUtil.adjustPosition(mSelections, toPosition, fromPosition, 1);
-            mExpanded = AdapterUtil.adjustPosition(mExpanded, toPosition, fromPosition, 1);
         }
 
         notifyItemMoved(fromPosition, toPosition);
