@@ -54,7 +54,7 @@ public class SimpleActivity extends AppCompatActivity {
 
         //create our ItemAdapter which will host our items
         final ItemAdapter<SampleItem> itemAdapter = new ItemAdapter<>();
-        final FastScrollIndicatorAdapter<SampleItem> fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter();
+        final FastScrollIndicatorAdapter<SampleItem> fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter<>();
 
         //
         undoHelper = new UndoHelper(itemAdapter, new UndoHelper.UndoListener() {
@@ -68,16 +68,16 @@ public class SimpleActivity extends AppCompatActivity {
         //configure our fastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         fastAdapter.setHasStableIds(true);
-        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
+        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
             @Override
-            public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
-                Toast.makeText(v.getContext(), ((SampleItem) item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
+            public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
+                Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
                 return false;
             }
         });
-        fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
+        fastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener<SampleItem>() {
             @Override
-            public boolean onLongClick(View v, IAdapter adapter, IItem item, int position) {
+            public boolean onLongClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
                 undoHelper.remove(SimpleActivity.this.findViewById(android.R.id.content), "Item removed", "Undo", Snackbar.LENGTH_LONG, position, 1);
                 return true;
             }
