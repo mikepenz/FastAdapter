@@ -99,14 +99,12 @@ public class IconGridActivity extends AppCompatActivity {
 
         //create our FastAdapter which will manage everything
         fastAdapter = new FastAdapter<>();
-        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
+        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
             @Override
-            public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
-                if (item instanceof SampleItem) {
-                    if (((SampleItem) item).getSubItems() != null) {
-                        fastAdapter.toggleExpandable(position);
-                        return true;
-                    }
+            public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
+                if (item.getSubItems() != null) {
+                    fastAdapter.toggleExpandable(position);
+                    return true;
                 }
                 return false;
             }
@@ -118,6 +116,7 @@ public class IconGridActivity extends AppCompatActivity {
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
 
+        //init our gridLayoutManager and configure RV
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
@@ -147,7 +146,6 @@ public class IconGridActivity extends AppCompatActivity {
 
         //add all icons of all registered Fonts to the list
         ArrayList<SampleItem> items = new ArrayList<>(Iconics.getRegisteredFonts(this).size());
-        int count = 0;
         for (ITypeface font : mFonts) {
             SampleItem sampleItem = new SampleItem().withName(font.getFontName());
 
@@ -158,11 +156,13 @@ public class IconGridActivity extends AppCompatActivity {
             sampleItem.withSubItems(icons);
 
             items.add(sampleItem);
-            count++;
         }
 
         //fill with some sample data
         itemAdapter.add(items);
+
+        //expand one item to make sample look a bit more interesting
+        fastAdapter.expand(2);
 
         //restore selections (this has to be done after the items were added
         fastAdapter.withSavedInstanceState(savedInstanceState);

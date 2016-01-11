@@ -26,7 +26,7 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 #Include in your project
 ##Using Maven
 ```javascript
-compile('com.mikepenz:fastadapter:0.6.0@aar') {
+compile('com.mikepenz:fastadapter:0.7.0@aar') {
 	transitive = true
 }
 ```

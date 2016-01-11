@@ -13,11 +13,9 @@ import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData;
 import com.mikepenz.fastadapter.app.items.ImageItem;
-import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 public class ImageListActivity extends AppCompatActivity {
@@ -44,10 +42,10 @@ public class ImageListActivity extends AppCompatActivity {
         final ItemAdapter<ImageItem> itemAdapter = new ItemAdapter<>();
 
         //configure our fastAdapter
-        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
+        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<ImageItem>() {
             @Override
-            public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
-                Toast.makeText(v.getContext(), ((SampleItem) item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
+            public boolean onClick(View v, IAdapter<ImageItem> adapter, ImageItem item, int position) {
+                Toast.makeText(v.getContext(), item.mName, Toast.LENGTH_LONG).show();
                 return false;
             }
         });

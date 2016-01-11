@@ -27,10 +27,14 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     protected static final String BUNDLE_EXPANDED = "bundle_expanded";
 
     // we remember all adapters
-    private ArrayMap<Integer, IAdapter> mAdapters = new ArrayMap<>();
+    private ArrayMap<Integer, IAdapter<Item>> mAdapters = new ArrayMap<>();
     // we remember all possible types so we can create a new view efficiently
     private ArrayMap<Integer, Item> mTypeInstances = new ArrayMap<>();
 
+    // if enabled we will select the item via a notifyItemChanged -> will animate with the Animator
+    // you can also use this if you have any custom logic for selections, and do not depend on the "selected" state of the view
+    // note if enabled it will feel a bit slower because it will animate the selection
+    private boolean mSelectWithItemUpdate = false;
     // if we want multiSelect enabled
     private boolean mMultiSelect = false;
     // if we want the multiSelect only on longClick
@@ -42,9 +46,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private SparseIntArray mExpanded = new SparseIntArray();
 
     // the listeners which can be hooked on an item
-    private OnClickListener mOnClickListener;
-    private OnLongClickListener mOnLongClickListener;
-    private OnTouchListener mOnTouchListener;
+    private OnClickListener<Item> mOnClickListener;
+    private OnLongClickListener<Item> mOnLongClickListener;
+    private OnTouchListener<Item> mOnTouchListener;
 
     /**
      * default CTOR
@@ -59,7 +63,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param mOnClickListener the OnClickListener which will be used for a single item
      * @return this
      */
-    public FastAdapter withOnClickListener(OnClickListener mOnClickListener) {
+    public FastAdapter<Item> withOnClickListener(OnClickListener<Item> mOnClickListener) {
         this.mOnClickListener = mOnClickListener;
         return this;
     }
@@ -70,7 +74,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param mOnLongClickListener the OnLongClickListener which will be used for a single item
      * @return this
      */
-    public FastAdapter withOnLongClickListener(OnLongClickListener mOnLongClickListener) {
+    public FastAdapter<Item> withOnLongClickListener(OnLongClickListener<Item> mOnLongClickListener) {
         this.mOnLongClickListener = mOnLongClickListener;
         return this;
     }
@@ -81,8 +85,22 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param mOnTouchListener the TouchListener which will be used for a single item
      * @return this
      */
-    public FastAdapter withOnTouchListener(OnTouchListener mOnTouchListener) {
+    public FastAdapter<Item> withOnTouchListener(OnTouchListener<Item> mOnTouchListener) {
         this.mOnTouchListener = mOnTouchListener;
+        return this;
+    }
+
+    /**
+     * select between the different selection behaviors.
+     * there are now 2 different variants of selection. you can toggle this via `withSelectWithItemUpdate(boolean)` (where false == default --> variant 1)
+     * 1.) direct selection via the view "selected" state, we also make sure we do not animate here so no notifyItemChanged is called if we repeatly press the same item
+     * 2.) we select the items via a notifyItemChanged. -> this will allow custom selected logics within your views (isSelected() --> do something...) and it will also animate the change via the provided itemAnimator. because of the animation of the itemAnimator the selection will have a small delay (time of animating)
+     *
+     * @param selectWithItemUpdate true if notifyItemChanged should be called upon select
+     * @return this
+     */
+    public FastAdapter<Item> withSelectWithItemUpdate(boolean selectWithItemUpdate) {
+        this.mSelectWithItemUpdate = selectWithItemUpdate;
         return this;
     }
 
@@ -92,7 +110,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param multiSelect true to enable multiSelect
      * @return this
      */
-    public FastAdapter withMultiSelect(boolean multiSelect) {
+    public FastAdapter<Item> withMultiSelect(boolean multiSelect) {
         mMultiSelect = multiSelect;
         return this;
     }
@@ -103,7 +121,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param multiSelectOnLongClick false to do multiSelect via single click
      * @return this
      */
-    public FastAdapter withMultiSelectOnLongClick(boolean multiSelectOnLongClick) {
+    public FastAdapter<Item> withMultiSelectOnLongClick(boolean multiSelectOnLongClick) {
         mMultiSelectOnLongClick = multiSelectOnLongClick;
         return this;
     }
@@ -112,10 +130,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * re-selects all elements stored in the savedInstanceState
      * IMPORTANT! Call this method only after all items where added to the adapters again. Otherwise it may select wrong items!
      *
-     * @param savedInstanceState
-     * @return
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down then this Bundle contains the data it most
+     *                           recently supplied in Note: Otherwise it is null.
+     * @return this
      */
-    public FastAdapter withSavedInstanceState(Bundle savedInstanceState) {
+    public FastAdapter<Item> withSavedInstanceState(Bundle savedInstanceState) {
         return withSavedInstanceState(savedInstanceState, "");
     }
 
@@ -123,11 +143,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * re-selects all elements stored in the savedInstanceState
      * IMPORTANT! Call this method only after all items where added to the adapters again. Otherwise it may select wrong items!
      *
-     * @param savedInstanceState
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down then this Bundle contains the data it most
+     *                           recently supplied in Note: Otherwise it is null.
      * @param prefix             a prefix added to the savedInstance key so we can store multiple states
-     * @return
+     * @return this
      */
-    public FastAdapter withSavedInstanceState(Bundle savedInstanceState, String prefix) {
+    public FastAdapter<Item> withSavedInstanceState(Bundle savedInstanceState, String prefix) {
         if (savedInstanceState != null) {
             //make sure already done selections are removed
             deselect();
@@ -165,10 +187,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * registers an AbstractAdapter which will be hooked into the adapter chain
      *
-     * @param adapter
-     * @param <A>     an adapter which extends the AbstractAdapter
+     * @param adapter an adapter which extends the AbstractAdapter
      */
-    public <A extends AbstractAdapter> void registerAdapter(A adapter) {
+    public <A extends AbstractAdapter<Item>> void registerAdapter(A adapter) {
         if (!mAdapters.containsKey(adapter.getOrder())) {
             mAdapters.put(adapter.getOrder(), adapter);
         }
@@ -188,9 +209,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * Creates the ViewHolder by the viewType
      *
-     * @param parent
-     * @param viewType
-     * @return
+     * @param parent   the parent view (the RecyclerView)
+     * @param viewType the current viewType which is bound
+     * @return the ViewHolder with the bound data
      */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -210,7 +231,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                         }
 
                         if (!consumed && (!(mMultiSelect && mMultiSelectOnLongClick) || !mMultiSelect)) {
-                            handleSelection(relativeInfo.item, pos);
+                            handleSelection(v, relativeInfo.item, pos);
                         }
                     }
                 }
@@ -230,7 +251,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                         }
 
                         if (!consumed && (mMultiSelect && mMultiSelectOnLongClick)) {
-                            handleSelection(relativeInfo.item, pos);
+                            handleSelection(v, relativeInfo.item, pos);
                         }
                     }
                     return consumed;
@@ -259,7 +280,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * Binds the data to the created ViewHolder and sets the listeners to the holder.itemView
      *
-     * @param holder
+     * @param holder   the viewHolder we bind the data on
      * @param position the global position
      */
     @Override
@@ -282,7 +303,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         int position = 0;
         int length = mAdapters.size();
         for (int i = 0; i < length; i++) {
-            IAdapter adapter = mAdapters.valueAt(i);
+            IAdapter<Item> adapter = mAdapters.valueAt(i);
             if (adapter.getOrder() < 0) {
                 continue;
             }
@@ -320,9 +341,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         }
 
         RelativeInfo<Item> relativeInfo = new RelativeInfo<>();
-        IAdapter adapter = getAdapter(position);
+        IAdapter<Item> adapter = getAdapter(position);
         if (adapter != null) {
-            relativeInfo.item = (Item) adapter.getAdapterItem(position - getItemCount(adapter.getOrder()));
+            relativeInfo.item = adapter.getAdapterItem(position - getItemCount(adapter.getOrder()));
             relativeInfo.adapter = adapter;
         }
         return relativeInfo;
@@ -334,11 +355,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      * @return the adapter responsible for this global position
      */
-    public IAdapter getAdapter(int position) {
+    public IAdapter<Item> getAdapter(int position) {
         int currentCount = 0;
         int length = mAdapters.size();
         for (int i = 0; i < length; i++) {
-            IAdapter adapter = mAdapters.valueAt(i);
+            IAdapter<Item> adapter = mAdapters.valueAt(i);
             if (adapter.getOrder() < 0) {
                 continue;
             }
@@ -355,7 +376,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * finds the int ItemViewType from the IItem which exists at the given position
      *
      * @param position the global position
-     * @return
+     * @return the viewType for this position
      */
     @Override
     public int getItemViewType(int position) {
@@ -366,7 +387,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * finds the int ItemId from the IItem which exists at the given position
      *
      * @param position the global position
-     * @return
+     * @return the itemId for this position
      */
     @Override
     public long getItemId(int position) {
@@ -423,8 +444,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * add the values to the bundle for saveInstanceState
      *
-     * @param savedInstanceState
-     * @return
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down then this Bundle contains the data it most
+     *                           recently supplied in Note: Otherwise it is null.
+     * @return the passed bundle with the newly added data
      */
     public Bundle saveInstanceState(Bundle savedInstanceState) {
         return saveInstanceState(savedInstanceState, "");
@@ -433,9 +456,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * add the values to the bundle for saveInstanceState
      *
-     * @param savedInstanceState
+     * @param savedInstanceState If the activity is being re-initialized after
+     *                           previously being shut down then this Bundle contains the data it most
+     *                           recently supplied in Note: Otherwise it is null.
      * @param prefix             a prefix added to the savedInstance key so we can store multiple states
-     * @return
+     * @return the passed bundle with the newly added data
      */
     public Bundle saveInstanceState(Bundle savedInstanceState, String prefix) {
         if (savedInstanceState != null) {
@@ -496,21 +521,46 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      *
      * @param position the global position
      */
-    private void handleSelection(Item item, int position) {
+    private void handleSelection(View view, Item item, int position) {
         if (!item.isSelectable()) {
             return;
         }
 
-        if (mSelections.contains(position)) {
+        boolean selected = mSelections.contains(position);
+        if (mSelectWithItemUpdate || view == null) {
             if (!mMultiSelect) {
                 deselect();
             }
-            deselect(position);
+            if (selected) {
+                deselect(position);
+            } else {
+                select(position);
+            }
         } else {
             if (!mMultiSelect) {
-                deselect();
+                //we have to separately handle deselection here because if we toggle the current item we do not want to deselect this first!
+                Iterator<Integer> entries = mSelections.iterator();
+                while (entries.hasNext()) {
+                    //deselect all but the current one! this is important!
+                    Integer pos = entries.next();
+                    if (pos != position) {
+                        deselect(pos, entries);
+                    }
+                }
             }
-            select(position);
+
+            //we toggle the state of the view
+            item.withSetSelected(!selected);
+            view.setSelected(!selected);
+
+            //now we make sure we remember the selection!
+            if (selected) {
+                if (mSelections.contains(position)) {
+                    mSelections.remove(position);
+                }
+            } else {
+                mSelections.add(position);
+            }
         }
     }
 
@@ -554,6 +604,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * deselects all selections
+     */
+    public void deselect() {
+        deselect(mSelections);
+    }
+
+    /**
      * deselects all items at the positions in the iteratable
      *
      * @param positions the global positions to deselect
@@ -594,13 +651,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             entries.remove();
         }
         notifyItemChanged(position);
-    }
-
-    /**
-     * deselects all selections
-     */
-    public void deselect() {
-        deselect(mSelections);
     }
 
     /**
@@ -739,13 +789,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public void expand(int position) {
         Item item = getItem(position);
         if (item != null && item instanceof IExpandable) {
-            IExpandable expandable = (IExpandable) item;
+            IExpandable<?, Item> expandable = (IExpandable<?, Item>) item;
 
             //if this item is not already callapsed and has sub items we go on
             if (!expandable.isExpanded() && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
-                IAdapter adapter = getAdapter(position);
+                IAdapter<Item> adapter = getAdapter(position);
                 if (adapter != null && adapter instanceof IItemAdapter) {
-                    ((IItemAdapter) adapter).add(position + 1, expandable.getSubItems());
+                    ((IItemAdapter<Item>) adapter).add(position + 1, expandable.getSubItems());
                 }
 
                 //remember that this item is now opened (not collapsed)
@@ -778,7 +828,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * wraps notifyItemRangeInserted
      *
      * @param position  the global position
-     * @param itemCount
+     * @param itemCount the count of items inserted
      */
     public void notifyAdapterItemRangeInserted(int position, int itemCount) {
         //we have to update all current stored selection and expandable states in our map
@@ -803,7 +853,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * wraps notifyItemRangeRemoved
      *
      * @param position  the global position
-     * @param itemCount
+     * @param itemCount the count of items removed
      */
     public void notifyAdapterItemRangeRemoved(int position, int itemCount) {
         //we have to update all current stored selection and expandable states in our map
@@ -849,7 +899,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * wraps notifyItemChanged
      *
      * @param position the global position
-     * @param payload
+     * @param payload  additional payload
      */
     public void notifyAdapterItemChanged(int position, Object payload) {
         Item updateItem = getItem(position);
@@ -870,7 +920,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * wraps notifyItemRangeChanged
      *
      * @param position  the global position
-     * @param itemCount
+     * @param itemCount the count of items changed
      */
     public void notifyAdapterItemRangeChanged(int position, int itemCount) {
         notifyAdapterItemRangeChanged(position, itemCount, null);
@@ -880,8 +930,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * wraps notifyItemRangeChanged
      *
      * @param position  the global position
-     * @param itemCount
-     * @param payload
+     * @param itemCount the count of items changed
+     * @param payload   an additional payload
      */
     public void notifyAdapterItemRangeChanged(int position, int itemCount, Object payload) {
         for (int i = position; i < position + itemCount; i++) {
@@ -901,51 +951,51 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     //listeners
-    public interface OnTouchListener {
+    public interface OnTouchListener<Item extends IItem> {
         /**
          * the onTouch event of a specific item inside the RecyclerView
          *
-         * @param v
-         * @param event
+         * @param v        the view we clicked
+         * @param event    the touch event
          * @param adapter  the adapter which is responsible for the given item
          * @param item     the IItem which was clicked
          * @param position the global position
          * @return return true if the event was consumed, otherwise false
          */
-        boolean onTouch(View v, MotionEvent event, IAdapter adapter, IItem item, int position);
+        boolean onTouch(View v, MotionEvent event, IAdapter<Item> adapter, Item item, int position);
     }
 
-    public interface OnClickListener {
+    public interface OnClickListener<Item extends IItem> {
         /**
          * the onClick event of a specific item inside the RecyclerView
          *
-         * @param v
+         * @param v        the view we clicked
          * @param adapter  the adapter which is responsible for the given item
          * @param item     the IItem which was clicked
          * @param position the global position
          * @return return true if the event was consumed, otherwise false
          */
-        boolean onClick(View v, IAdapter adapter, IItem item, int position);
+        boolean onClick(View v, IAdapter<Item> adapter, Item item, int position);
     }
 
-    public interface OnLongClickListener {
+    public interface OnLongClickListener<Item extends IItem> {
         /**
          * the onLongClick event of a specific item inside the RecyclerView
          *
-         * @param v
+         * @param v        the view we clicked
          * @param adapter  the adapter which is responsible for the given item
          * @param item     the IItem which was clicked
          * @param position the global position
          * @return return true if the event was consumed, otherwise false
          */
-        boolean onLongClick(View v, IAdapter adapter, IItem item, int position);
+        boolean onLongClick(View v, IAdapter<Item> adapter, Item item, int position);
     }
 
     /**
      * an internal class to return the IItem and relativePosition and it's adapter at once. used to save one iteration inside the getInternalItem method
      */
-    public static class RelativeInfo<Item> {
-        public IAdapter adapter = null;
+    public static class RelativeInfo<Item extends IItem> {
+        public IAdapter<Item> adapter = null;
         public Item item = null;
     }
 }
