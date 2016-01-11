@@ -869,18 +869,16 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param toPosition   the global toPosition
      */
     public void notifyAdapterItemMoved(int fromPosition, int toPosition) {
-        if (mSelections.contains(fromPosition)) {
+        //collapse items we move. just in case :D
+        collapse(fromPosition);
+        collapse(toPosition);
+
+        if (!mSelections.contains(fromPosition) && mSelections.contains(toPosition)) {
+            mSelections.remove(toPosition);
+            mSelections.add(fromPosition);
+        } else if (mSelections.contains(fromPosition) && !mSelections.contains(toPosition)) {
             mSelections.remove(fromPosition);
             mSelections.add(toPosition);
-        }
-
-        //we have to update all current stored selection and expandable states in our map
-        if (fromPosition < toPosition) {
-            mSelections = AdapterUtil.adjustPosition(mSelections, fromPosition, toPosition, -1);
-            mExpanded = AdapterUtil.adjustPosition(mExpanded, fromPosition, toPosition, -1);
-        } else {
-            mSelections = AdapterUtil.adjustPosition(mSelections, toPosition, fromPosition, 1);
-            mExpanded = AdapterUtil.adjustPosition(mExpanded, toPosition, fromPosition, 1);
         }
 
         notifyItemMoved(fromPosition, toPosition);
