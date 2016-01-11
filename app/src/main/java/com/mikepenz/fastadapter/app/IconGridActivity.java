@@ -54,7 +54,7 @@ public class IconGridActivity extends AppCompatActivity {
                 .withSavedInstance(savedInstanceState)
                 .withShowDrawerOnFirstLaunch(true)
                 .addDrawerItems(
-                        new PrimaryDrawerItem().withName(R.string.sample_simple).withSelectable(false).withIdentifier(6).withIcon(MaterialDesignIconic.Icon.gmi_wallpaper),
+                        new PrimaryDrawerItem().withName(R.string.sample_simple).withSelectable(false).withIdentifier(6).withIcon(MaterialDesignIconic.Icon.gmi_format_align_justify),
                         new PrimaryDrawerItem().withName(R.string.sample_image_list).withSelectable(false).withIdentifier(5).withIcon(MaterialDesignIconic.Icon.gmi_wallpaper),
                         new PrimaryDrawerItem().withName(R.string.sample_multi_select).withSelectable(false).withIdentifier(1).withIcon(MaterialDesignIconic.Icon.gmi_select_all),
                         new PrimaryDrawerItem().withName(R.string.sample_collapsible).withSelectable(false).withIdentifier(2).withIcon(MaterialDesignIconic.Icon.gmi_check_all),
