@@ -99,14 +99,12 @@ public class IconGridActivity extends AppCompatActivity {
 
         //create our FastAdapter which will manage everything
         fastAdapter = new FastAdapter<>();
-        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
+        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
             @Override
-            public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
-                if (item instanceof SampleItem) {
-                    if (((SampleItem) item).getSubItems() != null) {
-                        fastAdapter.toggleExpandable(position);
-                        return true;
-                    }
+            public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
+                if (item.getSubItems() != null) {
+                    fastAdapter.toggleExpandable(position);
+                    return true;
                 }
                 return false;
             }
