@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.mikepenz.fastadapter.utils.AdapterUtil;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -464,6 +465,17 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public Set<Integer> getSelections() {
         return mSelections;
+    }
+
+    /**
+     * @return a set with the items which are currently selected
+     */
+    public Set<Item> getSelectedItems() {
+        Set<Item> items = new HashSet<>();
+        for (Integer position : getSelections()) {
+            items.add(getItem(position));
+        }
+        return items;
     }
 
     /**
