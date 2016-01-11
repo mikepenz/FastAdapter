@@ -104,7 +104,7 @@ public class IconGridActivity extends AppCompatActivity {
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
                 if (item instanceof SampleItem) {
                     if (((SampleItem) item).getSubItems() != null) {
-                        fastAdapter.toggleCollapsible(position);
+                        fastAdapter.toggleExpandable(position);
                         return true;
                     }
                 }

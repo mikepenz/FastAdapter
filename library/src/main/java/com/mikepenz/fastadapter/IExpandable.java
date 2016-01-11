@@ -5,24 +5,24 @@ import java.util.List;
 /**
  * Created by mikepenz on 30.12.15.
  */
-public interface ICollapsible<T, Item extends IItem> {
+public interface IExpandable<T, Item extends IItem> {
     /**
-     * @return true if collapsed (closed)
+     * @return true if expanded (opened)
      */
-    boolean isCollapsed();
+    boolean isExpanded();
 
     /**
-     * use this method to set if the Collapsible item is currently collapsed (closed)
+     * use this method to set if the Expandable item is currently expanded
      *
-     * @param collapsed true if collapsed (closed)
+     * @param collapsed true if expanded (opened)
      * @return this
      */
-    T withCollapsed(boolean collapsed);
+    T withIsExpanded(boolean collapsed);
 
     /**
      * use this method to set the subItems of this item
      *
-     * @param subItems the subItems for this Collapsible Item
+     * @param subItems the subItems for this Expandable Item
      * @return this
      */
     T withSubItems(List<Item> subItems);

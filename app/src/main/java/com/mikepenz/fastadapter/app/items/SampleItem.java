@@ -7,7 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.mikepenz.fastadapter.ICollapsible;
+import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
@@ -24,14 +24,14 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> implements ICollapsible<SampleItem, IItem> {
+public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> implements IExpandable<SampleItem, IItem> {
 
     public String header;
     public StringHolder name;
     public StringHolder description;
 
     private List<IItem> mSubItems;
-    private boolean mCollapsed = true;
+    private boolean mExpanded = false;
 
     public SampleItem withHeader(String header) {
         this.header = header;
@@ -59,13 +59,13 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
     }
 
     @Override
-    public boolean isCollapsed() {
-        return mCollapsed;
+    public boolean isExpanded() {
+        return mExpanded;
     }
 
     @Override
-    public SampleItem withCollapsed(boolean collapsed) {
-        mCollapsed = collapsed;
+    public SampleItem withIsExpanded(boolean expaned) {
+        mExpanded = expaned;
         return this;
     }
 

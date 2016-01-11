@@ -24,7 +24,7 @@ import java.util.TreeSet;
  */
 public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     protected static final String BUNDLE_SELECTIONS = "bundle_selections";
-    protected static final String BUNDLE_COLLAPSIBLE = "bundle_collapsible";
+    protected static final String BUNDLE_EXPANDED = "bundle_expanded";
 
     // we remember all adapters
     private ArrayMap<Integer, IAdapter> mAdapters = new ArrayMap<>();
@@ -38,8 +38,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     // we need to remember all selections to recreate them after orientation change
     private SortedSet<Integer> mSelections = new TreeSet<>();
-    // we need to remember all opened collapse items to recreate them after orientation change
-    private SparseIntArray mCollapsibleOpened = new SparseIntArray();
+    // we need to remember all expanded items to recreate them after orientation change
+    private SparseIntArray mExpanded = new SparseIntArray();
 
     // the listeners which can be hooked on an item
     private OnClickListener mOnClickListener;
@@ -133,10 +133,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             deselect();
 
             //first restore opened collasable items, as otherwise may not all selections could be restored
-            int[] collapsibles = savedInstanceState.getIntArray(BUNDLE_COLLAPSIBLE + prefix);
-            if (collapsibles != null) {
-                for (Integer collapsible : collapsibles) {
-                    open(collapsible);
+            int[] expandedItems = savedInstanceState.getIntArray(BUNDLE_EXPANDED + prefix);
+            if (expandedItems != null) {
+                for (Integer expandedItem : expandedItems) {
+                    expand(expandedItem);
                 }
             }
 
@@ -449,7 +449,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             savedInstanceState.putIntArray(BUNDLE_SELECTIONS + prefix, selections);
 
             //remember the collapsed states
-            savedInstanceState.putIntArray(BUNDLE_COLLAPSIBLE + prefix, getOpenedCollapsibleItems());
+            savedInstanceState.putIntArray(BUNDLE_EXPANDED + prefix, getExpandedItems());
         }
         return savedInstanceState;
     }
@@ -629,32 +629,32 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     //-------------------------
     //-------------------------
-    //Collapse stuff
+    //Expandable stuff
     //-------------------------
     //-------------------------
 
     /**
-     * @return a set with the global positions of all opened collapsible items
+     * @return a set with the global positions of all expanded items
      */
-    public int[] getOpenedCollapsibleItems() {
-        int[] collapsibleItems = new int[mCollapsibleOpened.size()];
-        int length = mCollapsibleOpened.size();
+    public int[] getExpandedItems() {
+        int[] expandedItems = new int[mExpanded.size()];
+        int length = mExpanded.size();
         for (int i = 0; i < length; i++) {
-            collapsibleItems[i] = mCollapsibleOpened.keyAt(i);
+            expandedItems[i] = mExpanded.keyAt(i);
         }
-        return collapsibleItems;
+        return expandedItems;
     }
 
     /**
-     * toggles the collapse state of the given collapsible item at the given position
+     * toggles the expanded state of the given expandable item at the given position
      *
      * @param position the global position
      */
-    public void toggleCollapsible(int position) {
-        if (mCollapsibleOpened.indexOfKey(position) >= 0) {
+    public void toggleExpandable(int position) {
+        if (mExpanded.indexOfKey(position) >= 0) {
             collapse(position);
         } else {
-            open(position);
+            expand(position);
         }
     }
 
@@ -665,19 +665,19 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public void collapse(int position) {
         Item item = getItem(position);
-        if (item != null && item instanceof ICollapsible) {
-            ICollapsible collapsible = (ICollapsible) item;
+        if (item != null && item instanceof IExpandable) {
+            IExpandable expandable = (IExpandable) item;
 
             //as we now know the item we will collapse we can collapse all subitems
             //if this item is not already callapsed and has sub items we go on
-            if (!collapsible.isCollapsed() && collapsible.getSubItems() != null && collapsible.getSubItems().size() > 0) {
+            if (expandable.isExpanded() && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
                 //first we find out how many items were added in total
-                int totalAddedItems = collapsible.getSubItems().size();
+                int totalAddedItems = expandable.getSubItems().size();
 
-                int length = mCollapsibleOpened.size();
+                int length = mExpanded.size();
                 for (int i = 0; i < length; i++) {
-                    if (mCollapsibleOpened.keyAt(i) > position && mCollapsibleOpened.keyAt(i) <= position + totalAddedItems) {
-                        totalAddedItems = totalAddedItems + mCollapsibleOpened.get(mCollapsibleOpened.keyAt(i));
+                    if (mExpanded.keyAt(i) > position && mExpanded.keyAt(i) <= position + totalAddedItems) {
+                        totalAddedItems = totalAddedItems + mExpanded.get(mExpanded.keyAt(i));
                     }
                 }
 
@@ -690,68 +690,68 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
                 //now we start to collapse them
                 for (int i = length - 1; i >= 0; i--) {
-                    if (mCollapsibleOpened.keyAt(i) > position && mCollapsibleOpened.keyAt(i) <= position + totalAddedItems) {
+                    if (mExpanded.keyAt(i) > position && mExpanded.keyAt(i) <= position + totalAddedItems) {
                         //we collapsed those items now we remove update the added items
-                        totalAddedItems = totalAddedItems - mCollapsibleOpened.get(mCollapsibleOpened.keyAt(i));
+                        totalAddedItems = totalAddedItems - mExpanded.get(mExpanded.keyAt(i));
 
                         //we collapse the item
-                        internalCollapse(mCollapsibleOpened.keyAt(i));
+                        internalCollapse(mExpanded.keyAt(i));
                     }
                 }
 
                 //we collapse our root element
-                internalCollapse(collapsible, position);
+                internalCollapse(expandable, position);
             }
         }
     }
 
     private void internalCollapse(int position) {
         Item item = getItem(position);
-        if (item != null && item instanceof ICollapsible) {
-            ICollapsible collapsible = (ICollapsible) item;
+        if (item != null && item instanceof IExpandable) {
+            IExpandable expandable = (IExpandable) item;
             //if this item is not already callapsed and has sub items we go on
-            if (!collapsible.isCollapsed() && collapsible.getSubItems() != null && collapsible.getSubItems().size() > 0) {
-                internalCollapse(collapsible, position);
+            if (expandable.isExpanded() && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
+                internalCollapse(expandable, position);
             }
         }
     }
 
-    private void internalCollapse(ICollapsible collapsible, int position) {
+    private void internalCollapse(IExpandable expandable, int position) {
         IAdapter adapter = getAdapter(position);
         if (adapter != null && adapter instanceof IItemAdapter) {
-            ((IItemAdapter) adapter).removeItemRange(position + 1, collapsible.getSubItems().size());
+            ((IItemAdapter) adapter).removeItemRange(position + 1, expandable.getSubItems().size());
         }
 
         //remember that this item is now collapsed again
-        collapsible.withCollapsed(true);
+        expandable.withIsExpanded(false);
         //remove the information that this item was opened
-        int indexOfKey = mCollapsibleOpened.indexOfKey(position);
+        int indexOfKey = mExpanded.indexOfKey(position);
         if (indexOfKey >= 0) {
-            mCollapsibleOpened.removeAt(indexOfKey);
+            mExpanded.removeAt(indexOfKey);
         }
     }
 
     /**
-     * opens the collapsible item at the given position
+     * opens the expandable item at the given position
      *
      * @param position the global position
      */
-    public void open(int position) {
+    public void expand(int position) {
         Item item = getItem(position);
-        if (item != null && item instanceof ICollapsible) {
-            ICollapsible collapsible = (ICollapsible) item;
+        if (item != null && item instanceof IExpandable) {
+            IExpandable expandable = (IExpandable) item;
 
             //if this item is not already callapsed and has sub items we go on
-            if (collapsible.isCollapsed() && collapsible.getSubItems() != null && collapsible.getSubItems().size() > 0) {
+            if (!expandable.isExpanded() && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
                 IAdapter adapter = getAdapter(position);
                 if (adapter != null && adapter instanceof IItemAdapter) {
-                    ((IItemAdapter) adapter).add(position + 1, collapsible.getSubItems());
+                    ((IItemAdapter) adapter).add(position + 1, expandable.getSubItems());
                 }
 
                 //remember that this item is now opened (not collapsed)
-                collapsible.withCollapsed(false);
-                //store it in the list of opened collapsible items
-                mCollapsibleOpened.put(position, collapsible.getSubItems() != null ? collapsible.getSubItems().size() : 0);
+                expandable.withIsExpanded(true);
+                //store it in the list of opened expandable items
+                mExpanded.put(position, expandable.getSubItems() != null ? expandable.getSubItems().size() : 0);
             }
         }
     }
@@ -768,9 +768,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      */
     public void notifyAdapterItemInserted(int position) {
-        //we have to update all current stored selection and collapsed states in our map
+        //we have to update all current stored selection and expandable states in our map
         mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, 1);
-        mCollapsibleOpened = AdapterUtil.adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, 1);
+        mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, 1);
         notifyItemInserted(position);
     }
 
@@ -781,9 +781,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param itemCount
      */
     public void notifyAdapterItemRangeInserted(int position, int itemCount) {
-        //we have to update all current stored selection and collapsed states in our map
+        //we have to update all current stored selection and expandable states in our map
         mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount);
-        mCollapsibleOpened = AdapterUtil.adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, itemCount);
+        mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, itemCount);
         notifyItemRangeInserted(position, itemCount);
     }
 
@@ -793,9 +793,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      */
     public void notifyAdapterItemRemoved(int position) {
-        //we have to update all current stored selection and collapsed states in our map
+        //we have to update all current stored selection and expandable states in our map
         mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, -1);
-        mCollapsibleOpened = AdapterUtil.adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, -1);
+        mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, -1);
         notifyItemRemoved(position);
     }
 
@@ -806,9 +806,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param itemCount
      */
     public void notifyAdapterItemRangeRemoved(int position, int itemCount) {
-        //we have to update all current stored selection and collapsed states in our map
+        //we have to update all current stored selection and expandable states in our map
         mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount * (-1));
-        mCollapsibleOpened = AdapterUtil.adjustPosition(mCollapsibleOpened, position, Integer.MAX_VALUE, itemCount * (-1));
+        mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, itemCount * (-1));
         notifyItemRangeRemoved(position, itemCount);
     }
 
@@ -824,13 +824,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             mSelections.add(toPosition);
         }
 
-        //we have to update all current stored selection and collapsed states in our map
+        //we have to update all current stored selection and expandable states in our map
         if (fromPosition < toPosition) {
             mSelections = AdapterUtil.adjustPosition(mSelections, fromPosition, toPosition, -1);
-            mCollapsibleOpened = AdapterUtil.adjustPosition(mCollapsibleOpened, fromPosition, toPosition, -1);
+            mExpanded = AdapterUtil.adjustPosition(mExpanded, fromPosition, toPosition, -1);
         } else {
             mSelections = AdapterUtil.adjustPosition(mSelections, toPosition, fromPosition, 1);
-            mCollapsibleOpened = AdapterUtil.adjustPosition(mCollapsibleOpened, toPosition, fromPosition, 1);
+            mExpanded = AdapterUtil.adjustPosition(mExpanded, toPosition, fromPosition, 1);
         }
 
         notifyItemMoved(fromPosition, toPosition);

@@ -8,7 +8,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.ICollapsible;
+import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 
 /**
@@ -50,9 +50,9 @@ public class ActionModeHelper {
      * @return null if nothing was done, or a boolean to inform if the event was consumed
      */
     public Boolean onClick(IItem item, int position) {
-        if (item instanceof ICollapsible) {
-            if (((ICollapsible) item).getSubItems() != null) {
-                mFastAdapter.toggleCollapsible(position);
+        if (item instanceof IExpandable) {
+            if (((IExpandable) item).getSubItems() != null) {
+                mFastAdapter.toggleExpandable(position);
 
                 //if we are in CAB mode and there are no selections afterwards we end the CAB mode
                 if (mActionMode != null && mFastAdapter.getSelections().size() == 0) {
