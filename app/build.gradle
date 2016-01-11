@@ -77,6 +77,10 @@ dependencies {
     //customized version to allow minimal header animation
     compile 'com.mikepenz.thirdparty:stickyheadersrecyclerview:0.4.4-SNAPSHOT@aar'
 
+    //Used to provide the FastScrollBar
+    //https://github.com/krimin-killr21/MaterialScrollBar
+    compile 'com.turingtechnologies.materialscrollbar:lib:6.1.0'
+
     //https://github.com/JakeWharton/butterknife
     compile 'com.jakewharton:butterknife:7.0.1'
 
