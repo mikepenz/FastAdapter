@@ -9,6 +9,7 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 ##A quick overview:
 - Click / Long-Click listeners
 - Selection / Multi-Selection
+- Collapsable items
 - Write less code, get better results
 - Headers
 - Footers
