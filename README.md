@@ -9,6 +9,7 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 ##A quick overview:
 - Click / Long-Click listeners
 - Selection / Multi-Selection
+- Collapsable items
 - Write less code, get better results
 - Headers
 - Footers
@@ -25,7 +26,7 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 #Include in your project
 ##Using Maven
 ```javascript
-compile('com.mikepenz:fastadapter:0.5.6@aar') {
+compile('com.mikepenz:fastadapter:0.6.0@aar') {
 	transitive = true
 }
 ```
