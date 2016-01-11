@@ -148,7 +148,6 @@ public class IconGridActivity extends AppCompatActivity {
 
         //add all icons of all registered Fonts to the list
         ArrayList<SampleItem> items = new ArrayList<>(Iconics.getRegisteredFonts(this).size());
-        int count = 0;
         for (ITypeface font : mFonts) {
             SampleItem sampleItem = new SampleItem().withName(font.getFontName());
 
@@ -159,7 +158,6 @@ public class IconGridActivity extends AppCompatActivity {
             sampleItem.withSubItems(icons);
 
             items.add(sampleItem);
-            count++;
         }
 
         //fill with some sample data
