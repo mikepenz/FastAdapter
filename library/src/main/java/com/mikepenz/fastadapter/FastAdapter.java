@@ -31,6 +31,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     // we remember all possible types so we can create a new view efficiently
     private ArrayMap<Integer, Item> mTypeInstances = new ArrayMap<>();
 
+    // if enabled we will select the item via a notifyItemChanged -> will animate with the Animator
+    // you can also use this if you have any custom logic for selections, and do not depend on the "selected" state of the view
+    // note if enabled it will feel a bit slower because it will animate the selection
+    private boolean mSelectWithItemUpdate = false;
     // if we want multiSelect enabled
     private boolean mMultiSelect = false;
     // if we want the multiSelect only on longClick
@@ -226,7 +230,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                         }
 
                         if (!consumed && (!(mMultiSelect && mMultiSelectOnLongClick) || !mMultiSelect)) {
-                            handleSelection(relativeInfo.item, pos);
+                            handleSelection(v, relativeInfo.item, pos);
                         }
                     }
                 }
@@ -246,7 +250,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                         }
 
                         if (!consumed && (mMultiSelect && mMultiSelectOnLongClick)) {
-                            handleSelection(relativeInfo.item, pos);
+                            handleSelection(v, relativeInfo.item, pos);
                         }
                     }
                     return consumed;
@@ -516,21 +520,32 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      *
      * @param position the global position
      */
-    private void handleSelection(Item item, int position) {
+    private void handleSelection(View view, Item item, int position) {
         if (!item.isSelectable()) {
             return;
         }
 
-        if (mSelections.contains(position)) {
-            if (!mMultiSelect) {
-                deselect();
+        boolean selected = mSelections.contains(position);
+        if (!mMultiSelect) {
+            deselect();
+        }
+
+        if (mSelectWithItemUpdate || view == null) {
+            if (selected) {
+                deselect(position);
+            } else {
+                select(position);
             }
-            deselect(position);
         } else {
-            if (!mMultiSelect) {
-                deselect();
+            item.withSetSelected(!selected);
+            view.setSelected(!selected);
+            if (selected) {
+                if (mSelections.contains(position)) {
+                    mSelections.remove(position);
+                }
+            } else {
+                mSelections.add(position);
             }
-            select(position);
         }
     }
 
