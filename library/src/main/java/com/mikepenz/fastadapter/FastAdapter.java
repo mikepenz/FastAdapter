@@ -526,19 +526,31 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         }
 
         boolean selected = mSelections.contains(position);
-        if (!mMultiSelect) {
-            deselect();
-        }
-
         if (mSelectWithItemUpdate || view == null) {
+            if (!mMultiSelect) {
+                deselect();
+            }
             if (selected) {
                 deselect(position);
             } else {
                 select(position);
             }
         } else {
+            //we have to separately handle deselection here because if we toggle the current item we do not want to deselect this first!
+            Iterator<Integer> entries = mSelections.iterator();
+            while (entries.hasNext()) {
+                //deselect all but the current one! this is important!
+                Integer pos = entries.next();
+                if (pos != position) {
+                    deselect(pos, entries);
+                }
+            }
+
+            //we toggle the state of the view
             item.withSetSelected(!selected);
             view.setSelected(!selected);
+
+            //now we make sure we remember the selection!
             if (selected) {
                 if (mSelections.contains(position)) {
                     mSelections.remove(position);
@@ -589,6 +601,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * deselects all selections
+     */
+    public void deselect() {
+        deselect(mSelections);
+    }
+
+    /**
      * deselects all items at the positions in the iteratable
      *
      * @param positions the global positions to deselect
@@ -629,13 +648,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             entries.remove();
         }
         notifyItemChanged(position);
-    }
-
-    /**
-     * deselects all selections
-     */
-    public void deselect() {
-        deselect(mSelections);
     }
 
     /**
