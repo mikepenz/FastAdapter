@@ -489,19 +489,26 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             return;
         }
 
-        if (!mMultiSelect) {
-            Iterator<Integer> entries = mSelections.iterator();
-            while (entries.hasNext()) {
-                Integer pos = entries.next();
-                if (pos != position) {
-                    deselect(pos, entries);
-                }
-            }
-        }
-
         if (mSelections.contains(position)) {
+            if (!mMultiSelect) {
+                deselect();
+            }
             deselect(position);
         } else {
+            if (!mMultiSelect) {
+                deselect();
+            }
+            select(position);
+        }
+    }
+
+    /**
+     * selects all items at the positions in the iteratable
+     *
+     * @param positions the global positions to select
+     */
+    public void select(Iterable<Integer> positions) {
+        for (Integer position : positions) {
             select(position);
         }
     }
@@ -531,6 +538,18 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
         if (mOnClickListener != null && fireEvent) {
             mOnClickListener.onClick(null, getAdapter(position), item, position);
+        }
+    }
+
+    /**
+     * deselects all items at the positions in the iteratable
+     *
+     * @param positions the global positions to deselect
+     */
+    public void deselect(Iterable<Integer> positions) {
+        Iterator<Integer> entries = positions.iterator();
+        while (entries.hasNext()) {
+            deselect(entries.next(), entries);
         }
     }
 
@@ -569,10 +588,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * deselects all selections
      */
     public void deselect() {
-        Iterator<Integer> entries = mSelections.iterator();
-        while (entries.hasNext()) {
-            deselect(entries.next(), entries);
-        }
+        deselect(mSelections);
     }
 
     /**
