@@ -165,6 +165,9 @@ public class IconGridActivity extends AppCompatActivity {
         //fill with some sample data
         itemAdapter.add(items);
 
+        //expand one item to make sample look a bit more interesting
+        fastAdapter.expand(2);
+
         //restore selections (this has to be done after the items were added
         fastAdapter.withSavedInstanceState(savedInstanceState);
     }
