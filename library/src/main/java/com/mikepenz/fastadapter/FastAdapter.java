@@ -537,13 +537,15 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 select(position);
             }
         } else {
-            //we have to separately handle deselection here because if we toggle the current item we do not want to deselect this first!
-            Iterator<Integer> entries = mSelections.iterator();
-            while (entries.hasNext()) {
-                //deselect all but the current one! this is important!
-                Integer pos = entries.next();
-                if (pos != position) {
-                    deselect(pos, entries);
+            if (!mMultiSelect) {
+                //we have to separately handle deselection here because if we toggle the current item we do not want to deselect this first!
+                Iterator<Integer> entries = mSelections.iterator();
+                while (entries.hasNext()) {
+                    //deselect all but the current one! this is important!
+                    Integer pos = entries.next();
+                    if (pos != position) {
+                        deselect(pos, entries);
+                    }
                 }
             }
 
