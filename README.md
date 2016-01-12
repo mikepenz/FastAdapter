@@ -82,7 +82,6 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
         }
     }
 }
-
 ```
 
 ###2. Set the Adapter to the RecyclerView
@@ -106,7 +105,7 @@ rv.setAdapter(itemAdapter.wrap(fastAdapter));
 itemAdapter.add(ITEMS);
 ```
 
-###3. Libs used in sample app:
+## Libs used in sample app:
 Mike Penz:
 - AboutLibraries https://github.com/mikepenz/AboutLibraries
 - Android-Iconics https://github.com/mikepenz/Android-Iconics
