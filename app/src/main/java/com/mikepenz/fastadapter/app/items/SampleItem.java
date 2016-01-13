@@ -101,7 +101,7 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
         viewHolder.itemView.setTag(this);
 
         //set the background for the item
-        UIUtils.setBackground(viewHolder.view, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED));
+        UIUtils.setBackground(viewHolder.view, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true));
         //set the text for the name
         StringHolder.applyTo(name, viewHolder.name);
         //set the text for the description or hide
