@@ -7,6 +7,8 @@ import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 
+import com.mikepenz.fastadapter.R;
+
 /**
  * Created by mikepenz on 28.12.15.
  */
@@ -74,7 +76,8 @@ public class FastAdapterUIUtils {
             // If we're running on Honeycomb or newer, then we can use the Theme's
             // selectableItemBackground to ensure that the View has a pressed state
             TypedValue outValue = new TypedValue();
-            ctx.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+            //it is important here to not use the android.R because this wouldn't add the latest drawable
+            ctx.getTheme().resolveAttribute(R.attr.selectableItemBackground, outValue, true);
             return outValue.resourceId;
         } else {
             TypedValue outValue = new TypedValue();
