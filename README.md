@@ -2,20 +2,21 @@
 
 > The RecyclerView is one of the most used widgets in the Android world, and with it you have to implement an Adapter which provides the items for the view. Most use cases require the same base logic, but require you to write everything again and again.
 
-The FastAdapter is here to simplify this process. You don't have to worry about the adapter anymore. Just write the logic for how your view should look like, and you are done.
+The FastAdapter is here to simplify this process. You don't have to worry about the adapter anymore. Just write the logic for how your view/item should look like, and you are done.
 This library has a fast and highly optimized core which provides core functionality, most apps require. It also prevents common mistakes by taking away those steps from the devs. 
 Beside being blazing fast, minimizing the code you need to write, it is also really easy to extend. Just provide another Adapter implementation, hook into the adapter chain, custom select / deselection behaviors. Everything is possible.
 
 ##A quick overview:
 - Click / Long-Click listeners
 - Selection / Multi-Selection
-- Collapsable items
+- Expandable items
 - Write less code, get better results
 - Headers
 - Footers
 - Highly optimized code
 - Includes suggestions from the Android Team
 - Easily extensible
+- Chain other Adapters
 - Comes with useful Helpers
  - ActionModeHelper
  - More to come...
@@ -26,7 +27,7 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 #Include in your project
 ##Using Maven
 ```javascript
-compile('com.mikepenz:fastadapter:0.7.1@aar') {
+compile('com.mikepenz:fastadapter:0.7.2@aar') {
 	transitive = true
 }
 ```
@@ -81,7 +82,6 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
         }
     }
 }
-
 ```
 
 ###2. Set the Adapter to the RecyclerView
@@ -104,6 +104,19 @@ rv.setAdapter(itemAdapter.wrap(fastAdapter));
 //set the items to your ItemAdapter
 itemAdapter.add(ITEMS);
 ```
+
+## Libs used in sample app:
+Mike Penz:
+- AboutLibraries https://github.com/mikepenz/AboutLibraries
+- Android-Iconics https://github.com/mikepenz/Android-Iconics
+- ItemAnimators https://github.com/mikepenz/ItemAnimators
+- MaterialDrawer https://github.com/mikepenz/MaterialDrawer
+
+Other Libs:
+- Butterknife https://github.com/JakeWharton/butterknife
+- Glide https://github.com/bumptech/glide
+- MaterialScrollBar https://github.com/krimin-killr21/MaterialScrollBar
+- StickyRecyclerHeadersAdapter https://github.com/timehop/sticky-headers-recyclerview
 
 
 #Developed By

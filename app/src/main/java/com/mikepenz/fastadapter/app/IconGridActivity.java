@@ -12,6 +12,7 @@ import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.IconItem;
@@ -35,7 +36,7 @@ public class IconGridActivity extends AppCompatActivity {
     //save our header or result
     private Drawer result = null;
     //save our FastAdapter
-    private FastAdapter<SampleItem> fastAdapter;
+    private FastAdapter<IItem> fastAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,11 +99,11 @@ public class IconGridActivity extends AppCompatActivity {
                 .build();
 
         //create our FastAdapter which will manage everything
-        fastAdapter = new FastAdapter<>();
-        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
+        fastAdapter = new FastAdapter<IItem>();
+        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<IItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
-                if (item.getSubItems() != null) {
+            public boolean onClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
+                if (item instanceof IExpandable && ((IExpandable) item).getSubItems() != null) {
                     fastAdapter.toggleExpandable(position);
                     return true;
                 }
