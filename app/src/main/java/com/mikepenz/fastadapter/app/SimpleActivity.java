@@ -66,8 +66,6 @@ public class SimpleActivity extends AppCompatActivity {
         });
 
         //configure our fastAdapter
-        //as we provide id's for the items we want the hasStableIds enabled to speed up things
-        fastAdapter.setHasStableIds(true);
         fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
