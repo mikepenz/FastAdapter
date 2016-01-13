@@ -17,7 +17,7 @@ public class FastAdapterUIUtils {
      *
      * @param ctx            the context
      * @param selected_color the selected color
-     * @param animate        true if you want to fade over the states (only animates if >= Build.VERSION_CODES.HONEYCOMB)
+     * @param animate        true if you want to fade over the states (only animates if API newer than Build.VERSION_CODES.HONEYCOMB)
      * @return the StateListDrawable
      */
     public static StateListDrawable getSelectableBackground(Context ctx, int selected_color, boolean animate) {
@@ -42,7 +42,7 @@ public class FastAdapterUIUtils {
      * @param ctx            the context
      * @param selected_color the selected color
      * @param pressed_alpha  0-255
-     * @param animate        true if you want to fade over the states (only animates if >= Build.VERSION_CODES.HONEYCOMB)
+     * @param animate        true if you want to fade over the states (only animates if API newer than Build.VERSION_CODES.HONEYCOMB)
      * @return the StateListDrawable
      */
     public static StateListDrawable getSelectablePressedBackground(Context ctx, int selected_color, int pressed_alpha, boolean animate) {
