@@ -39,6 +39,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private boolean mMultiSelect = false;
     // if we want the multiSelect only on longClick
     private boolean mMultiSelectOnLongClick = true;
+    // if a user can deselect a selection via click. required if there is always one selected item!
+    private boolean mAllowDeselection = true;
 
     // we need to remember all selections to recreate them after orientation change
     private SortedSet<Integer> mSelections = new TreeSet<>();
@@ -127,6 +129,17 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * If false, a user can't deselect an item via click (you can still do this programmatically)
+     *
+     * @param allowDeselection true if a user can deselect an already selected item via click
+     * @return this
+     */
+    public FastAdapter<Item> withAllowDeselection(boolean allowDeselection) {
+        this.mAllowDeselection = allowDeselection;
+        return this;
+    }
+
+    /**
      * re-selects all elements stored in the savedInstanceState
      * IMPORTANT! Call this method only after all items where added to the adapters again. Otherwise it may select wrong items!
      *
@@ -172,17 +185,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         }
         return this;
     }
-
-    /*
-    public FastAdapter wrap(AbstractAdapter abstractAdapter) {
-        if (abstractAdapter != null) {
-            registerAdapter(abstractAdapter);
-            abstractAdapter.setFastAdapter(this);
-            wrap(abstractAdapter.getParentAdapter());
-        }
-        return this;
-    }
-    */
 
     /**
      * registers an AbstractAdapter which will be hooked into the adapter chain
@@ -522,7 +524,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      */
     private void handleSelection(View view, Item item, int position) {
+        //if this item is not selectable don't continue
         if (!item.isSelectable()) {
+            return;
+        }
+
+        //if we have disabled deselection via click don't continue
+        if (item.isSelected() && !mAllowDeselection) {
             return;
         }
 
