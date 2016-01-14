@@ -15,6 +15,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -210,6 +211,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (!mTypeInstances.containsKey(item.getType())) {
             mTypeInstances.put(item.getType(), item);
         }
+    }
+
+    /**
+     * @return all typeInstances remembered within the FastAdapter
+     */
+    public Map<Integer, Item> getTypeInstances() {
+        return mTypeInstances;
     }
 
     /**
