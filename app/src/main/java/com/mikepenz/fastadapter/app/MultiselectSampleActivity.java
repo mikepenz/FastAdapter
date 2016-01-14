@@ -3,12 +3,13 @@ package com.mikepenz.fastadapter.app;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,20 +17,24 @@ import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.fastadapter.helpers.ActionModeHelper;
+import com.mikepenz.fastadapter.helpers.UndoHelper;
+import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.materialize.MaterializeBuilder;
 import com.mikepenz.materialize.util.UIUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class MultiselectSampleActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastAdapter mFastAdapter;
+    private FastAdapter<SampleItem> mFastAdapter;
+
+    private UndoHelper mUndoHelper;
 
     private ActionModeHelper mActionModeHelper;
 
@@ -47,31 +52,39 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         new MaterializeBuilder().withActivity(this).build();
 
         //create our FastAdapter
-        mFastAdapter = new FastAdapter();
+        mFastAdapter = new FastAdapter<>();
+
+        //
+        mUndoHelper = new UndoHelper(mFastAdapter, new UndoHelper.UndoListener<SampleItem>() {
+            @Override
+            public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<SampleItem>> removed) {
+                Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size());
+            }
+        });
 
         //we init our ActionModeHelper
         mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
 
         //create our adapters
-        ItemAdapter itemAdapter = new ItemAdapter();
-        final HeaderAdapter headerAdapter = new HeaderAdapter();
+        ItemAdapter<SampleItem> itemAdapter = new ItemAdapter<>();
+        final HeaderAdapter<SampleItem> headerAdapter = new HeaderAdapter<>();
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         mFastAdapter.setHasStableIds(true);
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withMultiSelectOnLongClick(true);
-        mFastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
+        mFastAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
             @Override
-            public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
+            public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
                 Boolean res = mActionModeHelper.onClick(item, position);
                 return res != null ? res : false;
             }
         });
-        mFastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
+        mFastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener<SampleItem>() {
             @Override
-            public boolean onLongClick(View v, IAdapter adapter, IItem item, int position) {
+            public boolean onLongClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
                 ActionMode actionMode = mActionModeHelper.onLongClick(MultiselectSampleActivity.this, position);
 
                 if (actionMode != null) {
@@ -87,12 +100,12 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setItemAnimator(new DefaultItemAnimator());
+        rv.setItemAnimator(new SlideDownAlphaAnimator());
         rv.setAdapter(itemAdapter.wrap(headerAdapter.wrap(mFastAdapter)));
 
         //fill with some sample data
         headerAdapter.add(new SampleItem().withName("Header").withIdentifier(1));
-        List<IItem> items = new ArrayList<>();
+        List<SampleItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
             items.add(new SampleItem().withName("Test " + i).withIdentifier(100 + i));
         }
@@ -136,10 +149,9 @@ public class MultiselectSampleActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            //logic if an item was clicked
-
-            //return false as we want default behavior to go on
-            return false;
+            mUndoHelper.remove(findViewById(android.R.id.content), "Item removed", "Undo", Snackbar.LENGTH_LONG, mFastAdapter.getSelections());
+            //return true as we consumed the event
+            return true;
         }
 
         @Override
