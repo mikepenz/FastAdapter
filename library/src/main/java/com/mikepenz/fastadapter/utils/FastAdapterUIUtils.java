@@ -7,6 +7,8 @@ import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 
+import com.mikepenz.fastadapter.R;
+
 /**
  * Created by mikepenz on 28.12.15.
  */
@@ -17,7 +19,7 @@ public class FastAdapterUIUtils {
      *
      * @param ctx            the context
      * @param selected_color the selected color
-     * @param animate        true if you want to fade over the states (only animates if >= Build.VERSION_CODES.HONEYCOMB)
+     * @param animate        true if you want to fade over the states (only animates if API newer than Build.VERSION_CODES.HONEYCOMB)
      * @return the StateListDrawable
      */
     public static StateListDrawable getSelectableBackground(Context ctx, int selected_color, boolean animate) {
@@ -42,7 +44,7 @@ public class FastAdapterUIUtils {
      * @param ctx            the context
      * @param selected_color the selected color
      * @param pressed_alpha  0-255
-     * @param animate        true if you want to fade over the states (only animates if >= Build.VERSION_CODES.HONEYCOMB)
+     * @param animate        true if you want to fade over the states (only animates if API newer than Build.VERSION_CODES.HONEYCOMB)
      * @return the StateListDrawable
      */
     public static StateListDrawable getSelectablePressedBackground(Context ctx, int selected_color, int pressed_alpha, boolean animate) {
@@ -74,7 +76,8 @@ public class FastAdapterUIUtils {
             // If we're running on Honeycomb or newer, then we can use the Theme's
             // selectableItemBackground to ensure that the View has a pressed state
             TypedValue outValue = new TypedValue();
-            ctx.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+            //it is important here to not use the android.R because this wouldn't add the latest drawable
+            ctx.getTheme().resolveAttribute(R.attr.selectableItemBackground, outValue, true);
             return outValue.resourceId;
         } else {
             TypedValue outValue = new TypedValue();

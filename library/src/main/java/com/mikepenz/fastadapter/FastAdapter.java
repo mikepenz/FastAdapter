@@ -52,6 +52,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private OnLongClickListener<Item> mOnLongClickListener;
     private OnTouchListener<Item> mOnTouchListener;
 
+    //the listeners for onCreateViewHolder or onBindViewHolder
+    private OnCreateViewHolderListener mOnCreateViewHolderListener = new OnCreateViewHolderListenerImpl();
+    private OnBindViewHolderListener mOnBindViewHolderListener = new OnBindViewHolderListenerImpl();
+
     /**
      * default CTOR
      */
@@ -217,7 +221,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        final RecyclerView.ViewHolder holder = mTypeInstances.get(viewType).getViewHolder(parent);
+        final RecyclerView.ViewHolder holder = mOnCreateViewHolderListener.onPreCreateViewHolder(parent, viewType);
 
         //handle click behavior
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -240,6 +244,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             }
         });
 
+        //handle long click behavior
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -262,6 +267,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             }
         });
 
+        //handle touch behavior
         holder.itemView.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -276,7 +282,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             }
         });
 
-        return holder;
+        return mOnCreateViewHolderListener.onPostCreateViewHolder(holder);
     }
 
     /**
@@ -287,7 +293,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        getItem(position).bindView(holder);
+        mOnBindViewHolderListener.onBindViewHolder(holder, position);
     }
 
     /**
@@ -995,6 +1001,76 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          * @return return true if the event was consumed, otherwise false
          */
         boolean onLongClick(View v, IAdapter<Item> adapter, Item item, int position);
+    }
+
+    public interface OnCreateViewHolderListener {
+        /**
+         * is called inside the onCreateViewHolder method and creates the viewHolder based on the provided viewTyp
+         *
+         * @param parent   the parent which will host the View
+         * @param viewType the type of the ViewHolder we want to create
+         * @return the generated ViewHolder based on the given viewType
+         */
+        RecyclerView.ViewHolder onPreCreateViewHolder(ViewGroup parent, int viewType);
+
+        /**
+         * is called after the viewHolder was created and the default listeners were added
+         *
+         * @param viewHolder the created viewHolder after all listeners were set
+         * @return the viewHolder given as param
+         */
+        RecyclerView.ViewHolder onPostCreateViewHolder(RecyclerView.ViewHolder viewHolder);
+    }
+
+    /**
+     * default implementation of the OnCreateViewHolderListener
+     */
+    public class OnCreateViewHolderListenerImpl implements OnCreateViewHolderListener {
+        /**
+         * is called inside the onCreateViewHolder method and creates the viewHolder based on the provided viewTyp
+         *
+         * @param parent   the parent which will host the View
+         * @param viewType the type of the ViewHolder we want to create
+         * @return the generated ViewHolder based on the given viewType
+         */
+        @Override
+        public RecyclerView.ViewHolder onPreCreateViewHolder(ViewGroup parent, int viewType) {
+            return mTypeInstances.get(viewType).getViewHolder(parent);
+        }
+
+        /**
+         * is called after the viewHolder was created and the default listeners were added
+         *
+         * @param viewHolder the created viewHolder after all listeners were set
+         * @return the viewHolder given as param
+         */
+        @Override
+        public RecyclerView.ViewHolder onPostCreateViewHolder(RecyclerView.ViewHolder viewHolder) {
+            return viewHolder;
+        }
+    }
+
+    public interface OnBindViewHolderListener {
+        /**
+         * is called in onBindViewHolder to bind the data on the ViewHolder
+         *
+         * @param viewHolder the viewHolder for the type at this position
+         * @param position   the position of thsi viewHolder
+         */
+        void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position);
+    }
+
+    public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
+        /**
+         * is called in onBindViewHolder to bind the data on the ViewHolder
+         *
+         * @param viewHolder the viewHolder for the type at this position
+         * @param position   the position of thsi viewHolder
+         */
+        @Override
+        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+            getItem(position).bindView(viewHolder);
+        }
     }
 
     /**
