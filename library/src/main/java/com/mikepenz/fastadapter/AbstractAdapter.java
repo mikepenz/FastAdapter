@@ -87,19 +87,11 @@ public abstract class AbstractAdapter<Item extends IItem> extends RecyclerView.A
         return mFastAdapter.getItemId(position);
     }
 
-    /*
-    @Override
-    public AbstractAdapter getParentAdapter() {
-        //return mParentAdapter;
-        return null;
-    }
-    */
-
     /**
      * @return the reference to the FastAdapter
      */
     @Override
-    public FastAdapter getFastAdapter() {
+    public FastAdapter<Item> getFastAdapter() {
         return mFastAdapter;
     }
 
