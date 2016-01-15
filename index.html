@@ -27,7 +27,7 @@
 <p>The RecyclerView is one of the most used widgets in the Android world, and with it you have to implement an Adapter which provides the items for the view. Most use cases require the same base logic, but require you to write everything again and again.</p>
 </blockquote>
 
-<p>The FastAdapter is here to simplify this process. You don't have to worry about the adapter anymore. Just write the logic for how your view should look like, and you are done.
+<p>The FastAdapter is here to simplify this process. You don't have to worry about the adapter anymore. Just write the logic for how your view/item should look like, and you are done.
 This library has a fast and highly optimized core which provides core functionality, most apps require. It also prevents common mistakes by taking away those steps from the devs. 
 Beside being blazing fast, minimizing the code you need to write, it is also really easy to extend. Just provide another Adapter implementation, hook into the adapter chain, custom select / deselection behaviors. Everything is possible.</p>
 
@@ -37,13 +37,14 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 <ul>
 <li>Click / Long-Click listeners</li>
 <li>Selection / Multi-Selection</li>
-<li>Collapsable items</li>
+<li>Expandable items</li>
 <li>Write less code, get better results</li>
 <li>Headers</li>
 <li>Footers</li>
 <li>Highly optimized code</li>
 <li>Includes suggestions from the Android Team</li>
 <li>Easily extensible</li>
+<li>Chain other Adapters</li>
 <li>Comes with useful Helpers
 
 <ul>
@@ -65,7 +66,7 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 <h2>
 <a id="using-maven" class="anchor" href="#using-maven" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using Maven</h2>
 
-<div class="highlight highlight-source-js"><pre><span class="pl-en">compile</span>(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:0.7.1@aar<span class="pl-pds">'</span></span>) {
+<div class="highlight highlight-source-js"><pre><span class="pl-en">compile</span>(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:0.8.0@aar<span class="pl-pds">'</span></span>) {
     transitive <span class="pl-k">=</span> <span class="pl-c1">true</span>
 }</pre></div>
 
@@ -122,8 +123,7 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
             <span class="pl-v">this</span><span class="pl-k">.</span>description <span class="pl-k">=</span> (<span class="pl-smi">TextView</span>) view<span class="pl-k">.</span>findViewById(<span class="pl-smi">com.mikepenz.materialdrawer<span class="pl-k">.</span>R</span><span class="pl-k">.</span>id<span class="pl-k">.</span>material_drawer_description);
         }
     }
-}
-</pre></div>
+}</pre></div>
 
 <h3>
 <a id="2-set-the-adapter-to-the-recyclerview" class="anchor" href="#2-set-the-adapter-to-the-recyclerview" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. Set the Adapter to the RecyclerView</h3>
@@ -145,6 +145,35 @@ rv<span class="pl-k">.</span>setAdapter(itemAdapter<span class="pl-k">.</span>wr
 
 <span class="pl-c">//set the items to your ItemAdapter</span>
 itemAdapter<span class="pl-k">.</span>add(<span class="pl-c1">ITEMS</span>);</pre></div>
+
+<h2>
+<a id="libs-used-in-sample-app" class="anchor" href="#libs-used-in-sample-app" aria-hidden="true"><span class="octicon octicon-link"></span></a>Libs used in sample app:</h2>
+
+<p>Mike Penz:</p>
+
+<ul>
+<li>AboutLibraries <a href="https://github.com/mikepenz/AboutLibraries">https://github.com/mikepenz/AboutLibraries</a>
+</li>
+<li>Android-Iconics <a href="https://github.com/mikepenz/Android-Iconics">https://github.com/mikepenz/Android-Iconics</a>
+</li>
+<li>ItemAnimators <a href="https://github.com/mikepenz/ItemAnimators">https://github.com/mikepenz/ItemAnimators</a>
+</li>
+<li>MaterialDrawer <a href="https://github.com/mikepenz/MaterialDrawer">https://github.com/mikepenz/MaterialDrawer</a>
+</li>
+</ul>
+
+<p>Other Libs:</p>
+
+<ul>
+<li>Butterknife <a href="https://github.com/JakeWharton/butterknife">https://github.com/JakeWharton/butterknife</a>
+</li>
+<li>Glide <a href="https://github.com/bumptech/glide">https://github.com/bumptech/glide</a>
+</li>
+<li>MaterialScrollBar <a href="https://github.com/krimin-killr21/MaterialScrollBar">https://github.com/krimin-killr21/MaterialScrollBar</a>
+</li>
+<li>StickyRecyclerHeadersAdapter <a href="https://github.com/timehop/sticky-headers-recyclerview">https://github.com/timehop/sticky-headers-recyclerview</a>
+</li>
+</ul>
 
 <h1>
 <a id="developed-by" class="anchor" href="#developed-by" aria-hidden="true"><span class="octicon octicon-link"></span></a>Developed By</h1>
