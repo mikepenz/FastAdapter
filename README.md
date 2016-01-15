@@ -11,6 +11,7 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 - Selection / Multi-Selection
 - Expandable items
 - Write less code, get better results
+- Simple Drag & Drop
 - Headers
 - Footers
 - Highly optimized code
