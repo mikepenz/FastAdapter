@@ -50,7 +50,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     // the listeners which can be hooked on an item
     private OnClickListener<Item> mOnClickListener;
+    private OnClickListener<Item> mOnPostClickListener;
     private OnLongClickListener<Item> mOnLongClickListener;
+    private OnLongClickListener<Item> mOnPostLongClickListener;
     private OnTouchListener<Item> mOnTouchListener;
 
     //the listeners for onCreateViewHolder or onBindViewHolder
@@ -67,33 +69,55 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * Define the OnClickListener which will be used for a single item
      *
-     * @param mOnClickListener the OnClickListener which will be used for a single item
+     * @param onClickListener the OnClickListener which will be used for a single item
      * @return this
      */
-    public FastAdapter<Item> withOnClickListener(OnClickListener<Item> mOnClickListener) {
-        this.mOnClickListener = mOnClickListener;
+    public FastAdapter<Item> withOnClickListener(OnClickListener<Item> onClickListener) {
+        this.mOnClickListener = onClickListener;
+        return this;
+    }
+
+    /**
+     * Define the OnPostClickListener which will be used for a single item and is called after all internal methods are done
+     *
+     * @param onPostClickListener the OnPostClickListener which will be called after a single item was clicked and all internal methods are done
+     * @return this
+     */
+    public FastAdapter<Item> withOnPostClickListener(OnClickListener<Item> onPostClickListener) {
+        this.mOnPostClickListener = onPostClickListener;
         return this;
     }
 
     /**
      * Define the OnLongClickListener which will be used for a single item
      *
-     * @param mOnLongClickListener the OnLongClickListener which will be used for a single item
+     * @param onLongClickListener the OnLongClickListener which will be used for a single item
      * @return this
      */
-    public FastAdapter<Item> withOnLongClickListener(OnLongClickListener<Item> mOnLongClickListener) {
-        this.mOnLongClickListener = mOnLongClickListener;
+    public FastAdapter<Item> withOnLongClickListener(OnLongClickListener<Item> onLongClickListener) {
+        this.mOnLongClickListener = onLongClickListener;
+        return this;
+    }
+
+    /**
+     * Define the OnLongClickListener which will be used for a single item and is called after all internal methods are done
+     *
+     * @param onPostLongClickListener the OnLongClickListener which will be called after a single item was clicked and all internal methods are done
+     * @return this
+     */
+    public FastAdapter<Item> withOnPostLongClickListener(OnLongClickListener<Item> onPostLongClickListener) {
+        this.mOnPostLongClickListener = onPostLongClickListener;
         return this;
     }
 
     /**
      * Define the TouchListener which will be used for a single item
      *
-     * @param mOnTouchListener the TouchListener which will be used for a single item
+     * @param onTouchListener the TouchListener which will be used for a single item
      * @return this
      */
-    public FastAdapter<Item> withOnTouchListener(OnTouchListener<Item> mOnTouchListener) {
-        this.mOnTouchListener = mOnTouchListener;
+    public FastAdapter<Item> withOnTouchListener(OnTouchListener<Item> onTouchListener) {
+        this.mOnTouchListener = onTouchListener;
         return this;
     }
 
@@ -247,6 +271,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                         if (!consumed && (!(mMultiSelect && mMultiSelectOnLongClick) || !mMultiSelect)) {
                             handleSelection(v, relativeInfo.item, pos);
                         }
+
+                        if (mOnPostClickListener != null) {
+                            mOnPostClickListener.onClick(v, relativeInfo.adapter, relativeInfo.item, pos);
+                        }
                     }
                 }
             }
@@ -267,6 +295,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
                         if (!consumed && (mMultiSelect && mMultiSelectOnLongClick)) {
                             handleSelection(v, relativeInfo.item, pos);
+                        }
+
+                        if (mOnPostLongClickListener != null) {
+                            consumed = mOnPostLongClickListener.onLongClick(v, relativeInfo.adapter, relativeInfo.item, pos);
                         }
                     }
                     return consumed;

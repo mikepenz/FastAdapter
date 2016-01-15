@@ -7,16 +7,16 @@ public interface IIdentifyable<T> {
     /**
      * set the identifier of this item
      *
-     * @param identifier
-     * @return
+     * @param identifier the identifier which will be used (also for getItemId() inside the adapter)
+     * @return the item
      */
-    T withIdentifier(int identifier);
+    T withIdentifier(long identifier);
 
     /**
      * returns the identifier of this item
      * -1 is the default not set state
      *
-     * @return
+     * @return the defined identifier
      */
-    int getIdentifier();
+    long getIdentifier();
 }

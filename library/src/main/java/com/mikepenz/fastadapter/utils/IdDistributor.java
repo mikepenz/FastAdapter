@@ -5,13 +5,13 @@ import android.support.annotation.NonNull;
 import com.mikepenz.fastadapter.IIdentifyable;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by mikepenz on 19.09.15.
  */
 public class IdDistributor {
-    private static AtomicInteger idDistributor = new AtomicInteger(2000000000);
+    private static AtomicLong idDistributor = new AtomicLong(9000000000000000000L);
 
     /**
      * set an unique identifier for all drawerItems which do not have one set already
