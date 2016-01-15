@@ -13,7 +13,7 @@ android {
         minSdkVersion 11
         targetSdkVersion 23
         versionCode 80
-        versionName '0.80'
+        versionName '0.8.0'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
