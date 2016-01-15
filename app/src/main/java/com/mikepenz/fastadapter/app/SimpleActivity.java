@@ -71,10 +71,13 @@ public class SimpleActivity extends AppCompatActivity {
         materialScrollBar.addIndicator(new AlphabetIndicator(this), true);
 
         //fill with some sample data
+        int x = 0;
         List<SampleItem> items = new ArrayList<>();
         for (String s : ALPHABET) {
-            for (int i = 1; i <= new Random().nextInt(100); i++) {
-                items.add(new SampleItem().withName(s + " Test " + i).withIdentifier(100 + i));
+            int count = new Random().nextInt(20);
+            for (int i = 1; i <= count; i++) {
+                items.add(new SampleItem().withName(s + " Test " + x).withIdentifier(100 + x));
+                x++;
             }
         }
         itemAdapter.add(items);
