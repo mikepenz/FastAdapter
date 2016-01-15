@@ -9,6 +9,8 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.helper.ItemTouchHelper;
+import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -21,20 +23,30 @@ import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapter.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.drag.ItemTouchCallback;
+import com.mikepenz.fastadapter.drag.SimpleDragCallback;
 import com.mikepenz.materialize.MaterializeBuilder;
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
 import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class SimpleActivity extends AppCompatActivity {
+public class SimpleItemListActivity extends AppCompatActivity implements ItemTouchCallback {
     private static final String[] ALPHABET = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+
+    //our recyclerView
+    private RecyclerView recyclerView;
 
     //save our FastAdapter
     private FastAdapter<SampleItem> fastAdapter;
     private ItemAdapter<SampleItem> itemAdapter;
+
+    //drag & drop
+    private SimpleDragCallback touchCallback;
+    private ItemTouchHelper touchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,13 +88,13 @@ public class SimpleActivity extends AppCompatActivity {
         });
 
         //get our recyclerView and do basic setup
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
-        rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setItemAnimator(new DefaultItemAnimator());
-        rv.setAdapter(fastScrollIndicatorAdapter.wrap(itemAdapter.wrap(fastAdapter)));
+        recyclerView = (RecyclerView) findViewById(R.id.rv);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView.setItemAnimator(new DefaultItemAnimator());
+        recyclerView.setAdapter(fastScrollIndicatorAdapter.wrap(itemAdapter.wrap(fastAdapter)));
 
-        //add a FastScrollBar (Showcase compatiblity)
-        MaterialScrollBar materialScrollBar = new MaterialScrollBar(this, rv, true);
+        //add a FastScrollBar (Showcase compatibility)
+        MaterialScrollBar materialScrollBar = new MaterialScrollBar(this, recyclerView, true);
         materialScrollBar.setHandleColour(ContextCompat.getColor(this, R.color.accent)).setAutoHide(false);
         materialScrollBar.addIndicator(new AlphabetIndicator(this), true);
 
@@ -97,6 +109,11 @@ public class SimpleActivity extends AppCompatActivity {
             }
         }
         itemAdapter.add(items);
+
+        //add drag and drop for item
+        touchCallback = new SimpleDragCallback(this);
+        touchHelper = new ItemTouchHelper(touchCallback); // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
+        touchHelper.attachToRecyclerView(recyclerView); // Attach ItemTouchHelper to RecyclerView
 
         //restore selections (this has to be done after the items were added
         fastAdapter.withSavedInstanceState(savedInstanceState);
@@ -137,6 +154,7 @@ public class SimpleActivity extends AppCompatActivity {
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
                 public boolean onQueryTextSubmit(String s) {
+                    touchCallback.setIsDragEnabled(false);
                     itemAdapter.filter(s);
                     return true;
                 }
@@ -145,6 +163,7 @@ public class SimpleActivity extends AppCompatActivity {
                 @Override
                 public boolean onQueryTextChange(String s) {
                     itemAdapter.filter(s);
+                    touchCallback.setIsDragEnabled(TextUtils.isEmpty(s));
                     return true;
                 }
             });
@@ -153,5 +172,12 @@ public class SimpleActivity extends AppCompatActivity {
         }
 
         return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean itemTouchOnMove(int oldPosition, int newPosition) {
+        Collections.swap(itemAdapter.getAdapterItems(), oldPosition, newPosition); // change position
+        fastAdapter.notifyAdapterItemMoved(oldPosition, newPosition);
+        return true;
     }
 }
