@@ -1,18 +1,23 @@
 package com.mikepenz.fastadapter.app;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapter.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
@@ -29,6 +34,7 @@ public class SimpleActivity extends AppCompatActivity {
 
     //save our FastAdapter
     private FastAdapter<SampleItem> fastAdapter;
+    private ItemAdapter<SampleItem> itemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +53,7 @@ public class SimpleActivity extends AppCompatActivity {
         fastAdapter = new FastAdapter<>();
 
         //create our ItemAdapter which will host our items
-        final ItemAdapter<SampleItem> itemAdapter = new ItemAdapter<>();
+        itemAdapter = new ItemAdapter<>();
         final FastScrollIndicatorAdapter<SampleItem> fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter<>();
 
         //configure our fastAdapter
@@ -56,6 +62,16 @@ public class SimpleActivity extends AppCompatActivity {
             public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
                 return false;
+            }
+        });
+
+        //configure the itemAdapter
+        itemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SampleItem>() {
+            @Override
+            public boolean filter(SampleItem item, CharSequence constraint) {
+                //return true if we should filter it out
+                //return false to keep it
+                return !item.name.getText().contains(constraint);
             }
         });
 
@@ -108,5 +124,34 @@ public class SimpleActivity extends AppCompatActivity {
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu items for use in the action bar
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.search, menu);
+        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+                    itemAdapter.filter(s);
+                    return true;
+                }
+
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+                    itemAdapter.filter(s);
+                    return true;
+                }
+            });
+        } else {
+            menu.findItem(R.id.search).setVisible(false);
+        }
+
+        return super.onCreateOptionsMenu(menu);
     }
 }
