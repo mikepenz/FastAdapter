@@ -348,49 +348,69 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // Now we have to inform the adapter about the new list filtered
-            animateTo(mItems, (List<Item>) results.values);
+            animateTo((List<Item>) results.values);
         }
+    }
 
-        /**
-         * helper class to animate from one list to the other
-         *
-         * @param from
-         * @param models
-         */
-        private void animateTo(List<Item> from, List<Item> models) {
-            applyAndAnimateRemovals(from, models);
-            applyAndAnimateAdditions(from, models);
-        }
+    /**
+     * helper class to animate from one list to the other
+     *
+     * @param models the new list containing the new items
+     * @return the cleaned up item list. make sure to set your new list to this one
+     */
+    public List<Item> animateTo(List<Item> models) {
+        applyAndAnimateRemovals(mItems, models);
+        applyAndAnimateAdditions(mItems, models);
+        applyAndAnimateMovedItems(mItems, models);
+        return mItems;
+    }
 
-        /**
-         * find out all removed items and animate them
-         *
-         * @param from
-         * @param newModels
-         */
-        private void applyAndAnimateRemovals(List<Item> from, List<Item> newModels) {
-            for (int i = from.size() - 1; i >= 0; i--) {
-                final Item model = from.get(i);
-                if (!newModels.contains(model)) {
-                    //our methods work only with the global position
-                    remove(i + getFastAdapter().getItemCount(getOrder()));
-                }
+    /**
+     * find out all removed items and animate them
+     *
+     * @param from
+     * @param newModels
+     */
+    private void applyAndAnimateRemovals(List<Item> from, List<Item> newModels) {
+        for (int i = from.size() - 1; i >= 0; i--) {
+            final Item model = from.get(i);
+            if (!newModels.contains(model)) {
+                //our methods work only with the global position
+                remove(i + getFastAdapter().getItemCount(getOrder()));
             }
         }
+    }
 
-        /**
-         * find out all added items and animate them
-         *
-         * @param from
-         * @param newModels
-         */
-        private void applyAndAnimateAdditions(List<Item> from, List<Item> newModels) {
-            for (int i = 0, count = newModels.size(); i < count; i++) {
-                final Item model = newModels.get(i);
-                if (!from.contains(model)) {
-                    //our methods work only with the global position
-                    add(i + getFastAdapter().getItemCount(getOrder()), model);
-                }
+    /**
+     * find out all added items and animate them
+     *
+     * @param from
+     * @param newModels
+     */
+    private void applyAndAnimateAdditions(List<Item> from, List<Item> newModels) {
+        for (int i = 0, count = newModels.size(); i < count; i++) {
+            final Item model = newModels.get(i);
+            if (!from.contains(model)) {
+                //our methods work only with the global position
+                add(i + getFastAdapter().getItemCount(getOrder()), model);
+            }
+        }
+    }
+
+    /**
+     * find out all moved items and animate them
+     *
+     * @param from
+     * @param newModels
+     */
+    private void applyAndAnimateMovedItems(List<Item> from, List<Item> newModels) {
+        for (int toPosition = newModels.size() - 1; toPosition >= 0; toPosition--) {
+            final Item model = newModels.get(toPosition);
+            final int fromPosition = from.indexOf(model);
+            if (fromPosition >= 0 && fromPosition != toPosition) {
+                final Item m = from.remove(fromPosition);
+                from.add(toPosition, m);
+                getFastAdapter().notifyAdapterItemMoved(fromPosition, toPosition);
             }
         }
     }
