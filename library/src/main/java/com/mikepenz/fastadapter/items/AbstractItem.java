@@ -17,7 +17,7 @@ import java.lang.reflect.ParameterizedType;
  */
 public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implements IItem<T> {
     // the identifier for this item
-    protected int mIdentifier = -1;
+    protected long mIdentifier = -1;
 
     /**
      * set the identifier of this item
@@ -25,7 +25,7 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
      * @param identifier
      * @return
      */
-    public T withIdentifier(int identifier) {
+    public T withIdentifier(long identifier) {
         this.mIdentifier = identifier;
         return (T) this;
     }
@@ -34,7 +34,7 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
      * @return the identifier of this item
      */
     @Override
-    public int getIdentifier() {
+    public long getIdentifier() {
         return mIdentifier;
     }
 
@@ -242,6 +242,6 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
      */
     @Override
     public int hashCode() {
-        return mIdentifier;
+        return Long.valueOf(mIdentifier).hashCode();
     }
 }
