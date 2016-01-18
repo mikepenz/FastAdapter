@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Build;
+import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 
@@ -22,7 +23,7 @@ public class FastAdapterUIUtils {
      * @param animate        true if you want to fade over the states (only animates if API newer than Build.VERSION_CODES.HONEYCOMB)
      * @return the StateListDrawable
      */
-    public static StateListDrawable getSelectableBackground(Context ctx, int selected_color, boolean animate) {
+    public static StateListDrawable getSelectableBackground(Context ctx, @ColorInt int selected_color, boolean animate) {
         StateListDrawable states = new StateListDrawable();
 
         ColorDrawable clrActive = new ColorDrawable(selected_color);
@@ -47,7 +48,7 @@ public class FastAdapterUIUtils {
      * @param animate        true if you want to fade over the states (only animates if API newer than Build.VERSION_CODES.HONEYCOMB)
      * @return the StateListDrawable
      */
-    public static StateListDrawable getSelectablePressedBackground(Context ctx, int selected_color, int pressed_alpha, boolean animate) {
+    public static StateListDrawable getSelectablePressedBackground(Context ctx, @ColorInt int selected_color, int pressed_alpha, boolean animate) {
         StateListDrawable states = getSelectableBackground(ctx, selected_color, animate);
         ColorDrawable clrPressed = new ColorDrawable(adjustAlpha(selected_color, pressed_alpha));
         states.addState(new int[]{android.R.attr.state_pressed}, clrPressed);
@@ -61,7 +62,7 @@ public class FastAdapterUIUtils {
      * @param alpha the alpha value we want to set 0-255
      * @return the adjusted color
      */
-    public static int adjustAlpha(int color, int alpha) {
+    public static int adjustAlpha(@ColorInt int color, int alpha) {
         return (alpha << 24) | (color & 0x00ffffff);
     }
 

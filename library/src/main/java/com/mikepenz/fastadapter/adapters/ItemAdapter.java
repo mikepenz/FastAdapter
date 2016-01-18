@@ -55,7 +55,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param filterPredicate the predicate used to filter the list inside the ItemFilter
      * @return this
      */
-    public ItemAdapter withFilterPredicate(Predicate<Item> filterPredicate) {
+    public ItemAdapter<Item> withFilterPredicate(Predicate<Item> filterPredicate) {
         this.mFilterPredicate = filterPredicate;
         return this;
     }
@@ -153,7 +153,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
-        mItems = (List<Item>) items;
+        mItems = items;
         mapPossibleTypes(mItems);
         getFastAdapter().notifyAdapterItemRangeChanged(getFastAdapter().getItemCount(getOrder()), getAdapterItemCount());
     }
@@ -185,7 +185,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 IdDistributor.checkIds(items);
             }
             mItems.addAll(items);
-            mapPossibleTypes((Iterable<Item>) items);
+            mapPossibleTypes(items);
             getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()), items.size());
         }
     }
@@ -284,7 +284,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param position  the global position
      * @param itemCount
      */
-    public void removeItemRange(int position, int itemCount) {
+    public void removeRange(int position, int itemCount) {
         //global position to relative
         int length = mItems.size();
         //make sure we do not delete to many items

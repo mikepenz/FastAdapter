@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/item_delete"
+        android:title="Delete"
+        android:titleCondensed="Delete"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/item_add"
+        android:title="Add"
+        android:titleCondensed="Add"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/item_change"
+        android:title="Change"
+        android:titleCondensed="Change"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/item_move"
+        android:title="Move"
+        android:titleCondensed="Move"
+        app:showAsAction="always" />
+
+</menu>

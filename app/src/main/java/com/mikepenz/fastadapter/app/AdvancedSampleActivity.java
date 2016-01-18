@@ -46,6 +46,9 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
 
+        //improve ui
+        findViewById(android.R.id.content).setSystemUiVisibility(findViewById(android.R.id.content).getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -70,7 +73,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         mFastAdapter.setHasStableIds(true);
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withMultiSelectOnLongClick(true);
-        mFastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
+        mFastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener() {
             @Override
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
@@ -79,7 +82,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
             }
         });
 
-        mFastAdapter.withOnLongClickListener(new FastAdapter.OnLongClickListener() {
+        mFastAdapter.withOnPreLongClickListener(new FastAdapter.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v, IAdapter adapter, IItem item, int position) {
                 ActionMode actionMode = mActionModeHelper.onLongClick(AdvancedSampleActivity.this, position);

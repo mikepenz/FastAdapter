@@ -13,19 +13,22 @@ import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData;
 import com.mikepenz.fastadapter.app.items.ImageItem;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 public class ImageListActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastAdapter<ImageItem> fastAdapter;
+    private FastItemAdapter<ImageItem> fastItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
+
+        //improve ui
+        findViewById(android.R.id.content).setSystemUiVisibility(findViewById(android.R.id.content).getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -36,13 +39,10 @@ public class ImageListActivity extends AppCompatActivity {
         new MaterializeBuilder().withActivity(this).build();
 
         //create our FastAdapter which will manage everything
-        fastAdapter = new FastAdapter<>();
-
-        //create our ItemAdapter which will host our items
-        final ItemAdapter<ImageItem> itemAdapter = new ItemAdapter<>();
+        fastItemAdapter = new FastItemAdapter<>();
 
         //configure our fastAdapter
-        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<ImageItem>() {
+        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<ImageItem>() {
             @Override
             public boolean onClick(View v, IAdapter<ImageItem> adapter, ImageItem item, int position) {
                 Toast.makeText(v.getContext(), item.mName, Toast.LENGTH_LONG).show();
@@ -62,13 +62,13 @@ public class ImageListActivity extends AppCompatActivity {
             rv.setLayoutManager(new GridLayoutManager(this, columns));
         }
         rv.setItemAnimator(new DefaultItemAnimator());
-        rv.setAdapter(itemAdapter.wrap(fastAdapter));
+        rv.setAdapter(fastItemAdapter);
 
         //fill with some sample data
-        itemAdapter.add(ImageDummyData.getImages(mOnLovedClickListener));
+        fastItemAdapter.add(ImageDummyData.getImages(mOnLovedClickListener));
 
         //restore selections (this has to be done after the items were added
-        fastAdapter.withSavedInstanceState(savedInstanceState);
+        fastItemAdapter.withSavedInstanceState(savedInstanceState);
 
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -85,7 +85,7 @@ public class ImageListActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //add the values which need to be saved from the adapter to the bundel
-        outState = fastAdapter.saveInstanceState(outState);
+        outState = fastItemAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 

@@ -9,16 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.IExpandable;
-import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.app.items.IconItem;
-import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.adapters.TypedItemAdapter;
+import com.mikepenz.fastadapter.app.typed.IconModel;
+import com.mikepenz.fastadapter.app.typed.TypedIconItem;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
-import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
@@ -26,11 +22,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class IconGridActivity extends AppCompatActivity {
-    //save our header or result
-    private Drawer result = null;
+public class TypedItemActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastItemAdapter fastItemAdapter;
+    private FastAdapter fastAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,46 +37,26 @@ public class IconGridActivity extends AppCompatActivity {
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.sample_icon_grid);
+        getSupportActionBar().setTitle(R.string.sample_typed_item);
 
         //style our ui
         new MaterializeBuilder().withActivity(this).build();
 
+
         //create our FastAdapter which will manage everything
-        fastItemAdapter = new FastItemAdapter();
-        fastItemAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<IItem>() {
-            @Override
-            public boolean onClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
-                if (item instanceof IExpandable && ((IExpandable) item).getSubItems() != null) {
-                    fastItemAdapter.toggleExpandable(position);
-                    return true;
-                }
-                return false;
-            }
-        });
+        fastAdapter = new FastAdapter();
 
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
 
         //init our gridLayoutManager and configure RV
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                switch (fastItemAdapter.getItemViewType(position)) {
-                    case R.id.fastadapter_sample_item_id:
-                        return 3;
-                    case R.id.fastadapter_icon_item_id:
-                        return 1;
-                    default:
-                        return -1;
-                }
-            }
-        });
+
+        TypedItemAdapter<IconModel, TypedIconItem> itemAdapter = new TypedItemAdapter<>(TypedIconItem.class, IconModel.class);
 
         rv.setLayoutManager(gridLayoutManager);
         rv.setItemAnimator(new SlideDownAlphaAnimator());
-        rv.setAdapter(fastItemAdapter);
+        rv.setAdapter(itemAdapter.wrap(fastAdapter));
 
         //order fonts by their name
         List<ITypeface> mFonts = new ArrayList<>(Iconics.getRegisteredFonts(this));
@@ -94,27 +68,18 @@ public class IconGridActivity extends AppCompatActivity {
         });
 
         //add all icons of all registered Fonts to the list
-        ArrayList<SampleItem> items = new ArrayList<>(Iconics.getRegisteredFonts(this).size());
+        ArrayList<IconModel> models = new ArrayList<>();
         for (ITypeface font : mFonts) {
-            SampleItem sampleItem = new SampleItem().withName(font.getFontName());
-
-            ArrayList<IItem> icons = new ArrayList<>();
             for (String icon : font.getIcons()) {
-                icons.add(new IconItem().withIcon(font.getIcon(icon)).withSelectable(false));
+                models.add(new IconModel(font.getIcon(icon)));
             }
-            sampleItem.withSubItems(icons);
-
-            items.add(sampleItem);
         }
 
         //fill with some sample data
-        fastItemAdapter.add(items);
-
-        //expand one item to make sample look a bit more interesting
-        fastItemAdapter.expand(2);
+        itemAdapter.addModel(models);
 
         //restore selections (this has to be done after the items were added
-        fastItemAdapter.withSavedInstanceState(savedInstanceState);
+        fastAdapter.withSavedInstanceState(savedInstanceState);
 
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -123,10 +88,8 @@ public class IconGridActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //add the values which need to be saved from the drawer to the bundle
-        outState = result.saveInstanceState(outState);
         //add the values which need to be saved from the adapter to the bundel
-        outState = fastItemAdapter.saveInstanceState(outState);
+        outState = fastAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 

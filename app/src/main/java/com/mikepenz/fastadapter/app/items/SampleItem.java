@@ -90,15 +90,11 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
     }
 
     @Override
-    public void bindView(RecyclerView.ViewHolder holder) {
-        Context ctx = holder.itemView.getContext();
-        //get our viewHolder
-        ViewHolder viewHolder = (ViewHolder) holder;
+    public void bindView(ViewHolder viewHolder) {
+        super.bindView(viewHolder);
 
-        //set the item selected if it is
-        viewHolder.itemView.setSelected(isSelected());
-        //set itself as tag. (not required)
-        viewHolder.itemView.setTag(this);
+        //get the context
+        Context ctx = viewHolder.itemView.getContext();
 
         //set the background for the item
         UIUtils.setBackground(viewHolder.view, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true));

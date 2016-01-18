@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="CustomTheme" parent="MaterialDrawerTheme.Light.DarkToolbar.TranslucentStatus">
+    <style name="CustomTheme" parent="MaterialDrawerTheme.Light.TranslucentStatus">
         <!-- CAB :D -->
         <item name="windowActionModeOverlay">true</item>
     </style>

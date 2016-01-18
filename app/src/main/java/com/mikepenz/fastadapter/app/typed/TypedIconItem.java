@@ -1,13 +1,12 @@
-package com.mikepenz.fastadapter.app.items;
+package com.mikepenz.fastadapter.app.typed;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.items.TypedAbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
-import com.mikepenz.iconics.typeface.IIcon;
 import com.mikepenz.iconics.view.IconicsImageView;
 
 import butterknife.Bind;
@@ -16,13 +15,10 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class IconItem extends AbstractItem<IconItem, IconItem.ViewHolder> {
+public class TypedIconItem extends TypedAbstractItem<IconModel, TypedIconItem, TypedIconItem.ViewHolder> {
 
-    public IIcon mIcon;
-
-    public IconItem withIcon(IIcon icon) {
-        this.mIcon = icon;
-        return this;
+    public TypedIconItem(IconModel icon) {
+        super(icon);
     }
 
     @Override
@@ -40,8 +36,8 @@ public class IconItem extends AbstractItem<IconItem, IconItem.ViewHolder> {
         super.bindView(viewHolder);
 
         //define our data for the view
-        viewHolder.image.setIcon(mIcon);
-        viewHolder.name.setText(mIcon.getName());
+        viewHolder.image.setIcon(getModel().icon);
+        viewHolder.name.setText(getModel().icon.getName());
     }
 
     /**

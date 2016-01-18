@@ -15,7 +15,7 @@ import java.lang.reflect.ParameterizedType;
  * Created by mikepenz on 14.07.15.
  * Implements the general methods of the IItem interface to speed up development.
  */
-public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implements IItem<T> {
+public abstract class AbstractItem<Item extends IItem, VH extends RecyclerView.ViewHolder> implements IItem<Item, VH> {
     // the identifier for this item
     protected long mIdentifier = -1;
 
@@ -25,9 +25,9 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
      * @param identifier
      * @return
      */
-    public T withIdentifier(long identifier) {
+    public Item withIdentifier(long identifier) {
         this.mIdentifier = identifier;
-        return (T) this;
+        return (Item) this;
     }
 
     /**
@@ -47,9 +47,9 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
      * @param object
      * @return
      */
-    public T withTag(Object object) {
+    public Item withTag(Object object) {
         this.mTag = object;
-        return (T) this;
+        return (Item) this;
     }
 
     /**
@@ -69,9 +69,9 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
      * @param enabled true if this item is enabled
      * @return
      */
-    public T withEnabled(boolean enabled) {
+    public Item withEnabled(boolean enabled) {
         this.mEnabled = enabled;
-        return (T) this;
+        return (Item) this;
     }
 
     /**
@@ -92,9 +92,9 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
      * @return
      */
     @Override
-    public T withSetSelected(boolean selected) {
+    public Item withSetSelected(boolean selected) {
         this.mSelected = selected;
-        return (T) this;
+        return (Item) this;
     }
 
     /**
@@ -115,9 +115,9 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
      * @return
      */
     @Override
-    public T withSelectable(boolean selectable) {
+    public Item withSelectable(boolean selectable) {
         this.mSelectable = selectable;
-        return (T) this;
+        return (Item) this;
     }
 
     /**
@@ -126,6 +126,15 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
     @Override
     public boolean isSelectable() {
         return mSelectable;
+    }
+
+
+    @Override
+    public void bindView(VH holder) {
+        //set the selected state of this item. force this otherwise it may is missed when implementing an item
+        holder.itemView.setSelected(isSelected());
+        //set the tag of this item to this object (can be used when retrieving the view)
+        holder.itemView.setTag(this);
     }
 
     /**
@@ -137,7 +146,11 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
     @Override
     public View generateView(Context ctx) {
         RecyclerView.ViewHolder viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), null, false));
-        bindView(viewHolder);
+
+        //as we already know the type of our ViewHolder cast it to our type
+        bindView((VH) viewHolder);
+
+        //return the bound view
         return viewHolder.itemView;
     }
 
@@ -151,7 +164,10 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
     @Override
     public View generateView(Context ctx, ViewGroup parent) {
         RecyclerView.ViewHolder viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), parent, false));
-        bindView(viewHolder);
+
+        //as we already know the type of our ViewHolder cast it to our type
+        bindView((VH) viewHolder);
+        //return the bound and generatedView
         return viewHolder.itemView;
     }
 
