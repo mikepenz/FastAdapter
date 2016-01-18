@@ -27,7 +27,7 @@ public class IconItem extends AbstractItem<IconItem, IconItem.ViewHolder> {
 
     @Override
     public int getType() {
-        return R.id.fastadapter_image_item_id;
+        return R.id.fastadapter_icon_item_id;
     }
 
     @Override
