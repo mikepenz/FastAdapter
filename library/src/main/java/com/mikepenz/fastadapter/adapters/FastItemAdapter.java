@@ -209,7 +209,7 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
      * @param itemCount
      */
     public void removeItemRange(int position, int itemCount) {
-        mItemAdapter.removeItemRange(position, itemCount);
+        mItemAdapter.removeRange(position, itemCount);
     }
 
     /**

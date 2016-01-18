@@ -828,7 +828,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private void internalCollapse(IExpandable expandable, int position) {
         IAdapter adapter = getAdapter(position);
         if (adapter != null && adapter instanceof IItemAdapter) {
-            ((IItemAdapter) adapter).removeItemRange(position + 1, expandable.getSubItems().size());
+            ((IItemAdapter) adapter).removeRange(position + 1, expandable.getSubItems().size());
         }
 
         //remember that this item is now collapsed again
