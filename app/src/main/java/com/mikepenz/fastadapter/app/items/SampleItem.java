@@ -91,6 +91,9 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
 
     @Override
     public void bindView(ViewHolder viewHolder) {
+        super.bindView(viewHolder);
+
+        //get the context
         Context ctx = viewHolder.itemView.getContext();
 
         //set the background for the item

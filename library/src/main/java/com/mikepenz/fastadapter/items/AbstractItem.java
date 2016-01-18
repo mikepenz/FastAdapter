@@ -128,6 +128,15 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
         return mSelectable;
     }
 
+
+    @Override
+    public void bindView(VH holder) {
+        //set the selected state of this item. force this otherwise it may is missed when implementing an item
+        holder.itemView.setSelected(isSelected());
+        //set the tag of this item to this object (can be used when retrieving the view)
+        holder.itemView.setTag(this);
+    }
+
     /**
      * generates a view by the defined LayoutRes
      *
@@ -137,11 +146,6 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
     @Override
     public View generateView(Context ctx) {
         RecyclerView.ViewHolder viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), null, false));
-
-        //set the selected state of this item. force this otherwise it may is missed when implementing an item
-        viewHolder.itemView.setSelected(isSelected());
-        //set the tag of this item to this object (can be used when retrieving the view)
-        viewHolder.itemView.setTag(this);
 
         //as we already know the type of our ViewHolder cast it to our type
         bindView((VH) viewHolder);
@@ -160,6 +164,7 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
     @Override
     public View generateView(Context ctx, ViewGroup parent) {
         RecyclerView.ViewHolder viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), parent, false));
+
         //as we already know the type of our ViewHolder cast it to our type
         bindView((VH) viewHolder);
         //return the bound and generatedView

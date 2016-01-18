@@ -37,6 +37,8 @@ public class IconItem extends AbstractItem<IconItem, IconItem.ViewHolder> {
 
     @Override
     public void bindView(ViewHolder viewHolder) {
+        super.bindView(viewHolder);
+
         //define our data for the view
         viewHolder.image.setIcon(mIcon);
         viewHolder.name.setText(mIcon.getName());

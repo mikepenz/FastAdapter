@@ -69,6 +69,9 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
 
     @Override
     public void bindView(ViewHolder viewHolder) {
+        super.bindView(viewHolder);
+
+        //get the context
         Context ctx = viewHolder.itemView.getContext();
 
         //define our data for the view
