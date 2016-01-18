@@ -86,6 +86,9 @@ public class IconGridActivity extends AppCompatActivity {
                                         .withFields(R.string.class.getFields())
                                         .withActivityTitle(getString(R.string.open_source))
                                         .withActivityStyle(Libs.ActivityStyle.LIGHT_DARK_TOOLBAR)
+                                        .withAboutIconShown(true)
+                                        .withVersionShown(true)
+                                        .withAboutVersionShown(true)
                                         .intent(IconGridActivity.this);
                             }
                             if (intent != null) {
@@ -125,10 +128,11 @@ public class IconGridActivity extends AppCompatActivity {
                     case R.id.fastadapter_icon_item_id:
                         return 1;
                     default:
-                        return 1;
+                        return -1;
                 }
             }
         });
+
         rv.setLayoutManager(gridLayoutManager);
         rv.setItemAnimator(new SlideDownAlphaAnimator());
         rv.setAdapter(fastItemAdapter);
