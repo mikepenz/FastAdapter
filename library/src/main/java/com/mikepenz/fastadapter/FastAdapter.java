@@ -49,10 +49,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private SparseIntArray mExpanded = new SparseIntArray();
 
     // the listeners which can be hooked on an item
+    private OnClickListener<Item> mOnPreClickListener;
     private OnClickListener<Item> mOnClickListener;
-    private OnClickListener<Item> mOnPostClickListener;
+    private OnLongClickListener<Item> mOnPreLongClickListener;
     private OnLongClickListener<Item> mOnLongClickListener;
-    private OnLongClickListener<Item> mOnPostLongClickListener;
     private OnTouchListener<Item> mOnTouchListener;
 
     //the listeners for onCreateViewHolder or onBindViewHolder
@@ -78,13 +78,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * Define the OnPostClickListener which will be used for a single item and is called after all internal methods are done
+     * Define the OnPreClickListener which will be used for a single item and is called after all internal methods are done
      *
-     * @param onPostClickListener the OnPostClickListener which will be called after a single item was clicked and all internal methods are done
+     * @param OnPreClickListener the OnPreClickListener which will be called after a single item was clicked and all internal methods are done
      * @return this
      */
-    public FastAdapter<Item> withOnPostClickListener(OnClickListener<Item> onPostClickListener) {
-        this.mOnPostClickListener = onPostClickListener;
+    public FastAdapter<Item> withOnPreClickListener(OnClickListener<Item> OnPreClickListener) {
+        this.mOnPreClickListener = OnPreClickListener;
         return this;
     }
 
@@ -102,11 +102,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * Define the OnLongClickListener which will be used for a single item and is called after all internal methods are done
      *
-     * @param onPostLongClickListener the OnLongClickListener which will be called after a single item was clicked and all internal methods are done
+     * @param OnPreLongClickListener the OnLongClickListener which will be called after a single item was clicked and all internal methods are done
      * @return this
      */
-    public FastAdapter<Item> withOnPostLongClickListener(OnLongClickListener<Item> onPostLongClickListener) {
-        this.mOnPostLongClickListener = onPostLongClickListener;
+    public FastAdapter<Item> withOnPreLongClickListener(OnLongClickListener<Item> OnPreLongClickListener) {
+        this.mOnPreLongClickListener = OnPreLongClickListener;
         return this;
     }
 
@@ -264,16 +264,18 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                     boolean consumed = false;
                     RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
                     if (relativeInfo.item != null && relativeInfo.item.isEnabled()) {
-                        if (mOnClickListener != null) {
-                            consumed = mOnClickListener.onClick(v, relativeInfo.adapter, relativeInfo.item, pos);
+                        //first call the onPreClickListener which would allow to prevent executing of any following code, including selection
+                        if (mOnPreClickListener != null) {
+                            consumed = mOnPreClickListener.onClick(v, relativeInfo.adapter, relativeInfo.item, pos);
                         }
-
+                        //handle the selection if the event was not yet consumed, and we are allowed to select an item (only occurs when we select with long click only)
                         if (!consumed && (!(mMultiSelect && mMultiSelectOnLongClick) || !mMultiSelect)) {
                             handleSelection(v, relativeInfo.item, pos);
                         }
 
-                        if (mOnPostClickListener != null) {
-                            mOnPostClickListener.onClick(v, relativeInfo.adapter, relativeInfo.item, pos);
+                        //call the normal click listener after selection was handlded
+                        if (mOnClickListener != null) {
+                            mOnClickListener.onClick(v, relativeInfo.adapter, relativeInfo.item, pos);
                         }
                     }
                 }
@@ -289,16 +291,19 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                     boolean consumed = false;
                     RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
                     if (relativeInfo.item != null && relativeInfo.item.isEnabled()) {
-                        if (mOnLongClickListener != null) {
-                            consumed = mOnLongClickListener.onLongClick(v, relativeInfo.adapter, relativeInfo.item, pos);
+                        //first call the OnPreLongClickListener which would allow to prevent executing of any following code, including selection
+                        if (mOnPreLongClickListener != null) {
+                            consumed = mOnPreLongClickListener.onLongClick(v, relativeInfo.adapter, relativeInfo.item, pos);
                         }
 
+                        //now handle the selection if we are in multiSelect mode and allow selecting on longClick
                         if (!consumed && (mMultiSelect && mMultiSelectOnLongClick)) {
                             handleSelection(v, relativeInfo.item, pos);
                         }
 
-                        if (mOnPostLongClickListener != null) {
-                            consumed = mOnPostLongClickListener.onLongClick(v, relativeInfo.adapter, relativeInfo.item, pos);
+                        //call the normal long click listener after selection was handled
+                        if (mOnLongClickListener != null) {
+                            consumed = mOnLongClickListener.onLongClick(v, relativeInfo.adapter, relativeInfo.item, pos);
                         }
                     }
                     return consumed;

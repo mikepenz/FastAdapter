@@ -46,7 +46,7 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
         //configure our fastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         fastAdapter.setHasStableIds(true);
-        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener() {
+        fastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener() {
             @Override
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
                 if (item instanceof SampleItem) {
