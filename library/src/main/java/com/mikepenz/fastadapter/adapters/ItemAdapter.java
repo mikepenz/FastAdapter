@@ -55,7 +55,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param filterPredicate the predicate used to filter the list inside the ItemFilter
      * @return this
      */
-    public ItemAdapter withFilterPredicate(Predicate<Item> filterPredicate) {
+    public ItemAdapter<Item> withFilterPredicate(Predicate<Item> filterPredicate) {
         this.mFilterPredicate = filterPredicate;
         return this;
     }
