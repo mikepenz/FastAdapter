@@ -10,7 +10,7 @@ import android.view.ViewGroup;
 /**
  * Created by mikepenz on 03.02.15.
  */
-public interface IItem<T> extends IIdentifyable<T> {
+public interface IItem<T, VH extends RecyclerView.ViewHolder> extends IIdentifyable<T> {
 
     /**
      * return a Tag of the Item
@@ -118,7 +118,7 @@ public interface IItem<T> extends IIdentifyable<T> {
      *
      * @param holder
      */
-    void bindView(RecyclerView.ViewHolder holder);
+    void bindView(VH holder);
 
     /**
      * If this item equals to the given identifier

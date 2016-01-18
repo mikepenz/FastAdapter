@@ -15,7 +15,7 @@ import java.lang.reflect.ParameterizedType;
  * Created by mikepenz on 14.07.15.
  * Implements the general methods of the IItem interface to speed up development.
  */
-public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implements IItem<T> {
+public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implements IItem<T, VH> {
     // the identifier for this item
     protected long mIdentifier = -1;
 
@@ -137,7 +137,16 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
     @Override
     public View generateView(Context ctx) {
         RecyclerView.ViewHolder viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), null, false));
-        bindView(viewHolder);
+
+        //set the selected state of this item. force this otherwise it may is missed when implementing an item
+        viewHolder.itemView.setSelected(isSelected());
+        //set the tag of this item to this object (can be used when retrieving the view)
+        viewHolder.itemView.setTag(this);
+
+        //as we already know the type of our ViewHolder cast it to our type
+        bindView((VH) viewHolder);
+
+        //return the bound view
         return viewHolder.itemView;
     }
 
@@ -151,7 +160,9 @@ public abstract class AbstractItem<T, VH extends RecyclerView.ViewHolder> implem
     @Override
     public View generateView(Context ctx, ViewGroup parent) {
         RecyclerView.ViewHolder viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), parent, false));
-        bindView(viewHolder);
+        //as we already know the type of our ViewHolder cast it to our type
+        bindView((VH) viewHolder);
+        //return the bound and generatedView
         return viewHolder.itemView;
     }
 

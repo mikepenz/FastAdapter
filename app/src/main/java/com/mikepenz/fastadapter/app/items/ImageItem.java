@@ -68,15 +68,8 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
     }
 
     @Override
-    public void bindView(RecyclerView.ViewHolder holder) {
-        Context ctx = holder.itemView.getContext();
-        //get our viewHolder
-        final ViewHolder viewHolder = (ViewHolder) holder;
-
-        //set the item selected if it is
-        viewHolder.itemView.setSelected(isSelected());
-        //set itself as tag. (not required)
-        viewHolder.itemView.setTag(this);
+    public void bindView(ViewHolder viewHolder) {
+        Context ctx = viewHolder.itemView.getContext();
 
         //define our data for the view
         viewHolder.imageName.setText(mName);

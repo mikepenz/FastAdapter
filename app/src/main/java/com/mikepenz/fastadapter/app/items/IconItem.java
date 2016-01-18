@@ -1,6 +1,5 @@
 package com.mikepenz.fastadapter.app.items;
 
-import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
@@ -37,16 +36,7 @@ public class IconItem extends AbstractItem<IconItem, IconItem.ViewHolder> {
     }
 
     @Override
-    public void bindView(RecyclerView.ViewHolder holder) {
-        Context ctx = holder.itemView.getContext();
-        //get our viewHolder
-        final ViewHolder viewHolder = (ViewHolder) holder;
-
-        //set the item selected if it is
-        viewHolder.itemView.setSelected(isSelected());
-        //set itself as tag. (not required)
-        viewHolder.itemView.setTag(this);
-
+    public void bindView(ViewHolder viewHolder) {
         //define our data for the view
         viewHolder.image.setIcon(mIcon);
         viewHolder.name.setText(mIcon.getName());
