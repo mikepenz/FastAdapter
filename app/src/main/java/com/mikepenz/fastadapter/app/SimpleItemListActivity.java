@@ -52,6 +52,9 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
 
+        //improve ui
+        findViewById(android.R.id.content).setSystemUiVisibility(findViewById(android.R.id.content).getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
