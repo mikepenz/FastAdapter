@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.adapter.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.fastadapter.drag.ItemTouchCallback;
@@ -41,8 +41,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
     private RecyclerView recyclerView;
 
     //save our FastAdapter
-    private FastAdapter<SampleItem> fastAdapter;
-    private ItemAdapter<SampleItem> itemAdapter;
+    private FastItemAdapter<SampleItem> fastItemAdapter;
 
     //drag & drop
     private SimpleDragCallback touchCallback;
@@ -62,14 +61,12 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         new MaterializeBuilder().withActivity(this).build();
 
         //create our FastAdapter which will manage everything
-        fastAdapter = new FastAdapter<>();
+        fastItemAdapter = new FastItemAdapter<>();
 
-        //create our ItemAdapter which will host our items
-        itemAdapter = new ItemAdapter<>();
         final FastScrollIndicatorAdapter<SampleItem> fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter<>();
 
         //configure our fastAdapter
-        fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
+        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
@@ -78,12 +75,12 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         });
 
         //configure the itemAdapter
-        itemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SampleItem>() {
+        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SampleItem>() {
             @Override
             public boolean filter(SampleItem item, CharSequence constraint) {
                 //return true if we should filter it out
                 //return false to keep it
-                return !item.name.getText().contains(constraint);
+                return !item.name.getText().toLowerCase().contains(constraint);
             }
         });
 
@@ -91,7 +88,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(fastScrollIndicatorAdapter.wrap(itemAdapter.wrap(fastAdapter)));
+        recyclerView.setAdapter(fastScrollIndicatorAdapter.wrap(fastItemAdapter));
 
         //add a FastScrollBar (Showcase compatibility)
         MaterialScrollBar materialScrollBar = new MaterialScrollBar(this, recyclerView, true);
@@ -108,7 +105,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
                 x++;
             }
         }
-        itemAdapter.add(items);
+        fastItemAdapter.add(items);
 
         //add drag and drop for item
         touchCallback = new SimpleDragCallback(this);
@@ -116,7 +113,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         touchHelper.attachToRecyclerView(recyclerView); // Attach ItemTouchHelper to RecyclerView
 
         //restore selections (this has to be done after the items were added
-        fastAdapter.withSavedInstanceState(savedInstanceState);
+        fastItemAdapter.withSavedInstanceState(savedInstanceState);
 
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -126,7 +123,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //add the values which need to be saved from the adapter to the bundel
-        outState = fastAdapter.saveInstanceState(outState);
+        outState = fastItemAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
@@ -155,14 +152,14 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
                 @Override
                 public boolean onQueryTextSubmit(String s) {
                     touchCallback.setIsDragEnabled(false);
-                    itemAdapter.filter(s);
+                    fastItemAdapter.filter(s);
                     return true;
                 }
 
 
                 @Override
                 public boolean onQueryTextChange(String s) {
-                    itemAdapter.filter(s);
+                    fastItemAdapter.filter(s);
                     touchCallback.setIsDragEnabled(TextUtils.isEmpty(s));
                     return true;
                 }
@@ -176,8 +173,8 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
 
     @Override
     public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-        Collections.swap(itemAdapter.getAdapterItems(), oldPosition, newPosition); // change position
-        fastAdapter.notifyAdapterItemMoved(oldPosition, newPosition);
+        Collections.swap(fastItemAdapter.getAdapterItems(), oldPosition, newPosition); // change position
+        fastItemAdapter.notifyAdapterItemMoved(oldPosition, newPosition);
         return true;
     }
 }

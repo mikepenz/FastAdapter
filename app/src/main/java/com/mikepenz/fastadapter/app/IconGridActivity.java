@@ -14,7 +14,7 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.IconItem;
 import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.iconics.Iconics;
@@ -36,7 +36,7 @@ public class IconGridActivity extends AppCompatActivity {
     //save our header or result
     private Drawer result = null;
     //save our FastAdapter
-    private FastAdapter<IItem> fastAdapter;
+    private FastItemAdapter fastItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,20 +99,17 @@ public class IconGridActivity extends AppCompatActivity {
                 .build();
 
         //create our FastAdapter which will manage everything
-        fastAdapter = new FastAdapter<>();
-        fastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<IItem>() {
+        fastItemAdapter = new FastItemAdapter();
+        fastItemAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<IItem>() {
             @Override
             public boolean onClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
                 if (item instanceof IExpandable && ((IExpandable) item).getSubItems() != null) {
-                    fastAdapter.toggleExpandable(position);
+                    fastItemAdapter.toggleExpandable(position);
                     return true;
                 }
                 return false;
             }
         });
-
-        //create our ItemAdapter which will host our items
-        final ItemAdapter<SampleItem> itemAdapter = new ItemAdapter<>();
 
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
@@ -122,7 +119,7 @@ public class IconGridActivity extends AppCompatActivity {
         gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
             @Override
             public int getSpanSize(int position) {
-                switch (fastAdapter.getItemViewType(position)) {
+                switch (fastItemAdapter.getItemViewType(position)) {
                     case R.id.fastadapter_sample_item_id:
                         return 3;
                     case R.id.fastadapter_icon_item_id:
@@ -134,7 +131,7 @@ public class IconGridActivity extends AppCompatActivity {
         });
         rv.setLayoutManager(gridLayoutManager);
         rv.setItemAnimator(new SlideDownAlphaAnimator());
-        rv.setAdapter(itemAdapter.wrap(fastAdapter));
+        rv.setAdapter(fastItemAdapter);
 
         //order fonts by their name
         List<ITypeface> mFonts = new ArrayList<>(Iconics.getRegisteredFonts(this));
@@ -160,13 +157,13 @@ public class IconGridActivity extends AppCompatActivity {
         }
 
         //fill with some sample data
-        itemAdapter.add(items);
+        fastItemAdapter.add(items);
 
         //expand one item to make sample look a bit more interesting
-        fastAdapter.expand(2);
+        fastItemAdapter.expand(2);
 
         //restore selections (this has to be done after the items were added
-        fastAdapter.withSavedInstanceState(savedInstanceState);
+        fastItemAdapter.withSavedInstanceState(savedInstanceState);
     }
 
     @Override
@@ -174,7 +171,7 @@ public class IconGridActivity extends AppCompatActivity {
         //add the values which need to be saved from the drawer to the bundle
         outState = result.saveInstanceState(outState);
         //add the values which need to be saved from the adapter to the bundel
-        outState = fastAdapter.saveInstanceState(outState);
+        outState = fastItemAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 

@@ -11,7 +11,7 @@ import android.view.View;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -22,7 +22,7 @@ import java.util.List;
 
 public class CollapsibleSampleActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastAdapter fastAdapter;
+    private FastItemAdapter fastItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,20 +38,15 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
         new MaterializeBuilder().withActivity(this).build();
 
         //create our FastAdapter
-        fastAdapter = new FastAdapter();
-
-        //create our adapters
-        final ItemAdapter<SampleItem> itemAdapter = new ItemAdapter<>();
+        fastItemAdapter = new FastItemAdapter();
 
         //configure our fastAdapter
-        //as we provide id's for the items we want the hasStableIds enabled to speed up things
-        fastAdapter.setHasStableIds(true);
-        fastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener() {
+        fastItemAdapter.withOnPreClickListener(new FastAdapter.OnClickListener() {
             @Override
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
                 if (item instanceof SampleItem) {
                     if (((SampleItem) item).getSubItems() != null) {
-                        fastAdapter.toggleExpandable(position);
+                        fastItemAdapter.toggleExpandable(position);
                         return true;
                     }
                 }
@@ -63,7 +58,7 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new SlideDownAlphaAnimator());
-        rv.setAdapter(itemAdapter.wrap(fastAdapter));
+        rv.setAdapter(fastItemAdapter);
 
         //fill with some sample data
         List<SampleItem> items = new ArrayList<>();
@@ -80,10 +75,10 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
             }
             items.add(sampleItem);
         }
-        itemAdapter.add(items);
+        fastItemAdapter.add(items);
 
         //restore selections (this has to be done after the items were added
-        fastAdapter.withSavedInstanceState(savedInstanceState);
+        fastItemAdapter.withSavedInstanceState(savedInstanceState);
 
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -93,7 +88,7 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //add the values which need to be saved from the adapter to the bundel
-        outState = fastAdapter.saveInstanceState(outState);
+        outState = fastItemAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
