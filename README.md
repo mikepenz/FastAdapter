@@ -23,7 +23,11 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
  - More to come...
 
 #Preview
+##Demo
+You can try it out here [Google Play](https://play.google.com/store/apps/details?id=com.mikepenz.fastadapter.app) (or download the latest release from GitHub)
+
 ##Screenshots
+![Image](https://raw.githubusercontent.com/mikepenz/FastAdapter/develop/DEV/github/screenshots1.jpg)
 
 #Include in your project
 ##Using Maven
