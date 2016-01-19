@@ -28,7 +28,7 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 #Include in your project
 ##Using Maven
 ```javascript
-compile('com.mikepenz:fastadapter:0.9.0@aar') {
+compile('com.mikepenz:fastadapter:0.9.1@aar') {
 	transitive = true
 }
 ```
@@ -55,14 +55,11 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
 
     //The logic to bind your data to the view
     @Override
-    public void bindView(RecyclerView.ViewHolder holder) {
-        Context ctx = holder.itemView.getContext();
-        //get our viewHolder
-        ViewHolder viewHolder = (ViewHolder) holder;
-
-        //set the item selected if it is
-        viewHolder.itemView.setSelected(isSelected());
-
+    public void bindView(ViewHolder viewHolder) {
+    	//call super so the selection is already handled for you
+    	super.bindView(viewHolder);
+    	
+    	//bind our data
         //set the text for the name
         viewHolder.name.setText(name);
         //set the text for the description or hide
@@ -71,13 +68,11 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
 
     //The viewHolder used for this item. This viewHolder is always reused by the RecyclerView so scrolling is blazing fast
     protected static class ViewHolder extends RecyclerView.ViewHolder {
-        protected View view;
         protected TextView name;
         protected TextView description;
 
         public ViewHolder(View view) {
             super(view);
-            this.view = view;
             this.name = (TextView) view.findViewById(com.mikepenz.materialdrawer.R.id.material_drawer_name);
             this.description = (TextView) view.findViewById(com.mikepenz.materialdrawer.R.id.material_drawer_description);
         }

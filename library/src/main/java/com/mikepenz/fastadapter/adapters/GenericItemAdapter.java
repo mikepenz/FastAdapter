@@ -1,6 +1,6 @@
 package com.mikepenz.fastadapter.adapters;
 
-import com.mikepenz.fastadapter.items.TypedAbstractItem;
+import com.mikepenz.fastadapter.items.GenericAbstractItem;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -13,62 +13,119 @@ import java.util.List;
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  * This adapter has the order of 500 which is the centered order
  */
-public class TypedItemAdapter<Model, Item extends TypedAbstractItem> extends ItemAdapter<Item> {
-    List<Model> mItems = new ArrayList<>();
+public class GenericItemAdapter<Model, Item extends GenericAbstractItem> extends ItemAdapter<Item> {
+    private List<Model> mItems = new ArrayList<>();
+    private Class<Model> modelClass;
+    private Class<Item> itemClass;
 
-    Class<Model> modelClass;
-    Class<Item> itemClass;
-
-    public TypedItemAdapter(Class<Item> itemClass, Class<Model> modelClass) {
+    /**
+     * @param itemClass  the class of your item (Item extends GenericAbstractItem)
+     * @param modelClass the class which is your model class
+     */
+    public GenericItemAdapter(Class<Item> itemClass, Class<Model> modelClass) {
         this.itemClass = itemClass;
         this.modelClass = modelClass;
     }
 
+
+    /**
+     * set a new list of models for this adapter
+     *
+     * @param models
+     */
     public void setModel(List<Model> models) {
         super.set(toItems(models));
         mItems = models;
     }
 
+    /**
+     * add an array of models
+     *
+     * @param models
+     */
     public void addModel(Model... models) {
         super.add(toItems(models));
         Collections.addAll(mItems, models);
     }
 
+    /**
+     * add a list of models
+     *
+     * @param models
+     */
     public void addModel(List<Model> models) {
         super.add(toItems(models));
         mItems.addAll(models);
     }
 
+    /**
+     * add an array of models at a given (global) position
+     *
+     * @param position
+     * @param models
+     */
     public void addModel(int position, Model... models) {
         super.add(position, toItems(models));
         mItems.addAll(position - getFastAdapter().getItemCount(getOrder()), Arrays.asList(models));
     }
 
+    /**
+     * add a list of models at a given (global) position
+     *
+     * @param position
+     * @param models
+     */
     public void addModel(int position, List<Model> models) {
         super.add(position, toItems(models));
         mItems.addAll(position - getFastAdapter().getItemCount(getOrder()), models);
     }
 
+    /**
+     * set a model at a given position
+     *
+     * @param position
+     * @param model
+     */
     public void setModel(int position, Model model) {
         super.set(position, getAbstractItem(model));
         mItems.set(position - getFastAdapter().getItemCount(getOrder()), model);
     }
 
+    /**
+     * add a model at the end of the list
+     *
+     * @param model
+     */
     public void addModel(Model model) {
         super.add(getAbstractItem(model));
         mItems.add(model);
     }
 
+    /**
+     * add a model at the given (global) position
+     *
+     * @param position
+     * @param model
+     */
     public void addModel(int position, Model model) {
         super.add(position, getAbstractItem(model));
         mItems.add(position - getFastAdapter().getItemCount(getOrder()), model);
     }
 
+    /**
+     * clear all models
+     */
     public void clearModel() {
         super.clear();
         mItems.clear();
     }
 
+    /**
+     * remove a range oof model items starting with the (global) position and the size
+     *
+     * @param position
+     * @param itemCount
+     */
     public void removeModelRange(int position, int itemCount) {
         super.removeRange(position, itemCount);
 
@@ -82,6 +139,11 @@ public class TypedItemAdapter<Model, Item extends TypedAbstractItem> extends Ite
         }
     }
 
+    /**
+     * remove a model at the given (global) position
+     *
+     * @param position
+     */
     public void removeModel(int position) {
         super.remove(position);
         mItems.remove(position - getFastAdapter().getItemCount(getOrder()));

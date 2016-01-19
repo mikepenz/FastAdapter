@@ -9,9 +9,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.adapters.TypedItemAdapter;
-import com.mikepenz.fastadapter.app.typed.IconModel;
-import com.mikepenz.fastadapter.app.typed.TypedIconItem;
+import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
+import com.mikepenz.fastadapter.app.generic.IconModel;
+import com.mikepenz.fastadapter.app.generic.GenericIconItem;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
@@ -22,7 +22,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class TypedItemActivity extends AppCompatActivity {
+public class GenericItemActivity extends AppCompatActivity {
     //save our FastAdapter
     private FastAdapter fastAdapter;
 
@@ -37,7 +37,7 @@ public class TypedItemActivity extends AppCompatActivity {
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.sample_typed_item);
+        getSupportActionBar().setTitle(R.string.sample_generic_item);
 
         //style our ui
         new MaterializeBuilder().withActivity(this).build();
@@ -52,7 +52,7 @@ public class TypedItemActivity extends AppCompatActivity {
         //init our gridLayoutManager and configure RV
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
 
-        TypedItemAdapter<IconModel, TypedIconItem> itemAdapter = new TypedItemAdapter<>(TypedIconItem.class, IconModel.class);
+        GenericItemAdapter<IconModel, GenericIconItem> itemAdapter = new GenericItemAdapter<>(GenericIconItem.class, IconModel.class);
 
         rv.setLayoutManager(gridLayoutManager);
         rv.setItemAnimator(new SlideDownAlphaAnimator());
