@@ -87,22 +87,14 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
 ###2. Set the Adapter to the RecyclerView
 ```java
 //create our FastAdapter which will manage everything
-FastAdapter fastAdapter = new FastAdapter();
-
-//create our ItemAdapter which will host our items
-ItemAdapter itemAdapter = new ItemAdapter();
-
-//find the RecyclerView
-RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+FastItemAdapter fastAdapter = new FastItemAdapter();
 
 //set our adapters to the RecyclerView
 //we wrap our FastAdapter inside the ItemAdapter -> This allows us to chain adapters for more complex useCases
-rv.setAdapter(itemAdapter.wrap(fastAdapter));
-
-//GENERATE or FETCH YOUR ITEMS...
+recyclerView.setAdapter(fastAdapter);
 
 //set the items to your ItemAdapter
-itemAdapter.add(ITEMS);
+fastAdapter.add(ITEMS);
 ```
 
 ## Libs used in sample app:
