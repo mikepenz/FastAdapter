@@ -1,6 +1,6 @@
 package com.mikepenz.fastadapter.adapters;
 
-import com.mikepenz.fastadapter.items.TypedAbstractItem;
+import com.mikepenz.fastadapter.items.GenericAbstractItem;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -13,13 +13,13 @@ import java.util.List;
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  * This adapter has the order of 500 which is the centered order
  */
-public class TypedItemAdapter<Model, Item extends TypedAbstractItem> extends ItemAdapter<Item> {
+public class GenericItemAdapter<Model, Item extends GenericAbstractItem> extends ItemAdapter<Item> {
     List<Model> mItems = new ArrayList<>();
 
     Class<Model> modelClass;
     Class<Item> itemClass;
 
-    public TypedItemAdapter(Class<Item> itemClass, Class<Model> modelClass) {
+    public GenericItemAdapter(Class<Item> itemClass, Class<Model> modelClass) {
         this.itemClass = itemClass;
         this.modelClass = modelClass;
     }

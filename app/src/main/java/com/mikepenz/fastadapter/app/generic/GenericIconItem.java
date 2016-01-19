@@ -1,11 +1,11 @@
-package com.mikepenz.fastadapter.app.typed;
+package com.mikepenz.fastadapter.app.generic;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.items.TypedAbstractItem;
+import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.iconics.view.IconicsImageView;
 
@@ -15,9 +15,9 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class TypedIconItem extends TypedAbstractItem<IconModel, TypedIconItem, TypedIconItem.ViewHolder> {
+public class GenericIconItem extends GenericAbstractItem<IconModel, GenericIconItem, GenericIconItem.ViewHolder> {
 
-    public TypedIconItem(IconModel icon) {
+    public GenericIconItem(IconModel icon) {
         super(icon);
     }
 

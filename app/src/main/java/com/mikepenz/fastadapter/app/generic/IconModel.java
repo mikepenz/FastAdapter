@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter.app.typed;
+package com.mikepenz.fastadapter.app.generic;
 
 import com.mikepenz.iconics.typeface.IIcon;
 

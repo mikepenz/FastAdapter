@@ -12,10 +12,10 @@ import java.lang.reflect.ParameterizedType;
  * Created by mikepenz on 14.07.15.
  * Implements the general methods of the IItem interface to speed up development.
  */
-public abstract class TypedAbstractItem<Model, Item extends IItem, VH extends RecyclerView.ViewHolder> extends AbstractItem<Item, VH> {
+public abstract class GenericAbstractItem<Model, Item extends IItem, VH extends RecyclerView.ViewHolder> extends AbstractItem<Item, VH> {
     private Model mModel;
 
-    public TypedAbstractItem(Model model) {
+    public GenericAbstractItem(Model model) {
         this.mModel = model;
     }
 

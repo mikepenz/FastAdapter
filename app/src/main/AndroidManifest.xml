@@ -34,8 +34,8 @@
             android:name=".AdvancedSampleActivity"
             android:label="@string/sample_advanced" />
         <activity
-            android:name=".TypedItemActivity"
-            android:label="@string/sample_typed_item" />
+            android:name=".GenericItemActivity"
+            android:label="@string/sample_generic_item" />
         <activity
             android:name=".IconGridActivity"
             android:label="@string/sample_icon_grid" />
