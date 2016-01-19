@@ -18,7 +18,6 @@ import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
-import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
@@ -27,8 +26,6 @@ import java.util.Comparator;
 import java.util.List;
 
 public class IconGridActivity extends AppCompatActivity {
-    //save our header or result
-    private Drawer result = null;
     //save our FastAdapter
     private FastItemAdapter fastItemAdapter;
 
@@ -123,8 +120,6 @@ public class IconGridActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //add the values which need to be saved from the drawer to the bundle
-        outState = result.saveInstanceState(outState);
         //add the values which need to be saved from the adapter to the bundel
         outState = fastItemAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
