@@ -116,7 +116,7 @@ public class ActionModeHelper {
             mode.getMenuInflater().inflate(mCabMenu, menu);
 
             //as we are now in the actionMode a single click is fine for multiSelection
-            mFastAdapter.withMultiSelectOnLongClick(false);
+            mFastAdapter.withSelectOnLongClick(false);
 
             return mCallback == null || mCallback.onCreateActionMode(mode, menu);
         }
@@ -126,7 +126,7 @@ public class ActionModeHelper {
             mActionMode = null;
 
             //after we are done with the actionMode we fallback to longClick for multiselect
-            mFastAdapter.withMultiSelectOnLongClick(true);
+            mFastAdapter.withSelectOnLongClick(true);
 
             //actionMode end. deselect everything
             mFastAdapter.deselect();

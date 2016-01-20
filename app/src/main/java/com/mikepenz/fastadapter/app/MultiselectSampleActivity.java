@@ -76,7 +76,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         mFastAdapter.setHasStableIds(true);
         mFastAdapter.withMultiSelect(true);
-        mFastAdapter.withMultiSelectOnLongClick(true);
+        mFastAdapter.withSelectOnLongClick(true);
         mFastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<SampleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {

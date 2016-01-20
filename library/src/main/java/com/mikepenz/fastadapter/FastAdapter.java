@@ -46,7 +46,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     // if we want multiSelect enabled
     private boolean mMultiSelect = false;
     // if we want the multiSelect only on longClick
-    private boolean mMultiSelectOnLongClick = true;
+    private boolean mSelectOnLongClick = false;
     // if a user can deselect a selection via click. required if there is always one selected item!
     private boolean mAllowDeselection = true;
 
@@ -154,13 +154,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * Disable this if you want the multiSelection on a single tap (note you have to enable multiSelect for this to make a difference)
+     * Disable this if you want the selection on a single tap
      *
-     * @param multiSelectOnLongClick false to do multiSelect via single click
+     * @param selectOnLongClick false to do select via single click
      * @return this
      */
-    public FastAdapter<Item> withMultiSelectOnLongClick(boolean multiSelectOnLongClick) {
-        mMultiSelectOnLongClick = multiSelectOnLongClick;
+    public FastAdapter<Item> withSelectOnLongClick(boolean selectOnLongClick) {
+        mSelectOnLongClick = selectOnLongClick;
         return this;
     }
 
@@ -277,7 +277,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                             consumed = mOnPreClickListener.onClick(v, relativeInfo.adapter, relativeInfo.item, pos);
                         }
                         //handle the selection if the event was not yet consumed, and we are allowed to select an item (only occurs when we select with long click only)
-                        if (!consumed && (!(mMultiSelect && mMultiSelectOnLongClick) || !mMultiSelect)) {
+                        if (!consumed && !mSelectOnLongClick) {
                             handleSelection(v, relativeInfo.item, pos);
                         }
 
@@ -305,7 +305,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                         }
 
                         //now handle the selection if we are in multiSelect mode and allow selecting on longClick
-                        if (!consumed && (mMultiSelect && mMultiSelectOnLongClick)) {
+                        if (!consumed && mSelectOnLongClick) {
                             handleSelection(v, relativeInfo.item, pos);
                         }
 
@@ -818,7 +818,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         Item item = getItem(position);
         if (item != null && item instanceof IExpandable) {
             IExpandable expandable = (IExpandable) item;
-            //if this item is not already callapsed and has sub items we go on
+            //if this item is not already collapsed and has sub items we go on
             if (expandable.isExpanded() && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
                 internalCollapse(expandable, position);
             }
@@ -1114,7 +1114,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          * is called in onBindViewHolder to bind the data on the ViewHolder
          *
          * @param viewHolder the viewHolder for the type at this position
-         * @param position   the position of thsi viewHolder
+         * @param position   the position of this viewHolder
          */
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
