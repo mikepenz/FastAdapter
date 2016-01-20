@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.items;
 
 import android.content.Context;
+import android.support.annotation.CallSuper;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -130,6 +131,7 @@ public abstract class AbstractItem<Item extends IItem, VH extends RecyclerView.V
 
 
     @Override
+    @CallSuper
     public void bindView(VH holder) {
         //set the selected state of this item. force this otherwise it may is missed when implementing an item
         holder.itemView.setSelected(isSelected());

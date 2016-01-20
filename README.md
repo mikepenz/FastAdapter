@@ -23,12 +23,16 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
  - More to come...
 
 #Preview
+##Demo
+You can try it out here [Google Play](https://play.google.com/store/apps/details?id=com.mikepenz.fastadapter.app) (or download the latest release from GitHub)
+
 ##Screenshots
+![Image](https://raw.githubusercontent.com/mikepenz/FastAdapter/develop/DEV/github/screenshots1.jpg)
 
 #Include in your project
 ##Using Maven
 ```javascript
-compile('com.mikepenz:fastadapter:0.9.1@aar') {
+compile('com.mikepenz:fastadapter:0.9.2@aar') {
 	transitive = true
 }
 ```
@@ -83,22 +87,14 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
 ###2. Set the Adapter to the RecyclerView
 ```java
 //create our FastAdapter which will manage everything
-FastAdapter fastAdapter = new FastAdapter();
-
-//create our ItemAdapter which will host our items
-ItemAdapter itemAdapter = new ItemAdapter();
-
-//find the RecyclerView
-RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+FastItemAdapter fastAdapter = new FastItemAdapter();
 
 //set our adapters to the RecyclerView
 //we wrap our FastAdapter inside the ItemAdapter -> This allows us to chain adapters for more complex useCases
-rv.setAdapter(itemAdapter.wrap(fastAdapter));
-
-//GENERATE or FETCH YOUR ITEMS...
+recyclerView.setAdapter(fastAdapter);
 
 //set the items to your ItemAdapter
-itemAdapter.add(ITEMS);
+fastAdapter.add(ITEMS);
 ```
 
 ## Libs used in sample app:

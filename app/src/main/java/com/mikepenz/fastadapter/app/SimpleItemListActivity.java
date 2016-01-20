@@ -83,7 +83,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
             public boolean filter(SampleItem item, CharSequence constraint) {
                 //return true if we should filter it out
                 //return false to keep it
-                return !item.name.getText().toLowerCase().contains(constraint);
+                return !item.name.getText().toLowerCase().contains(constraint.toString().toLowerCase());
             }
         });
 

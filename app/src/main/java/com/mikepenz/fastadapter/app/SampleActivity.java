@@ -119,7 +119,7 @@ public class SampleActivity extends AppCompatActivity {
         //create our FastAdapter which will manage everything
         mFastAdapter = new FastAdapter<>();
         mFastAdapter.withMultiSelect(true);
-        mFastAdapter.withMultiSelectOnLongClick(false);
+        mFastAdapter.withSelectOnLongClick(false);
         //create our ItemAdapter which will host our items
         mItemAdapter = new ItemAdapter<>();
 

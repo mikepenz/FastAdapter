@@ -72,7 +72,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         mFastAdapter.setHasStableIds(true);
         mFastAdapter.withMultiSelect(true);
-        mFastAdapter.withMultiSelectOnLongClick(true);
+        mFastAdapter.withSelectOnLongClick(true);
         mFastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener() {
             @Override
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
@@ -179,7 +179,6 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             //logic if an item was clicked
-
             //return false as we want default behavior to go on
             return false;
         }
