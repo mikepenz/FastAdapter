@@ -150,12 +150,10 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items
      */
     public void set(List<Item> items) {
-        if (mUseIdDistributor) {
-            IdDistributor.checkIds(items);
+        if (!mItems.isEmpty()) {
+            clear();
         }
-        mItems = items;
-        mapPossibleTypes(mItems);
-        getFastAdapter().notifyAdapterItemRangeChanged(getFastAdapter().getItemCount(getOrder()), getAdapterItemCount());
+        add(items);
     }
 
     /**
