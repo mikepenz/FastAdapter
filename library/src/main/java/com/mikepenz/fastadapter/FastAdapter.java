@@ -872,6 +872,16 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     //-------------------------
 
     /**
+     * wraps notifyDataSetChanged
+     */
+    public void notifyAdapterDataSetChanged() {
+        mSelections.clear();
+        mExpanded.clear();
+        cacheSizes();
+        notifyDataSetChanged();
+    }
+
+    /**
      * wraps notifyItemInserted
      *
      * @param position the global position

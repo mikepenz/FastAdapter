@@ -17,11 +17,18 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
     <T> T setSubItems(IExpandable<T, Item> collapsible, List<Item> subItems);
 
     /**
-     * set a new list of items for this adapter
+     * set a new list of items and apply it to the existing list (clear -> add) for this adapter
      *
      * @param items
      */
     void set(List<Item> items);
+
+    /**
+     * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
+     *
+     * @param items
+     */
+    void setNewList(List<Item> items);
 
     /**
      * add an array of items to the end of the existing items
