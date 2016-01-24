@@ -145,7 +145,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     /**
-     * set a new list of items and apply it to the existing list (clear -> add) for this adapter
+     * set a new list of items and apply it to the existing list (clear - add) for this adapter
      *
      * @param items
      */
