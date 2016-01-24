@@ -62,21 +62,6 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
     void set(int position, Item item);
 
     /**
-     * add an item at the end of the existing items
-     *
-     * @param item
-     */
-    void add(Item item);
-
-    /**
-     * add an item at the given position within the existing icons
-     *
-     * @param position the relative position (position of this adapter)
-     * @param item
-     */
-    void add(int position, Item item);
-
-    /**
      * removes an item at the given position within the existing icons
      *
      * @param position the relative position (position of this adapter)

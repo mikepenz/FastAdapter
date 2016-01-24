@@ -1,32 +1,37 @@
 package com.mikepenz.fastadapter.adapters;
 
 import com.mikepenz.fastadapter.items.GenericAbstractItem;
+import com.mikepenz.fastadapter.utils.Function;
 
-import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * Created by mikepenz on 27.12.15.
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  * This adapter has the order of 500 which is the centered order
  */
-public class GenericItemAdapter<Model, Item extends GenericAbstractItem> extends ItemAdapter<Item> {
+public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model,Item,?>> extends ItemAdapter<Item> {
+    private final Function<Model, Item> mItemFactory;
     private List<Model> mItems = new ArrayList<>();
-    private Class<Model> modelClass;
-    private Class<Item> itemClass;
 
     /**
      * @param itemClass  the class of your item (Item extends GenericAbstractItem)
      * @param modelClass the class which is your model class
      */
-    public GenericItemAdapter(Class<Item> itemClass, Class<Model> modelClass) {
-        this.itemClass = itemClass;
-        this.modelClass = modelClass;
+    public GenericItemAdapter(Class<? extends Item> itemClass, Class<? extends Model> modelClass) {
+        this(new ReflectionBasedItemFactory<Model, Item>(modelClass, itemClass));
     }
 
+    /**
+     * @param itemFactory a factory that takes a model as an argument and returns an item as a result
+     */
+    public GenericItemAdapter(Function<Model, Item> itemFactory) {
+        this.mItemFactory = itemFactory;
+    }
 
     /**
      * set a new list of models for this adapter
@@ -44,8 +49,7 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem> extends
      * @param models
      */
     public void addModel(Model... models) {
-        super.add(toItems(models));
-        Collections.addAll(mItems, models);
+        addModel(asList(models));
     }
 
     /**
@@ -65,8 +69,7 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem> extends
      * @param models
      */
     public void addModel(int position, Model... models) {
-        super.add(position, toItems(models));
-        mItems.addAll(position - getFastAdapter().getItemCount(getOrder()), Arrays.asList(models));
+        addModel(position, asList(models));
     }
 
     /**
@@ -87,29 +90,8 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem> extends
      * @param model
      */
     public void setModel(int position, Model model) {
-        super.set(position, getAbstractItem(model));
+        super.set(position, toItem(model));
         mItems.set(position - getFastAdapter().getItemCount(getOrder()), model);
-    }
-
-    /**
-     * add a model at the end of the list
-     *
-     * @param model
-     */
-    public void addModel(Model model) {
-        super.add(getAbstractItem(model));
-        mItems.add(model);
-    }
-
-    /**
-     * add a model at the given (global) position
-     *
-     * @param position
-     * @param model
-     */
-    public void addModel(int position, Model model) {
-        super.add(position, getAbstractItem(model));
-        mItems.add(position - getFastAdapter().getItemCount(getOrder()), model);
     }
 
     /**
@@ -155,27 +137,11 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem> extends
      * @param models
      * @return
      */
-    private List<Item> toItems(List<Model> models) {
-        ArrayList<Item> items = new ArrayList<>();
+    protected List<Item> toItems(List<Model> models) {
+        List<Item> items = new ArrayList<>();
         if (models != null) {
             for (Model model : models) {
-                items.add(getAbstractItem(model));
-            }
-        }
-        return items;
-    }
-
-    /**
-     * helper to get a list of item from a list of model
-     *
-     * @param models
-     * @return
-     */
-    private List<Item> toItems(Model... models) {
-        ArrayList<Item> items = new ArrayList<>();
-        if (models != null) {
-            for (Model model : models) {
-                items.add(getAbstractItem(model));
+                items.add(toItem(model));
             }
         }
         return items;
@@ -187,18 +153,28 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem> extends
      * @param model the model class we want to wrap into a typedItem
      * @return our typedItem
      */
-    private Item getAbstractItem(Model model) {
-        try {
-            return itemClass.getDeclaredConstructor(modelClass).newInstance(model);
-        } catch (InstantiationException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (NoSuchMethodException e) {
-            e.printStackTrace();
+    protected Item toItem(Model model) {
+        return mItemFactory.apply(model);
+    }
+
+    protected static class ReflectionBasedItemFactory<Model, Item> implements Function<Model, Item> {
+        private final Class<? extends Model> modelClass;
+        private final Class<? extends Item> itemClass;
+
+        public ReflectionBasedItemFactory(Class<? extends Model> modelClass, Class<? extends Item> itemClass) {
+            this.modelClass = modelClass;
+            this.itemClass = itemClass;
         }
-        return null;
+
+        @Override
+        public Item apply(Model model) {
+            try {
+                Constructor<? extends Item> constructor = itemClass.getDeclaredConstructor(modelClass);
+                constructor.setAccessible(true);
+                return constructor.newInstance(model);
+            } catch (Exception e) {
+                throw new RuntimeException("Please provide a constructor that takes a model as an argument");
+            }
+        }
     }
 }
