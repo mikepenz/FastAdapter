@@ -24,7 +24,7 @@ public abstract class GenericAbstractItem<Model, Item extends IItem, VH extends 
     }
 
     public void setModel(Model model) {
-        this.mModel = mModel;
+        this.mModel = model;
     }
 
     @Override
