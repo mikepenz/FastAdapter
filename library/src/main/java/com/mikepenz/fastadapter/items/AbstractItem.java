@@ -16,7 +16,7 @@ import java.lang.reflect.ParameterizedType;
  * Created by mikepenz on 14.07.15.
  * Implements the general methods of the IItem interface to speed up development.
  */
-public abstract class AbstractItem<Item extends IItem, VH extends RecyclerView.ViewHolder> implements IItem<Item, VH> {
+public abstract class AbstractItem<Item extends AbstractItem<?, ?>, VH extends RecyclerView.ViewHolder> implements IItem<Item, VH> {
     // the identifier for this item
     protected long mIdentifier = -1;
 
@@ -180,7 +180,7 @@ public abstract class AbstractItem<Item extends IItem, VH extends RecyclerView.V
      * @return
      */
     @Override
-    public RecyclerView.ViewHolder getViewHolder(ViewGroup parent) {
+    public VH getViewHolder(ViewGroup parent) {
         return getViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutRes(), parent, false));
     }
 
@@ -231,12 +231,12 @@ public abstract class AbstractItem<Item extends IItem, VH extends RecyclerView.V
     /**
      * If this item equals to the given identifier
      *
-     * @param id
-     * @return
+     * @param id identifier
+     * @return true if identifier equals id, false otherwise
      */
     @Override
-    public boolean equals(Integer id) {
-        return id != null && id == mIdentifier;
+    public boolean equals(int id) {
+        return id == mIdentifier;
     }
 
     /**
