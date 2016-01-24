@@ -890,8 +890,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         //we have to update all current stored selection and expandable states in our map
         mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, 1);
         mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, 1);
-        notifyItemInserted(position);
         cacheSizes();
+        notifyItemInserted(position);
     }
 
     /**
@@ -904,8 +904,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         //we have to update all current stored selection and expandable states in our map
         mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount);
         mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, itemCount);
-        notifyItemRangeInserted(position, itemCount);
         cacheSizes();
+        notifyItemRangeInserted(position, itemCount);
     }
 
     /**
@@ -917,8 +917,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         //we have to update all current stored selection and expandable states in our map
         mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, -1);
         mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, -1);
-        notifyItemRemoved(position);
         cacheSizes();
+        notifyItemRemoved(position);
     }
 
     /**
@@ -931,8 +931,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         //we have to update all current stored selection and expandable states in our map
         mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount * (-1));
         mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, itemCount * (-1));
-        notifyItemRangeRemoved(position, itemCount);
         cacheSizes();
+        notifyItemRangeRemoved(position, itemCount);
     }
 
     /**
