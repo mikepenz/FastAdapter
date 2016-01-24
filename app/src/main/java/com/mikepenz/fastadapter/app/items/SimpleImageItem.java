@@ -24,6 +24,7 @@ import butterknife.ButterKnife;
  */
 public class SimpleImageItem extends AbstractItem<ImageItem, SimpleImageItem.ViewHolder> {
 
+    private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
     public String mImageUrl;
     public String mName;
     public String mDescription;
@@ -93,7 +94,7 @@ public class SimpleImageItem extends AbstractItem<ImageItem, SimpleImageItem.Vie
      * It is highly recommended to implement a ViewHolderFactory as it is 0-1ms faster for ViewHolder creation,
      * and it is also many many times more efficient if you define custom listeners on views within your item.
      */
-    public class ItemFactory implements ViewHolderFactory<ViewHolder> {
+    protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
         public ViewHolder create(View v) {
             return new ViewHolder(v);
         }
@@ -105,8 +106,8 @@ public class SimpleImageItem extends AbstractItem<ImageItem, SimpleImageItem.Vie
      * @return
      */
     @Override
-    public ViewHolderFactory getFactory() {
-        return new ItemFactory();
+    public ViewHolderFactory<? extends ViewHolder> getFactory() {
+        return FACTORY;
     }
 
     /**

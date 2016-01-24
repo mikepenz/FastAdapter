@@ -17,6 +17,7 @@ import butterknife.ButterKnife;
  */
 public class GenericIconItem extends GenericAbstractItem<IconModel, GenericIconItem, GenericIconItem.ViewHolder> {
 
+    private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
     public GenericIconItem(IconModel icon) {
         super(icon);
     }
@@ -45,7 +46,7 @@ public class GenericIconItem extends GenericAbstractItem<IconModel, GenericIconI
      * It is highly recommended to implement a ViewHolderFactory as it is 0-1ms faster for ViewHolder creation,
      * and it is also many many times more efficient if you define custom listeners on views within your item.
      */
-    public class ItemFactory implements ViewHolderFactory<ViewHolder> {
+    protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
         public ViewHolder create(View v) {
             return new ViewHolder(v);
         }
@@ -57,8 +58,8 @@ public class GenericIconItem extends GenericAbstractItem<IconModel, GenericIconI
      * @return
      */
     @Override
-    public ViewHolderFactory getFactory() {
-        return new ItemFactory();
+    public ViewHolderFactory<? extends ViewHolder> getFactory() {
+        return FACTORY;
     }
 
     /**
