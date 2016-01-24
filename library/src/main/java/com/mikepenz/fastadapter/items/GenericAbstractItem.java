@@ -28,17 +28,7 @@ public abstract class GenericAbstractItem<Model, Item extends GenericAbstractIte
     }
 
     @Override
-    public VH getViewHolder(View v) {
-        ViewHolderFactory viewHolderFactory = getFactory();
-
-        if (viewHolderFactory != null) {
-            return (VH) viewHolderFactory.create(v);
-        } else {
-            try {
-                return (VH) ((Class) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[2]).getDeclaredConstructor(View.class).newInstance(v);
-            } catch (Exception e) {
-                throw new RuntimeException("something really bad happened. if this happens more often, head over to GitHub and read how to switch to the ViewHolderFactory");
-            }
-        }
+    protected Class<? extends VH> viewHolderType() {
+        return ((Class<? extends VH>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[2]);
     }
 }
