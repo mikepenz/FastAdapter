@@ -129,6 +129,28 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * allows you to set a custom OnCreateViewHolderListener which will be used before and after the ViewHolder is created
+     * You may check the OnCreateViewHolderListenerImpl for the default behavior
+     *
+     * @param onCreateViewHolderListener the OnCreateViewHolderListener (you may use the OnCreateViewHolderListenerImpl)
+     */
+    public FastAdapter<Item> withOnCreateViewHolderListener(OnCreateViewHolderListener onCreateViewHolderListener) {
+        this.mOnCreateViewHolderListener = onCreateViewHolderListener;
+        return this;
+    }
+
+    /**
+     * allows you to set an custom OnBindViewHolderListener which is used to bind the view. This will overwrite the libraries behavior.
+     * You may check the OnBindViewHolderListenerImpl for the default behavior
+     *
+     * @param onBindViewHolderListener the OnBindViewHolderListener
+     */
+    public FastAdapter<Item> withOnBindViewHolderListener(OnBindViewHolderListener onBindViewHolderListener) {
+        this.mOnBindViewHolderListener = onBindViewHolderListener;
+        return this;
+    }
+
+    /**
      * select between the different selection behaviors.
      * there are now 2 different variants of selection. you can toggle this via `withSelectWithItemUpdate(boolean)` (where false == default - variant 1)
      * 1.) direct selection via the view "selected" state, we also make sure we do not animate here so no notifyItemChanged is called if we repeatly press the same item
