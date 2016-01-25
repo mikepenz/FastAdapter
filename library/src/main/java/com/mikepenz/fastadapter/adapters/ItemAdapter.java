@@ -149,10 +149,30 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items
      */
     public void set(List<Item> items) {
+        int newItemsCount = items.size();
+        int previousItemsCount = mItems.size();
+        int itemsBeforeThisAdapter = getFastAdapter().getItemCount(getOrder());
+
+        //remove all previous items
         if (!mItems.isEmpty()) {
-            clear();
+            mItems.clear();
         }
-        add(items);
+
+        //add all new items to the list
+        mItems.addAll(items);
+
+        //now properly notify the adapter about the changes
+        if (newItemsCount > previousItemsCount) {
+            if (previousItemsCount > 0) {
+                getFastAdapter().notifyAdapterItemRangeChanged(itemsBeforeThisAdapter, previousItemsCount);
+            }
+            getFastAdapter().notifyAdapterItemRangeInserted(itemsBeforeThisAdapter + newItemsCount - 1, newItemsCount - previousItemsCount);
+        } else if (newItemsCount > 0 && newItemsCount < previousItemsCount) {
+            getFastAdapter().notifyAdapterItemRangeChanged(itemsBeforeThisAdapter, newItemsCount);
+            getFastAdapter().notifyAdapterItemRangeRemoved(itemsBeforeThisAdapter + newItemsCount - 1, previousItemsCount - newItemsCount);
+        } else if (newItemsCount == 0) {
+            getFastAdapter().notifyAdapterItemRangeRemoved(itemsBeforeThisAdapter, previousItemsCount);
+        }
     }
 
     /**
