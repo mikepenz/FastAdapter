@@ -12,7 +12,7 @@ import java.lang.reflect.ParameterizedType;
  * Created by mikepenz on 14.07.15.
  * Implements the general methods of the IItem interface to speed up development.
  */
-public abstract class GenericAbstractItem<Model, Item extends IItem, VH extends RecyclerView.ViewHolder> extends AbstractItem<Item, VH> {
+public abstract class GenericAbstractItem<Model, Item extends GenericAbstractItem<?, ?, ?>, VH extends RecyclerView.ViewHolder> extends AbstractItem<Item, VH> {
     private Model mModel;
 
     public GenericAbstractItem(Model model) {
@@ -24,21 +24,11 @@ public abstract class GenericAbstractItem<Model, Item extends IItem, VH extends 
     }
 
     public void setModel(Model model) {
-        this.mModel = mModel;
+        this.mModel = model;
     }
 
     @Override
-    public VH getViewHolder(View v) {
-        ViewHolderFactory viewHolderFactory = getFactory();
-
-        if (viewHolderFactory != null) {
-            return (VH) viewHolderFactory.create(v);
-        } else {
-            try {
-                return (VH) ((Class) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[2]).getDeclaredConstructor(View.class).newInstance(v);
-            } catch (Exception e) {
-                throw new RuntimeException("something really bad happened. if this happens more often, head over to GitHub and read how to switch to the ViewHolderFactory");
-            }
-        }
+    protected Class<? extends VH> viewHolderType() {
+        return ((Class<? extends VH>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[2]);
     }
 }

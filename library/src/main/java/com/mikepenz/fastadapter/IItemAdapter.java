@@ -17,7 +17,7 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
     <T> T setSubItems(IExpandable<T, Item> collapsible, List<Item> subItems);
 
     /**
-     * set a new list of items and apply it to the existing list (clear -> add) for this adapter
+     * set a new list of items and apply it to the existing list (clear - add) for this adapter
      *
      * @param items
      */
@@ -67,21 +67,6 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
      * @param item
      */
     void set(int position, Item item);
-
-    /**
-     * add an item at the end of the existing items
-     *
-     * @param item
-     */
-    void add(Item item);
-
-    /**
-     * add an item at the given position within the existing icons
-     *
-     * @param position the relative position (position of this adapter)
-     * @param item
-     */
-    void add(int position, Item item);
 
     /**
      * removes an item at the given position within the existing icons

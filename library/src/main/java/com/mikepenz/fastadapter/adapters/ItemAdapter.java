@@ -9,9 +9,9 @@ import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.utils.IdDistributor;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 /**
  * Created by mikepenz on 27.12.15.
@@ -85,7 +85,6 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         return mItems.size();
     }
 
-
     /**
      * @return the items within this adapter
      */
@@ -145,7 +144,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     /**
-     * set a new list of items and apply it to the existing list (clear -> add) for this adapter
+     * set a new list of items and apply it to the existing list (clear - add) for this adapter
      *
      * @param items
      */
@@ -173,14 +172,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items
      */
     public void add(Item... items) {
-        if (items != null) {
-            if (mUseIdDistributor) {
-                IdDistributor.checkIds(items);
-            }
-            Collections.addAll(mItems, items);
-            mapPossibleTypes(Arrays.asList(items));
-            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()), items.length);
-        }
+        add(asList(items));
     }
 
     /**
@@ -189,14 +181,12 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items
      */
     public void add(List<Item> items) {
-        if (items != null) {
-            if (mUseIdDistributor) {
-                IdDistributor.checkIds(items);
-            }
-            mItems.addAll(items);
-            mapPossibleTypes(items);
-            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()), items.size());
+        if (mUseIdDistributor) {
+            IdDistributor.checkIds(items);
         }
+        mItems.addAll(items);
+        mapPossibleTypes(items);
+        getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getItemCount(getOrder()), items.size());
     }
 
     /**
@@ -206,14 +196,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items
      */
     public void add(int position, Item... items) {
-        if (mUseIdDistributor) {
-            IdDistributor.checkIds(items);
-        }
-        if (items != null) {
-            mItems.addAll(position - getFastAdapter().getItemCount(getOrder()), Arrays.asList(items));
-            mapPossibleTypes(Arrays.asList(items));
-            getFastAdapter().notifyAdapterItemRangeInserted(position, items.length);
-        }
+        add(position, asList(items));
     }
 
     /**
@@ -246,35 +229,6 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         mItems.set(position - getFastAdapter().getItemCount(getOrder()), item);
         mapPossibleType(item);
         getFastAdapter().notifyAdapterItemChanged(position);
-    }
-
-    /**
-     * add an item at the end of the existing items
-     *
-     * @param item
-     */
-    public void add(Item item) {
-        if (mUseIdDistributor) {
-            IdDistributor.checkId(item);
-        }
-        mItems.add(item);
-        mapPossibleType(item);
-        getFastAdapter().notifyAdapterItemInserted(getFastAdapter().getItemCount(getOrder()) + mItems.size());
-    }
-
-    /**
-     * add an item at the given position within the existing icons
-     *
-     * @param position the global position
-     * @param item
-     */
-    public void add(int position, Item item) {
-        if (mUseIdDistributor) {
-            IdDistributor.checkId(item);
-        }
-        mItems.add(position - getFastAdapter().getItemCount(getOrder()), item);
-        mapPossibleType(item);
-        getFastAdapter().notifyAdapterItemInserted(position);
     }
 
     /**

@@ -10,13 +10,14 @@ import android.view.ViewGroup;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
 
 /**
  * Created by mikepenz on 14.07.15.
  * Implements the general methods of the IItem interface to speed up development.
  */
-public abstract class AbstractItem<Item extends IItem, VH extends RecyclerView.ViewHolder> implements IItem<Item, VH> {
+public abstract class AbstractItem<Item extends AbstractItem<?, ?>, VH extends RecyclerView.ViewHolder> implements IItem<Item, VH> {
     // the identifier for this item
     protected long mIdentifier = -1;
 
@@ -129,7 +130,6 @@ public abstract class AbstractItem<Item extends IItem, VH extends RecyclerView.V
         return mSelectable;
     }
 
-
     @Override
     @CallSuper
     public void bindView(VH holder) {
@@ -165,10 +165,10 @@ public abstract class AbstractItem<Item extends IItem, VH extends RecyclerView.V
      */
     @Override
     public View generateView(Context ctx, ViewGroup parent) {
-        RecyclerView.ViewHolder viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), parent, false));
+        VH viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), parent, false));
 
         //as we already know the type of our ViewHolder cast it to our type
-        bindView((VH) viewHolder);
+        bindView(viewHolder);
         //return the bound and generatedView
         return viewHolder.itemView;
     }
@@ -180,31 +180,48 @@ public abstract class AbstractItem<Item extends IItem, VH extends RecyclerView.V
      * @return
      */
     @Override
-    public RecyclerView.ViewHolder getViewHolder(ViewGroup parent) {
+    public VH getViewHolder(ViewGroup parent) {
         return getViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutRes(), parent, false));
     }
 
+    protected ViewHolderFactory<? extends VH> mFactory;
 
     /**
-     * @Override
-     * public ViewHolderFactory getFactory() {
-     *      return new ItemFactory();
-     * }
+     * set the view holder factory of this item
      *
-     * public static class ItemFactory implements ViewHolderFactory<ViewHolder> {
-     *      public ViewHolder factory(View v) {
-     *          return new ViewHolder(v);
-     *      }
-     * }
+     * @param factory to be set
+     * @return
      */
+    public Item withFactory(ViewHolderFactory<? extends VH> factory) {
+        this.mFactory = factory;
+        return (Item) this;
+    }
+
     /**
      * the abstract method to retrieve the ViewHolder factory
      * The ViewHolder factory implementation should look like (see the commented code above)
      *
      * @return
      */
-    public ViewHolderFactory getFactory() {
-        return null;
+    public ViewHolderFactory<? extends VH> getFactory() {
+        if (mFactory == null) {
+            try {
+                this.mFactory = new ReflectionBasedViewHolderFactory<>(viewHolderType());
+            } catch (Exception e) {
+                throw new RuntimeException("please set a ViewHolderFactory");
+            }
+        }
+
+        return mFactory;
+    }
+
+    /**
+     * gets the viewHolder via the generic superclass
+     *
+     * @return the class of the ViewHolder
+     */
+    protected Class<? extends VH> viewHolderType() {
+        return ((Class<? extends VH>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]);
     }
 
     /**
@@ -215,28 +232,18 @@ public abstract class AbstractItem<Item extends IItem, VH extends RecyclerView.V
      * @return the ViewHolder for this Item
      */
     public VH getViewHolder(View v) {
-        ViewHolderFactory viewHolderFactory = getFactory();
-
-        if (viewHolderFactory != null) {
-            return (VH) viewHolderFactory.create(v);
-        } else {
-            try {
-                return (VH) ((Class) ((ParameterizedType) this.getClass().getGenericSuperclass()).getActualTypeArguments()[1]).getDeclaredConstructor(View.class).newInstance(v);
-            } catch (Exception e) {
-                throw new RuntimeException("something really bad happened. if this happens more often, head over to GitHub and read how to switch to the ViewHolderFactory");
-            }
-        }
+        return getFactory().create(v);
     }
 
     /**
      * If this item equals to the given identifier
      *
-     * @param id
-     * @return
+     * @param id identifier
+     * @return true if identifier equals id, false otherwise
      */
     @Override
-    public boolean equals(Integer id) {
-        return id != null && id == mIdentifier;
+    public boolean equals(int id) {
+        return id == mIdentifier;
     }
 
     /**
@@ -261,5 +268,31 @@ public abstract class AbstractItem<Item extends IItem, VH extends RecyclerView.V
     @Override
     public int hashCode() {
         return Long.valueOf(mIdentifier).hashCode();
+    }
+
+    protected static class ReflectionBasedViewHolderFactory<VH extends RecyclerView.ViewHolder> implements ViewHolderFactory<VH> {
+        private final Class<? extends VH> clazz;
+
+        public ReflectionBasedViewHolderFactory(Class<? extends VH> clazz) {
+            this.clazz = clazz;
+        }
+
+        @Override
+        public VH create(View v) {
+            try {
+                try {
+                    Constructor<? extends VH> constructor = clazz.getDeclaredConstructor(View.class);
+                    //could be that the constructor is not public
+                    constructor.setAccessible(true);
+                    return constructor.newInstance(v);
+                } catch (NoSuchMethodException e) {
+                    //maybe that viewholder has a default view
+                    return clazz.newInstance();
+                }
+            } catch (Exception e) {
+                // I am really out of options, you could have just set
+                throw new RuntimeException("Please provide a constructor that takes a view or a no-arg constructor");
+            }
+        }
     }
 }

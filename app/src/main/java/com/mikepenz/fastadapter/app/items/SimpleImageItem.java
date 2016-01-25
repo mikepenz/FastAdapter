@@ -1,9 +1,7 @@
 package com.mikepenz.fastadapter.app.items;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -23,6 +21,8 @@ import butterknife.ButterKnife;
  * Created by mikepenz on 28.12.15.
  */
 public class SimpleImageItem extends AbstractItem<ImageItem, SimpleImageItem.ViewHolder> {
+    //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
+    private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
     public String mImageUrl;
     public String mName;
@@ -43,16 +43,31 @@ public class SimpleImageItem extends AbstractItem<ImageItem, SimpleImageItem.Vie
         return this;
     }
 
+    /**
+     * defines the type defining this item. must be unique. preferably an id
+     *
+     * @return the type
+     */
     @Override
     public int getType() {
         return R.id.fastadapter_simple_image_item_id;
     }
 
+    /**
+     * defines the layout which will be used for this item in the list
+     *
+     * @return the layout for this item
+     */
     @Override
     public int getLayoutRes() {
         return R.layout.simple_image_item;
     }
 
+    /**
+     * binds the data of this item onto the viewHolder
+     *
+     * @param viewHolder the viewHolder of this item
+     */
     @Override
     public void bindView(SimpleImageItem.ViewHolder viewHolder) {
         super.bindView(viewHolder);
@@ -74,26 +89,12 @@ public class SimpleImageItem extends AbstractItem<ImageItem, SimpleImageItem.Vie
         Glide.with(ctx).load(mImageUrl).animate(R.anim.alpha_on).into(viewHolder.imageView);
     }
 
-    public static int getSelectableBackground(Context ctx) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // If we're running on Honeycomb or newer, then we can use the Theme's
-            // selectableItemBackground to ensure that the View has a pressed state
-            TypedValue outValue = new TypedValue();
-            ctx.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-            return outValue.resourceId;
-        } else {
-            TypedValue outValue = new TypedValue();
-            ctx.getTheme().resolveAttribute(android.R.attr.itemBackground, outValue, true);
-            return outValue.resourceId;
-        }
-    }
-
     /**
      * our ItemFactory implementation which creates the ViewHolder for our adapter.
      * It is highly recommended to implement a ViewHolderFactory as it is 0-1ms faster for ViewHolder creation,
      * and it is also many many times more efficient if you define custom listeners on views within your item.
      */
-    public class ItemFactory implements ViewHolderFactory<ViewHolder> {
+    protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
         public ViewHolder create(View v) {
             return new ViewHolder(v);
         }
@@ -105,8 +106,8 @@ public class SimpleImageItem extends AbstractItem<ImageItem, SimpleImageItem.Vie
      * @return
      */
     @Override
-    public ViewHolderFactory getFactory() {
-        return new ItemFactory();
+    public ViewHolderFactory<? extends ViewHolder> getFactory() {
+        return FACTORY;
     }
 
     /**

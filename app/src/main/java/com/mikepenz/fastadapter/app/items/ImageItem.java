@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -24,13 +23,13 @@ import butterknife.ButterKnife;
  * Created by mikepenz on 28.12.15.
  */
 public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
+    //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
+    private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
     public String mImageUrl;
     public String mName;
     public String mDescription;
     public boolean mStarred = false;
-
-    public OnItemClickListener mOnItemClickListener;
 
     public ImageItem withImage(String imageUrl) {
         this.mImageUrl = imageUrl;
@@ -52,21 +51,31 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
         return this;
     }
 
-    public ImageItem withOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.mOnItemClickListener = onItemClickListener;
-        return this;
-    }
-
+    /**
+     * defines the type defining this item. must be unique. preferably an id
+     *
+     * @return the type
+     */
     @Override
     public int getType() {
         return R.id.fastadapter_image_item_id;
     }
 
+    /**
+     * defines the layout which will be used for this item in the list
+     *
+     * @return the layout for this item
+     */
     @Override
     public int getLayoutRes() {
         return R.layout.image_item;
     }
 
+    /**
+     * binds the data of this item onto the viewHolder
+     *
+     * @param viewHolder the viewHolder of this item
+     */
     @Override
     public void bindView(ViewHolder viewHolder) {
         super.bindView(viewHolder);
@@ -86,28 +95,14 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
         //load glide
         Glide.clear(viewHolder.imageView);
         Glide.with(ctx).load(mImageUrl).animate(R.anim.alpha_on).into(viewHolder.imageView);
-
-        viewHolder.imageLovedContainer.setOnClickListener(onClickListener);
     }
-
-    /**
-     * the onClickListener used to animate from one heart to the other
-     */
-    public View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            mStarred = !mStarred;
-            animateHeart(((ViewGroup) v).getChildAt(0), ((ViewGroup) v).getChildAt(1), mStarred);
-            mOnItemClickListener.onLovedClick(mImageUrl, mStarred);
-        }
-    };
 
     /**
      * our ItemFactory implementation which creates the ViewHolder for our adapter.
      * It is highly recommended to implement a ViewHolderFactory as it is 0-1ms faster for ViewHolder creation,
      * and it is also many many times more efficient if you define custom listeners on views within your item.
      */
-    public class ItemFactory implements ViewHolderFactory<ViewHolder> {
+    protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
         public ViewHolder create(View v) {
             return new ViewHolder(v);
         }
@@ -132,7 +127,7 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
      * @param imageLovedOff
      * @param on
      */
-    private void animateHeart(View imageLovedOn, View imageLovedOff, boolean on) {
+    public void animateHeart(View imageLovedOn, View imageLovedOff, boolean on) {
         imageLovedOn.setVisibility(View.VISIBLE);
         imageLovedOff.setVisibility(View.VISIBLE);
 
@@ -159,14 +154,14 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
      * @return
      */
     @Override
-    public ViewHolderFactory getFactory() {
-        return new ItemFactory();
+    public ViewHolderFactory<? extends ViewHolder> getFactory() {
+        return FACTORY;
     }
 
     /**
      * our ViewHolder
      */
-    protected static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         protected View view;
         @Bind(R.id.item_image_img)
         protected ImageView imageView;
@@ -175,7 +170,7 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
         @Bind(R.id.item_image_description)
         protected TextView imageDescription;
         @Bind(R.id.item_image_loved_container)
-        protected RelativeLayout imageLovedContainer;
+        public RelativeLayout imageLovedContainer;
         @Bind(R.id.item_image_loved_yes)
         protected IconicsImageView imageLovedOn;
         @Bind(R.id.item_image_loved_no)
