@@ -26,6 +26,7 @@ import butterknife.ButterKnife;
  */
 public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> implements IExpandable<SampleItem, IItem> {
 
+    private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
     public String header;
     public StringHolder name;
     public StringHolder description;
@@ -105,11 +106,11 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
     }
 
     @Override
-    public ViewHolderFactory getFactory() {
-        return new ItemFactory();
+    public ViewHolderFactory<? extends ViewHolder> getFactory() {
+        return FACTORY;
     }
 
-    public static class ItemFactory implements ViewHolderFactory<ViewHolder> {
+    protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
         public ViewHolder create(View v) {
             return new ViewHolder(v);
         }

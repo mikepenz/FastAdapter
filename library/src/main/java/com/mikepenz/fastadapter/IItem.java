@@ -111,7 +111,7 @@ public interface IItem<T, VH extends RecyclerView.ViewHolder> extends IIdentifya
      * @param parent
      * @return
      */
-    RecyclerView.ViewHolder getViewHolder(ViewGroup parent);
+    VH getViewHolder(ViewGroup parent);
 
     /**
      * Binds the data of this item to the given holder
@@ -126,13 +126,6 @@ public interface IItem<T, VH extends RecyclerView.ViewHolder> extends IIdentifya
      * @param id
      * @return
      */
-    boolean equals(Integer id);
+    boolean equals(int id);
 
-    /**
-     * If this item equals to the given object
-     *
-     * @param o
-     * @return
-     */
-    boolean equals(Object o);
 }
