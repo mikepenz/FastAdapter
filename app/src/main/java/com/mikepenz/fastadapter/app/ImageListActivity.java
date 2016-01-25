@@ -91,8 +91,7 @@ public class ImageListActivity extends AppCompatActivity {
                 //we do this for our ImageItem.ViewHolder
                 if (viewHolder instanceof ImageItem.ViewHolder) {
                     //if we click on the imageLovedContainer
-                    ImageItem.ViewHolder holder = ((ImageItem.ViewHolder) viewHolder);
-                    mClickListenerHelper.listen(holder, holder.imageLovedContainer, new ClickListenerHelper.OnClickListener<ImageItem>() {
+                    mClickListenerHelper.listen(viewHolder, ((ImageItem.ViewHolder) viewHolder).imageLovedContainer, new ClickListenerHelper.OnClickListener<ImageItem>() {
                         @Override
                         public void onClick(View v, int position, ImageItem item) {
                             item.withStarred(!item.mStarred);
