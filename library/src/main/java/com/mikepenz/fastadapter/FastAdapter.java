@@ -996,6 +996,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public void notifyAdapterItemChanged(int position, Object payload) {
         Item updateItem = getItem(position);
+        if (mExpanded.indexOfKey(position) >= 0) {
+            collapse(position);
+        }
         if (updateItem.isSelected()) {
             mSelections.add(position);
         } else if (mSelections.contains(position)) {
@@ -1028,6 +1031,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public void notifyAdapterItemRangeChanged(int position, int itemCount, Object payload) {
         for (int i = position; i < position + itemCount; i++) {
+            if (mExpanded.indexOfKey(position) >= 0) {
+                collapse(position);
+            }
             Item updateItem = getItem(position);
             if (updateItem.isSelected()) {
                 mSelections.add(position);
