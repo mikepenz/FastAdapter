@@ -59,16 +59,31 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
         return this;
     }
 
+    /**
+     * defines the type defining this item. must be unique. preferably an id
+     *
+     * @return the type
+     */
     @Override
     public int getType() {
         return R.id.fastadapter_image_item_id;
     }
 
+    /**
+     * defines the layout which will be used for this item in the list
+     *
+     * @return the layout for this item
+     */
     @Override
     public int getLayoutRes() {
         return R.layout.image_item;
     }
 
+    /**
+     * binds the data of this item onto the viewHolder
+     *
+     * @param viewHolder the viewHolder of this item
+     */
     @Override
     public void bindView(ViewHolder viewHolder) {
         super.bindView(viewHolder);
