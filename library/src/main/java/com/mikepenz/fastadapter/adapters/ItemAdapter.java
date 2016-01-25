@@ -161,6 +161,9 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         //add all new items to the list
         mItems.addAll(items);
 
+        //map the types
+        mapPossibleTypes(items);
+
         //now properly notify the adapter about the changes
         if (newItemsCount > previousItemsCount) {
             if (previousItemsCount > 0) {
