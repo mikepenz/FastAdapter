@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -32,8 +31,6 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
     public String mDescription;
     public boolean mStarred = false;
 
-    public OnItemClickListener mOnItemClickListener;
-
     public ImageItem withImage(String imageUrl) {
         this.mImageUrl = imageUrl;
         return this;
@@ -51,11 +48,6 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
 
     public ImageItem withStarred(boolean starred) {
         this.mStarred = starred;
-        return this;
-    }
-
-    public ImageItem withOnItemClickListener(OnItemClickListener onItemClickListener) {
-        this.mOnItemClickListener = onItemClickListener;
         return this;
     }
 
@@ -103,21 +95,7 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
         //load glide
         Glide.clear(viewHolder.imageView);
         Glide.with(ctx).load(mImageUrl).animate(R.anim.alpha_on).into(viewHolder.imageView);
-
-        viewHolder.imageLovedContainer.setOnClickListener(onClickListener);
     }
-
-    /**
-     * the onClickListener used to animate from one heart to the other
-     */
-    public View.OnClickListener onClickListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            mStarred = !mStarred;
-            animateHeart(((ViewGroup) v).getChildAt(0), ((ViewGroup) v).getChildAt(1), mStarred);
-            mOnItemClickListener.onLovedClick(mImageUrl, mStarred);
-        }
-    };
 
     /**
      * our ItemFactory implementation which creates the ViewHolder for our adapter.
@@ -149,7 +127,7 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
      * @param imageLovedOff
      * @param on
      */
-    private void animateHeart(View imageLovedOn, View imageLovedOff, boolean on) {
+    public void animateHeart(View imageLovedOn, View imageLovedOff, boolean on) {
         imageLovedOn.setVisibility(View.VISIBLE);
         imageLovedOff.setVisibility(View.VISIBLE);
 
@@ -183,7 +161,7 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
     /**
      * our ViewHolder
      */
-    protected static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         protected View view;
         @Bind(R.id.item_image_img)
         protected ImageView imageView;
@@ -192,7 +170,7 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
         @Bind(R.id.item_image_description)
         protected TextView imageDescription;
         @Bind(R.id.item_image_loved_container)
-        protected RelativeLayout imageLovedContainer;
+        public RelativeLayout imageLovedContainer;
         @Bind(R.id.item_image_loved_yes)
         protected IconicsImageView imageLovedOn;
         @Bind(R.id.item_image_loved_no)

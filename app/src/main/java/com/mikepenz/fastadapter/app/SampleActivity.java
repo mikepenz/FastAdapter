@@ -141,7 +141,7 @@ public class SampleActivity extends AppCompatActivity {
             @Override
             public void run() {
                 //add some dummy data
-                mItemAdapter.add(ImageDummyData.getImages());
+                mItemAdapter.add(ImageDummyData.getSimpleImageItems());
             }
         }, 50);
     }

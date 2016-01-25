@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
@@ -16,11 +17,14 @@ import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData;
 import com.mikepenz.fastadapter.app.items.ImageItem;
+import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 public class ImageListActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastItemAdapter<ImageItem> fastItemAdapter;
+    private FastItemAdapter<ImageItem> mFastItemAdapter;
+
+    private ClickListenerHelper<ImageItem> mClickListenerHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +43,16 @@ public class ImageListActivity extends AppCompatActivity {
         new MaterializeBuilder().withActivity(this).build();
 
         //create our FastAdapter which will manage everything
-        fastItemAdapter = new FastItemAdapter<>();
+        mFastItemAdapter = new FastItemAdapter<>();
+
+        //init the ClickListenerHelper which simplifies custom click listeners on views of the Adapter
+        mClickListenerHelper = new ClickListenerHelper<>(mFastItemAdapter);
 
         //configure our fastAdapter
-        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<ImageItem>() {
+        mFastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<ImageItem>() {
             @Override
             public boolean onClick(View v, IAdapter<ImageItem> adapter, ImageItem item, int position) {
-                Toast.makeText(v.getContext(), item.mName, Toast.LENGTH_LONG).show();
+                Toast.makeText(v.getContext(), item.mName, Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -62,30 +69,55 @@ public class ImageListActivity extends AppCompatActivity {
             rv.setLayoutManager(new GridLayoutManager(this, columns));
         }
         rv.setItemAnimator(new DefaultItemAnimator());
-        rv.setAdapter(fastItemAdapter);
+        rv.setAdapter(mFastItemAdapter);
 
         //fill with some sample data
-        fastItemAdapter.add(ImageDummyData.getImages(mOnLovedClickListener));
+        mFastItemAdapter.add(ImageDummyData.getImageItems());
 
         //restore selections (this has to be done after the items were added
-        fastItemAdapter.withSavedInstanceState(savedInstanceState);
+        mFastItemAdapter.withSavedInstanceState(savedInstanceState);
+
+        //a custom OnCreateViewHolder listener class which is used to create the viewHolders
+        //we define the listener for the imageLovedContainer here for better performance
+        //you can also define the listener within the items bindView method but performance is better if you do it like this
+        mFastItemAdapter.withOnCreateViewHolderListener(new FastAdapter.OnCreateViewHolderListener() {
+            @Override
+            public RecyclerView.ViewHolder onPreCreateViewHolder(ViewGroup parent, int viewType) {
+                return mFastItemAdapter.getTypeInstances().get(viewType).getViewHolder(parent);
+            }
+
+            @Override
+            public RecyclerView.ViewHolder onPostCreateViewHolder(final RecyclerView.ViewHolder viewHolder) {
+                //we do this for our ImageItem.ViewHolder
+                if (viewHolder instanceof ImageItem.ViewHolder) {
+                    //if we click on the imageLovedContainer
+                    ImageItem.ViewHolder holder = ((ImageItem.ViewHolder) viewHolder);
+                    mClickListenerHelper.listen(holder, holder.imageLovedContainer, new ClickListenerHelper.OnClickListener<ImageItem>() {
+                        @Override
+                        public void onClick(View v, int position, ImageItem item) {
+                            item.withStarred(!item.mStarred);
+                            //we animate the heart
+                            item.animateHeart(((ViewGroup) v).getChildAt(0), ((ViewGroup) v).getChildAt(1), item.mStarred);
+
+                            //we display the info about the click
+                            Toast.makeText(ImageListActivity.this, item.mImageUrl + " - " + item.mStarred, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+
+                return viewHolder;
+            }
+        });
 
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
     }
 
-    private ImageItem.OnItemClickListener mOnLovedClickListener = new ImageItem.OnItemClickListener() {
-        @Override
-        public void onLovedClick(String image, boolean starred) {
-            Toast.makeText(ImageListActivity.this, image + " - " + starred, Toast.LENGTH_SHORT).show();
-        }
-    };
-
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //add the values which need to be saved from the adapter to the bundel
-        outState = fastItemAdapter.saveInstanceState(outState);
+        outState = mFastItemAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
