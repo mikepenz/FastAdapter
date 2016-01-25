@@ -216,16 +216,9 @@ public abstract class AbstractItem<Item extends AbstractItem<?, ?>, VH extends R
     }
 
     /**
-     * @Override
-     * public ViewHolderFactory getFactory() {
-     *      return new ItemFactory();
-     * }
+     * gets the viewHolder via the generic superclass
      *
-     * public static class ItemFactory implements ViewHolderFactory<ViewHolder> {
-     *      public ViewHolder factory(View v) {
-     *          return new ViewHolder(v);
-     *      }
-     * }
+     * @return the class of the ViewHolder
      */
     protected Class<? extends VH> viewHolderType() {
         return ((Class<? extends VH>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]);
