@@ -1,9 +1,7 @@
 package com.mikepenz.fastadapter.app.items;
 
 import android.content.Context;
-import android.os.Build;
 import android.support.v7.widget.RecyclerView;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -89,20 +87,6 @@ public class SimpleImageItem extends AbstractItem<ImageItem, SimpleImageItem.Vie
         //load glide
         Glide.clear(viewHolder.imageView);
         Glide.with(ctx).load(mImageUrl).animate(R.anim.alpha_on).into(viewHolder.imageView);
-    }
-
-    public static int getSelectableBackground(Context ctx) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // If we're running on Honeycomb or newer, then we can use the Theme's
-            // selectableItemBackground to ensure that the View has a pressed state
-            TypedValue outValue = new TypedValue();
-            ctx.getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
-            return outValue.resourceId;
-        } else {
-            TypedValue outValue = new TypedValue();
-            ctx.getTheme().resolveAttribute(android.R.attr.itemBackground, outValue, true);
-            return outValue.resourceId;
-        }
     }
 
     /**
