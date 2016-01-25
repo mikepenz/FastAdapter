@@ -13,8 +13,20 @@ import java.util.List;
 public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
     ItemAdapter<Item> mItemAdapter = new ItemAdapter<>();
 
+    /**
+     * ctor
+     */
     public FastItemAdapter() {
         mItemAdapter.wrap(this);
+    }
+
+    /**
+     * returns the internal created ItemAdapter
+     *
+     * @return the ItemAdapter used inside this FastItemAdapter
+     */
+    public ItemAdapter<Item> getItemAdapter() {
+        return mItemAdapter;
     }
 
     /**
