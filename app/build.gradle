@@ -25,7 +25,6 @@ android {
     }
     buildTypes {
         debug {
-            applicationIdSuffix ".debug"
             versionNameSuffix "-DEBUG"
             try {
                 signingConfig signingConfigs.debug
