@@ -20,7 +20,7 @@
 
     <section class="main-content">
       <h1>
-<a id="fastadapter---" class="anchor" href="#fastadapter---" aria-hidden="true"><span class="octicon octicon-link"></span></a>FastAdapter  <a href="https://maven-badges.herokuapp.com/maven-central/com.mikepenz/fastadapter"><img src="https://maven-badges.herokuapp.com/maven-central/com.mikepenz/fastadapter/badge.svg?style=flat" alt="Maven Central"></a> <a href="https://gitter.im/mikepenz/fastadapter?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/mikepenz/fastadapter"></a>
+<a id="fastadapter---" class="anchor" href="#fastadapter---" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>FastAdapter  <a href="https://maven-badges.herokuapp.com/maven-central/com.mikepenz/fastadapter"><img src="https://maven-badges.herokuapp.com/maven-central/com.mikepenz/fastadapter/badge.svg?style=flat" alt="Maven Central"></a> <a href="https://gitter.im/mikepenz/fastadapter?utm_source=badge&amp;utm_medium=badge&amp;utm_campaign=pr-badge&amp;utm_content=badge"><img src="https://badges.gitter.im/Join%20Chat.svg" alt="Join the chat at https://gitter.im/mikepenz/fastadapter"></a>
 </h1>
 
 <blockquote>
@@ -32,7 +32,7 @@ This library has a fast and highly optimized core which provides core functional
 Beside being blazing fast, minimizing the code you need to write, it is also really easy to extend. Just provide another Adapter implementation, hook into the adapter chain, custom select / deselection behaviors. Everything is possible.</p>
 
 <h2>
-<a id="a-quick-overview" class="anchor" href="#a-quick-overview" aria-hidden="true"><span class="octicon octicon-link"></span></a>A quick overview:</h2>
+<a id="a-quick-overview" class="anchor" href="#a-quick-overview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>A quick overview:</h2>
 
 <ul>
 <li>Click / Long-Click listeners</li>
@@ -56,26 +56,33 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 </ul>
 
 <h1>
-<a id="preview" class="anchor" href="#preview" aria-hidden="true"><span class="octicon octicon-link"></span></a>Preview</h1>
+<a id="preview" class="anchor" href="#preview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Preview</h1>
 
 <h2>
-<a id="screenshots" class="anchor" href="#screenshots" aria-hidden="true"><span class="octicon octicon-link"></span></a>Screenshots</h2>
+<a id="demo" class="anchor" href="#demo" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Demo</h2>
+
+<p>You can try it out here <a href="https://play.google.com/store/apps/details?id=com.mikepenz.fastadapter.app">Google Play</a> (or download the latest release from GitHub)</p>
+
+<h2>
+<a id="screenshots" class="anchor" href="#screenshots" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Screenshots</h2>
+
+<p><img src="https://raw.githubusercontent.com/mikepenz/FastAdapter/develop/DEV/github/screenshots1.jpg" alt="Image"></p>
 
 <h1>
-<a id="include-in-your-project" class="anchor" href="#include-in-your-project" aria-hidden="true"><span class="octicon octicon-link"></span></a>Include in your project</h1>
+<a id="include-in-your-project" class="anchor" href="#include-in-your-project" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Include in your project</h1>
 
 <h2>
-<a id="using-maven" class="anchor" href="#using-maven" aria-hidden="true"><span class="octicon octicon-link"></span></a>Using Maven</h2>
+<a id="using-maven" class="anchor" href="#using-maven" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Using Maven</h2>
 
-<div class="highlight highlight-source-js"><pre><span class="pl-en">compile</span>(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:0.9.0@aar<span class="pl-pds">'</span></span>) {
+<div class="highlight highlight-source-js"><pre><span class="pl-en">compile</span>(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:0.9.5@aar<span class="pl-pds">'</span></span>) {
     transitive <span class="pl-k">=</span> <span class="pl-c1">true</span>
 }</pre></div>
 
 <h2>
-<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use</h2>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use</h2>
 
 <h3>
-<a id="1-implement-your-item-the-easy-way" class="anchor" href="#1-implement-your-item-the-easy-way" aria-hidden="true"><span class="octicon octicon-link"></span></a>1. Implement your item (the easy way)</h3>
+<a id="1-implement-your-item-the-easy-way" class="anchor" href="#1-implement-your-item-the-easy-way" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>1. Implement your item (the easy way)</h3>
 
 <p>Just create a class which extends the <code>AbstractItem</code> as shown below. Implement the methods, and your item is ready.</p>
 
@@ -97,14 +104,11 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 
     <span class="pl-c">//The logic to bind your data to the view</span>
     <span class="pl-k">@Override</span>
-    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">bindView</span>(<span class="pl-smi">RecyclerView</span>.<span class="pl-smi">ViewHolder</span> <span class="pl-v">holder</span>) {
-        <span class="pl-smi">Context</span> ctx <span class="pl-k">=</span> holder<span class="pl-k">.</span>itemView<span class="pl-k">.</span>getContext();
-        <span class="pl-c">//get our viewHolder</span>
-        <span class="pl-smi">ViewHolder</span> viewHolder <span class="pl-k">=</span> (<span class="pl-smi">ViewHolder</span>) holder;
+    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">bindView</span>(<span class="pl-smi">ViewHolder</span> <span class="pl-v">viewHolder</span>) {
+        <span class="pl-c">//call super so the selection is already handled for you</span>
+        <span class="pl-v">super</span><span class="pl-k">.</span>bindView(viewHolder);
 
-        <span class="pl-c">//set the item selected if it is</span>
-        viewHolder<span class="pl-k">.</span>itemView<span class="pl-k">.</span>setSelected(isSelected());
-
+        <span class="pl-c">//bind our data</span>
         <span class="pl-c">//set the text for the name</span>
         viewHolder<span class="pl-k">.</span>name<span class="pl-k">.</span>setText(name);
         <span class="pl-c">//set the text for the description or hide</span>
@@ -113,13 +117,11 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 
     <span class="pl-c">//The viewHolder used for this item. This viewHolder is always reused by the RecyclerView so scrolling is blazing fast</span>
     <span class="pl-k">protected</span> <span class="pl-k">static</span> <span class="pl-k">class</span> <span class="pl-en">ViewHolder</span> <span class="pl-k">extends</span> <span class="pl-e">RecyclerView</span>.<span class="pl-e">ViewHolder</span> {
-        <span class="pl-k">protected</span> <span class="pl-smi">View</span> view;
         <span class="pl-k">protected</span> <span class="pl-smi">TextView</span> name;
         <span class="pl-k">protected</span> <span class="pl-smi">TextView</span> description;
 
         <span class="pl-k">public</span> <span class="pl-en">ViewHolder</span>(<span class="pl-smi">View</span> <span class="pl-v">view</span>) {
             <span class="pl-v">super</span>(view);
-            <span class="pl-v">this</span><span class="pl-k">.</span>view <span class="pl-k">=</span> view;
             <span class="pl-v">this</span><span class="pl-k">.</span>name <span class="pl-k">=</span> (<span class="pl-smi">TextView</span>) view<span class="pl-k">.</span>findViewById(<span class="pl-smi">com.mikepenz.materialdrawer<span class="pl-k">.</span>R</span><span class="pl-k">.</span>id<span class="pl-k">.</span>material_drawer_name);
             <span class="pl-v">this</span><span class="pl-k">.</span>description <span class="pl-k">=</span> (<span class="pl-smi">TextView</span>) view<span class="pl-k">.</span>findViewById(<span class="pl-smi">com.mikepenz.materialdrawer<span class="pl-k">.</span>R</span><span class="pl-k">.</span>id<span class="pl-k">.</span>material_drawer_description);
         }
@@ -127,28 +129,20 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 }</pre></div>
 
 <h3>
-<a id="2-set-the-adapter-to-the-recyclerview" class="anchor" href="#2-set-the-adapter-to-the-recyclerview" aria-hidden="true"><span class="octicon octicon-link"></span></a>2. Set the Adapter to the RecyclerView</h3>
+<a id="2-set-the-adapter-to-the-recyclerview" class="anchor" href="#2-set-the-adapter-to-the-recyclerview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>2. Set the Adapter to the RecyclerView</h3>
 
 <div class="highlight highlight-source-java"><pre><span class="pl-c">//create our FastAdapter which will manage everything</span>
-<span class="pl-smi">FastAdapter</span> fastAdapter <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">FastAdapter</span>();
-
-<span class="pl-c">//create our ItemAdapter which will host our items</span>
-<span class="pl-smi">ItemAdapter</span> itemAdapter <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">ItemAdapter</span>();
-
-<span class="pl-c">//find the RecyclerView</span>
-<span class="pl-smi">RecyclerView</span> rv <span class="pl-k">=</span> (<span class="pl-smi">RecyclerView</span>) findViewById(<span class="pl-smi">R</span><span class="pl-k">.</span>id<span class="pl-k">.</span>rv);
+<span class="pl-smi">FastItemAdapter</span> fastAdapter <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">FastItemAdapter</span>();
 
 <span class="pl-c">//set our adapters to the RecyclerView</span>
 <span class="pl-c">//we wrap our FastAdapter inside the ItemAdapter -&gt; This allows us to chain adapters for more complex useCases</span>
-rv<span class="pl-k">.</span>setAdapter(itemAdapter<span class="pl-k">.</span>wrap(fastAdapter));
-
-<span class="pl-c">//GENERATE or FETCH YOUR ITEMS...</span>
+recyclerView<span class="pl-k">.</span>setAdapter(fastAdapter);
 
 <span class="pl-c">//set the items to your ItemAdapter</span>
-itemAdapter<span class="pl-k">.</span>add(<span class="pl-c1">ITEMS</span>);</pre></div>
+fastAdapter<span class="pl-k">.</span>add(<span class="pl-c1">ITEMS</span>);</pre></div>
 
 <h2>
-<a id="libs-used-in-sample-app" class="anchor" href="#libs-used-in-sample-app" aria-hidden="true"><span class="octicon octicon-link"></span></a>Libs used in sample app:</h2>
+<a id="libs-used-in-sample-app" class="anchor" href="#libs-used-in-sample-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Libs used in sample app:</h2>
 
 <p>Mike Penz:</p>
 
@@ -177,7 +171,7 @@ itemAdapter<span class="pl-k">.</span>add(<span class="pl-c1">ITEMS</span>);</pr
 </ul>
 
 <h1>
-<a id="developed-by" class="anchor" href="#developed-by" aria-hidden="true"><span class="octicon octicon-link"></span></a>Developed By</h1>
+<a id="developed-by" class="anchor" href="#developed-by" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Developed By</h1>
 
 <ul>
 <li>Mike Penz 
@@ -192,7 +186,7 @@ itemAdapter<span class="pl-k">.</span>add(<span class="pl-c1">ITEMS</span>);</pr
 </ul>
 
 <h1>
-<a id="license" class="anchor" href="#license" aria-hidden="true"><span class="octicon octicon-link"></span></a>License</h1>
+<a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h1>
 
 <pre><code>Copyright 2016 Mike Penz
 
