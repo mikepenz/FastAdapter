@@ -32,7 +32,7 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 #Include in your project
 ##Using Maven
 ```javascript
-compile('com.mikepenz:fastadapter:0.9.5@aar') {
+compile('com.mikepenz:fastadapter:0.9.6@aar') {
 	transitive = true
 }
 ```
