@@ -145,6 +145,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
 
     /**
      * set a new list of items and apply it to the existing list (clear - add) for this adapter
+     * Note may consider using setNewList if the items list is a reference to the list which is used inside the adapter
      *
      * @param items
      */
@@ -153,25 +154,33 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         int previousItemsCount = mItems.size();
         int itemsBeforeThisAdapter = getFastAdapter().getItemCount(getOrder());
 
-        //remove all previous items
-        if (!mItems.isEmpty()) {
-            mItems.clear();
+        //make sure the new items list is not a reference of the already mItems list
+        if (items != mItems) {
+            //remove all previous items
+            if (!mItems.isEmpty()) {
+                mItems.clear();
+            }
+
+            //add all new items to the list
+            mItems.addAll(items);
         }
 
-        //add all new items to the list
-        mItems.addAll(items);
+        //map the types
+        mapPossibleTypes(items);
 
         //now properly notify the adapter about the changes
         if (newItemsCount > previousItemsCount) {
             if (previousItemsCount > 0) {
                 getFastAdapter().notifyAdapterItemRangeChanged(itemsBeforeThisAdapter, previousItemsCount);
             }
-            getFastAdapter().notifyAdapterItemRangeInserted(itemsBeforeThisAdapter + newItemsCount - 1, newItemsCount - previousItemsCount);
+            getFastAdapter().notifyAdapterItemRangeInserted(itemsBeforeThisAdapter + previousItemsCount, newItemsCount - previousItemsCount);
         } else if (newItemsCount > 0 && newItemsCount < previousItemsCount) {
             getFastAdapter().notifyAdapterItemRangeChanged(itemsBeforeThisAdapter, newItemsCount);
-            getFastAdapter().notifyAdapterItemRangeRemoved(itemsBeforeThisAdapter + newItemsCount - 1, previousItemsCount - newItemsCount);
+            getFastAdapter().notifyAdapterItemRangeRemoved(itemsBeforeThisAdapter + newItemsCount, previousItemsCount - newItemsCount);
         } else if (newItemsCount == 0) {
             getFastAdapter().notifyAdapterItemRangeRemoved(itemsBeforeThisAdapter, previousItemsCount);
+        } else {
+            getFastAdapter().notifyAdapterDataSetChanged();
         }
     }
 
