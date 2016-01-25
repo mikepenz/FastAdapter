@@ -118,12 +118,21 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
     }
 
     /**
-     * set a new list of items for this adapter
+     * set a new list of items and apply it to the existing list (clear - add) for this adapter
      *
      * @param items
      */
     public void set(List<Item> items) {
         mItemAdapter.set(items);
+    }
+
+    /**
+     * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
+     *
+     * @param items
+     */
+    public void setNewList(List<Item> items) {
+        mItemAdapter.setNewList(items);
     }
 
     /**
