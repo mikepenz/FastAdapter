@@ -17,25 +17,47 @@ import butterknife.ButterKnife;
  * Created by mikepenz on 28.12.15.
  */
 public class IconItem extends AbstractItem<IconItem, IconItem.ViewHolder> {
-
+    //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
     private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
+
     public IIcon mIcon;
 
+    /**
+     * setter method for the Icon
+     *
+     * @param icon the icon
+     * @return this
+     */
     public IconItem withIcon(IIcon icon) {
         this.mIcon = icon;
         return this;
     }
 
+    /**
+     * defines the type defining this item. must be unique. preferably an id
+     *
+     * @return the type
+     */
     @Override
     public int getType() {
         return R.id.fastadapter_icon_item_id;
     }
 
+    /**
+     * defines the layout which will be used for this item in the list
+     *
+     * @return the layout for this item
+     */
     @Override
     public int getLayoutRes() {
         return R.layout.icon_item;
     }
 
+    /**
+     * binds the data of this item onto the viewHolder
+     *
+     * @param viewHolder the viewHolder of this item
+     */
     @Override
     public void bindView(ViewHolder viewHolder) {
         super.bindView(viewHolder);

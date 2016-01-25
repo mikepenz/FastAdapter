@@ -23,8 +23,9 @@ import butterknife.ButterKnife;
  * Created by mikepenz on 28.12.15.
  */
 public class SimpleImageItem extends AbstractItem<ImageItem, SimpleImageItem.ViewHolder> {
-
+    //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
     private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
+
     public String mImageUrl;
     public String mName;
     public String mDescription;

@@ -25,8 +25,9 @@ import butterknife.ButterKnife;
  * Created by mikepenz on 28.12.15.
  */
 public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> implements IExpandable<SampleItem, IItem> {
-
+    //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
     private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
+
     public String header;
     public StringHolder name;
     public StringHolder description;

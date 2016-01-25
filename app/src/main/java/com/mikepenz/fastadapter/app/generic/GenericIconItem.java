@@ -16,8 +16,9 @@ import butterknife.ButterKnife;
  * Created by mikepenz on 28.12.15.
  */
 public class GenericIconItem extends GenericAbstractItem<IconModel, GenericIconItem, GenericIconItem.ViewHolder> {
-
+    //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
     private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
+
     public GenericIconItem(IconModel icon) {
         super(icon);
     }
