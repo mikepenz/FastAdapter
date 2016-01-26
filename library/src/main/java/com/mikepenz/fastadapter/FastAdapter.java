@@ -790,6 +790,15 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * collapses all expanded items
+     */
+    public void collapse() {
+        for (int expandedItem : getExpandedItems()) {
+            collapse(expandedItem);
+        }
+    }
+
+    /**
      * collapses (closes) the given collapsible item at the given position
      *
      * @param position the global position
