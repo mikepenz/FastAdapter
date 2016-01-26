@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.R;
+import com.mikepenz.fastadapter.app.items.ExpandableItem;
 import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
@@ -29,6 +30,8 @@ public class StickyHeaderAdapter extends AbstractAdapter implements StickyRecycl
         //in our sample we want a separate header per first letter of our items
         if (item instanceof SampleItem && ((SampleItem) item).header != null) {
             return ((SampleItem) item).header.charAt(0);
+        } else if (item instanceof ExpandableItem && ((ExpandableItem) item).header != null) {
+            return ((ExpandableItem) item).header.charAt(0);
         }
         return -1;
     }
@@ -49,6 +52,9 @@ public class StickyHeaderAdapter extends AbstractAdapter implements StickyRecycl
         if (item instanceof SampleItem && ((SampleItem) item).header != null) {
             //based on the position we set the headers text
             textView.setText(String.valueOf(((SampleItem) item).header.charAt(0)));
+        } else if (item instanceof ExpandableItem && ((ExpandableItem) item).header != null) {
+            //based on the position we set the headers text
+            textView.setText(String.valueOf(((ExpandableItem) item).header.charAt(0)));
         }
         holder.itemView.setBackgroundColor(getRandomColor());
     }

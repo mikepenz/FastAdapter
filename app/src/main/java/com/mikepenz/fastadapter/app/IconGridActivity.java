@@ -1,6 +1,8 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
+import android.support.v4.view.LayoutInflaterCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -13,9 +15,10 @@ import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.app.items.ExpandableItem;
 import com.mikepenz.fastadapter.app.items.IconItem;
-import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.iconics.Iconics;
+import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.iconics.typeface.ITypeface;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -31,6 +34,10 @@ public class IconGridActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //as we use an icon from Android-Iconics via xml we add the IconicsLayoutInflater
+        //https://github.com/mikepenz/Android-Iconics
+        LayoutInflaterCompat.setFactory(getLayoutInflater(), new IconicsLayoutInflater(getDelegate()));
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
 
@@ -51,6 +58,12 @@ public class IconGridActivity extends AppCompatActivity {
             @Override
             public boolean onClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
                 if (item instanceof IExpandable && ((IExpandable) item).getSubItems() != null) {
+                    if (((IExpandable) item).isExpanded()) {
+                        ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(90).start();
+                    } else {
+                        ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
+                    }
+
                     fastItemAdapter.toggleExpandable(position);
                     return true;
                 }
@@ -67,7 +80,7 @@ public class IconGridActivity extends AppCompatActivity {
             @Override
             public int getSpanSize(int position) {
                 switch (fastItemAdapter.getItemViewType(position)) {
-                    case R.id.fastadapter_sample_item_id:
+                    case R.id.fastadapter_expandable_item_id:
                         return 3;
                     case R.id.fastadapter_icon_item_id:
                         return 1;
@@ -91,17 +104,17 @@ public class IconGridActivity extends AppCompatActivity {
         });
 
         //add all icons of all registered Fonts to the list
-        ArrayList<SampleItem> items = new ArrayList<>(Iconics.getRegisteredFonts(this).size());
+        ArrayList<ExpandableItem> items = new ArrayList<>(Iconics.getRegisteredFonts(this).size());
         for (ITypeface font : mFonts) {
-            SampleItem sampleItem = new SampleItem().withName(font.getFontName());
+            ExpandableItem expandableItem = new ExpandableItem().withName(font.getFontName());
 
             ArrayList<IItem> icons = new ArrayList<>();
             for (String icon : font.getIcons()) {
                 icons.add(new IconItem().withIcon(font.getIcon(icon)).withSelectable(false));
             }
-            sampleItem.withSubItems(icons);
+            expandableItem.withSubItems(icons);
 
-            items.add(sampleItem);
+            items.add(expandableItem);
         }
 
         //fill with some sample data

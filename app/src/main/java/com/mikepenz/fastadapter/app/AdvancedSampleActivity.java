@@ -3,6 +3,8 @@ package com.mikepenz.fastadapter.app;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.view.LayoutInflaterCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -15,12 +17,15 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapter.StickyHeaderAdapter;
+import com.mikepenz.fastadapter.app.items.ExpandableItem;
 import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.fastadapter.helpers.ActionModeHelper;
+import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.materialize.MaterializeBuilder;
 import com.mikepenz.materialize.util.UIUtils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
@@ -28,6 +33,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * This sample showcases compatibility the awesome Sticky-Headers library by timehop
@@ -38,11 +44,16 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
     //save our FastAdapter
     private FastAdapter mFastAdapter;
+    private HeaderAdapter mHeaderAdapter;
+    private ItemAdapter mItemAdapter;
 
     private ActionModeHelper mActionModeHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //as we use an icon from Android-Iconics via xml we add the IconicsLayoutInflater
+        //https://github.com/mikepenz/Android-Iconics
+        LayoutInflaterCompat.setFactory(getLayoutInflater(), new IconicsLayoutInflater(getDelegate()));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
 
@@ -65,8 +76,8 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         //create our adapters
         final StickyHeaderAdapter stickyHeaderAdapter = new StickyHeaderAdapter();
-        ItemAdapter itemAdapter = new ItemAdapter();
-        final HeaderAdapter headerAdapter = new HeaderAdapter();
+        mItemAdapter = new ItemAdapter();
+        mHeaderAdapter = new HeaderAdapter();
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
@@ -78,6 +89,15 @@ public class AdvancedSampleActivity extends AppCompatActivity {
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
                 Boolean res = mActionModeHelper.onClick(item, position);
+
+                if (res != null && res) {
+                    if (((IExpandable) item).isExpanded()) {
+                        ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
+                    } else {
+                        ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(90).start();
+                    }
+                }
+
                 return res != null ? res : false;
             }
         });
@@ -101,35 +121,11 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
-        rv.setAdapter(stickyHeaderAdapter.wrap(itemAdapter.wrap(headerAdapter.wrap(mFastAdapter))));
+        rv.setAdapter(stickyHeaderAdapter.wrap(mItemAdapter.wrap(mHeaderAdapter.wrap(mFastAdapter))));
 
         final StickyRecyclerHeadersDecoration decoration = new StickyRecyclerHeadersDecoration(stickyHeaderAdapter);
         rv.addItemDecoration(decoration);
 
-        //fill with some sample data
-        headerAdapter.add(new SampleItem().withName("Header").withSelectable(false).withIdentifier(1));
-        List<IItem> items = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-            SampleItem sampleItem = new SampleItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(100 + i);
-
-            if (i % 10 == 0) {
-                List<IItem> subItems = new LinkedList<>();
-                for (int ii = 1; ii <= 3; ii++) {
-                    SampleItem subItem = new SampleItem().withName("-- SubTest " + ii).withHeader(headers[i / 5]).withIdentifier(1000 + ii);
-
-                    List<IItem> subSubItems = new LinkedList<>();
-                    for (int iii = 1; iii <= 3; iii++) {
-                        subSubItems.add(new SampleItem().withName("---- SubSubTest " + iii).withHeader(headers[i / 5]).withIdentifier(10000 + iii));
-                    }
-                    subItem.withSubItems(subSubItems);
-
-                    subItems.add(subItem);
-                }
-                sampleItem.withSubItems(subItems);
-            }
-            items.add(sampleItem);
-        }
-        itemAdapter.add(items);
 
         //so the headers are aware of changes
         stickyHeaderAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -148,6 +144,38 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
+
+        setItems();
+    }
+
+    private void setItems() {
+        mHeaderAdapter.add(new SampleItem().withName("Header").withSelectable(false).withIdentifier(1));
+        //fill with some sample data
+        List<IItem> items = new ArrayList<>();
+        int size = new Random().nextInt(25) + 10;
+        for (int i = 1; i <= size; i++) {
+
+            if (i % 6 == 0) {
+                ExpandableItem expandableItem = new ExpandableItem().withName("Test " + i).withHeader(headers[i / 5]);
+                List<IItem> subItems = new LinkedList<>();
+                for (int ii = 1; ii <= 3; ii++) {
+                    ExpandableItem subItem = new ExpandableItem().withName("-- SubTest " + ii).withHeader(headers[i / 5]).withIdentifier(1000 + ii);
+
+                    List<IItem> subSubItems = new LinkedList<>();
+                    for (int iii = 1; iii <= 3; iii++) {
+                        subSubItems.add(new SampleItem().withName("---- SubSubTest " + iii).withHeader(headers[i / 5]).withIdentifier(10000 + iii));
+                    }
+                    subItem.withSubItems(subSubItems);
+
+                    subItems.add(subItem);
+                }
+                expandableItem.withSubItems(subItems);
+                items.add(expandableItem);
+            } else {
+                items.add(new SampleItem().withName("Test " + i).withHeader(headers[i / 5]));
+            }
+        }
+        mItemAdapter.set(items);
     }
 
     @Override

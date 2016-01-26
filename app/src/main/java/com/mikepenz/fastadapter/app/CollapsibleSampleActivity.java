@@ -1,6 +1,8 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
+import android.support.v4.view.LayoutInflaterCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +12,12 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.app.items.ExpandableItem;
 import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.materialize.MaterializeBuilder;
 
@@ -26,6 +31,9 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //as we use an icon from Android-Iconics via xml we add the IconicsLayoutInflater
+        //https://github.com/mikepenz/Android-Iconics
+        LayoutInflaterCompat.setFactory(getLayoutInflater(), new IconicsLayoutInflater(getDelegate()));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
 
@@ -47,8 +55,14 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
         fastItemAdapter.withOnPreClickListener(new FastAdapter.OnClickListener() {
             @Override
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
-                if (item instanceof SampleItem) {
-                    if (((SampleItem) item).getSubItems() != null) {
+                if (item instanceof ExpandableItem) {
+                    if (((ExpandableItem) item).getSubItems() != null) {
+                        if (((IExpandable) item).isExpanded()) {
+                            ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(90).start();
+                        } else {
+                            ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
+                        }
+
                         fastItemAdapter.toggleExpandable(position);
                         return true;
                     }
@@ -64,19 +78,22 @@ public class CollapsibleSampleActivity extends AppCompatActivity {
         rv.setAdapter(fastItemAdapter);
 
         //fill with some sample data
-        List<SampleItem> items = new ArrayList<>();
+        List<IItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
-            SampleItem sampleItem = new SampleItem().withName("Test " + i + (i % 10 == 0 ? " (Collapsible)" : "")).withIdentifier(100 + i);
-
-            //add subitems so we can showcase the collapsible functionality
             if (i % 10 == 0) {
+                ExpandableItem expandableItem = new ExpandableItem().withName("Test " + i).withIdentifier(100 + 1);
+
+                //add subitems so we can showcase the collapsible functionality
                 List<IItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 5; ii++) {
                     subItems.add(new SampleItem().withName("-- Test " + ii).withIdentifier(1000 + ii));
                 }
-                sampleItem.withSubItems(subItems);
+                expandableItem.withSubItems(subItems);
+
+                items.add(expandableItem);
+            } else {
+                items.add(new SampleItem().withName("Test " + i).withIdentifier(100 + i));
             }
-            items.add(sampleItem);
         }
         fastItemAdapter.add(items);
 

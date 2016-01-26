@@ -790,6 +790,15 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * collapses all expanded items
+     */
+    public void collapse() {
+        for (int expandedItem : getExpandedItems()) {
+            collapse(expandedItem);
+        }
+    }
+
+    /**
      * collapses (closes) the given collapsible item at the given position
      *
      * @param position the global position
@@ -996,6 +1005,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public void notifyAdapterItemChanged(int position, Object payload) {
         Item updateItem = getItem(position);
+        if (mExpanded.indexOfKey(position) >= 0) {
+            collapse(position);
+        }
         if (updateItem.isSelected()) {
             mSelections.add(position);
         } else if (mSelections.contains(position)) {
@@ -1028,11 +1040,14 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public void notifyAdapterItemRangeChanged(int position, int itemCount, Object payload) {
         for (int i = position; i < position + itemCount; i++) {
-            Item updateItem = getItem(position);
+            if (mExpanded.indexOfKey(i) >= 0) {
+                collapse(i);
+            }
+            Item updateItem = getItem(i);
             if (updateItem.isSelected()) {
-                mSelections.add(position);
-            } else if (mSelections.contains(position)) {
-                mSelections.remove(position);
+                mSelections.add(i);
+            } else if (mSelections.contains(i)) {
+                mSelections.remove(i);
             }
         }
 
