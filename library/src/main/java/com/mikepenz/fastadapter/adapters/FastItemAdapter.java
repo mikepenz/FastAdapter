@@ -239,15 +239,4 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
     public void clear() {
         mItemAdapter.clear();
     }
-
-
-    /**
-     * helper class to animate from one list to the other
-     *
-     * @param models the new list containing the new items
-     * @return the cleaned up item list. make sure to set your new list to this one
-     */
-    public List<Item> animateTo(List<Item> models) {
-        return mItemAdapter.animateTo(models);
-    }
 }
