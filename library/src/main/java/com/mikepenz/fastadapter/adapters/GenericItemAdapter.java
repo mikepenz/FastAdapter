@@ -14,7 +14,7 @@ import static java.util.Arrays.asList;
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  * This adapter has the order of 500 which is the centered order
  */
-public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model,Item,?>> extends ItemAdapter<Item> {
+public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model, Item, ?>> extends ItemAdapter<Item> {
     private final Function<Model, Item> mItemFactory;
     private List<Model> mItems = new ArrayList<>();
 
@@ -36,7 +36,7 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model,It
     /**
      * set a new list of models for this adapter
      *
-     * @param models
+     * @param models the set models
      */
     public void setModel(List<Model> models) {
         super.set(toItems(models));
@@ -44,18 +44,29 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model,It
     }
 
     /**
+     * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
+     *
+     * @param models the set models
+     */
+    public void setNewModel(List<Model> models) {
+        super.setNewList(toItems(models));
+        mItems = models;
+    }
+
+    /**
      * add an array of models
      *
-     * @param models
+     * @param models the added models
      */
-    public void addModel(Model... models) {
+    @SafeVarargs
+    public final void addModel(Model... models) {
         addModel(asList(models));
     }
 
     /**
      * add a list of models
      *
-     * @param models
+     * @param models the added models
      */
     public void addModel(List<Model> models) {
         super.add(toItems(models));
@@ -65,18 +76,19 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model,It
     /**
      * add an array of models at a given (global) position
      *
-     * @param position
-     * @param models
+     * @param position the global position
+     * @param models   the added models
      */
-    public void addModel(int position, Model... models) {
+    @SafeVarargs
+    public final void addModel(int position, Model... models) {
         addModel(position, asList(models));
     }
 
     /**
      * add a list of models at a given (global) position
      *
-     * @param position
-     * @param models
+     * @param position the global position
+     * @param models   the added models
      */
     public void addModel(int position, List<Model> models) {
         super.add(position, toItems(models));
@@ -86,8 +98,8 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model,It
     /**
      * set a model at a given position
      *
-     * @param position
-     * @param model
+     * @param position the global position
+     * @param model    the set model
      */
     public void setModel(int position, Model model) {
         super.set(position, toItem(model));
@@ -105,8 +117,8 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model,It
     /**
      * remove a range oof model items starting with the (global) position and the size
      *
-     * @param position
-     * @param itemCount
+     * @param position  the global position
+     * @param itemCount the count of items which were removed
      */
     public void removeModelRange(int position, int itemCount) {
         super.removeRange(position, itemCount);
@@ -124,7 +136,7 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model,It
     /**
      * remove a model at the given (global) position
      *
-     * @param position
+     * @param position the global position
      */
     public void removeModel(int position) {
         super.remove(position);
@@ -134,8 +146,8 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model,It
     /**
      * helper to get a list of item from a list o model
      *
-     * @param models
-     * @return
+     * @param models the models
+     * @return the list of items referencing the models
      */
     protected List<Item> toItems(List<Model> models) {
         List<Item> items = new ArrayList<>();

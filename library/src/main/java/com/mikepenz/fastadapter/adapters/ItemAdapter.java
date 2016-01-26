@@ -112,8 +112,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     /**
      * returns the global position if the relative position within this adapter was given
      *
-     * @param position
-     * @return
+     * @param position the relative position
+     * @return the global position
      */
     public int getGlobalPosition(int position) {
         return position + getFastAdapter().getItemCount(getOrder());
@@ -147,7 +147,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * set a new list of items and apply it to the existing list (clear - add) for this adapter
      * Note may consider using setNewList if the items list is a reference to the list which is used inside the adapter
      *
-     * @param items
+     * @param items the items to set
      */
     public void set(List<Item> items) {
         if (mUseIdDistributor) {
@@ -195,7 +195,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     /**
      * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
      *
-     * @param items
+     * @param items the new items to set
      */
     public void setNewList(List<Item> items) {
         if (mUseIdDistributor) {
@@ -209,16 +209,17 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     /**
      * add an array of items to the end of the existing items
      *
-     * @param items
+     * @param items the items to add
      */
-    public void add(Item... items) {
+    @SafeVarargs
+    public final void add(Item... items) {
         add(asList(items));
     }
 
     /**
      * add a list of items to the end of the existing items
      *
-     * @param items
+     * @param items the items to add
      */
     public void add(List<Item> items) {
         if (mUseIdDistributor) {
@@ -233,9 +234,10 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * add an array of items at the given position within the existing items
      *
      * @param position the global position
-     * @param items
+     * @param items    the items to add
      */
-    public void add(int position, Item... items) {
+    @SafeVarargs
+    public final void add(int position, Item... items) {
         add(position, asList(items));
     }
 
@@ -243,7 +245,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * add a list of items at the given position within the existing items
      *
      * @param position the global position
-     * @param items
+     * @param items    the items to add
      */
     public void add(int position, List<Item> items) {
         if (mUseIdDistributor) {
@@ -260,7 +262,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * sets an item at the given position, overwriting the previous item
      *
      * @param position the global position
-     * @param item
+     * @param item     the item to set
      */
     public void set(int position, Item item) {
         if (mUseIdDistributor) {
@@ -285,7 +287,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * removes a range of items starting with the given position within the existing icons
      *
      * @param position  the global position
-     * @param itemCount
+     * @param itemCount the count of items which were removed
      */
     public void removeRange(int position, int itemCount) {
         //global position to relative
