@@ -33,6 +33,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * This sample showcases compatibility the awesome Sticky-Headers library by timehop
@@ -43,6 +44,8 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
     //save our FastAdapter
     private FastAdapter mFastAdapter;
+    private HeaderAdapter mHeaderAdapter;
+    private ItemAdapter mItemAdapter;
 
     private ActionModeHelper mActionModeHelper;
 
@@ -73,8 +76,8 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         //create our adapters
         final StickyHeaderAdapter stickyHeaderAdapter = new StickyHeaderAdapter();
-        ItemAdapter itemAdapter = new ItemAdapter();
-        final HeaderAdapter headerAdapter = new HeaderAdapter();
+        mItemAdapter = new ItemAdapter();
+        mHeaderAdapter = new HeaderAdapter();
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
@@ -118,37 +121,11 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
-        rv.setAdapter(stickyHeaderAdapter.wrap(itemAdapter.wrap(headerAdapter.wrap(mFastAdapter))));
+        rv.setAdapter(stickyHeaderAdapter.wrap(mItemAdapter.wrap(mHeaderAdapter.wrap(mFastAdapter))));
 
         final StickyRecyclerHeadersDecoration decoration = new StickyRecyclerHeadersDecoration(stickyHeaderAdapter);
         rv.addItemDecoration(decoration);
 
-        //fill with some sample data
-        headerAdapter.add(new SampleItem().withName("Header").withSelectable(false).withIdentifier(1));
-        List<IItem> items = new ArrayList<>();
-        for (int i = 1; i <= 10; i++) {
-
-            if (i % 10 == 0) {
-                ExpandableItem expandableItem = new ExpandableItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(100 + 1);
-                List<IItem> subItems = new LinkedList<>();
-                for (int ii = 1; ii <= 3; ii++) {
-                    ExpandableItem subItem = new ExpandableItem().withName("-- SubTest " + ii).withHeader(headers[i / 5]).withIdentifier(1000 + ii);
-
-                    List<IItem> subSubItems = new LinkedList<>();
-                    for (int iii = 1; iii <= 3; iii++) {
-                        subSubItems.add(new SampleItem().withName("---- SubSubTest " + iii).withHeader(headers[i / 5]).withIdentifier(10000 + iii));
-                    }
-                    subItem.withSubItems(subSubItems);
-
-                    subItems.add(subItem);
-                }
-                expandableItem.withSubItems(subItems);
-                items.add(expandableItem);
-            } else {
-                items.add(new SampleItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(100 + i));
-            }
-        }
-        itemAdapter.add(items);
 
         //so the headers are aware of changes
         stickyHeaderAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
@@ -167,6 +144,38 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
+
+        setItems();
+    }
+
+    private void setItems() {
+        mHeaderAdapter.add(new SampleItem().withName("Header").withSelectable(false).withIdentifier(1));
+        //fill with some sample data
+        List<IItem> items = new ArrayList<>();
+        int size = new Random().nextInt(25) + 10;
+        for (int i = 1; i <= size; i++) {
+
+            if (i % 6 == 0) {
+                ExpandableItem expandableItem = new ExpandableItem().withName("Test " + i).withHeader(headers[i / 5]);
+                List<IItem> subItems = new LinkedList<>();
+                for (int ii = 1; ii <= 3; ii++) {
+                    ExpandableItem subItem = new ExpandableItem().withName("-- SubTest " + ii).withHeader(headers[i / 5]).withIdentifier(1000 + ii);
+
+                    List<IItem> subSubItems = new LinkedList<>();
+                    for (int iii = 1; iii <= 3; iii++) {
+                        subSubItems.add(new SampleItem().withName("---- SubSubTest " + iii).withHeader(headers[i / 5]).withIdentifier(10000 + iii));
+                    }
+                    subItem.withSubItems(subSubItems);
+
+                    subItems.add(subItem);
+                }
+                expandableItem.withSubItems(subItems);
+                items.add(expandableItem);
+            } else {
+                items.add(new SampleItem().withName("Test " + i).withHeader(headers[i / 5]));
+            }
+        }
+        mItemAdapter.set(items);
     }
 
     @Override
