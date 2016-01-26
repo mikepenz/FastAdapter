@@ -9,7 +9,7 @@ import com.mikepenz.fastadapter.IItem;
 public class FooterAdapter<Item extends IItem> extends ItemAdapter<Item> {
 
     /**
-     * @return
+     * @return the order
      */
     @Override
     public int getOrder() {
