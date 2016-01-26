@@ -153,6 +153,11 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
+
+        //first collapse all items
+        getFastAdapter().collapse();
+
+        //get sizes
         int newItemsCount = items.size();
         int previousItemsCount = mItems.size();
         int itemsBeforeThisAdapter = getFastAdapter().getItemCount(getOrder());
