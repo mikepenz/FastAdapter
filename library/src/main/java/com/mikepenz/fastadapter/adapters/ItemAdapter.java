@@ -150,6 +150,9 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items
      */
     public void set(List<Item> items) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkIds(items);
+        }
         int newItemsCount = items.size();
         int previousItemsCount = mItems.size();
         int itemsBeforeThisAdapter = getFastAdapter().getItemCount(getOrder());
@@ -190,6 +193,9 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items
      */
     public void setNewList(List<Item> items) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkIds(items);
+        }
         mItems = items;
         mapPossibleTypes(items);
         getFastAdapter().notifyAdapterDataSetChanged();
