@@ -23,7 +23,7 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model, I
      * @param modelClass the class which is your model class
      */
     public GenericItemAdapter(Class<? extends Item> itemClass, Class<? extends Model> modelClass) {
-        this(new ReflectionBasedItemFactory<Model, Item>(modelClass, itemClass));
+        this(new ReflectionBasedItemFactory<>(modelClass, itemClass));
     }
 
     /**
