@@ -65,8 +65,9 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
                     } else {
                         return new RightGenericIconItem((IconModel) o);
                     }
+                } else {
+                    throw new IllegalArgumentException("The passed model can't be created within this Factory");
                 }
-                return null;
             }
         });
 
