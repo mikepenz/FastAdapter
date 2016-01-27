@@ -34,10 +34,13 @@
             android:name=".AdvancedSampleActivity"
             android:label="@string/sample_advanced" />
         <activity
+            android:name=".IconGridActivity"
+            android:label="@string/sample_icon_grid" />
+        <activity
             android:name=".GenericItemActivity"
             android:label="@string/sample_generic_item" />
         <activity
-            android:name=".IconGridActivity"
-            android:label="@string/sample_icon_grid" />
+            android:name=".MultiTypeGenericItemActivity"
+            android:label="@string/sample_multi_generic_item" />
     </application>
 </manifest>

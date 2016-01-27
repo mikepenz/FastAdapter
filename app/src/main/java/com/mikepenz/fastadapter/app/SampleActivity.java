@@ -72,6 +72,7 @@ public class SampleActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName(R.string.sample_sticky_header).withDescription(R.string.sample_sticky_header_descr).withSelectable(false).withIdentifier(3).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
                         new PrimaryDrawerItem().withName(R.string.sample_advanced).withDescription(R.string.sample_advanced_descr).withSelectable(false).withIdentifier(4).withIcon(MaterialDesignIconic.Icon.gmi_coffee),
                         new PrimaryDrawerItem().withName(R.string.sample_generic_item).withDescription(R.string.sample_generic_item_descr).withSelectable(false).withIdentifier(7).withIcon(MaterialDesignIconic.Icon.gmi_font),
+                        new PrimaryDrawerItem().withName(R.string.sample_multi_generic_item).withDescription(R.string.sample_multi_generic_item_descr).withSelectable(false).withIdentifier(9).withIcon(MaterialDesignIconic.Icon.gmi_format_list_numbered),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.open_source).withSelectable(false).withIdentifier(100).withIcon(MaterialDesignIconic.Icon.gmi_github)
                 )
@@ -96,6 +97,8 @@ public class SampleActivity extends AppCompatActivity {
                                 intent = new Intent(SampleActivity.this, GenericItemActivity.class);
                             } else if (drawerItem.getIdentifier() == 8) {
                                 intent = new Intent(SampleActivity.this, IconGridActivity.class);
+                            } else if (drawerItem.getIdentifier() == 9) {
+                                intent = new Intent(SampleActivity.this, MultiTypeGenericItemActivity.class);
                             } else if (drawerItem.getIdentifier() == 100) {
                                 intent = new LibsBuilder()
                                         .withFields(R.string.class.getFields())

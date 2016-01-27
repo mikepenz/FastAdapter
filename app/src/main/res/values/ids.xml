@@ -6,4 +6,6 @@
     <item name="fastadapter_image_item_id" type="id" />
     <item name="fastadapter_simple_image_item_id" type="id" />
     <item name="fastadapter_icon_item_id" type="id" />
+    <item name="fastadapter_generic_icon_item_id" type="id" />
+    <item name="fastadapter_right_generic_icon_item_id" type="id" />
 </resources>

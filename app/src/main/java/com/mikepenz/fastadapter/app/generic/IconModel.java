@@ -10,5 +10,12 @@ public class IconModel {
         this.icon = icon;
     }
 
+    public IconModel(IIcon icon, boolean normal) {
+        this.icon = icon;
+        this.normal = normal;
+    }
+
     public IIcon icon;
+
+    public boolean normal = true;
 }
