@@ -268,10 +268,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * @return all typeInstances remembered within the FastAdapter
+     * gets the TypeInstance remembered within the FastAdapter for an item
+     *
+     * @param type the int type of the item
+     * @return the Item typeInstance
      */
-    public Map<Integer, Item> getTypeInstances() {
-        return mTypeInstances;
+    public Item getTypeInstance(int type) {
+        return mTypeInstances.get(type);
     }
 
     /**
@@ -1131,7 +1134,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public RecyclerView.ViewHolder onPreCreateViewHolder(ViewGroup parent, int viewType) {
-            return mTypeInstances.get(viewType).getViewHolder(parent);
+            return getTypeInstance(viewType).getViewHolder(parent);
         }
 
         /**
