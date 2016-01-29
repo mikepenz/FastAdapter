@@ -21,7 +21,7 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 - Chain other Adapters
 - Comes with useful Helpers
  - ActionModeHelper
- - UndoModeHelper
+ - UndoHelper
  - More to come...
 
 #Preview
