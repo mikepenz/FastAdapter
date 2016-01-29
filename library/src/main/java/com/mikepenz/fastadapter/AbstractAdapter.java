@@ -19,7 +19,7 @@ public abstract class AbstractAdapter<Item extends IItem> extends RecyclerView.A
      * @param fastAdapter the FastAdapter which contains the base logic
      * @return this
      */
-    public AbstractAdapter wrap(FastAdapter<Item> fastAdapter) {
+    public AbstractAdapter<Item> wrap(FastAdapter<Item> fastAdapter) {
         //this.mParentAdapter = abstractAdapter;
         this.mFastAdapter = fastAdapter;
         this.mFastAdapter.registerAdapter(this);
@@ -32,7 +32,7 @@ public abstract class AbstractAdapter<Item extends IItem> extends RecyclerView.A
      * @param abstractAdapter an AbstractWrapper which wraps another AbstractAdapter or FastAdapter
      * @return this
      */
-    public AbstractAdapter wrap(IAdapter<Item> abstractAdapter) {
+    public AbstractAdapter<Item> wrap(IAdapter<Item> abstractAdapter) {
         //this.mParentAdapter = abstractAdapter;
         this.mFastAdapter = abstractAdapter.getFastAdapter();
         this.mFastAdapter.registerAdapter(this);
