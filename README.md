@@ -14,12 +14,14 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 - Simple Drag & Drop
 - Headers
 - Footers
+- FastScroller (external lib)
 - Highly optimized code
 - Includes suggestions from the Android Team
 - Easily extensible
 - Chain other Adapters
 - Comes with useful Helpers
  - ActionModeHelper
+ - UndoHelper
  - More to come...
 
 #Preview
