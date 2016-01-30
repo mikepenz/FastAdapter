@@ -107,7 +107,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         rv.setAdapter(itemAdapter.wrap(headerAdapter.wrap(mFastAdapter)));
 
         //fill with some sample data
-        headerAdapter.add(new SampleItem().withName("Header").withIdentifier(1));
+        headerAdapter.add(new SampleItem().withName("Header").withIdentifier(1).withSelectable(false));
         List<SampleItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
             items.add(new SampleItem().withName("Test " + i).withIdentifier(100 + i));

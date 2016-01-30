@@ -83,7 +83,7 @@ public class ImageListActivity extends AppCompatActivity {
         mFastItemAdapter.withOnCreateViewHolderListener(new FastAdapter.OnCreateViewHolderListener() {
             @Override
             public RecyclerView.ViewHolder onPreCreateViewHolder(ViewGroup parent, int viewType) {
-                return mFastItemAdapter.getTypeInstances().get(viewType).getViewHolder(parent);
+                return mFastItemAdapter.getTypeInstance(viewType).getViewHolder(parent);
             }
 
             @Override

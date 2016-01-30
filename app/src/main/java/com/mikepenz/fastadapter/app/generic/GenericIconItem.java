@@ -30,7 +30,7 @@ public class GenericIconItem extends GenericAbstractItem<IconModel, GenericIconI
      */
     @Override
     public int getType() {
-        return R.id.fastadapter_icon_item_id;
+        return R.id.fastadapter_generic_icon_item_id;
     }
 
     /**

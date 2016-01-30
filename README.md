@@ -14,12 +14,14 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 - Simple Drag & Drop
 - Headers
 - Footers
+- FastScroller (external lib)
 - Highly optimized code
 - Includes suggestions from the Android Team
 - Easily extensible
 - Chain other Adapters
 - Comes with useful Helpers
  - ActionModeHelper
+ - UndoHelper
  - More to come...
 
 #Preview
@@ -32,7 +34,7 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 #Include in your project
 ##Using Maven
 ```javascript
-compile('com.mikepenz:fastadapter:1.0.0@aar') {
+compile('com.mikepenz:fastadapter:1.0.1@aar') {
 	transitive = true
 }
 ```

@@ -11,7 +11,7 @@ public interface IAdapter<Item extends IItem> {
      *
      * @return the FastAdapter specified for this IAdapter
      */
-    FastAdapter getFastAdapter();
+    FastAdapter<Item> getFastAdapter();
 
     /**
      * defines in which order this adapter should be hooked into the FastAdapter
