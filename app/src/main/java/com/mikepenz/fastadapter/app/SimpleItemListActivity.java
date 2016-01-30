@@ -27,7 +27,7 @@ import com.mikepenz.fastadapter.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter.drag.SimpleDragCallback;
 import com.mikepenz.materialize.MaterializeBuilder;
 import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
-import com.turingtechnologies.materialscrollbar.MaterialScrollBar;
+import com.turingtechnologies.materialscrollbar.DragScrollBar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -94,8 +94,8 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         recyclerView.setAdapter(fastScrollIndicatorAdapter.wrap(fastItemAdapter));
 
         //add a FastScrollBar (Showcase compatibility)
-        MaterialScrollBar materialScrollBar = new MaterialScrollBar(this, recyclerView, true);
-        materialScrollBar.setHandleColour(ContextCompat.getColor(this, R.color.accent)).setAutoHide(false);
+        DragScrollBar materialScrollBar = new DragScrollBar(this, recyclerView, true);
+        materialScrollBar.setHandleColour(ContextCompat.getColor(this, R.color.accent));
         materialScrollBar.addIndicator(new AlphabetIndicator(this), true);
 
         //fill with some sample data
