@@ -2,7 +2,9 @@ package com.mikepenz.fastadapter.app.adapter;
 
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.app.generic.GenericIconItem;
 import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.turingtechnologies.materialscrollbar.ICustomAdapter;
 import com.turingtechnologies.materialscrollbar.INameableAdapter;
 
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.List;
  * This is a FastAdapter adapter implementation for the awesome Sticky-Headers lib by timehop
  * https://github.com/timehop/sticky-headers-recyclerview
  */
-public class FastScrollIndicatorAdapter<Item extends IItem> extends AbstractAdapter<Item> implements INameableAdapter {
+public class FastScrollIndicatorAdapter<Item extends IItem> extends AbstractAdapter<Item> implements INameableAdapter, ICustomAdapter {
     @Override
     public Character getCharacterForElement(int position) {
         IItem item = getItem(position);
@@ -21,6 +23,16 @@ public class FastScrollIndicatorAdapter<Item extends IItem> extends AbstractAdap
             return ((SampleItem) item).name.getText().charAt(0);
         }
         return ' ';
+    }
+
+    @Override
+    public String getCustomStringForElement(int position) {
+        IItem item = getItem(position);
+        if (item instanceof GenericIconItem && ((GenericIconItem) item).getModel().icon.getName() != null) {
+            //based on the position we set the headers text
+            return ((GenericIconItem) item).getModel().icon.getName();
+        }
+        return "";
     }
 
     /**
