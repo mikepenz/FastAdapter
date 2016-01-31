@@ -68,3 +68,52 @@ public class GenericItemActivity extends AppCompatActivity {
 
         rv.setLayoutManager(gridLayoutManager);
         rv.setItemAnimator(new SlideDownAlphaAnimator());
+
+        //order fonts by their name
+        List<ITypeface> mFonts = new ArrayList<>(Iconics.getRegisteredFonts(this));
+        Collections.sort(mFonts, new Comparator<ITypeface>() {
+            @Override
+            public int compare(final ITypeface object1, final ITypeface object2) {
+                return object1.getFontName().compareTo(object2.getFontName());
+            }
+        });
+
+        //add all icons of all registered Fonts to the list
+        ArrayList<IconModel> models = new ArrayList<>();
+        for (ITypeface font : mFonts) {
+            for (String icon : font.getIcons()) {
+                models.add(new IconModel(font.getIcon(icon)));
+            }
+        }
+
+        //fill with some sample data
+        itemAdapter.addModel(models);
+
+        //restore selections (this has to be done after the items were added
+        fastAdapter.withSavedInstanceState(savedInstanceState);
+
+        //set the back arrow in the toolbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeButtonEnabled(false);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        //add the values which need to be saved from the adapter to the bundel
+        outState = fastAdapter.saveInstanceState(outState);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        //handle the click on the back arrow click
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+}
