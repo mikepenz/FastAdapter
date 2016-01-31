@@ -78,12 +78,12 @@ dependencies {
 
     //Used to provide the FastScrollBar
     //https://github.com/krimin-killr21/MaterialScrollBar
-    compile 'com.turingtechnologies.materialscrollbar:lib:7.1.0'
+    compile 'com.turingtechnologies.materialscrollbar:lib:7.1.1'
 
     //https://github.com/JakeWharton/butterknife
     compile 'com.jakewharton:butterknife:7.0.1'
 
     //used to load the images in the ImageListSample
     //https://github.com/bumptech/glide
-    compile 'com.github.bumptech.glide:glide:3.6.1'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 }
