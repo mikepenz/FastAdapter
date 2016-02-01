@@ -1,7 +1,5 @@
 package com.mikepenz.fastadapter.app;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v4.view.ViewCompat;
@@ -213,17 +211,11 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(UIUtils.getThemeColorFromAttrOrRes(AdvancedSampleActivity.this, R.attr.colorPrimaryDark, R.color.material_drawer_primary_dark));
-            }
             return true;
         }
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(Color.TRANSPARENT);
-            }
         }
 
         @Override

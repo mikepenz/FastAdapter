@@ -1,7 +1,5 @@
 package com.mikepenz.fastadapter.app;
 
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -166,17 +164,11 @@ public class MultiselectSampleActivity extends AppCompatActivity {
 
         @Override
         public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(UIUtils.getThemeColorFromAttrOrRes(MultiselectSampleActivity.this, R.attr.colorPrimaryDark, R.color.material_drawer_primary_dark));
-            }
             return true;
         }
 
         @Override
         public void onDestroyActionMode(ActionMode mode) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(Color.TRANSPARENT);
-            }
         }
 
         @Override
