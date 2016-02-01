@@ -85,6 +85,13 @@ public class MultiselectSampleActivity extends AppCompatActivity {
                 return res != null ? res : false;
             }
         });
+        mFastAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
+            @Override
+            public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
+                Toast.makeText(v.getContext(), "SelectedCount: " + mFastAdapter.getSelections().size() + " ItemsCount: " + mFastAdapter.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
+                return false;
+            }
+        });
         mFastAdapter.withOnPreLongClickListener(new FastAdapter.OnLongClickListener<SampleItem>() {
             @Override
             public boolean onLongClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
