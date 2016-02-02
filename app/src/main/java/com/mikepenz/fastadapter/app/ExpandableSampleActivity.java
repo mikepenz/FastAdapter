@@ -25,20 +25,18 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CollapsibleSampleActivity extends AppCompatActivity {
+public class ExpandableSampleActivity extends AppCompatActivity {
     //save our FastAdapter
     private FastItemAdapter fastItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        findViewById(android.R.id.content).setSystemUiVisibility(findViewById(android.R.id.content).getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         //as we use an icon from Android-Iconics via xml we add the IconicsLayoutInflater
         //https://github.com/mikepenz/Android-Iconics
         LayoutInflaterCompat.setFactory(getLayoutInflater(), new IconicsLayoutInflater(getDelegate()));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
-
-        //improve ui
-        findViewById(android.R.id.content).setSystemUiVisibility(findViewById(android.R.id.content).getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

@@ -12,8 +12,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 23
-        versionCode 101
-        versionName '1.0.1'
+        versionCode 102
+        versionName '1.0.2'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
@@ -51,7 +51,7 @@ dependencies {
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
-    compile('com.mikepenz:materialdrawer:5.0.0.b22-SNAPSHOT@aar') {
+    compile('com.mikepenz:materialdrawer:5.0.0.b24-SNAPSHOT@aar') {
         transitive = true
         exclude module: "fastadapter"
     }
@@ -60,8 +60,9 @@ dependencies {
     compile 'com.mikepenz:itemanimators:0.2.1@aar'
     //used to generate the Open Source section
     //https://github.com/mikepenz/AboutLibraries
-    compile('com.mikepenz:aboutlibraries:5.3.6@aar') {
+    compile('com.mikepenz:aboutlibraries:5.5.0@aar') {
         transitive = true
+        exclude module: "fastadapter"
     }
     //used to display the icons in the drawer
     //https://github.com/mikepenz/Android-Iconics
@@ -78,12 +79,12 @@ dependencies {
 
     //Used to provide the FastScrollBar
     //https://github.com/krimin-killr21/MaterialScrollBar
-    compile 'com.turingtechnologies.materialscrollbar:lib:7.1.0'
+    compile 'com.turingtechnologies.materialscrollbar:lib:7.1.1'
 
     //https://github.com/JakeWharton/butterknife
     compile 'com.jakewharton:butterknife:7.0.1'
 
     //used to load the images in the ImageListSample
     //https://github.com/bumptech/glide
-    compile 'com.github.bumptech.glide:glide:3.6.1'
+    compile 'com.github.bumptech.glide:glide:3.7.0'
 }

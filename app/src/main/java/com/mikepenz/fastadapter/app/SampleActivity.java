@@ -45,11 +45,10 @@ public class SampleActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        findViewById(android.R.id.content).setSystemUiVisibility(findViewById(android.R.id.content).getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
+        //create the activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //improve ui
-        findViewById(android.R.id.content).setSystemUiVisibility(findViewById(android.R.id.content).getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -84,7 +83,7 @@ public class SampleActivity extends AppCompatActivity {
                             if (drawerItem.getIdentifier() == 1) {
                                 intent = new Intent(SampleActivity.this, MultiselectSampleActivity.class);
                             } else if (drawerItem.getIdentifier() == 2) {
-                                intent = new Intent(SampleActivity.this, CollapsibleSampleActivity.class);
+                                intent = new Intent(SampleActivity.this, ExpandableSampleActivity.class);
                             } else if (drawerItem.getIdentifier() == 3) {
                                 intent = new Intent(SampleActivity.this, StickyHeaderSampleActivity.class);
                             } else if (drawerItem.getIdentifier() == 4) {

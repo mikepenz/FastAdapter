@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,12 +11,15 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
-import com.mikepenz.fastadapter.app.generic.IconModel;
+import com.mikepenz.fastadapter.app.adapter.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.generic.GenericIconItem;
+import com.mikepenz.fastadapter.app.generic.IconModel;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.materialize.MaterializeBuilder;
+import com.turingtechnologies.materialscrollbar.CustomIndicator;
+import com.turingtechnologies.materialscrollbar.DragScrollBar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,11 +32,9 @@ public class GenericItemActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        findViewById(android.R.id.content).setSystemUiVisibility(findViewById(android.R.id.content).getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
-
-        //improve ui
-        findViewById(android.R.id.content).setSystemUiVisibility(findViewById(android.R.id.content).getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
 
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -54,9 +56,16 @@ public class GenericItemActivity extends AppCompatActivity {
 
         GenericItemAdapter<IconModel, GenericIconItem> itemAdapter = new GenericItemAdapter<>(GenericIconItem.class, IconModel.class);
 
+        final FastScrollIndicatorAdapter<GenericIconItem> fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter<>();
+        rv.setAdapter(fastScrollIndicatorAdapter.wrap(itemAdapter.wrap(fastAdapter)));
+
+        DragScrollBar materialScrollBar = new DragScrollBar(this, rv, true);
+        materialScrollBar.setHandleColour(ContextCompat.getColor(this, R.color.colorAccent));
+        materialScrollBar.setHandleOffColour(ContextCompat.getColor(this, R.color.colorAccent));
+        materialScrollBar.addIndicator(new CustomIndicator(this), true);
+
         rv.setLayoutManager(gridLayoutManager);
         rv.setItemAnimator(new SlideDownAlphaAnimator());
-        rv.setAdapter(itemAdapter.wrap(fastAdapter));
 
         //order fonts by their name
         List<ITypeface> mFonts = new ArrayList<>(Iconics.getRegisteredFonts(this));

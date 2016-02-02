@@ -1061,6 +1061,35 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         }
     }
 
+    /**
+     * notifies the fastAdapter about new / removed items within a sub hierarchy
+     * NOTE this currently only works for sub items with only 1 level
+     *
+     * @param position the global position of the parent item
+     */
+    public void notifyAdapterSubItemsChanged(int position) {
+        Item item = getItem(position);
+        if (item != null && item instanceof IExpandable) {
+            IExpandable expandable = (IExpandable) item;
+
+            //TODO ALSO CARE ABOUT SUB SUB ... HIRACHIES
+
+            //first we find out how many items this parent item contains
+            int itemsCount = expandable.getSubItems().size();
+
+            //we only need to do something if this item is expanded
+            if (mExpanded.indexOfKey(position) > -1) {
+                int previousCount = mExpanded.get(position);
+                IAdapter adapter = getAdapter(position);
+                if (adapter != null && adapter instanceof IItemAdapter) {
+                    ((IItemAdapter) adapter).removeRange(position + 1, previousCount);
+                    ((IItemAdapter) adapter).add(position + 1, expandable.getSubItems());
+                }
+                mExpanded.put(position, itemsCount);
+            }
+        }
+    }
+
     //listeners
     public interface OnTouchListener<Item extends IItem> {
         /**
