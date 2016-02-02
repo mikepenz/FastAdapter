@@ -34,7 +34,7 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 #Include in your project
 ##Using Maven
 ```javascript
-compile('com.mikepenz:fastadapter:1.0.1@aar') {
+compile('com.mikepenz:fastadapter:1.0.2@aar') {
 	transitive = true
 }
 ```
