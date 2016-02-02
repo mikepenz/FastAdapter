@@ -27,7 +27,7 @@
             android:name=".MultiselectSampleActivity"
             android:label="@string/sample_multi_select" />
         <activity
-            android:name=".CollapsibleSampleActivity"
+            android:name=".ExpandableSampleActivity"
             android:label="@string/sample_collapsible" />
         <activity
             android:name=".StickyHeaderSampleActivity"

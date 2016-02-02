@@ -83,7 +83,7 @@ public class SampleActivity extends AppCompatActivity {
                             if (drawerItem.getIdentifier() == 1) {
                                 intent = new Intent(SampleActivity.this, MultiselectSampleActivity.class);
                             } else if (drawerItem.getIdentifier() == 2) {
-                                intent = new Intent(SampleActivity.this, CollapsibleSampleActivity.class);
+                                intent = new Intent(SampleActivity.this, ExpandableSampleActivity.class);
                             } else if (drawerItem.getIdentifier() == 3) {
                                 intent = new Intent(SampleActivity.this, StickyHeaderSampleActivity.class);
                             } else if (drawerItem.getIdentifier() == 4) {

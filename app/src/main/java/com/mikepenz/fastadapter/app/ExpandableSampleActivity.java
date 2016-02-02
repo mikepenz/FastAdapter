@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-public class CollapsibleSampleActivity extends AppCompatActivity {
+public class ExpandableSampleActivity extends AppCompatActivity {
     //save our FastAdapter
     private FastItemAdapter fastItemAdapter;
 
