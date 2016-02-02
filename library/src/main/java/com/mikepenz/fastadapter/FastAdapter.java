@@ -1062,7 +1062,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * notifies the fastAdapter about new / removed items within a sub hirachy
+     * notifies the fastAdapter about new / removed items within a sub hierarchy
+     * NOTE this currently only works for sub items with only 1 level
      *
      * @param position the global position of the parent item
      */
