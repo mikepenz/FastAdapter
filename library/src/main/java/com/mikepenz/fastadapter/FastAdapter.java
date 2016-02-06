@@ -768,6 +768,16 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     //-------------------------
 
     /**
+     * returns the expanded items this contains position and the count of items
+     * which are expanded by this position
+     *
+     * @return the expanded items
+     */
+    public SparseIntArray getExpanded() {
+        return mExpanded;
+    }
+
+    /**
      * @return a set with the global positions of all expanded items
      */
     public int[] getExpandedItems() {
@@ -884,8 +894,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (item != null && item instanceof IExpandable) {
             IExpandable<?, Item> expandable = (IExpandable<?, Item>) item;
 
-            //if this item is not already callapsed and has sub items we go on
-            if (!expandable.isExpanded() && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
+            //if this item is not already expanded and has sub items we go on
+            if (mExpanded.indexOfKey(position) < 0 && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
                 IAdapter<Item> adapter = getAdapter(position);
                 if (adapter != null && adapter instanceof IItemAdapter) {
                     ((IItemAdapter<Item>) adapter).add(position + 1, expandable.getSubItems());
@@ -913,6 +923,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         mExpanded.clear();
         cacheSizes();
         notifyDataSetChanged();
+
+        //we make sure the new items are displayed properly
+        AdapterUtil.handleStates(this, 0, getItemCount() - 1);
     }
 
     /**
@@ -926,6 +939,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, 1);
         cacheSizes();
         notifyItemInserted(position);
+
+        //we make sure the new items are displayed properly
+        AdapterUtil.handleStates(this, position, position);
     }
 
     /**
@@ -940,6 +956,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, itemCount);
         cacheSizes();
         notifyItemRangeInserted(position, itemCount);
+
+        //we make sure the new items are displayed properly
+        AdapterUtil.handleStates(this, position, position + itemCount - 1);
     }
 
     /**
@@ -1022,6 +1041,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         } else {
             notifyItemChanged(position, payload);
         }
+
+        //we make sure the new items are displayed properly
+        AdapterUtil.handleStates(this, position, position);
     }
 
     /**
@@ -1046,12 +1068,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             if (mExpanded.indexOfKey(i) >= 0) {
                 collapse(i);
             }
-            Item updateItem = getItem(i);
-            if (updateItem.isSelected()) {
-                mSelections.add(i);
-            } else if (mSelections.contains(i)) {
-                mSelections.remove(i);
-            }
         }
 
         if (payload == null) {
@@ -1059,6 +1075,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         } else {
             notifyItemRangeChanged(position, itemCount, payload);
         }
+
+        //we make sure the new items are displayed properly
+        AdapterUtil.handleStates(this, position, position + itemCount - 1);
     }
 
     /**

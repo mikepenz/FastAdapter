@@ -2,6 +2,10 @@ package com.mikepenz.fastadapter.utils;
 
 import android.util.SparseIntArray;
 
+import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IExpandable;
+import com.mikepenz.fastadapter.IItem;
+
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -10,6 +14,29 @@ import java.util.TreeSet;
  * Created by mikepenz on 31.12.15.
  */
 public class AdapterUtil {
+
+    /**
+     * internal method which correctly set the selected state and expandable state on the newly added items
+     *
+     * @param fastAdapter   the fastAdapter which manages everything
+     * @param startPosition the position of the first item to handle
+     * @param endPosition   the position of the last item to handle
+     */
+    public static void handleStates(FastAdapter fastAdapter, int startPosition, int endPosition) {
+        for (int i = endPosition; i >= startPosition; i--) {
+            IItem updateItem = fastAdapter.getItem(i);
+            if (updateItem.isSelected()) {
+                fastAdapter.getSelections().add(i);
+            } else if (fastAdapter.getSelections().contains(i)) {
+                fastAdapter.getSelections().remove(i);
+            }
+            if (updateItem instanceof IExpandable) {
+                if (((IExpandable) updateItem).isExpanded() && fastAdapter.getExpanded().indexOfKey(i) < 0) {
+                    fastAdapter.expand(i);
+                }
+            }
+        }
+    }
 
     /**
      * internal method to handle the selections if items are added / removed
