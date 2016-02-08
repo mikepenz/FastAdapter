@@ -49,6 +49,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private boolean mSelectOnLongClick = false;
     // if a user can deselect a selection via click. required if there is always one selected item!
     private boolean mAllowDeselection = true;
+    // if items are selectable in general
+    private boolean mSelectable = true;
 
     // we need to remember all selections to recreate them after orientation change
     private SortedSet<Integer> mSelections = new TreeSet<>();
@@ -198,6 +200,24 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * set if no item is selectable
+     *
+     * @param selectable true if items are selectable
+     * @return
+     */
+    public FastAdapter<Item> withSelectable(boolean selectable) {
+        this.mSelectable = selectable;
+        return this;
+    }
+
+    /**
+     * @return if items are selectable
+     */
+    public boolean isSelectable() {
+        return mSelectable;
+    }
+
+    /**
      * re-selects all elements stored in the savedInstanceState
      * IMPORTANT! Call this method only after all items where added to the adapters again. Otherwise it may select wrong items!
      *
@@ -302,7 +322,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                             consumed = mOnPreClickListener.onClick(v, relativeInfo.adapter, relativeInfo.item, pos);
                         }
                         //handle the selection if the event was not yet consumed, and we are allowed to select an item (only occurs when we select with long click only)
-                        if (!consumed && !mSelectOnLongClick) {
+                        if (!consumed && !mSelectOnLongClick && mSelectable) {
                             handleSelection(v, relativeInfo.item, pos);
                         }
 
@@ -330,7 +350,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                         }
 
                         //now handle the selection if we are in multiSelect mode and allow selecting on longClick
-                        if (!consumed && mSelectOnLongClick) {
+                        if (!consumed && mSelectOnLongClick && mSelectable) {
                             handleSelection(v, relativeInfo.item, pos);
                         }
 

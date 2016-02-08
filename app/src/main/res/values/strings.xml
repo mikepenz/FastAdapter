@@ -19,6 +19,10 @@
     <string name="sample_generic_item_descr">Split up Item and Model</string>
     <string name="sample_multi_generic_item">MultiGenericItem Sample</string>
     <string name="sample_multi_generic_item_descr">Split up multiple Items and Models in one GenericAdapter</string>
+    <string name="sample_checkbox_item">CheckBox Sample</string>
+    <string name="sample_checkbox_item_descr">Use FastAdapters internal state with a CheckBox</string>
+    <string name="sample_radiobutton_item">RadioButton Sample</string>
+    <string name="sample_radiobutton_item_descr">Use FastAdapters internal state with a RadioButton</string>
     <string name="open_source">Open Source</string>
     <string name="search_title">Suche</string>
 </resources>
