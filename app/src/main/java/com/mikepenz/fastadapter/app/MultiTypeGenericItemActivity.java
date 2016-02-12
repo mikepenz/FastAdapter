@@ -9,7 +9,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
 import com.mikepenz.fastadapter.app.generic.GenericIconItem;
 import com.mikepenz.fastadapter.app.generic.IconModel;
@@ -54,9 +53,9 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
 
         //if you need multiple items for different models you can also do this be defining a Function which get's the model object and returns the item (extends IItem)
-        GenericItemAdapter itemAdapter = new GenericItemAdapter(new Function<IconModel, IItem>() {
+        GenericItemAdapter<IconModel, GenericIconItem> itemAdapter = new GenericItemAdapter<>(new Function<IconModel, GenericIconItem>() {
             @Override
-            public IItem apply(IconModel o) {
+            public GenericIconItem apply(IconModel o) {
                 if (o.normal) {
                     return new GenericIconItem(o);
                 } else {
