@@ -41,9 +41,9 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     private static final String[] headers = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     //save our FastAdapter
-    private FastAdapter mFastAdapter;
-    private HeaderAdapter mHeaderAdapter;
-    private ItemAdapter mItemAdapter;
+    private FastAdapter<IItem> mFastAdapter;
+    private HeaderAdapter<SampleItem> mHeaderAdapter;
+    private ItemAdapter<ExpandableItem> mItemAdapter;
 
     private ActionModeHelper mActionModeHelper;
 
@@ -65,22 +65,22 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         new MaterializeBuilder().withActivity(this).build();
 
         //create our FastAdapter
-        mFastAdapter = new FastAdapter();
+        mFastAdapter = new FastAdapter<>();
 
         //we init our ActionModeHelper
         mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
 
         //create our adapters
         final StickyHeaderAdapter stickyHeaderAdapter = new StickyHeaderAdapter();
-        mItemAdapter = new ItemAdapter();
-        mHeaderAdapter = new HeaderAdapter();
+        mItemAdapter = new ItemAdapter<>();
+        mHeaderAdapter = new HeaderAdapter<>();
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         mFastAdapter.setHasStableIds(true);
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withSelectOnLongClick(true);
-        mFastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener() {
+        mFastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<IItem>() {
             @Override
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
@@ -98,7 +98,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
             }
         });
 
-        mFastAdapter.withOnPreLongClickListener(new FastAdapter.OnLongClickListener() {
+        mFastAdapter.withOnPreLongClickListener(new FastAdapter.OnLongClickListener<IItem>() {
             @Override
             public boolean onLongClick(View v, IAdapter adapter, IItem item, int position) {
                 ActionMode actionMode = mActionModeHelper.onLongClick(AdvancedSampleActivity.this, position);
@@ -147,7 +147,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     private void setItems() {
         mHeaderAdapter.add(new SampleItem().withName("Header").withSelectable(false).withIdentifier(1));
         //fill with some sample data
-        List<IItem> items = new ArrayList<>();
+        List<ExpandableItem> items = new ArrayList<>();
         int size = new Random().nextInt(25) + 10;
         for (int i = 1; i <= size; i++) {
 
@@ -168,7 +168,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 expandableItem.withSubItems(subItems);
                 items.add(expandableItem);
             } else {
-                items.add(new SampleItem().withName("Test " + i).withHeader(headers[i / 5]));
+                items.add(new ExpandableItem().withName("Test " + i).withHeader(headers[i / 5]));
             }
         }
         mItemAdapter.set(items);
