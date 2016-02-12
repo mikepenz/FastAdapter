@@ -26,9 +26,6 @@ import java.util.Set;
 public class RadioButtonSampleActivity extends AppCompatActivity {
     private static final String[] ALPHABET = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
-    //our recyclerView
-    private RecyclerView recyclerView;
-
     //save our FastAdapter
     private FastItemAdapter<RadioButtonSampleItem> fastItemAdapter;
 
@@ -79,7 +76,7 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
 
             @Override
             public RecyclerView.ViewHolder onPostCreateViewHolder(final RecyclerView.ViewHolder viewHolder) {
-                mClickListenerHelper.listen(viewHolder, ((RadioButtonSampleItem.ViewHolder)viewHolder).radioButton, new ClickListenerHelper.OnClickListener<RadioButtonSampleItem>() {
+                mClickListenerHelper.listen(viewHolder, ((RadioButtonSampleItem.ViewHolder) viewHolder).radioButton, new ClickListenerHelper.OnClickListener<RadioButtonSampleItem>() {
                     @Override
                     public void onClick(View v, int position, RadioButtonSampleItem item) {
                         if (!item.isSelected()) {
@@ -98,7 +95,7 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
         });
 
         //get our recyclerView and do basic setup
-        recyclerView = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(fastItemAdapter);

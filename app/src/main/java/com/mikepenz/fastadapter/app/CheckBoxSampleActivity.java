@@ -25,9 +25,6 @@ import java.util.Random;
 public class CheckBoxSampleActivity extends AppCompatActivity {
     private static final String[] ALPHABET = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
-    //our recyclerView
-    private RecyclerView recyclerView;
-
     //save our FastAdapter
     private FastItemAdapter<CheckBoxSampleItem> fastItemAdapter;
 
@@ -78,7 +75,7 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
 
             @Override
             public RecyclerView.ViewHolder onPostCreateViewHolder(final RecyclerView.ViewHolder viewHolder) {
-                mClickListenerHelper.listen(viewHolder, ((CheckBoxSampleItem.ViewHolder)viewHolder).checkBox, new ClickListenerHelper.OnClickListener<CheckBoxSampleItem>() {
+                mClickListenerHelper.listen(viewHolder, ((CheckBoxSampleItem.ViewHolder) viewHolder).checkBox, new ClickListenerHelper.OnClickListener<CheckBoxSampleItem>() {
                     @Override
                     public void onClick(View v, int position, CheckBoxSampleItem item) {
                         fastItemAdapter.toggleSelection(position);
@@ -89,7 +86,7 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
         });
 
         //get our recyclerView and do basic setup
-        recyclerView = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(fastItemAdapter);

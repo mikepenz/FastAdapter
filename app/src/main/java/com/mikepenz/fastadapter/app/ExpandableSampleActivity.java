@@ -27,7 +27,7 @@ import java.util.List;
 
 public class ExpandableSampleActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastItemAdapter fastItemAdapter;
+    private FastItemAdapter<IItem> fastItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,10 +47,10 @@ public class ExpandableSampleActivity extends AppCompatActivity {
         new MaterializeBuilder().withActivity(this).build();
 
         //create our FastAdapter
-        fastItemAdapter = new FastItemAdapter();
+        fastItemAdapter = new FastItemAdapter<>();
 
         //configure our fastAdapter
-        fastItemAdapter.withOnPreClickListener(new FastAdapter.OnClickListener() {
+        fastItemAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<IItem>() {
             @Override
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
                 if (item instanceof ExpandableItem) {
