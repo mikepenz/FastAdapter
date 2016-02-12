@@ -37,9 +37,6 @@ import java.util.Random;
 public class SimpleItemListActivity extends AppCompatActivity implements ItemTouchCallback {
     private static final String[] ALPHABET = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
-    //our recyclerView
-    private RecyclerView recyclerView;
-
     //save our FastAdapter
     private FastItemAdapter<SampleItem> fastItemAdapter;
 
@@ -86,7 +83,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         });
 
         //get our recyclerView and do basic setup
-        recyclerView = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(fastScrollIndicatorAdapter.wrap(fastItemAdapter));

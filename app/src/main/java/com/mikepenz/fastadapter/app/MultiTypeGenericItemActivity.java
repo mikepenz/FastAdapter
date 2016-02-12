@@ -53,18 +53,13 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
 
         //if you need multiple items for different models you can also do this be defining a Function which get's the model object and returns the item (extends IItem)
-        GenericItemAdapter itemAdapter = new GenericItemAdapter(new Function() {
+        GenericItemAdapter<IconModel, GenericIconItem> itemAdapter = new GenericItemAdapter<>(new Function<IconModel, GenericIconItem>() {
             @Override
-            public Object apply(Object o) {
-                //depending on your logic you can now decide which model maps to which item.
-                if (o instanceof IconModel) {
-                    if (((IconModel) o).normal) {
-                        return new GenericIconItem((IconModel) o);
-                    } else {
-                        return new RightGenericIconItem((IconModel) o);
-                    }
+            public GenericIconItem apply(IconModel o) {
+                if (o.normal) {
+                    return new GenericIconItem(o);
                 } else {
-                    throw new IllegalArgumentException("The passed model can't be created within this Factory");
+                    return new RightGenericIconItem(o);
                 }
             }
         });
