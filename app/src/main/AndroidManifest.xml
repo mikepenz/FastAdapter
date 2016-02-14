@@ -21,6 +21,9 @@
             android:name=".SimpleItemListActivity"
             android:label="@string/sample_simple_item_list" />
         <activity
+            android:name=".SwipeListActivity"
+            android:label="@string/sample_swipe_list" />
+        <activity
             android:name=".ImageListActivity"
             android:label="@string/sample_image_list" />
         <activity
