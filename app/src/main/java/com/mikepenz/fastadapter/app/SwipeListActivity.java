@@ -1,9 +1,9 @@
 package com.mikepenz.fastadapter.app;
 
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,16 +22,14 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.app.adapter.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.fastadapter.app.swipe.SimpleSwipeCallback;
 import com.mikepenz.fastadapter.app.swipe.SimpleSwipeDragCallback;
 import com.mikepenz.fastadapter.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter.drag.SimpleDragCallback;
-import com.mikepenz.fastadapter.helpers.UndoHelper;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialize.MaterializeBuilder;
-import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
-import com.turingtechnologies.materialscrollbar.DragScrollBar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -105,7 +103,12 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
 
         //add drag and drop for item
         //and add swipe as well
-        touchCallback = new SimpleSwipeDragCallback(this, this, ItemTouchHelper.LEFT, Color.GREEN);
+        Drawable leaveBehindDrawable = new IconicsDrawable(this)
+                .icon(MaterialDesignIconic.Icon.gmi_delete)
+                .color(Color.WHITE)
+                .sizeDp(24);
+
+        touchCallback = new SimpleSwipeDragCallback(this, this, leaveBehindDrawable, ItemTouchHelper.LEFT, Color.RED);
         touchHelper = new ItemTouchHelper(touchCallback); // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
         touchHelper.attachToRecyclerView(recyclerView); // Attach ItemTouchHelper to RecyclerView
 

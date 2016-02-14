@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.app.swipe;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -16,18 +17,18 @@ public class SimpleSwipeDragCallback extends SimpleDragCallback {
 
     private final SimpleSwipeCallback simpleSwipeCallback;
 
-    public SimpleSwipeDragCallback(ItemTouchCallback itemTouchCallback, SimpleSwipeCallback.ItemSwipeCallback itemSwipeCallback) {
-        this(itemTouchCallback, itemSwipeCallback, ItemTouchHelper.LEFT);
+    public SimpleSwipeDragCallback(ItemTouchCallback itemTouchCallback, SimpleSwipeCallback.ItemSwipeCallback itemSwipeCallback, Drawable leaveBehindDrawable) {
+        this(itemTouchCallback, itemSwipeCallback, leaveBehindDrawable, ItemTouchHelper.LEFT);
     }
 
-    public SimpleSwipeDragCallback(ItemTouchCallback itemTouchCallback, SimpleSwipeCallback.ItemSwipeCallback itemSwipeCallback, int swipeDirs) {
-        this(itemTouchCallback, itemSwipeCallback, swipeDirs, Color.RED);
+    public SimpleSwipeDragCallback(ItemTouchCallback itemTouchCallback, SimpleSwipeCallback.ItemSwipeCallback itemSwipeCallback, Drawable leaveBehindDrawable, int swipeDirs) {
+        this(itemTouchCallback, itemSwipeCallback, leaveBehindDrawable, swipeDirs, Color.RED);
     }
 
-    public SimpleSwipeDragCallback(ItemTouchCallback itemTouchCallback, SimpleSwipeCallback.ItemSwipeCallback itemSwipeCallback, int swipeDirs, @ColorInt int bgColor) {
+    public SimpleSwipeDragCallback(ItemTouchCallback itemTouchCallback, SimpleSwipeCallback.ItemSwipeCallback itemSwipeCallback, Drawable leaveBehindDrawable, int swipeDirs, @ColorInt int bgColor) {
         super(itemTouchCallback);
         setDefaultSwipeDirs(swipeDirs);
-        simpleSwipeCallback = new SimpleSwipeCallback(itemSwipeCallback, swipeDirs, bgColor);
+        simpleSwipeCallback = new SimpleSwipeCallback(itemSwipeCallback, leaveBehindDrawable, swipeDirs, bgColor);
     }
 
 
