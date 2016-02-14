@@ -176,7 +176,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
     }
 
     @Override
-    public void itemSwiped(final int position, int direction) {
+    public void itemSwiped(int position, int direction) {
         // -- Option 1: Direct action --
         //do something when swiped such as: remove, select, ...
         //fastItemAdapter.select(position);
@@ -186,12 +186,14 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         //Currently just showing example of modifying current item, could swap it out, or
         //set part of the layout as GONE and another as VISIBLE
         //Possibly make a general case of this?
-        fastItemAdapter.getItem(position).withDescription("").withName("Swiped, removing...");
+        final SampleItem item = fastItemAdapter.getItem(position);
+        item.withDescription("").withName("Swiped, removing...");
         fastItemAdapter.notifyItemChanged(position);
 
         Runnable removeRunnable = new Runnable() {
             @Override
             public void run() {
+                int position = fastItemAdapter.getAdapterPosition(item);
                 fastItemAdapter.remove(position);
             }
         };
