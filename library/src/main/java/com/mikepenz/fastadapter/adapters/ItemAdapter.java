@@ -201,8 +201,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
-        mItems = items;
-        mapPossibleTypes(items);
+        mItems = new ArrayList<>(items);
+        mapPossibleTypes(mItems);
         getFastAdapter().notifyAdapterDataSetChanged();
     }
 
