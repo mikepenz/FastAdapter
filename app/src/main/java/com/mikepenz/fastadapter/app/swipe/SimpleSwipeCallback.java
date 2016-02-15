@@ -54,6 +54,8 @@ public class SimpleSwipeCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+        viewHolder.itemView.setTranslationX(0);
+        viewHolder.itemView.setTranslationY(0);
         int position = viewHolder.getAdapterPosition();
         if (position != RecyclerView.NO_POSITION) {
             itemSwipeCallback.itemSwiped(position, direction);

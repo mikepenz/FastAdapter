@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,6 +24,7 @@ import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.app.items.SwipeableItem;
 import com.mikepenz.fastadapter.app.swipe.SimpleSwipeCallback;
 import com.mikepenz.fastadapter.app.swipe.SimpleSwipeDragCallback;
 import com.mikepenz.fastadapter.drag.ItemTouchCallback;
@@ -40,7 +42,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
     private static final String[] ALPHABET = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     //save our FastAdapter
-    private FastItemAdapter<SampleItem> fastItemAdapter;
+    private FastItemAdapter<SwipeableItem> fastItemAdapter;
 
     //drag & drop
     private SimpleDragCallback touchCallback;
@@ -64,18 +66,18 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         fastItemAdapter = new FastItemAdapter<>();
 
         //configure our fastAdapter
-        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
+        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<SwipeableItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
+            public boolean onClick(View v, IAdapter<SwipeableItem> adapter, SwipeableItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
                 return false;
             }
         });
 
         //configure the itemAdapter
-        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SampleItem>() {
+        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SwipeableItem>() {
             @Override
-            public boolean filter(SampleItem item, CharSequence constraint) {
+            public boolean filter(SwipeableItem item, CharSequence constraint) {
                 //return true if we should filter it out
                 //return false to keep it
                 return !item.name.getText().toLowerCase().contains(constraint.toString().toLowerCase());
@@ -90,11 +92,11 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
 
         //fill with some sample data
         int x = 0;
-        List<SampleItem> items = new ArrayList<>();
+        List<SwipeableItem> items = new ArrayList<>();
         for (String s : ALPHABET) {
             int count = new Random().nextInt(20);
             for (int i = 1; i <= count; i++) {
-                items.add(new SampleItem().withName(s + " Test " + x).withIdentifier(100 + x));
+                items.add(new SwipeableItem().withName(s + " Test " + x).withIdentifier(100 + x));
                 x++;
             }
         }
@@ -108,7 +110,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
                 .color(Color.WHITE)
                 .sizeDp(24);
 
-        touchCallback = new SimpleSwipeDragCallback(this, this, leaveBehindDrawable, ItemTouchHelper.LEFT, Color.RED);
+        touchCallback = new SimpleSwipeDragCallback(this, this, leaveBehindDrawable, ItemTouchHelper.LEFT, ContextCompat.getColor(this, R.color.md_red_900));
         touchHelper = new ItemTouchHelper(touchCallback); // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
         touchHelper.attachToRecyclerView(recyclerView); // Attach ItemTouchHelper to RecyclerView
 
@@ -181,32 +183,38 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
     @Override
     public void itemSwiped(int position, int direction) {
         // -- Option 1: Direct action --
-        //do something when swiped such as: remove, select, ...
-        //fastItemAdapter.select(position);
-        //fastItemAdapter.remove(position);
+        //do something when swiped such as: select, remove, update, ...:
+        //A) fastItemAdapter.select(position);
+        //B) fastItemAdapter.remove(position);
+        //C) update item, set "read" if an email etc
 
         // -- Option 2: Delayed action --
-        //Currently just showing example of modifying current item, could swap it out, or
-        //set part of the layout as GONE and another as VISIBLE
         //Possibly make a general case of this?
-        final SampleItem item = fastItemAdapter.getItem(position);
-        item.withDescription("").withName("Swiped, removing...");
-        fastItemAdapter.notifyItemChanged(position);
+        final SwipeableItem item = fastItemAdapter.getItem(position);
+        item.setSwipedDirection(direction);
 
-        Runnable removeRunnable = new Runnable() {
+        final Runnable removeRunnable = new Runnable() {
             @Override
             public void run() {
                 int position = fastItemAdapter.getAdapterPosition(item);
+                item.setSwipedAction(null);
                 fastItemAdapter.remove(position);
             }
         };
-        View rv = findViewById(R.id.rv);
+        final View rv = findViewById(R.id.rv);
         rv.postDelayed(removeRunnable, 3000);
 
-        //for undo, add an onClickListener to something (button, image, text) which removes this
-        //runnable from the message queue (reset the ui as well!)
-        //rv.removeCallbacks(removeRunnable);
-        //fastItemAdapter.notifyItemChanged(position);
+        item.setSwipedAction(new Runnable() {
+            @Override
+            public void run() {
+                rv.removeCallbacks(removeRunnable);
+                item.setSwipedDirection(0);
+                int position = fastItemAdapter.getAdapterPosition(item);
+                fastItemAdapter.notifyItemChanged(position);
+            }
+        });
+
+        fastItemAdapter.notifyItemChanged(position);
     }
 
 }
