@@ -27,4 +27,5 @@
     <string name="sample_radiobutton_item_descr">Use FastAdapters internal state with a RadioButton</string>
     <string name="open_source">Open Source</string>
     <string name="search_title">Suche</string>
+    <string name="action_undo">UNDO</string>
 </resources>
