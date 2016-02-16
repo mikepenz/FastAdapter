@@ -1,7 +1,9 @@
 package com.mikepenz.fastadapter.app.items;
 
 import android.support.annotation.StringRes;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.TextView;
 
@@ -99,9 +101,9 @@ public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.Vie
         CharSequence swipedAction = null;
         CharSequence swipedText = null;
         if (swipedDirection != 0) {
-            //FIXME left, right, top, bottom, ...
             swipedAction = viewHolder.itemView.getContext().getString(R.string.action_undo);
-            swipedText = "Swiped";
+            swipedText = swipedDirection == ItemTouchHelper.LEFT ? "Removed" : "Archived";
+            viewHolder.swipeResultContent.setBackgroundColor(ContextCompat.getColor(viewHolder.itemView.getContext(), swipedDirection == ItemTouchHelper.LEFT ? R.color.md_red_900 : R.color.md_blue_900));
         }
         viewHolder.swipedAction.setText(swipedAction == null ? "" : swipedAction);
         viewHolder.swipedText.setText(swipedText == null ? "" : swipedText);

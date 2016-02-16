@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter.app.swipe;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -30,27 +31,65 @@ public class SimpleSwipeCallback extends ItemTouchHelper.SimpleCallback {
 
     private final ItemSwipeCallback itemSwipeCallback;
 
-    private final int bgColor;
+    private int bgColorLeft;
+    private int bgColorRight;
+    private Drawable leaveBehindDrawableLeft;
+    private Drawable leaveBehindDrawableRight;
 
-    private Drawable leaveBehindDrawable;
     private Paint bgPaint;
-    private int horizMargin;
+    private int horizontalMargin = Integer.MAX_VALUE;
 
-    public SimpleSwipeCallback(SimpleSwipeCallback.ItemSwipeCallback itemSwipeCallback, Drawable leaveBehindDrawable) {
-        this(itemSwipeCallback, leaveBehindDrawable, ItemTouchHelper.LEFT);
+    public SimpleSwipeCallback(SimpleSwipeCallback.ItemSwipeCallback itemSwipeCallback, Drawable leaveBehindDrawableLeft) {
+        this(itemSwipeCallback, leaveBehindDrawableLeft, ItemTouchHelper.LEFT);
     }
 
-    public SimpleSwipeCallback(SimpleSwipeCallback.ItemSwipeCallback itemSwipeCallback, Drawable leaveBehindDrawable, int swipeDirs) {
-        this(itemSwipeCallback, leaveBehindDrawable, swipeDirs, Color.RED);
+    public SimpleSwipeCallback(SimpleSwipeCallback.ItemSwipeCallback itemSwipeCallback, Drawable leaveBehindDrawableLeft, int swipeDirs) {
+        this(itemSwipeCallback, leaveBehindDrawableLeft, swipeDirs, Color.RED);
     }
 
-    public SimpleSwipeCallback(ItemSwipeCallback itemSwipeCallback, Drawable leaveBehindDrawable, int swipeDirs, @ColorInt int bgColor) {
+    public SimpleSwipeCallback(ItemSwipeCallback itemSwipeCallback, Drawable leaveBehindDrawableLeft, int swipeDirs, @ColorInt int bgColor) {
         super(0, swipeDirs);
         this.itemSwipeCallback = itemSwipeCallback;
-        this.leaveBehindDrawable = leaveBehindDrawable;
-        this.bgColor = bgColor;
+        this.leaveBehindDrawableLeft = leaveBehindDrawableLeft;
+        this.bgColorLeft = bgColor;
     }
 
+    public SimpleSwipeCallback withLeaveBehindSwipeLeft(Drawable d) {
+        this.leaveBehindDrawableLeft = d;
+        setDefaultSwipeDirs(getSwipeDirs(null, null)|ItemTouchHelper.LEFT);
+        return this;
+    }
+
+    public SimpleSwipeCallback withLeaveBehindSwipeRight(Drawable d) {
+        this.leaveBehindDrawableRight = d;
+        setDefaultSwipeDirs(getSwipeDirs(null, null)|ItemTouchHelper.RIGHT);
+        return this;
+    }
+
+    public SimpleSwipeCallback withHorizontalMarginDp(Context ctx, int dp) {
+        return withHorizontalMarginPx((int) (ctx.getResources().getDisplayMetrics().density * dp));
+    }
+
+    public SimpleSwipeCallback withHorizontalMarginPx(int px) {
+        horizontalMargin = px;
+        return this;
+    }
+
+    public SimpleSwipeCallback withBackgroundSwipeLeft(@ColorInt int bgColor) {
+        bgColorLeft = bgColor;
+        return this;
+    }
+
+    public SimpleSwipeCallback withBackgroundSwipeRight(@ColorInt int bgColor) {
+        bgColorRight = bgColor;
+        return this;
+    }
+
+    @Override
+    public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        //TODO should disallow this if in swiped state
+        return super.getSwipeDirs(recyclerView, viewHolder);
+    }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
@@ -76,28 +115,41 @@ public class SimpleSwipeCallback extends ItemTouchHelper.SimpleCallback {
             return;
         }
         if (Math.abs(dX) > Math.abs(dY)) {
+            boolean isLeft = dX < 0;
             if (bgPaint == null) {
                 bgPaint = new Paint();
-                bgPaint.setColor(bgColor);
-                horizMargin = (int)(16 * recyclerView.getResources().getDisplayMetrics().density);
+                if (horizontalMargin == Integer.MAX_VALUE) {
+                    withHorizontalMarginDp(recyclerView.getContext(), 16);
+                }
+            }
+            bgPaint.setColor(isLeft ? bgColorLeft : bgColorRight);
+
+            if (bgPaint.getColor() != Color.TRANSPARENT) {
+                int left = isLeft ? itemView.getRight()+(int) dX : itemView.getLeft();
+                int right = isLeft ? itemView.getRight() : (itemView.getLeft() + (int) dX);
+                c.drawRect(left, itemView.getTop(), right, itemView.getBottom(), bgPaint);
             }
 
-            if (bgColor != Color.TRANSPARENT) {
-                c.drawRect(itemView.getRight() + (int) dX, itemView.getTop(), itemView.getRight(), itemView.getBottom(), bgPaint);
-            }
-
-            if (leaveBehindDrawable != null) {
+            Drawable drawable = isLeft ? leaveBehindDrawableLeft : leaveBehindDrawableRight;
+            if (drawable != null) {
                 int itemHeight = itemView.getBottom() - itemView.getTop();
-                int intrinsicWidth = leaveBehindDrawable.getIntrinsicWidth();
-                int intrinsicHeight = leaveBehindDrawable.getIntrinsicWidth();
+                int intrinsicWidth = drawable.getIntrinsicWidth();
+                int intrinsicHeight = drawable.getIntrinsicWidth();
 
-                int left = itemView.getRight() - horizMargin - intrinsicWidth;
-                int right = itemView.getRight() - horizMargin;
+                int left;
+                int right;
+                if (isLeft) {
+                    left = itemView.getRight() - horizontalMargin - intrinsicWidth;
+                    right = itemView.getRight() - horizontalMargin;
+                } else {
+                    left = itemView.getLeft() + horizontalMargin;
+                    right = itemView.getLeft() + horizontalMargin + intrinsicWidth;
+                }
                 int top = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
                 int bottom = top + intrinsicHeight;
-                leaveBehindDrawable.setBounds(left, top, right, bottom);
+                drawable.setBounds(left, top, right, bottom);
 
-                leaveBehindDrawable.draw(c);
+                drawable.draw(c);
             }
         }
         super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive);
