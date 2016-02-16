@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter.app.swipe;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -31,6 +32,37 @@ public class SimpleSwipeDragCallback extends SimpleDragCallback {
         simpleSwipeCallback = new SimpleSwipeCallback(itemSwipeCallback, leaveBehindDrawable, swipeDirs, bgColor);
     }
 
+    public SimpleSwipeDragCallback withLeaveBehindSwipeLeft(Drawable d) {
+        setDefaultSwipeDirs(getSwipeDirs(null, null)|ItemTouchHelper.LEFT);
+        simpleSwipeCallback.withLeaveBehindSwipeLeft(d);
+        return this;
+    }
+
+    public SimpleSwipeDragCallback withLeaveBehindSwipeRight(Drawable d) {
+        setDefaultSwipeDirs(getSwipeDirs(null, null) | ItemTouchHelper.RIGHT);
+        simpleSwipeCallback.withLeaveBehindSwipeRight(d);
+        return this;
+    }
+
+    public SimpleSwipeDragCallback withHorizontalMarginDp(Context ctx, int dp) {
+        simpleSwipeCallback.withHorizontalMarginDp(ctx, dp);
+        return this;
+    }
+
+    public SimpleSwipeDragCallback withHorizontalMarginPx(int px) {
+        simpleSwipeCallback.withHorizontalMarginPx(px);
+        return this;
+    }
+
+    public SimpleSwipeDragCallback withBackgroundSwipeLeft(@ColorInt int bgColor) {
+        simpleSwipeCallback.withBackgroundSwipeLeft(bgColor);
+        return this;
+    }
+
+    public SimpleSwipeDragCallback withBackgroundSwipeRight(@ColorInt int bgColor) {
+        simpleSwipeCallback.withBackgroundSwipeRight(bgColor);
+        return this;
+    }
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {

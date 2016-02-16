@@ -23,7 +23,6 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.fastadapter.app.items.SwipeableItem;
 import com.mikepenz.fastadapter.app.swipe.SimpleSwipeCallback;
 import com.mikepenz.fastadapter.app.swipe.SimpleSwipeDragCallback;
@@ -105,12 +104,25 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
 
         //add drag and drop for item
         //and add swipe as well
-        Drawable leaveBehindDrawable = new IconicsDrawable(this)
+        Drawable leaveBehindDrawableLeft = new IconicsDrawable(this)
                 .icon(MaterialDesignIconic.Icon.gmi_delete)
                 .color(Color.WHITE)
                 .sizeDp(24);
+        Drawable leaveBehindDrawableRight = new IconicsDrawable(this)
+                .icon(MaterialDesignIconic.Icon.gmi_archive)
+                .color(Color.WHITE)
+                .sizeDp(24);
 
-        touchCallback = new SimpleSwipeDragCallback(this, this, leaveBehindDrawable, ItemTouchHelper.LEFT, ContextCompat.getColor(this, R.color.md_red_900));
+        touchCallback = new SimpleSwipeDragCallback(
+                this,
+                this,
+                leaveBehindDrawableLeft,
+                ItemTouchHelper.LEFT,
+                ContextCompat.getColor(this, R.color.md_red_900)
+        )
+                .withBackgroundSwipeRight(ContextCompat.getColor(this, R.color.md_blue_900))
+                .withLeaveBehindSwipeRight(leaveBehindDrawableRight);
+
         touchHelper = new ItemTouchHelper(touchCallback); // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
         touchHelper.attachToRecyclerView(recyclerView); // Attach ItemTouchHelper to RecyclerView
 
@@ -189,16 +201,19 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         //C) update item, set "read" if an email etc
 
         // -- Option 2: Delayed action --
-        //Possibly make a general case of this?
         final SwipeableItem item = fastItemAdapter.getItem(position);
         item.setSwipedDirection(direction);
 
+        // This can vary depending on direction but remove & archive simulated here both results in
+        // removal from list
         final Runnable removeRunnable = new Runnable() {
             @Override
             public void run() {
-                int position = fastItemAdapter.getAdapterPosition(item);
                 item.setSwipedAction(null);
-                fastItemAdapter.remove(position);
+                int position = fastItemAdapter.getAdapterPosition(item);
+                if (position != RecyclerView.NO_POSITION) {
+                    fastItemAdapter.remove(position);
+                }
             }
         };
         final View rv = findViewById(R.id.rv);
@@ -210,11 +225,15 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
                 rv.removeCallbacks(removeRunnable);
                 item.setSwipedDirection(0);
                 int position = fastItemAdapter.getAdapterPosition(item);
-                fastItemAdapter.notifyItemChanged(position);
+                if (position != RecyclerView.NO_POSITION) {
+                    fastItemAdapter.notifyItemChanged(position);
+                }
             }
         });
 
         fastItemAdapter.notifyItemChanged(position);
+
+        //TODO can this above be made more generic, along with the support in the item?
     }
 
 }
