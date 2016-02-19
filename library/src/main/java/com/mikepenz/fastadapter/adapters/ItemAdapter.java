@@ -69,11 +69,11 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         mItemFilter.filter(constraint);
     }
 
-    public void setItemsFilteredCallback(ItemsFiltered callback) {
-        mItemsFilteredCallback = callback;
+    public void setItemFilterListener(ItemFilterListener listener) {
+        mItemFilterListener = listener;
     }
-    protected ItemsFiltered mItemsFilteredCallback;
-    public interface ItemsFiltered {
+    protected ItemFilterListener mItemFilterListener;
+    public interface ItemFilterListener {
         void itemsFiltered();
     }
 
@@ -363,8 +363,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             // Now we have to inform the adapter about the new list filtered
             set((List<Item>) results.values);
 
-            if (mItemsFilteredCallback != null) {
-                mItemsFilteredCallback.itemsFiltered();
+            if (mItemFilterListener != null) {
+                mItemFilterListener.itemsFiltered();
             }
         }
     }

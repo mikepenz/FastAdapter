@@ -21,7 +21,7 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.adapters.ItemAdapter.ItemsFiltered;
+import com.mikepenz.fastadapter.adapters.ItemAdapter.ItemFilterListener;
 import com.mikepenz.fastadapter.app.adapter.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.fastadapter.drag.ItemTouchCallback;
@@ -35,7 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class SimpleItemListActivity extends AppCompatActivity implements ItemTouchCallback, ItemsFiltered {
+public class SimpleItemListActivity extends AppCompatActivity implements ItemTouchCallback, ItemFilterListener {
     private static final String[] ALPHABET = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     //save our FastAdapter
@@ -83,7 +83,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
             }
         });
 
-        fastItemAdapter.getItemAdapter().setItemsFilteredCallback(this);
+        fastItemAdapter.getItemAdapter().setItemFilterListener(this);
 
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
