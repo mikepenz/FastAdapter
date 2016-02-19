@@ -69,6 +69,14 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         mItemFilter.filter(constraint);
     }
 
+    public void setItemsFilteredCallback(ItemsFiltered callback) {
+        mItemsFilteredCallback = callback;
+    }
+    protected ItemsFiltered mItemsFilteredCallback;
+    public interface ItemsFiltered {
+        void itemsFiltered();
+    }
+
     /**
      * @return the order of the items within the FastAdapter
      */
@@ -354,6 +362,10 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // Now we have to inform the adapter about the new list filtered
             set((List<Item>) results.values);
+
+            if (mItemsFilteredCallback != null) {
+                mItemsFilteredCallback.itemsFiltered();
+            }
         }
     }
 }
