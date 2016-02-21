@@ -69,6 +69,14 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         mItemFilter.filter(constraint);
     }
 
+    public void setItemFilterListener(ItemFilterListener listener) {
+        mItemFilterListener = listener;
+    }
+    protected ItemFilterListener mItemFilterListener;
+    public interface ItemFilterListener {
+        void itemsFiltered();
+    }
+
     /**
      * @return the order of the items within the FastAdapter
      */
@@ -354,6 +362,10 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // Now we have to inform the adapter about the new list filtered
             set((List<Item>) results.values);
+
+            if (mItemFilterListener != null) {
+                mItemFilterListener.itemsFiltered();
+            }
         }
     }
 }

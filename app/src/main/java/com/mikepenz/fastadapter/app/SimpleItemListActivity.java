@@ -21,6 +21,7 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.adapters.ItemAdapter.ItemFilterListener;
 import com.mikepenz.fastadapter.app.adapter.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.fastadapter.drag.ItemTouchCallback;
@@ -34,7 +35,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class SimpleItemListActivity extends AppCompatActivity implements ItemTouchCallback {
+public class SimpleItemListActivity extends AppCompatActivity implements ItemTouchCallback, ItemFilterListener {
     private static final String[] ALPHABET = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     //save our FastAdapter
@@ -81,6 +82,8 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
                 return !item.name.getText().toLowerCase().contains(constraint.toString().toLowerCase());
             }
         });
+
+        fastItemAdapter.getItemAdapter().setItemFilterListener(this);
 
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
@@ -174,5 +177,10 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         Collections.swap(fastItemAdapter.getAdapterItems(), oldPosition, newPosition); // change position
         fastItemAdapter.notifyAdapterItemMoved(oldPosition, newPosition);
         return true;
+    }
+
+    @Override
+    public void itemsFiltered() {
+        Toast.makeText(SimpleItemListActivity.this, "filtered items count: " + fastItemAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
     }
 }
