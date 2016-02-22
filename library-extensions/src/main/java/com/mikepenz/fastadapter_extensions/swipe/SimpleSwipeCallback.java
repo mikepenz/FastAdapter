@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter.app.swipe;
+package com.mikepenz.fastadapter_extensions.swipe;
 
 import android.content.Context;
 import android.graphics.Canvas;
