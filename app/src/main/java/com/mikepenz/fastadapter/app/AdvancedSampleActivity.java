@@ -22,7 +22,7 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapter.StickyHeaderAdapter;
 import com.mikepenz.fastadapter.app.items.ExpandableItem;
 import com.mikepenz.fastadapter.app.items.SampleItem;
-import com.mikepenz.fastadapter_addon.ActionModeHelper;
+import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.materialize.MaterializeBuilder;
 import com.mikepenz.materialize.util.UIUtils;

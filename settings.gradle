@@ -1,2 +1,2 @@
-include ':app', ':library-addon'
+include ':app', ':library-extensions'
 include ':library'

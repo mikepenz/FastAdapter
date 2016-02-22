@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter_addon.drag;
+package com.mikepenz.fastadapter_extensions.drag;
 
 public interface ItemTouchCallback {
 

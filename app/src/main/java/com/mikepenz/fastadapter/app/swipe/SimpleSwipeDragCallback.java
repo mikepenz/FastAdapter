@@ -8,8 +8,8 @@ import android.support.annotation.ColorInt;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
-import com.mikepenz.fastadapter_addon.drag.ItemTouchCallback;
-import com.mikepenz.fastadapter_addon.drag.SimpleDragCallback;
+import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
+import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
 
 /**
  * Created by Mattias on 2016-02-13.
