@@ -23,7 +23,6 @@ public class SimpleSwipeCallback extends ItemTouchHelper.SimpleCallback {
          *
          * @param position  position of item in the adapter
          * @param direction direction the item was swiped
-         * @return true if moved otherwise false
          */
         void itemSwiped(int position, int direction);
 
@@ -56,13 +55,13 @@ public class SimpleSwipeCallback extends ItemTouchHelper.SimpleCallback {
 
     public SimpleSwipeCallback withLeaveBehindSwipeLeft(Drawable d) {
         this.leaveBehindDrawableLeft = d;
-        setDefaultSwipeDirs(getSwipeDirs(null, null)|ItemTouchHelper.LEFT);
+        setDefaultSwipeDirs(getSwipeDirs(null, null) | ItemTouchHelper.LEFT);
         return this;
     }
 
     public SimpleSwipeCallback withLeaveBehindSwipeRight(Drawable d) {
         this.leaveBehindDrawableRight = d;
-        setDefaultSwipeDirs(getSwipeDirs(null, null)|ItemTouchHelper.RIGHT);
+        setDefaultSwipeDirs(getSwipeDirs(null, null) | ItemTouchHelper.RIGHT);
         return this;
     }
 
@@ -125,7 +124,7 @@ public class SimpleSwipeCallback extends ItemTouchHelper.SimpleCallback {
             bgPaint.setColor(isLeft ? bgColorLeft : bgColorRight);
 
             if (bgPaint.getColor() != Color.TRANSPARENT) {
-                int left = isLeft ? itemView.getRight()+(int) dX : itemView.getLeft();
+                int left = isLeft ? itemView.getRight() + (int) dX : itemView.getLeft();
                 int right = isLeft ? itemView.getRight() : (itemView.getLeft() + (int) dX);
                 c.drawRect(left, itemView.getTop(), right, itemView.getBottom(), bgPaint);
             }
@@ -145,7 +144,7 @@ public class SimpleSwipeCallback extends ItemTouchHelper.SimpleCallback {
                     left = itemView.getLeft() + horizontalMargin;
                     right = itemView.getLeft() + horizontalMargin + intrinsicWidth;
                 }
-                int top = itemView.getTop() + (itemHeight - intrinsicHeight)/2;
+                int top = itemView.getTop() + (itemHeight - intrinsicHeight) / 2;
                 int bottom = top + intrinsicHeight;
                 drawable.setBounds(left, top, right, bottom);
 
