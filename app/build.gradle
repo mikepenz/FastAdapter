@@ -48,6 +48,7 @@ android {
 
 dependencies {
     compile project(':library')
+    compile project(':library-addon')
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer

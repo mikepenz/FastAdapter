@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter.helpers;
+package com.mikepenz.fastadapter_addon;
 
 import android.support.design.widget.Snackbar;
 import android.view.View;
