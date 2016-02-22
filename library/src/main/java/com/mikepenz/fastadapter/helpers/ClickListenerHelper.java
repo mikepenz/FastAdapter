@@ -28,7 +28,7 @@ public class ClickListenerHelper<Item extends IItem> {
      * @param view            the view which listens for the click
      * @param onClickListener the listener which gets called
      */
-    public void listen(final RecyclerView.ViewHolder viewHolder, View view, final OnClickListener onClickListener) {
+    public void listen(final RecyclerView.ViewHolder viewHolder, View view, final OnClickListener<Item> onClickListener) {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -49,7 +49,7 @@ public class ClickListenerHelper<Item extends IItem> {
      * @param viewId          the viewId which listens for the click
      * @param onClickListener the listener which gets called
      */
-    public void listen(final RecyclerView.ViewHolder viewHolder, @IdRes int viewId, final OnClickListener onClickListener) {
+    public void listen(final RecyclerView.ViewHolder viewHolder, @IdRes int viewId, final OnClickListener<Item> onClickListener) {
         viewHolder.itemView.findViewById(viewId).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

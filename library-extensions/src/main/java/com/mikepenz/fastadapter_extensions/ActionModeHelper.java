@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter.helpers;
+package com.mikepenz.fastadapter_extensions;
 
 
 import android.support.annotation.MenuRes;

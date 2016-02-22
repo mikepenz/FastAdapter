@@ -1,5 +1,7 @@
 package com.mikepenz.fastadapter.app;
 
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
@@ -21,25 +23,25 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.adapters.ItemAdapter.ItemFilterListener;
-import com.mikepenz.fastadapter.app.adapter.FastScrollIndicatorAdapter;
-import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.app.items.SwipeableItem;
+import com.mikepenz.fastadapter_extensions.swipe.SimpleSwipeCallback;
+import com.mikepenz.fastadapter_extensions.swipe.SimpleSwipeDragCallback;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialize.MaterializeBuilder;
-import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
-import com.turingtechnologies.materialscrollbar.DragScrollBar;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class SimpleItemListActivity extends AppCompatActivity implements ItemTouchCallback, ItemFilterListener {
+public class SwipeListActivity extends AppCompatActivity implements ItemTouchCallback, SimpleSwipeCallback.ItemSwipeCallback {
     private static final String[] ALPHABET = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     //save our FastAdapter
-    private FastItemAdapter<SampleItem> fastItemAdapter;
+    private FastItemAdapter<SwipeableItem> fastItemAdapter;
 
     //drag & drop
     private SimpleDragCallback touchCallback;
@@ -62,54 +64,65 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         //create our FastAdapter which will manage everything
         fastItemAdapter = new FastItemAdapter<>();
 
-        final FastScrollIndicatorAdapter<SampleItem> fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter<>();
-
         //configure our fastAdapter
-        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
+        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<SwipeableItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
+            public boolean onClick(View v, IAdapter<SwipeableItem> adapter, SwipeableItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
                 return false;
             }
         });
 
         //configure the itemAdapter
-        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SampleItem>() {
+        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SwipeableItem>() {
             @Override
-            public boolean filter(SampleItem item, CharSequence constraint) {
+            public boolean filter(SwipeableItem item, CharSequence constraint) {
                 //return true if we should filter it out
                 //return false to keep it
                 return !item.name.getText().toLowerCase().contains(constraint.toString().toLowerCase());
             }
         });
 
-        fastItemAdapter.getItemAdapter().setItemFilterListener(this);
-
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(fastScrollIndicatorAdapter.wrap(fastItemAdapter));
-
-        //add a FastScrollBar (Showcase compatibility)
-        DragScrollBar materialScrollBar = new DragScrollBar(this, recyclerView, true);
-        materialScrollBar.setHandleColour(ContextCompat.getColor(this, R.color.accent));
-        materialScrollBar.addIndicator(new AlphabetIndicator(this), true);
+        recyclerView.setAdapter(fastItemAdapter);
 
         //fill with some sample data
         int x = 0;
-        List<SampleItem> items = new ArrayList<>();
+        List<SwipeableItem> items = new ArrayList<>();
         for (String s : ALPHABET) {
             int count = new Random().nextInt(20);
             for (int i = 1; i <= count; i++) {
-                items.add(new SampleItem().withName(s + " Test " + x).withIdentifier(100 + x));
+                items.add(new SwipeableItem().withName(s + " Test " + x).withIdentifier(100 + x));
                 x++;
             }
         }
         fastItemAdapter.add(items);
 
+
         //add drag and drop for item
-        touchCallback = new SimpleDragCallback(this);
+        //and add swipe as well
+        Drawable leaveBehindDrawableLeft = new IconicsDrawable(this)
+                .icon(MaterialDesignIconic.Icon.gmi_delete)
+                .color(Color.WHITE)
+                .sizeDp(24);
+        Drawable leaveBehindDrawableRight = new IconicsDrawable(this)
+                .icon(MaterialDesignIconic.Icon.gmi_archive)
+                .color(Color.WHITE)
+                .sizeDp(24);
+
+        touchCallback = new SimpleSwipeDragCallback(
+                this,
+                this,
+                leaveBehindDrawableLeft,
+                ItemTouchHelper.LEFT,
+                ContextCompat.getColor(this, R.color.md_red_900)
+        )
+                .withBackgroundSwipeRight(ContextCompat.getColor(this, R.color.md_blue_900))
+                .withLeaveBehindSwipeRight(leaveBehindDrawableRight);
+
         touchHelper = new ItemTouchHelper(touchCallback); // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
         touchHelper.attachToRecyclerView(recyclerView); // Attach ItemTouchHelper to RecyclerView
 
@@ -123,7 +136,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //add the values which need to be saved from the adapter to the bundel
+        //add the values which need to be saved from the adapter to the bundle
         outState = fastItemAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
@@ -147,7 +160,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search, menu);
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
@@ -180,7 +193,47 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
     }
 
     @Override
-    public void itemsFiltered() {
-        Toast.makeText(SimpleItemListActivity.this, "filtered items count: " + fastItemAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
+    public void itemSwiped(int position, int direction) {
+        // -- Option 1: Direct action --
+        //do something when swiped such as: select, remove, update, ...:
+        //A) fastItemAdapter.select(position);
+        //B) fastItemAdapter.remove(position);
+        //C) update item, set "read" if an email etc
+
+        // -- Option 2: Delayed action --
+        final SwipeableItem item = fastItemAdapter.getItem(position);
+        item.setSwipedDirection(direction);
+
+        // This can vary depending on direction but remove & archive simulated here both results in
+        // removal from list
+        final Runnable removeRunnable = new Runnable() {
+            @Override
+            public void run() {
+                item.setSwipedAction(null);
+                int position = fastItemAdapter.getAdapterPosition(item);
+                if (position != RecyclerView.NO_POSITION) {
+                    fastItemAdapter.remove(position);
+                }
+            }
+        };
+        final View rv = findViewById(R.id.rv);
+        rv.postDelayed(removeRunnable, 3000);
+
+        item.setSwipedAction(new Runnable() {
+            @Override
+            public void run() {
+                rv.removeCallbacks(removeRunnable);
+                item.setSwipedDirection(0);
+                int position = fastItemAdapter.getAdapterPosition(item);
+                if (position != RecyclerView.NO_POSITION) {
+                    fastItemAdapter.notifyItemChanged(position);
+                }
+            }
+        });
+
+        fastItemAdapter.notifyItemChanged(position);
+
+        //TODO can this above be made more generic, along with the support in the item?
     }
+
 }

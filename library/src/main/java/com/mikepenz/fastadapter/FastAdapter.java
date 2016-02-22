@@ -503,7 +503,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      *
      * @return the global count
      */
-    @Override
     public int getItemCount() {
         return mGlobalSize;
     }
@@ -514,14 +513,42 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param order the number up to which the items are counted
      * @return the total count of items up to the adapter order
      */
-    public int getItemCount(int order) {
+    public int getPreItemCountByOrder(int order) {
+        //if we are empty just return 0 count
+        if (mGlobalSize == 0) {
+            return 0;
+        }
+
+        int size = 0;
+
+        //count the number of items before the adapter with the given order
+        for (IAdapter<Item> adapter : mAdapters.values()) {
+            if (adapter.getOrder() == order) {
+                return size;
+            } else {
+                size = size + adapter.getAdapterItemCount();
+            }
+        }
+
+        //get the count of items which are before this order
+        return size;
+    }
+
+
+    /**
+     * calculates the item count up to a given (excluding this) adapter (defined by the global position of the item)
+     *
+     * @param position the global position of an adapter item
+     * @return the total count of items up to the adapter which holds the given position
+     */
+    public int getPreItemCount(int position) {
         //if we are empty just return 0 count
         if (mGlobalSize == 0) {
             return 0;
         }
 
         //get the count of items which are before this order
-        return mAdapterSizes.floorKey(order);
+        return mAdapterSizes.floorKey(position);
     }
 
     /**
@@ -568,6 +595,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private void cacheSizes() {
         mAdapterSizes.clear();
         int size = 0;
+
+        //we also have to add this for the first adapter otherwise the floorKey method will return the wrong value
+        if (mAdapters.size() > 0) {
+            mAdapterSizes.put(0, mAdapters.valueAt(0));
+        }
+
         for (IAdapter<Item> adapter : mAdapters.values()) {
             if (adapter.getAdapterItemCount() > 0) {
                 mAdapterSizes.put(size, adapter);

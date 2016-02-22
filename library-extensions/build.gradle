@@ -23,14 +23,13 @@ android {
     }
 }
 
-if (project.hasProperty('pushall') || project.hasProperty('librarycoreonly')) {
+if (project.hasProperty('pushall') || project.hasProperty('libraryextensiononly')) {
     apply from: '../gradle-mvn-push.gradle'
     apply plugin: 'com.novoda.bintray-release'
     apply from: '../gradle-jcenter-push.gradle'
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
-    compile "com.android.support:recyclerview-v7:${rootProject.ext.supportLibVersion}"
-    compile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
+    compile project(':library')
+    compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
 }

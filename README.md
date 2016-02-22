@@ -8,20 +8,36 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 
 ##A quick overview:
 - Click / Long-Click listeners
-- Selection / Multi-Selection
+- Selection / Multi-Selection [MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java)
+ - [CheckBoxSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/CheckBoxSampleActivity.java)
+ - [RadioButtonSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/RadioButtonSampleActivity.java)
 - Expandable items
+ - [ExpandableSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/ExpandableSampleActivity.java)
+ - [IconGridSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/IconGridActivity.java)
+ - [AdvancedSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/AdvancedSampleActivity.java)
 - Write less code, get better results
 - Simple Drag & Drop
-- Headers
+ - [SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java)
+- Headers 
+ - [StickyHeaderSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/StickyHeaderSampleActivity.java)
+ - [AdvancedSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/AdvancedSampleActivity.java)
 - Footers
 - FastScroller (external lib)
+ - [SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java)
+- Filter
+ - [SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java)
 - Highly optimized code
 - Includes suggestions from the Android Team
 - Easily extensible
+- Split item view and model
+ - [GenericItem](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/GenericItemActivity.java)
+ - [MultiTypeGenericItem](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiTypeGenericItemActivity.java)
 - Chain other Adapters
+ - [SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java)
+ - [StickyHeaderSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/StickyHeaderSampleActivity.java)
 - Comes with useful Helpers
- - ActionModeHelper
- - UndoHelper
+ - ActionModeHelper [MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java)
+ - UndoHelper [MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java)
  - More to come...
 
 #Preview
@@ -33,11 +49,19 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 #Include in your project
 ##Using Maven
-```javascript
-compile('com.mikepenz:fastadapter:1.0.6@aar') {
+
+The library is split up into core, and extensions. The core functions are included in the following dependency.
+```gradle
+compile('com.mikepenz:fastadapter:1.1.0@aar') {
 	transitive = true
 }
 ```
+
+All additions are included in the following dependency.
+```gradle
+compile 'com.mikepenz:fastadapter-extensions:1.1.0@aar'
+```
+
 
 ##How to use
 ###1. Implement your item (the easy way)
