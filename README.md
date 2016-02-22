@@ -57,6 +57,12 @@ compile('com.mikepenz:fastadapter:1.1.0@aar') {
 }
 ```
 
+All additions are included in the following dependency.
+```gradle
+compile 'com.mikepenz:fastadapter-extensions:1.1.0@aar'
+```
+
+
 ##How to use
 ###1. Implement your item (the easy way)
 Just create a class which extends the `AbstractItem` as shown below. Implement the methods, and your item is ready.

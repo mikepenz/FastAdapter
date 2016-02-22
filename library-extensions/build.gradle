@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'com.novoda.bintray-release'
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -24,8 +23,11 @@ android {
     }
 }
 
-apply from: '../gradle-mvn-push.gradle'
-apply from: '../gradle-jcenter-push.gradle'
+if (project.hasProperty('pushall') || project.hasProperty('libraryextensiononly')) {
+    apply from: '../gradle-mvn-push.gradle'
+    apply plugin: 'com.novoda.bintray-release'
+    apply from: '../gradle-jcenter-push.gradle'
+}
 
 dependencies {
     compile project(':library')
