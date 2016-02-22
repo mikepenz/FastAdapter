@@ -49,8 +49,10 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 #Include in your project
 ##Using Maven
-```javascript
-compile('com.mikepenz:fastadapter:1.0.6@aar') {
+
+The library is split up into core, and extensions. The core functions are included in the following dependency.
+```gradle
+compile('com.mikepenz:fastadapter:1.1.0@aar') {
 	transitive = true
 }
 ```
