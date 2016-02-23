@@ -69,10 +69,21 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         mItemFilter.filter(constraint);
     }
 
-    public void setItemFilterListener(ItemFilterListener listener) {
+    /**
+     * @param listener which will be called after the items were filtered
+     * @return this
+     */
+    public ItemAdapter<Item> withItemFilterListener(ItemFilterListener listener) {
         mItemFilterListener = listener;
+        return this;
     }
+
+    //the listener which will be called after the items were filtered
     protected ItemFilterListener mItemFilterListener;
+
+    /**
+     * interface for the ItemFilterListener
+     */
     public interface ItemFilterListener {
         void itemsFiltered();
     }
