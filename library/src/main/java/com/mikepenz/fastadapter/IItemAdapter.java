@@ -61,15 +61,6 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
     void add(int position, List<Item> items);
 
     /**
-     * add a list of items at the given position within the existing items
-     *
-     * @param position              the global position
-     * @param items
-     * @param adjustByExpandedItems
-     */
-    void add(int position, List<Item> items, boolean adjustByExpandedItems);
-
-    /**
      * sets an item at the given position, overwriting the previous item
      *
      * @param position the global position
