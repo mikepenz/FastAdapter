@@ -92,7 +92,7 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model, I
      */
     public void addModel(int position, List<Model> models) {
         super.add(position, toItems(models));
-        mItems.addAll(position - getFastAdapter().getPreItemCount(position), models);
+        mItems.addAll(position - getFastAdapter().getPreItemCount(position, true), models);
     }
 
     /**
@@ -103,7 +103,7 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model, I
      */
     public void setModel(int position, Model model) {
         super.set(position, toItem(model));
-        mItems.set(position - getFastAdapter().getPreItemCount(position), model);
+        mItems.set(position - getFastAdapter().getPreItemCount(position, true), model);
     }
 
     /**
@@ -125,7 +125,7 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model, I
 
         //global position to relative
         int length = mItems.size();
-        int preItemCount = getFastAdapter().getPreItemCount(position);
+        int preItemCount = getFastAdapter().getPreItemCount(position, true);
         //make sure we do not delete to many items
         int saveItemCount = Math.min(itemCount, length - position + preItemCount);
 
@@ -141,7 +141,7 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model, I
      */
     public void removeModel(int position) {
         super.remove(position);
-        mItems.remove(position - getFastAdapter().getPreItemCount(position));
+        mItems.remove(position - getFastAdapter().getPreItemCount(position, true));
     }
 
     /**

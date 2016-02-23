@@ -152,7 +152,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @return the global position
      */
     public int getGlobalPosition(int position) {
-        return position + getFastAdapter().getPreItemCount(position);
+        return position + getFastAdapter().getPreItemCount(position, false);
     }
 
     /**
@@ -296,11 +296,23 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items    the items to add
      */
     public void add(int position, List<Item> items) {
+        add(position, items, true);
+    }
+
+    /**
+     * add a list of items at the given position within the existing items
+     *
+     * @param position              the global position
+     * @param items                 the items to add
+     * @param adjustByExpandedItems
+     */
+    @Override
+    public void add(int position, List<Item> items, boolean adjustByExpandedItems) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
         if (items != null) {
-            mItems.addAll(position - getFastAdapter().getPreItemCount(position), items);
+            mItems.addAll(position - getFastAdapter().getPreItemCount(position, adjustByExpandedItems), items);
             mapPossibleTypes(items);
 
             getFastAdapter().notifyAdapterItemRangeInserted(position, items.size());
@@ -317,7 +329,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         if (mUseIdDistributor) {
             IdDistributor.checkId(item);
         }
-        mItems.set(position - getFastAdapter().getPreItemCount(position), item);
+        mItems.set(position - getFastAdapter().getPreItemCount(position, true), item);
         mapPossibleType(item);
 
         getFastAdapter().notifyAdapterItemChanged(position);
@@ -329,7 +341,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param position the global position
      */
     public void remove(int position) {
-        mItems.remove(position - getFastAdapter().getPreItemCount(position));
+        mItems.remove(position - getFastAdapter().getPreItemCount(position, true));
         getFastAdapter().notifyAdapterItemRemoved(position);
     }
 
@@ -340,9 +352,21 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param itemCount the count of items which were removed
      */
     public void removeRange(int position, int itemCount) {
+        removeRange(position, itemCount, true);
+    }
+
+    /**
+     * removes a range of items starting with the given position within the existing icons
+     *
+     * @param position              the global position
+     * @param itemCount             the count of items which were removed
+     * @param adjustByExpandedItems
+     */
+    @Override
+    public void removeRange(int position, int itemCount, boolean adjustByExpandedItems) {
         //global position to relative
         int length = mItems.size();
-        int preItemCount = getFastAdapter().getPreItemCount(position);
+        int preItemCount = getFastAdapter().getPreItemCount(position, adjustByExpandedItems);
         //make sure we do not delete to many items
         int saveItemCount = Math.min(itemCount, length - position + preItemCount);
 

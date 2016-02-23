@@ -93,6 +93,13 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
     void removeRange(int position, int itemCount);
 
     /**
+     * @param position              the global position
+     * @param itemCount
+     * @param adjustByExpandedItems
+     */
+    void removeRange(int position, int itemCount, boolean adjustByExpandedItems);
+
+    /**
      * removes all items of this adapter
      */
     void clear();

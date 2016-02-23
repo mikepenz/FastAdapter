@@ -541,14 +541,40 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position of an adapter item
      * @return the total count of items up to the adapter which holds the given position
      */
-    public int getPreItemCount(int position) {
+    public int getPreItemCount(int position, boolean adjustByExpandedItems) {
         //if we are empty just return 0 count
         if (mGlobalSize == 0) {
             return 0;
         }
 
         //get the count of items which are before this order
-        return mAdapterSizes.floorKey(position);
+        int count = mAdapterSizes.floorKey(position);
+        if (adjustByExpandedItems) {
+            //add count to the getExpandedItemsBefore because we also just care about expanded items of the current adapter
+            count = count + getExpandedItemsBefore(count, position);
+        }
+        return count;
+    }
+
+    /**
+     * calculates the count of expandable items before a given position
+     *
+     * @param position the global position
+     * @return the count of expandable items before a given position
+     */
+    public int getExpandedItemsBefore(int from, int position) {
+        int totalAddedItems = 0;
+        int length = mExpanded.size();
+        for (int i = 0; i < length; i++) {
+            //now we count the amount of expanded items within our range we check
+            if (mExpanded.keyAt(i) >= from && mExpanded.keyAt(i) < position) {
+                totalAddedItems = totalAddedItems + mExpanded.get(mExpanded.keyAt(i));
+            } else if (mExpanded.keyAt(i) >= position) {
+                //we do not care about all expanded items which are outside our range
+                break;
+            }
+        }
+        return totalAddedItems;
     }
 
     /**
@@ -925,7 +951,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private void internalCollapse(IExpandable expandable, int position) {
         IAdapter adapter = getAdapter(position);
         if (adapter != null && adapter instanceof IItemAdapter) {
-            ((IItemAdapter) adapter).removeRange(position + 1, expandable.getSubItems().size());
+            //we also have to add the count of expandable items as we have to interact with them here.
+            //normally devs can't interact with those.
+            ((IItemAdapter) adapter).removeRange(position + 1, expandable.getSubItems().size(), false);
         }
 
         //remember that this item is now collapsed again
@@ -951,7 +979,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             if (mExpanded.indexOfKey(position) < 0 && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
                 IAdapter<Item> adapter = getAdapter(position);
                 if (adapter != null && adapter instanceof IItemAdapter) {
-                    ((IItemAdapter<Item>) adapter).add(position + 1, expandable.getSubItems());
+                    //we also have to add the count of expandable items as we have to interact with them here.
+                    //normally devs can't interact with those.
+                    ((IItemAdapter<Item>) adapter).add(position + 1, expandable.getSubItems(), false);
                 }
 
                 //remember that this item is now opened (not collapsed)
