@@ -83,7 +83,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
             }
         });
 
-        fastItemAdapter.getItemAdapter().setItemFilterListener(this);
+        fastItemAdapter.getItemAdapter().withItemFilterListener(this);
 
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);

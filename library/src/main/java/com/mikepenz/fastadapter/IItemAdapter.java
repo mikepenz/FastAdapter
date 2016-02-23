@@ -47,7 +47,7 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
     /**
      * add an array of items at the given position within the existing items
      *
-     * @param position the relative position (position of this adapter)
+     * @param position the global position
      * @param items
      */
     void add(int position, Item... items);
@@ -55,7 +55,7 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
     /**
      * add a list of items at the given position within the existing items
      *
-     * @param position the relative position (position of this adapter)
+     * @param position the global position
      * @param items
      */
     void add(int position, List<Item> items);
@@ -63,7 +63,7 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
     /**
      * sets an item at the given position, overwriting the previous item
      *
-     * @param position the relative position (position of this adapter)
+     * @param position the global position
      * @param item
      */
     void set(int position, Item item);
@@ -71,14 +71,14 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
     /**
      * removes an item at the given position within the existing icons
      *
-     * @param position the relative position (position of this adapter)
+     * @param position the global position
      */
     void remove(int position);
 
     /**
      * removes a range of items starting with the given position within the existing icons
      *
-     * @param position  the relative position (position of this adapter)
+     * @param position  the global position
      * @param itemCount
      */
     void removeRange(int position, int itemCount);

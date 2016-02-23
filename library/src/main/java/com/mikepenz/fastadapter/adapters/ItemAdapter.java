@@ -9,6 +9,8 @@ import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.utils.IdDistributor;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -69,12 +71,38 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         mItemFilter.filter(constraint);
     }
 
-    public void setItemFilterListener(ItemFilterListener listener) {
+    /**
+     * @param listener which will be called after the items were filtered
+     * @return this
+     */
+    public ItemAdapter<Item> withItemFilterListener(ItemFilterListener listener) {
         mItemFilterListener = listener;
+        return this;
     }
+
+    //the listener which will be called after the items were filtered
     protected ItemFilterListener mItemFilterListener;
+
+    /**
+     * interface for the ItemFilterListener
+     */
     public interface ItemFilterListener {
         void itemsFiltered();
+    }
+
+    //
+    public Comparator<Item> mComparator;
+
+    /**
+     * define a comparator which will be used to sort the list "everytime" it is altered
+     * NOTE this will only sort if you "set" a new list or "add" new items (not if you provide a position for the add function)
+     *
+     * @param comparator used to sort the list
+     * @return this
+     */
+    public ItemAdapter<Item> withComparator(Comparator<Item> comparator) {
+        this.mComparator = comparator;
+        return this;
     }
 
     /**
@@ -153,7 +181,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
 
     /**
      * set a new list of items and apply it to the existing list (clear - add) for this adapter
-     * Note may consider using setNewList if the items list is a reference to the list which is used inside the adapter
+     * NOTE may consider using setNewList if the items list is a reference to the list which is used inside the adapter
+     * NOTE this will not sort
      *
      * @param items the items to set
      */
@@ -211,6 +240,11 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         }
         mItems = new ArrayList<>(items);
         mapPossibleTypes(mItems);
+
+        if (mComparator != null) {
+            Collections.sort(mItems, mComparator);
+        }
+
         getFastAdapter().notifyAdapterDataSetChanged();
     }
 
@@ -235,7 +269,13 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         }
         mItems.addAll(items);
         mapPossibleTypes(items);
-        getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getPreItemCountByOrder(getOrder()), items.size());
+
+        if (mComparator == null) {
+            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getPreItemCountByOrder(getOrder()), items.size());
+        } else {
+            Collections.sort(mItems, mComparator);
+            getFastAdapter().notifyAdapterDataSetChanged();
+        }
     }
 
     /**
@@ -262,6 +302,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         if (items != null) {
             mItems.addAll(position - getFastAdapter().getPreItemCount(position), items);
             mapPossibleTypes(items);
+
             getFastAdapter().notifyAdapterItemRangeInserted(position, items.size());
         }
     }
@@ -278,6 +319,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         }
         mItems.set(position - getFastAdapter().getPreItemCount(position), item);
         mapPossibleType(item);
+
         getFastAdapter().notifyAdapterItemChanged(position);
     }
 

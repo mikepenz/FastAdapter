@@ -552,6 +552,29 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * calculates the count of expandable items before a given position
+     *
+     * @param from     the global start position you should pass here the count of items of the previous adapters (or 0 if you want to start from the beginning)
+     * @param position the global position
+     * @return the count of expandable items before a given position
+     */
+    public int getExpandedItemsCount(int from, int position) {
+        int totalAddedItems = 0;
+        int length = mExpanded.size();
+        for (int i = 0; i < length; i++) {
+            //now we count the amount of expanded items within our range we check
+            if (mExpanded.keyAt(i) >= from && mExpanded.keyAt(i) < position) {
+                totalAddedItems = totalAddedItems + mExpanded.get(mExpanded.keyAt(i));
+            } else if (mExpanded.keyAt(i) >= position) {
+                //we do not care about all expanded items which are outside our range
+                break;
+            }
+        }
+        return totalAddedItems;
+    }
+
+
+    /**
      * add the values to the bundle for saveInstanceState
      *
      * @param savedInstanceState If the activity is being re-initialized after
