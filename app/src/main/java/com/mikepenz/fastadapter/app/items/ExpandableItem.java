@@ -127,7 +127,7 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
         if (isExpanded()) {
             ViewCompat.setRotation(viewHolder.icon, 0);
         } else {
-            ViewCompat.setRotation(viewHolder.icon, 90);
+            ViewCompat.setRotation(viewHolder.icon, 180);
         }
     }
 

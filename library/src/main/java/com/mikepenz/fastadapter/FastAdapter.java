@@ -321,6 +321,14 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                         if (mOnPreClickListener != null) {
                             consumed = mOnPreClickListener.onClick(v, relativeInfo.adapter, relativeInfo.item, pos);
                         }
+
+                        //if this is a expandable item :D
+                        if (relativeInfo.item instanceof IExpandable) {
+                            if (((IExpandable) relativeInfo.item).getSubItems() != null) {
+                                toggleExpandable(pos);
+                            }
+                        }
+
                         //handle the selection if the event was not yet consumed, and we are allowed to select an item (only occurs when we select with long click only)
                         if (!consumed && !mSelectOnLongClick && mSelectable) {
                             handleSelection(v, relativeInfo.item, pos);

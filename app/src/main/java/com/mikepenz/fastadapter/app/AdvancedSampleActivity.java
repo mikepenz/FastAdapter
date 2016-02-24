@@ -87,10 +87,10 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 Boolean res = mActionModeHelper.onClick(item, position);
 
                 if (res != null && res) {
-                    if (((IExpandable) item).isExpanded()) {
+                    if (!((IExpandable) item).isExpanded()) {
                         ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
                     } else {
-                        ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(90).start();
+                        ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(180).start();
                     }
                 }
 
@@ -101,6 +101,13 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         mFastAdapter.withOnPreLongClickListener(new FastAdapter.OnLongClickListener<IItem>() {
             @Override
             public boolean onLongClick(View v, IAdapter adapter, IItem item, int position) {
+                //we do not want expandable items to be selected
+                if (item instanceof IExpandable) {
+                    if (((IExpandable) item).getSubItems() != null) {
+                        return true;
+                    }
+                }
+
                 ActionMode actionMode = mActionModeHelper.onLongClick(AdvancedSampleActivity.this, position);
 
                 if (actionMode != null) {
