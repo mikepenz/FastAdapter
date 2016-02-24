@@ -55,13 +55,11 @@ public class ExpandableSampleActivity extends AppCompatActivity {
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
                 if (item instanceof ExpandableItem) {
                     if (((ExpandableItem) item).getSubItems() != null) {
-                        if (((IExpandable) item).isExpanded()) {
+                        if (!((IExpandable) item).isExpanded()) {
                             ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(90).start();
                         } else {
                             ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
                         }
-
-                        fastItemAdapter.toggleExpandable(position);
                         return true;
                     }
                 }

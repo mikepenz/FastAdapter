@@ -52,8 +52,6 @@ public class ActionModeHelper {
     public Boolean onClick(IItem item, int position) {
         if (item instanceof IExpandable) {
             if (((IExpandable) item).getSubItems() != null) {
-                mFastAdapter.toggleExpandable(position);
-
                 //if we are in CAB mode and there are no selections afterwards we end the CAB mode
                 if (mActionMode != null && mFastAdapter.getSelections().size() == 0) {
                     mActionMode.finish();
