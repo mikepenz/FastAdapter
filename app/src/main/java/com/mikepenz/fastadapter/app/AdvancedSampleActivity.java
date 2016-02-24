@@ -90,7 +90,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                     if (!((IExpandable) item).isExpanded()) {
                         ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
                     } else {
-                        ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(90).start();
+                        ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(180).start();
                     }
                 }
 
