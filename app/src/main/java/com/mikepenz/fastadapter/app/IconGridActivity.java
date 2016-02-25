@@ -57,12 +57,10 @@ public class IconGridActivity extends AppCompatActivity {
             public boolean onClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
                 if (item instanceof IExpandable && ((IExpandable) item).getSubItems() != null) {
                     if (((IExpandable) item).isExpanded()) {
-                        ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(90).start();
+                        ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(180).start();
                     } else {
                         ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
                     }
-
-                    fastItemAdapter.toggleExpandable(position);
                     return true;
                 }
                 return false;
