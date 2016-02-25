@@ -1,7 +1,8 @@
 package com.mikepenz.fastadapter_extensions.scroll;
 
-import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 
@@ -12,24 +13,60 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
     private int mCurrentPage = 1;
 
-    private LinearLayoutManager mLinearLayoutManager;
+    private RecyclerView.LayoutManager mLayoutManager;
 
-    public EndlessRecyclerOnScrollListener(LinearLayoutManager linearLayoutManager) {
-        this.mLinearLayoutManager = linearLayoutManager;
+    public EndlessRecyclerOnScrollListener(RecyclerView.LayoutManager layoutManager) {
+        this.mLayoutManager = layoutManager;
     }
 
-    public EndlessRecyclerOnScrollListener(LinearLayoutManager linearLayoutManager, int visibleThreshold) {
-        this.mLinearLayoutManager = linearLayoutManager;
+    public EndlessRecyclerOnScrollListener(RecyclerView.LayoutManager layoutManager, int visibleThreshold) {
+        this.mLayoutManager = layoutManager;
         this.mVisibleThreshold = visibleThreshold;
+    }
+
+    private int findFirstVisibleItemPosition(RecyclerView recyclerView) {
+        final View child = findOneVisibleChild(0, mLayoutManager.getChildCount(), false, true);
+        return child == null ? RecyclerView.NO_POSITION : recyclerView.getChildAdapterPosition(child);
+    }
+
+    private View findOneVisibleChild(int fromIndex, int toIndex, boolean completelyVisible,
+                                     boolean acceptPartiallyVisible) {
+        OrientationHelper helper;
+        if (mLayoutManager.canScrollVertically()) {
+            helper = OrientationHelper.createVerticalHelper(mLayoutManager);
+        } else {
+            helper = OrientationHelper.createHorizontalHelper(mLayoutManager);
+        }
+
+        final int start = helper.getStartAfterPadding();
+        final int end = helper.getEndAfterPadding();
+        final int next = toIndex > fromIndex ? 1 : -1;
+        View partiallyVisible = null;
+        for (int i = fromIndex; i != toIndex; i += next) {
+            final View child = mLayoutManager.getChildAt(i);
+            final int childStart = helper.getDecoratedStart(child);
+            final int childEnd = helper.getDecoratedEnd(child);
+            if (childStart < end && childEnd > start) {
+                if (completelyVisible) {
+                    if (childStart >= start && childEnd <= end) {
+                        return child;
+                    } else if (acceptPartiallyVisible && partiallyVisible == null) {
+                        partiallyVisible = child;
+                    }
+                } else {
+                    return child;
+                }
+            }
+        }
+        return partiallyVisible;
     }
 
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-
         mVisibleItemCount = recyclerView.getChildCount();
-        mTotalItemCount = mLinearLayoutManager.getItemCount();
-        mFirstVisibleItem = mLinearLayoutManager.findFirstVisibleItemPosition();
+        mTotalItemCount = mLayoutManager.getItemCount();
+        mFirstVisibleItem = findFirstVisibleItemPosition(recyclerView);
 
         if (mLoading) {
             if (mTotalItemCount > mPreviousTotal) {
