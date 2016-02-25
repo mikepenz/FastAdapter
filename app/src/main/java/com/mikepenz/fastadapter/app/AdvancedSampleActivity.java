@@ -2,7 +2,6 @@ package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
 import android.support.v4.view.LayoutInflaterCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -77,23 +76,13 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
-        mFastAdapter.setHasStableIds(true);
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withSelectOnLongClick(true);
         mFastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<IItem>() {
             @Override
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
-                Boolean res = mActionModeHelper.onClick(item, position);
-
-                if (res != null && res) {
-                    if (!((IExpandable) item).isExpanded()) {
-                        ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
-                    } else {
-                        ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(180).start();
-                    }
-                }
-
+                Boolean res = mActionModeHelper.onClick(item);
                 return res != null ? res : false;
             }
         });
@@ -108,13 +97,12 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                     }
                 }
 
+                //handle the longclick actions
                 ActionMode actionMode = mActionModeHelper.onLongClick(AdvancedSampleActivity.this, position);
-
                 if (actionMode != null) {
                     //we want color our CAB
                     findViewById(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(AdvancedSampleActivity.this, R.attr.colorPrimary, R.color.material_drawer_primary));
                 }
-
                 //if we have no actionMode we do not consume the event
                 return actionMode != null;
             }

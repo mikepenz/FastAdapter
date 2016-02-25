@@ -8,7 +8,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 
 /**
@@ -45,21 +44,10 @@ public class ActionModeHelper {
      * implements the basic behavior of a CAB and multi select behavior,
      * including logics if the clicked item is collapsible
      *
-     * @param item     the current item
-     * @param position the global position of the current item
+     * @param item the current item
      * @return null if nothing was done, or a boolean to inform if the event was consumed
      */
-    public Boolean onClick(IItem item, int position) {
-        if (item instanceof IExpandable) {
-            if (((IExpandable) item).getSubItems() != null) {
-                //if we are in CAB mode and there are no selections afterwards we end the CAB mode
-                if (mActionMode != null && mFastAdapter.getSelections().size() == 0) {
-                    mActionMode.finish();
-                }
-
-                return true;
-            }
-        }
+    public Boolean onClick(IItem item) {
         //if we are current in CAB mode, and we remove the last selection, we want to finish the actionMode
         if (mActionMode != null && mFastAdapter.getSelections().size() == 1 && item.isSelected()) {
             mActionMode.finish();

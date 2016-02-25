@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.app;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,23 +21,24 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.adapters.FooterAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter.ItemFilterListener;
-import com.mikepenz.fastadapter.app.adapter.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
+import com.mikepenz.fastadapter_extensions.items.ProgressItem;
+import com.mikepenz.fastadapter_extensions.scroll.EndlessRecyclerOnScrollListener;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
-public class SimpleItemListActivity extends AppCompatActivity implements ItemTouchCallback, ItemFilterListener {
-    private static final String[] ALPHABET = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
+public class EndlessScrollListActivity extends AppCompatActivity implements ItemTouchCallback, ItemFilterListener {
 
     //save our FastAdapter
     private FastItemAdapter<SampleItem> fastItemAdapter;
+    private FooterAdapter<ProgressItem> footerAdapter;
 
     //drag & drop
     private SimpleDragCallback touchCallback;
@@ -59,7 +61,8 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         //create our FastAdapter which will manage everything
         fastItemAdapter = new FastItemAdapter<>();
 
-        final FastScrollIndicatorAdapter<SampleItem> fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter<>();
+        //create our FooterAdapter which will manage the progress items
+        footerAdapter = new FooterAdapter<>();
 
         //configure our fastAdapter
         fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
@@ -84,24 +87,39 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
 
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(fastScrollIndicatorAdapter.wrap(fastItemAdapter));
+        recyclerView.setAdapter(footerAdapter.wrap(fastItemAdapter));
+        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(manager, 15) {
+            @Override
+            public void onLoadMore(final int currentPage) {
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        footerAdapter.clear();
+                        footerAdapter.add(new ProgressItem());
+                        //simulate networking (2 seconds)
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                footerAdapter.clear();
+                                for (int i = 1; i < 16; i++) {
+                                    fastItemAdapter.add(fastItemAdapter.getAdapterItemCount(), new SampleItem().withName("Item " + i + " Page " + currentPage));
+                                }
+                            }
+                        }, 2000);
+                    }
+                }, 10);
 
-        //add a FastScrollBar (Showcase compatibility)
-        //DragScrollBar materialScrollBar = new DragScrollBar(this, recyclerView, true);
-        //materialScrollBar.setHandleColour(ContextCompat.getColor(this, R.color.accent));
-        //materialScrollBar.addIndicator(new AlphabetIndicator(this), true);
-
-        //fill with some sample data
-        int x = 0;
-        List<SampleItem> items = new ArrayList<>();
-        for (String s : ALPHABET) {
-            int count = new Random().nextInt(20);
-            for (int i = 1; i <= count; i++) {
-                items.add(new SampleItem().withName(s + " Test " + x).withIdentifier(100 + x));
-                x++;
             }
+        });
+
+        //fill with some sample data (load the first page here)
+        List<SampleItem> items = new ArrayList<>();
+        for (int i = 1; i < 16; i++) {
+            items.add(new SampleItem().withName("Item " + i + " Page " + 1));
         }
         fastItemAdapter.add(items);
 
@@ -144,7 +162,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         // Inflate the menu items for use in the action bar
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.search, menu);
-        if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
             searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
                 @Override
@@ -178,6 +196,6 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
 
     @Override
     public void itemsFiltered() {
-        Toast.makeText(SimpleItemListActivity.this, "filtered items count: " + fastItemAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
+        Toast.makeText(EndlessScrollListActivity.this, "filtered items count: " + fastItemAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
     }
 }
