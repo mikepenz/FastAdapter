@@ -145,7 +145,7 @@ Other Libs:
  
 #Contributors
 
-This free, open source software was also made possible by a group of volunteers that put many hours of hard work into it. See the CONTRIBUTORS.md file for details.
+This free, open source software was also made possible by a group of volunteers that put many hours of hard work into it. See the [CONTRIBUTORS.md](CONTRIBUTORS.md) file for details.
 
 #License
 
