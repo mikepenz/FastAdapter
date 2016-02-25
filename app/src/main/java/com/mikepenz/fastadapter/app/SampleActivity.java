@@ -76,7 +76,7 @@ public class SampleActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName(R.string.sample_checkbox_item).withDescription(R.string.sample_checkbox_item_descr).withSelectable(false).withIdentifier(10).withIcon(CommunityMaterial.Icon.cmd_checkbox_marked),
                         new PrimaryDrawerItem().withName(R.string.sample_radiobutton_item).withDescription(R.string.sample_radiobutton_item_descr).withSelectable(false).withIdentifier(11).withIcon(CommunityMaterial.Icon.cmd_radiobox_marked),
                         new PrimaryDrawerItem().withName(R.string.sample_swipe_list).withDescription(R.string.sample_swipe_list_descr).withSelectable(false).withIdentifier(12).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
-                        new PrimaryDrawerItem().withName(R.string.sample_endless_scroll_list).withDescription(R.string.sample_endless_scroll_list_descr).withSelectable(false).withIdentifier(13).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
+                        new PrimaryDrawerItem().withName(R.string.sample_endless_scroll_list).withDescription(R.string.sample_endless_scroll_list_descr).withSelectable(false).withIdentifier(13).withIcon(MaterialDesignIconic.Icon.gmi_long_arrow_down),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.open_source).withSelectable(false).withIdentifier(100).withIcon(MaterialDesignIconic.Icon.gmi_github)
                 )
