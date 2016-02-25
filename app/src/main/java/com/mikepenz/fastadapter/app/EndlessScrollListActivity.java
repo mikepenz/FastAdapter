@@ -38,7 +38,6 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
 
     //save our FastAdapter
     private FastItemAdapter<SampleItem> fastItemAdapter;
-
     private FooterAdapter<ProgressItem> footerAdapter;
 
     //drag & drop
@@ -95,19 +94,25 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(manager, 15) {
             @Override
             public void onLoadMore(final int currentPage) {
-                footerAdapter.clear();
-                footerAdapter.add(new ProgressItem());
-                //simulate networking (2 seconds)
-                Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
+                new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         footerAdapter.clear();
-                        for (int i = 1; i < 16; i++) {
-                            fastItemAdapter.add(fastItemAdapter.getAdapterItemCount(), new SampleItem().withName("Item " + i + " Page " + currentPage));
-                        }
+                        footerAdapter.add(new ProgressItem());
+                        //simulate networking (2 seconds)
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                footerAdapter.clear();
+                                for (int i = 1; i < 16; i++) {
+                                    fastItemAdapter.add(fastItemAdapter.getAdapterItemCount(), new SampleItem().withName("Item " + i + " Page " + currentPage));
+                                }
+                            }
+                        }, 2000);
                     }
-                }, 2000);
+                }, 10);
+
             }
         });
 
