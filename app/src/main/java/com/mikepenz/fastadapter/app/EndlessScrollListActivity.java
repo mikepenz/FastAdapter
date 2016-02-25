@@ -62,6 +62,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         //create our FastAdapter which will manage everything
         fastItemAdapter = new FastItemAdapter<>();
 
+        //create our FooterAdapter which will manage the progress items
         footerAdapter = new FooterAdapter<>();
 
         //configure our fastAdapter
@@ -110,7 +111,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
             }
         });
 
-        //fill with some sample data (normally would load the first page here)
+        //fill with some sample data (load the first page here)
         List<SampleItem> items = new ArrayList<>();
         for (int i = 1; i < 16; i++) {
             items.add(new SampleItem().withName("Item " + i + " Page " + 1));
