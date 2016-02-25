@@ -89,11 +89,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * Define the OnPreClickListener which will be used for a single item and is called after all internal methods are done
      *
-     * @param OnPreClickListener the OnPreClickListener which will be called after a single item was clicked and all internal methods are done
+     * @param onPreClickListener the OnPreClickListener which will be called after a single item was clicked and all internal methods are done
      * @return this
      */
-    public FastAdapter<Item> withOnPreClickListener(OnClickListener<Item> OnPreClickListener) {
-        this.mOnPreClickListener = OnPreClickListener;
+    public FastAdapter<Item> withOnPreClickListener(OnClickListener<Item> onPreClickListener) {
+        this.mOnPreClickListener = onPreClickListener;
         return this;
     }
 
@@ -111,11 +111,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * Define the OnLongClickListener which will be used for a single item and is called after all internal methods are done
      *
-     * @param OnPreLongClickListener the OnLongClickListener which will be called after a single item was clicked and all internal methods are done
+     * @param onPreLongClickListener the OnLongClickListener which will be called after a single item was clicked and all internal methods are done
      * @return this
      */
-    public FastAdapter<Item> withOnPreLongClickListener(OnLongClickListener<Item> OnPreLongClickListener) {
-        this.mOnPreLongClickListener = OnPreLongClickListener;
+    public FastAdapter<Item> withOnPreLongClickListener(OnLongClickListener<Item> onPreLongClickListener) {
+        this.mOnPreLongClickListener = onPreLongClickListener;
         return this;
     }
 
@@ -316,27 +316,38 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 if (pos != RecyclerView.NO_POSITION) {
                     boolean consumed = false;
                     RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
-                    if (relativeInfo.item != null && relativeInfo.item.isEnabled()) {
+                    Item item = relativeInfo.item;
+                    if (item != null && item.isEnabled()) {
+                        //on the very first we call the click listener from the item itself (if defined)
+                        if (item instanceof IClickable && ((IClickable) item).getOnPreItemClickListener() != null) {
+                            consumed = ((IClickable<Item>) item).getOnPreItemClickListener().onClick(v, relativeInfo.adapter, item, pos);
+                        }
+
                         //first call the onPreClickListener which would allow to prevent executing of any following code, including selection
-                        if (mOnPreClickListener != null) {
-                            consumed = mOnPreClickListener.onClick(v, relativeInfo.adapter, relativeInfo.item, pos);
+                        if (!consumed && mOnPreClickListener != null) {
+                            consumed = mOnPreClickListener.onClick(v, relativeInfo.adapter, item, pos);
                         }
 
                         //if this is a expandable item :D
-                        if (relativeInfo.item instanceof IExpandable) {
-                            if (((IExpandable) relativeInfo.item).getSubItems() != null) {
+                        if (!consumed && item instanceof IExpandable) {
+                            if (((IExpandable) item).getSubItems() != null) {
                                 toggleExpandable(pos);
                             }
                         }
 
                         //handle the selection if the event was not yet consumed, and we are allowed to select an item (only occurs when we select with long click only)
                         if (!consumed && !mSelectOnLongClick && mSelectable) {
-                            handleSelection(v, relativeInfo.item, pos);
+                            handleSelection(v, item, pos);
+                        }
+
+                        //before calling the global adapter onClick listener call the item specific onClickListener
+                        if (item instanceof IClickable && ((IClickable) item).getOnItemClickListener() != null) {
+                            consumed = ((IClickable<Item>) item).getOnItemClickListener().onClick(v, relativeInfo.adapter, item, pos);
                         }
 
                         //call the normal click listener after selection was handlded
-                        if (mOnClickListener != null) {
-                            mOnClickListener.onClick(v, relativeInfo.adapter, relativeInfo.item, pos);
+                        if (!consumed && mOnClickListener != null) {
+                            mOnClickListener.onClick(v, relativeInfo.adapter, item, pos);
                         }
                     }
                 }
