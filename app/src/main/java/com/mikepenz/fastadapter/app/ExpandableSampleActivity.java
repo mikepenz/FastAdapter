@@ -2,7 +2,6 @@ package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
 import android.support.v4.view.LayoutInflaterCompat;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,9 +9,6 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.ExpandableItem;
@@ -48,24 +44,6 @@ public class ExpandableSampleActivity extends AppCompatActivity {
 
         //create our FastAdapter
         fastItemAdapter = new FastItemAdapter<>();
-
-        //configure our fastAdapter
-        fastItemAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<IItem>() {
-            @Override
-            public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
-                if (item instanceof ExpandableItem) {
-                    if (((ExpandableItem) item).getSubItems() != null) {
-                        if (!((IExpandable) item).isExpanded()) {
-                            ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(180).start();
-                        } else {
-                            ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
-                        }
-                        return true;
-                    }
-                }
-                return false;
-            }
-        });
 
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
