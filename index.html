@@ -36,9 +36,10 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 
 <ul>
 <li>Click / Long-Click listeners</li>
-<li>Selection / Multi-Selection <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java">MultiselectSample</a>
+<li>Selection / Multi-Selection [
 
 <ul>
+<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java">MultiselectSample</a></li>
 <li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/CheckBoxSampleActivity.java">CheckBoxSample</a></li>
 <li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/RadioButtonSampleActivity.java">RadioButtonSample</a></li>
 </ul>
@@ -52,11 +53,8 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 </ul>
 </li>
 <li>Write less code, get better results</li>
-<li>Simple Drag &amp; Drop
-
-<ul>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java">SimpleItemListSample</a></li>
-</ul>
+<li>Highly optimized code</li>
+<li>Simple Drag &amp; Drop <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java">(SimpleItemListSample)</a>
 </li>
 <li>Headers 
 
@@ -66,21 +64,14 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 </ul>
 </li>
 <li>Footers</li>
-<li>FastScroller (external lib)
-
-<ul>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java">SimpleItemListSample</a></li>
-</ul>
+<li>Filter <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java">(SimpleItemListSample)</a>
 </li>
-<li>Filter
-
-<ul>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java">SimpleItemListSample</a></li>
-</ul>
-</li>
-<li>Highly optimized code</li>
 <li>Includes suggestions from the Android Team</li>
 <li>Easily extensible</li>
+<li>Endless Scroll <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/EndlessScrollListActivity.java">(EndlessScrollSample)</a>
+</li>
+<li>"Leave-Behind"-Pattern <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SwipeListActivity.java">(SwipeListSample)</a>
+</li>
 <li>Split item view and model
 
 <ul>
@@ -98,12 +89,14 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 <li>Comes with useful Helpers
 
 <ul>
-<li>ActionModeHelper <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java">MultiselectSample</a>
+<li>ActionModeHelper <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java">(MultiselectSample)</a>
 </li>
-<li>UndoHelper <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java">MultiselectSample</a>
+<li>UndoHelper <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java">(MultiselectSample)</a>
 </li>
 <li>More to come...</li>
 </ul>
+</li>
+<li>FastScroller (external lib) <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java">(SimpleItemListSample)</a>
 </li>
 </ul>
 
@@ -128,13 +121,13 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 
 <p>The library is split up into core, and extensions. The core functions are included in the following dependency.</p>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:1.1.2@aar<span class="pl-pds">'</span></span>) {
+<div class="highlight highlight-source-groovy-gradle"><pre>compile(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:1.2.0@aar<span class="pl-pds">'</span></span>) {
     transitive <span class="pl-k">=</span> <span class="pl-c1">true</span>
 }</pre></div>
 
 <p>All additions are included in the following dependency.</p>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter-extensions:1.1.2@aar<span class="pl-pds">'</span></span></pre></div>
+<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter-extensions:1.2.0@aar<span class="pl-pds">'</span></span></pre></div>
 
 <h2>
 <a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use</h2>
@@ -242,6 +235,11 @@ fastAdapter<span class="pl-k">.</span>add(<span class="pl-c1">ITEMS</span>);</pr
 </ul>
 </li>
 </ul>
+
+<h1>
+<a id="contributors" class="anchor" href="#contributors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributors</h1>
+
+<p>This free, open source software was also made possible by a group of volunteers that put many hours of hard work into it. See the <a href="CONTRIBUTORS.md">CONTRIBUTORS.md</a> file for details.</p>
 
 <h1>
 <a id="license" class="anchor" href="#license" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>License</h1>
