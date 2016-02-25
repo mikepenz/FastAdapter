@@ -104,7 +104,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
                     public void run() {
                         footerAdapter.clear();
                         for (int i = 1; i < 16; i++) {
-                            fastItemAdapter.add(fastItemAdapter.getAdapterItemCount(), new SampleItem().withName("Item" + i + " Page " + currentPage));
+                            fastItemAdapter.add(fastItemAdapter.getAdapterItemCount(), new SampleItem().withName("Item " + i + " Page " + currentPage));
                         }
                     }
                 }, 2000);
