@@ -27,7 +27,7 @@
     <string name="sample_endless_scroll_item">EndlessScroll Sample</string>
     <string name="sample_radiobutton_item_descr">Use FastAdapters internal state with a RadioButton</string>
     <string name="sample_endless_scroll_list">EndlessScroll Sample</string>
-    <string name="sample_endless_scroll_list_descr">EndlesScroll, Progress</string>
+    <string name="sample_endless_scroll_list_descr">EndlessScroll, Progress</string>
     <string name="open_source">Open Source</string>
     <string name="search_title">Suche</string>
     <string name="action_undo">UNDO</string>
