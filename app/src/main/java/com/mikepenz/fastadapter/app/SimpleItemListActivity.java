@@ -2,7 +2,6 @@ package com.mikepenz.fastadapter.app;
 
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,8 +26,6 @@ import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
 import com.mikepenz.materialize.MaterializeBuilder;
-import com.turingtechnologies.materialscrollbar.AlphabetIndicator;
-import com.turingtechnologies.materialscrollbar.DragScrollBar;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -92,9 +89,9 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         recyclerView.setAdapter(fastScrollIndicatorAdapter.wrap(fastItemAdapter));
 
         //add a FastScrollBar (Showcase compatibility)
-        DragScrollBar materialScrollBar = new DragScrollBar(this, recyclerView, true);
-        materialScrollBar.setHandleColour(ContextCompat.getColor(this, R.color.accent));
-        materialScrollBar.addIndicator(new AlphabetIndicator(this), true);
+        //DragScrollBar materialScrollBar = new DragScrollBar(this, recyclerView, true);
+        //materialScrollBar.setHandleColour(ContextCompat.getColor(this, R.color.accent));
+        //materialScrollBar.addIndicator(new AlphabetIndicator(this), true);
 
         //fill with some sample data
         int x = 0;
