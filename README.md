@@ -142,6 +142,10 @@ Other Libs:
 * Mike Penz 
  * [mikepenz.com](http://mikepenz.com) - <mikepenz@gmail.com>
  * [paypal.me/mikepenz](http://paypal.me/mikepenz)
+ 
+#Contributors
+
+This free, open source software was also made possible by a group of volunteers that put many hours of hard work into it. See the CONTRIBUTORS.md file for details.
 
 #License
 
