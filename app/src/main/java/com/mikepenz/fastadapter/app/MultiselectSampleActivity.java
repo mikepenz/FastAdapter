@@ -77,7 +77,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
             @Override
             public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
-                Boolean res = mActionModeHelper.onClick(item, position);
+                Boolean res = mActionModeHelper.onClick(item);
                 return res != null ? res : false;
             }
         });
