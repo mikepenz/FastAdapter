@@ -267,11 +267,12 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
+        int countBefore = mItems.size();
         mItems.addAll(items);
         mapPossibleTypes(items);
 
         if (mComparator == null) {
-            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getPreItemCountByOrder(getOrder()), items.size());
+            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getPreItemCountByOrder(getOrder()) + countBefore, items.size());
         } else {
             Collections.sort(mItems, mComparator);
             getFastAdapter().notifyAdapterDataSetChanged();
