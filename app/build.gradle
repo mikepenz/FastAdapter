@@ -54,13 +54,13 @@ dependencies {
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
-    compile('com.mikepenz:materialdrawer:5.0.6-SNAPSHOT@aar') {
+    compile('com.mikepenz:materialdrawer:5.0.7@aar') {
         transitive = true
         exclude module: "fastadapter"
     }
     //used to provide different itemAnimators for the RecyclerView
     //https://github.com/mikepenz/ItemAnimators
-    compile 'com.mikepenz:itemanimators:0.2.1@aar'
+    compile 'com.mikepenz:itemanimators:0.2.2@aar'
     //used to generate the Open Source section
     //https://github.com/mikepenz/AboutLibraries
     compile('com.mikepenz:aboutlibraries:5.5.6@aar') {
