@@ -101,7 +101,26 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @return this
      */
     public ItemAdapter<Item> withComparator(Comparator<Item> comparator) {
+        return withComparator(comparator, true);
+    }
+
+    /**
+     * define a comparator which will be used to sort the list "everytime" it is altered
+     * NOTE this will only sort if you "set" a new list or "add" new items (not if you provide a position for the add function)
+     *
+     * @param comparator used to sort the list
+     * @param sortNow    specifies if we use the provided comparator to sort now
+     * @return this
+     */
+    public ItemAdapter<Item> withComparator(Comparator<Item> comparator, boolean sortNow) {
         this.mComparator = comparator;
+
+        //we directly sort the list with the defined comparator
+        if (mItems != null && mComparator != null && sortNow) {
+            Collections.sort(mItems, mComparator);
+            getFastAdapter().notifyAdapterDataSetChanged();
+        }
+
         return this;
     }
 
