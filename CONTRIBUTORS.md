@@ -13,3 +13,7 @@ FastAdapter contributors (sorted alphabeticaly)
 
   * CheckBoxSample
   * RadioButtonSample
+
+* **[rubengees](https://github.com/rubengees)**
+
+  * SortSample with comparator
