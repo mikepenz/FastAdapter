@@ -232,6 +232,11 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         //map the types
         mapPossibleTypes(items);
 
+        //if we have a comparator then sort
+        if (mComparator != null) {
+            Collections.sort(mItems, mComparator);
+        }
+
         //now properly notify the adapter about the changes
         if (newItemsCount > previousItemsCount) {
             if (previousItemsCount > 0) {
