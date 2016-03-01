@@ -1,7 +1,9 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
+import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +20,8 @@ import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.io.Serializable;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -34,6 +38,9 @@ import butterknife.OnClick;
  */
 public class SortActivity extends AppCompatActivity {
 
+    public static final int SORT_ASCENDING = 0;
+    public static final int SORT_DESCENDING = 1;
+    private static final int SORT_NONE = -1;
     private static final String[] ALPHABET = new String[]{"A", "B", "C", "D", "E", "F", "G", "H",
             "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
             "Z"};
@@ -45,6 +52,9 @@ public class SortActivity extends AppCompatActivity {
 
     //save our FastAdapter
     private FastItemAdapter<SampleItem> fastItemAdapter;
+
+    @SortingStrategy
+    private int sortingStrategy;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,12 +92,15 @@ public class SortActivity extends AppCompatActivity {
         recyclerView.setAdapter(fastItemAdapter);
 
         if (savedInstanceState != null) {
-            //noinspection unchecked
-            fastItemAdapter.getItemAdapter().withComparator((Comparator<SampleItem>)
-                    savedInstanceState.getSerializable("comparator"));
+            //Retrieve the previous sorting strategy from the instance state
+            sortingStrategy = savedInstanceState.getInt("sorting_strategy");
+        } else {
+            //Set the default so
+            sortingStrategy = SORT_NONE;
         }
 
-        fastItemAdapter.set(generateUnsortedList());
+        fastItemAdapter.getItemAdapter().withComparator(getComparator());
+        fastItemAdapter.setNewList(generateUnsortedList());
 
         //restore selections (this has to be done after the items were added
         fastItemAdapter.withSavedInstanceState(savedInstanceState);
@@ -101,9 +114,8 @@ public class SortActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         //add the values which need to be saved from the adapter to the bundle
         outState = fastItemAdapter.saveInstanceState(outState);
-        //We need to persist our comparator between orientation changes
-        outState.putSerializable("comparator", (Serializable)
-                fastItemAdapter.getItemAdapter().mComparator);
+        //We need to persist our sorting strategy between orientation changes
+        outState.putInt("sorting_strategy", sortingStrategy);
         super.onSaveInstanceState(outState);
     }
 
@@ -127,8 +139,10 @@ public class SortActivity extends AppCompatActivity {
      */
     @OnClick(R.id.button_ascending)
     public void sortAscending() {
+        //Set the new sorting strategy
+        sortingStrategy = SORT_ASCENDING;
         //Set the new comparator to the list
-        fastItemAdapter.getItemAdapter().withComparator(new AlphabetComparatorAscending());
+        fastItemAdapter.getItemAdapter().withComparator(getComparator());
         //Reset the list to trigger the sorting
         fastItemAdapter.setNewList(generateUnsortedList());
     }
@@ -138,10 +152,32 @@ public class SortActivity extends AppCompatActivity {
      */
     @OnClick(R.id.button_descending)
     public void sortDescending() {
+        //Set the new sorting strategy
+        sortingStrategy = SORT_DESCENDING;
         //Set the new comparator to the list
-        fastItemAdapter.getItemAdapter().withComparator(new AlphabetComparatorDescending());
+        fastItemAdapter.getItemAdapter().withComparator(getComparator());
         //Reset the list to trigger the sorting
         fastItemAdapter.setNewList(generateUnsortedList());
+    }
+
+    /**
+     * Returns the appropriate Comparator for the current sorting strategy or null if no strategy is
+     * set. (SORT_NONE)
+     *
+     * @return The comparator or null.
+     */
+    @Nullable
+    private Comparator<SampleItem> getComparator() {
+        switch (sortingStrategy) {
+            case SORT_ASCENDING:
+                return new AlphabetComparatorAscending();
+            case SORT_DESCENDING:
+                return new AlphabetComparatorDescending();
+            case SORT_NONE:
+                return null;
+        }
+
+        throw new RuntimeException("This sortingStrategy is not supported.");
     }
 
     /**
@@ -187,6 +223,11 @@ public class SortActivity extends AppCompatActivity {
         }
 
         return result.withDescription(description + " letter in the alphabet");
+    }
+
+    @Retention(RetentionPolicy.SOURCE)
+    @IntDef({SORT_NONE, SORT_ASCENDING, SORT_DESCENDING})
+    public @interface SortingStrategy {
     }
 
     /**
