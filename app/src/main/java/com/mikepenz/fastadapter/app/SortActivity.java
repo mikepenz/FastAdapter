@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * TODO: Describe Class
+ * An Activity which showcases the sort feature of the library.
  *
  * @author Ruben Gees
  */
@@ -87,7 +87,7 @@ public class SortActivity extends AppCompatActivity {
                     savedInstanceState.getSerializable("comparator"));
         }
 
-        fastItemAdapter.setNewList(generateUnsortedList());
+        fastItemAdapter.set(generateUnsortedList());
 
         //restore selections (this has to be done after the items were added
         fastItemAdapter.withSavedInstanceState(savedInstanceState);
