@@ -91,7 +91,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     //
-    public Comparator<Item> mComparator;
+    protected Comparator<Item> mComparator;
 
     /**
      * define a comparator which will be used to sort the list "everytime" it is altered
@@ -122,6 +122,14 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         }
 
         return this;
+    }
+
+
+    /**
+     * @return the defined Comparator used for this ItemAdaper
+     */
+    public Comparator<Item> getComparator() {
+        return mComparator;
     }
 
     /**
