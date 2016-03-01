@@ -38,9 +38,10 @@ import butterknife.OnClick;
  */
 public class SortActivity extends AppCompatActivity {
 
-    public static final int SORT_ASCENDING = 0;
-    public static final int SORT_DESCENDING = 1;
+    private static final int SORT_ASCENDING = 0;
+    private static final int SORT_DESCENDING = 1;
     private static final int SORT_NONE = -1;
+
     private static final String[] ALPHABET = new String[]{"A", "B", "C", "D", "E", "F", "G", "H",
             "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y",
             "Z"};
