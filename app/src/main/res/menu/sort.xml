@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/item_sort_random"
+        android:title="Random"
+        android:titleCondensed="RANDOM"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/item_sort_asc"
+        android:title="Asc"
+        android:titleCondensed="ASC"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/item_sort_desc"
+        android:title="Desc"
+        android:titleCondensed="DESC"
+        app:showAsAction="always" />
+
+</menu>

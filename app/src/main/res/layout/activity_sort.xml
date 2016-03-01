@@ -17,33 +17,9 @@
 
     </android.support.design.widget.AppBarLayout>
 
-    <LinearLayout
-        android:id="@+id/button_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/toolbar_container"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/button_ascending"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:layout_weight="0.5"
-            android:text="Sort Ascending" />
-
-        <Button
-            android:id="@+id/button_descending"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_margin="4dp"
-            android:layout_weight="0.5"
-            android:text="Sort Descending" />
-    </LinearLayout>
-
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/button_container" />
+        android:layout_below="@+id/toolbar_container" />
 </RelativeLayout>

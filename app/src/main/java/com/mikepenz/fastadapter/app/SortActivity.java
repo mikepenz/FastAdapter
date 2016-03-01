@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter.app;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
@@ -9,6 +10,8 @@ import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -17,6 +20,8 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.io.Serializable;
@@ -29,7 +34,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 /**
  * An Activity which showcases the sort feature of the library.
@@ -100,7 +104,10 @@ public class SortActivity extends AppCompatActivity {
             sortingStrategy = SORT_NONE;
         }
 
+        //we sort the list
         fastItemAdapter.getItemAdapter().withComparator(getComparator());
+
+        //initial filling of the list
         fastItemAdapter.setNewList(generateUnsortedList());
 
         //restore selections (this has to be done after the items were added
@@ -120,45 +127,49 @@ public class SortActivity extends AppCompatActivity {
         super.onSaveInstanceState(outState);
     }
 
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.sort, menu);
+        menu.findItem(R.id.item_sort_random).setIcon(new IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_wrap_text).color(Color.BLACK).actionBar());
+        menu.findItem(R.id.item_sort_asc).setIcon(new IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_sort_asc).color(Color.BLACK).actionBar());
+        menu.findItem(R.id.item_sort_desc).setIcon(new IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_sort_desc).color(Color.BLACK).actionBar());
+        return true;
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        //handle the click on the back arrow click
+
+        //handle the menu item click
         switch (item.getItemId()) {
+            case R.id.item_sort_random:
+                //Set the new sorting strategy
+                sortingStrategy = SORT_NONE;
+                //randomize the items
+                Collections.shuffle(fastItemAdapter.getAdapterItems());
+                fastItemAdapter.notifyDataSetChanged();
+                return true;
+            case R.id.item_sort_asc:
+                //Set the new sorting strategy
+                sortingStrategy = SORT_ASCENDING;
+                //Set the new comparator to the list
+                fastItemAdapter.getItemAdapter().withComparator(getComparator());
+                return true;
+            case R.id.item_sort_desc:
+                //Set the new sorting strategy
+                sortingStrategy = SORT_DESCENDING;
+                //Set the new comparator to the list
+                fastItemAdapter.getItemAdapter().withComparator(getComparator());
+                return true;
             case android.R.id.home:
                 Toast.makeText(getApplicationContext(), "selections = " +
                         fastItemAdapter.getSelections(), Toast.LENGTH_LONG).show();
                 onBackPressed();
                 return true;
-
             default:
                 return super.onOptionsItemSelected(item);
         }
-    }
-
-    /**
-     * Sorts the list ascending
-     */
-    @OnClick(R.id.button_ascending)
-    public void sortAscending() {
-        //Set the new sorting strategy
-        sortingStrategy = SORT_ASCENDING;
-        //Set the new comparator to the list
-        fastItemAdapter.getItemAdapter().withComparator(getComparator());
-        //Reset the list to trigger the sorting
-        fastItemAdapter.setNewList(generateUnsortedList());
-    }
-
-    /**
-     * Sorts the list descending
-     */
-    @OnClick(R.id.button_descending)
-    public void sortDescending() {
-        //Set the new sorting strategy
-        sortingStrategy = SORT_DESCENDING;
-        //Set the new comparator to the list
-        fastItemAdapter.getItemAdapter().withComparator(getComparator());
-        //Reset the list to trigger the sorting
-        fastItemAdapter.setNewList(generateUnsortedList());
     }
 
     /**
