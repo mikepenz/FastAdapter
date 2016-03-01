@@ -56,5 +56,8 @@
         <activity
             android:name=".EndlessScrollListActivity"
             android:label="@string/sample_endless_scroll_item" />
+        <activity
+            android:name=".SortActivity"
+            android:label="@string/sample_sort" />
     </application>
 </manifest>

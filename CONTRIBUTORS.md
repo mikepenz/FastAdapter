@@ -11,4 +11,9 @@ FastAdapter contributors (sorted alphabeticaly)
 
 * **[Rainer Lang](https://github.com/Rainer-Lang)**
 
-  * 
+  * CheckBoxSample
+  * RadioButtonSample
+
+* **[rubengees](https://github.com/rubengees)**
+
+  * SortSample with comparator
