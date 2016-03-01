@@ -31,4 +31,6 @@
     <string name="open_source">Open Source</string>
     <string name="search_title">Suche</string>
     <string name="action_undo">UNDO</string>
+    <string name="sample_sort">Sort Sample</string>
+    <string name="sample_sort_descr">Simply sort your items by providing a Comparator</string>
 </resources>

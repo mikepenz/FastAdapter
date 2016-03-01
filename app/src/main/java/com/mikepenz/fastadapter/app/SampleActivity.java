@@ -35,10 +35,10 @@ import java.util.List;
 
 public class SampleActivity extends AppCompatActivity {
 
-    //save our header or result
-    private Drawer mResult = null;
     //our rv
     RecyclerView mRecyclerView;
+    //save our header or result
+    private Drawer mResult = null;
     //save our FastAdapter
     private FastAdapter<SimpleImageItem> mFastAdapter;
     //save our FastAdapter
@@ -77,6 +77,7 @@ public class SampleActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName(R.string.sample_radiobutton_item).withDescription(R.string.sample_radiobutton_item_descr).withSelectable(false).withIdentifier(11).withIcon(CommunityMaterial.Icon.cmd_radiobox_marked),
                         new PrimaryDrawerItem().withName(R.string.sample_swipe_list).withDescription(R.string.sample_swipe_list_descr).withSelectable(false).withIdentifier(12).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
                         new PrimaryDrawerItem().withName(R.string.sample_endless_scroll_list).withDescription(R.string.sample_endless_scroll_list_descr).withSelectable(false).withIdentifier(13).withIcon(MaterialDesignIconic.Icon.gmi_long_arrow_down),
+                        new PrimaryDrawerItem().withName(R.string.sample_sort).withDescription(R.string.sample_sort_descr).withSelectable(false).withIdentifier(14).withIcon(MaterialDesignIconic.Icon.gmi_sort_by_alpha),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.open_source).withSelectable(false).withIdentifier(100).withIcon(MaterialDesignIconic.Icon.gmi_github)
                 )
@@ -109,8 +110,10 @@ public class SampleActivity extends AppCompatActivity {
                                 intent = new Intent(SampleActivity.this, RadioButtonSampleActivity.class);
                             } else if (drawerItem.getIdentifier() == 12) {
                                 intent = new Intent(SampleActivity.this, SwipeListActivity.class);
-                            }else if (drawerItem.getIdentifier() == 13) {
+                            } else if (drawerItem.getIdentifier() == 13) {
                                 intent = new Intent(SampleActivity.this, EndlessScrollListActivity.class);
+                            } else if (drawerItem.getIdentifier() == 14) {
+                                intent = new Intent(SampleActivity.this, SortActivity.class);
                             } else if (drawerItem.getIdentifier() == 100) {
                                 intent = new LibsBuilder()
                                         .withFields(R.string.class.getFields())
