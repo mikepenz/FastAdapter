@@ -11,4 +11,5 @@ FastAdapter contributors (sorted alphabeticaly)
 
 * **[Rainer Lang](https://github.com/Rainer-Lang)**
 
-  * 
+  * CheckBoxSample
+  * RadioButtonSample
