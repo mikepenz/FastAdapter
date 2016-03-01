@@ -7,6 +7,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.mikepenz.fastadapter.IDraggable;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.R;
@@ -24,7 +25,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> implements IExpandable<SampleItem, IItem> {
+public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> implements IExpandable<SampleItem, IItem>, IDraggable<SampleItem, IItem> {
     //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
     private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
@@ -34,6 +35,7 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
 
     private List<IItem> mSubItems;
     private boolean mExpanded = false;
+    private boolean mIsDraggable = true;
 
     public SampleItem withHeader(String header) {
         this.header = header;
@@ -81,6 +83,18 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
         return this;
     }
 
+    @Override
+    public boolean isDraggable() {
+        return mIsDraggable;
+    }
+
+    @Override
+    public SampleItem withIsDraggable(boolean draggable) {
+        this.mIsDraggable = draggable;
+        return this;
+    }
+
+
     /**
      * defines the type defining this item. must be unique. preferably an id
      *
@@ -120,7 +134,6 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
         //set the text for the description or hide
         StringHolder.applyToOrHide(description, viewHolder.description);
     }
-
 
     /**
      * our ItemFactory implementation which creates the ViewHolder for our adapter.
