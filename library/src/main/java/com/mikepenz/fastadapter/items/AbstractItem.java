@@ -340,7 +340,7 @@ public abstract class AbstractItem<Item extends AbstractItem<?, ?>, VH extends R
                 }
             } catch (Exception e) {
                 // I am really out of options, you could have just set
-                throw new RuntimeException("Please provide a constructor that takes a view or a no-arg constructor");
+                throw new RuntimeException("You have to provide a ViewHolder with a constructor which takes a view!");
             }
         }
     }
