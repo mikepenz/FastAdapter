@@ -64,5 +64,5 @@ public interface IAdapter<Item extends IItem> {
      * @param position the global position
      * @return the global item based on the global position
      */
-    <Item extends IItem> Item getItem(int position);
+    Item getItem(int position);
 }
