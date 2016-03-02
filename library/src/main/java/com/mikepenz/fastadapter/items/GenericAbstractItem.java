@@ -1,10 +1,6 @@
 package com.mikepenz.fastadapter.items;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
-
-import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 
 import java.lang.reflect.ParameterizedType;
 

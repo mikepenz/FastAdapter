@@ -31,11 +31,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     // we remember all adapters
     //priority queue...
-    private ArrayMap<Integer, IAdapter<Item>> mAdapters = new ArrayMap<>();
+    final private ArrayMap<Integer, IAdapter<Item>> mAdapters = new ArrayMap<>();
     // we remember all possible types so we can create a new view efficiently
-    private ArrayMap<Integer, Item> mTypeInstances = new ArrayMap<>();
+    final private ArrayMap<Integer, Item> mTypeInstances = new ArrayMap<>();
     // cache the sizes of the different adapters so we can access the items more performant
-    private NavigableMap<Integer, IAdapter<Item>> mAdapterSizes = new TreeMap<>();
+    final private NavigableMap<Integer, IAdapter<Item>> mAdapterSizes = new TreeMap<>();
     // the total size
     private int mGlobalSize = 0;
 
