@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter.app.adapter;
+package com.mikepenz.fastadapter.app.adapters;
 
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IItem;

@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
-import com.mikepenz.fastadapter.app.adapter.FastScrollIndicatorAdapter;
+import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.generic.GenericIconItem;
 import com.mikepenz.fastadapter.app.generic.IconModel;
 import com.mikepenz.iconics.Iconics;

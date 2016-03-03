@@ -18,7 +18,7 @@ import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
-import com.mikepenz.fastadapter.app.adapter.StickyHeaderAdapter;
+import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
 import com.mikepenz.fastadapter.app.items.ExpandableItem;
 import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
