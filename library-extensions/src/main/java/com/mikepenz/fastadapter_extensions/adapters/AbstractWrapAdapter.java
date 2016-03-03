@@ -176,7 +176,7 @@ public abstract class AbstractWrapAdapter<Item extends IItem> extends RecyclerVi
         if (shouldInsertItemAtPosition(position)) {
             getItem(position).bindView(holder);
         } else {
-            mAdapter.onBindViewHolder(holder, position);
+            mAdapter.onBindViewHolder(holder, position - itemInsertedBeforeCount(position));
         }
     }
 
