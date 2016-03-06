@@ -70,8 +70,8 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
     }
 
     @Override
-    public ExpandableItem withIsExpanded(boolean expaned) {
-        mExpanded = expaned;
+    public ExpandableItem withIsExpanded(boolean expanded) {
+        mExpanded = expanded;
         return this;
     }
 
