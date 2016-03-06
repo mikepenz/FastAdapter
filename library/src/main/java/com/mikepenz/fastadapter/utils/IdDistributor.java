@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Created by mikepenz on 19.09.15.
  */
 public class IdDistributor {
-    private static AtomicLong idDistributor = new AtomicLong(9000000000000000000L);
+    private static final AtomicLong idDistributor = new AtomicLong(9000000000000000000L);
 
     /**
      * set an unique identifier for all drawerItems which do not have one set already

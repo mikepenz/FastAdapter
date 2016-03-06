@@ -11,7 +11,7 @@ import java.util.List;
  * Created by mikepenz on 18.01.16.
  */
 public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
-    ItemAdapter<Item> mItemAdapter = new ItemAdapter<>();
+    private final ItemAdapter<Item> mItemAdapter = new ItemAdapter<>();
 
     /**
      * ctor

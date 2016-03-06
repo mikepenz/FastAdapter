@@ -70,8 +70,8 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
     }
 
     @Override
-    public ExpandableItem withIsExpanded(boolean expaned) {
-        mExpanded = expaned;
+    public ExpandableItem withIsExpanded(boolean expanded) {
+        mExpanded = expanded;
         return this;
     }
 
@@ -86,7 +86,7 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
     }
 
     //we define a clickListener in here so we can directly animate
-    FastAdapter.OnClickListener<ExpandableItem> onClickListener = new FastAdapter.OnClickListener<ExpandableItem>() {
+    final private FastAdapter.OnClickListener<ExpandableItem> onClickListener = new FastAdapter.OnClickListener<ExpandableItem>() {
         @Override
         public boolean onClick(View v, IAdapter adapter, ExpandableItem item, int position) {
             if (item.getSubItems() != null) {
@@ -192,7 +192,7 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
      * our ViewHolder
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
-        protected View view;
+        protected final View view;
         @Bind(R.id.material_drawer_name)
         TextView name;
         @Bind(R.id.material_drawer_description)

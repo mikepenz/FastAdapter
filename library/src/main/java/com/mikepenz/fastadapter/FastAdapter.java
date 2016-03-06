@@ -31,11 +31,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     // we remember all adapters
     //priority queue...
-    private ArrayMap<Integer, IAdapter<Item>> mAdapters = new ArrayMap<>();
+    final private ArrayMap<Integer, IAdapter<Item>> mAdapters = new ArrayMap<>();
     // we remember all possible types so we can create a new view efficiently
-    private ArrayMap<Integer, Item> mTypeInstances = new ArrayMap<>();
+    final private ArrayMap<Integer, Item> mTypeInstances = new ArrayMap<>();
     // cache the sizes of the different adapters so we can access the items more performant
-    private NavigableMap<Integer, IAdapter<Item>> mAdapterSizes = new TreeMap<>();
+    final private NavigableMap<Integer, IAdapter<Item>> mAdapterSizes = new TreeMap<>();
     // the total size
     private int mGlobalSize = 0;
 
@@ -1029,14 +1029,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      */
     public void notifyAdapterItemInserted(int position) {
-        //we have to update all current stored selection and expandable states in our map
-        mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, 1);
-        mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, 1);
-        cacheSizes();
-        notifyItemInserted(position);
-
-        //we make sure the new items are displayed properly
-        AdapterUtil.handleStates(this, position, position);
+        notifyAdapterItemRangeInserted(position, 1);
     }
 
     /**
@@ -1050,6 +1043,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount);
         mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, itemCount);
         cacheSizes();
+
         notifyItemRangeInserted(position, itemCount);
 
         //we make sure the new items are displayed properly
@@ -1062,11 +1056,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      */
     public void notifyAdapterItemRemoved(int position) {
-        //we have to update all current stored selection and expandable states in our map
-        mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, -1);
-        mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, -1);
-        cacheSizes();
-        notifyItemRemoved(position);
+        notifyAdapterItemRangeRemoved(position, 1);
     }
 
     /**
@@ -1121,24 +1111,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param payload  additional payload
      */
     public void notifyAdapterItemChanged(int position, Object payload) {
-        Item updateItem = getItem(position);
-        if (mExpanded.indexOfKey(position) >= 0) {
-            collapse(position);
-        }
-        if (updateItem.isSelected()) {
-            mSelections.add(position);
-        } else if (mSelections.contains(position)) {
-            mSelections.remove(position);
-        }
-
-        if (payload == null) {
-            notifyItemChanged(position);
-        } else {
-            notifyItemChanged(position, payload);
-        }
-
-        //we make sure the new items are displayed properly
-        AdapterUtil.handleStates(this, position, position);
+        notifyAdapterItemRangeChanged(position, 1, payload);
     }
 
     /**

@@ -21,7 +21,7 @@ import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter.ItemFilterListener;
-import com.mikepenz.fastadapter.app.adapter.FastScrollIndicatorAdapter;
+import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;

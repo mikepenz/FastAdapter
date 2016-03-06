@@ -12,7 +12,7 @@ import com.mikepenz.fastadapter.IDraggable;
 public class SimpleDragCallback extends ItemTouchHelper.SimpleCallback {
 
     //our callback
-    private ItemTouchCallback mCallbackItemTouch; // interface
+    private final ItemTouchCallback mCallbackItemTouch; // interface
     private boolean mIsDragEnabled = true;
 
     public SimpleDragCallback(ItemTouchCallback itemTouchCallback) {

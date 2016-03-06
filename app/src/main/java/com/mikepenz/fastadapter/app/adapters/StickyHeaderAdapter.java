@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter.app.adapter;
+package com.mikepenz.fastadapter.app.adapters;
 
 import android.graphics.Color;
 import android.support.v7.widget.RecyclerView;
