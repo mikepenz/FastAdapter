@@ -22,6 +22,7 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData;
 import com.mikepenz.fastadapter.app.items.SimpleImageItem;
+import com.mikepenz.fastadapter_extensions.admob.AdmobAdapter;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
@@ -141,12 +142,14 @@ public class SampleActivity extends AppCompatActivity {
         //create our ItemAdapter which will host our items
         mItemAdapter = new ItemAdapter<>();
 
+        AdmobAdapter adAdapter = AdmobAdapter.fromAdCount(this, 3);
+
         //configure our fastAdapter
         //get our recyclerView and do basic setup
         mRecyclerView = (RecyclerView) findViewById(R.id.rv);
         //mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(mItemAdapter.wrap(mFastAdapter));
+        mRecyclerView.setAdapter(adAdapter.wrap(mItemAdapter.wrap(mFastAdapter)));
         mRecyclerView.setItemAnimator(new SlideDownAlphaAnimator());
         mRecyclerView.getItemAnimator().setAddDuration(500);
         mRecyclerView.getItemAnimator().setRemoveDuration(500);

@@ -49,6 +49,7 @@ android {
 dependencies {
     compile project(':library')
     compile project(':library-extensions')
+    compile project(':library-extensions-admob')
 
     compile "com.android.support:cardview-v7:${rootProject.ext.supportLibVersion}"
 

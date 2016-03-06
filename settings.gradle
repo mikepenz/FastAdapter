@@ -1,2 +1,4 @@
-include ':app', ':library-extensions'
+include ':app'
 include ':library'
+include ':library-extensions'
+include ':library-extensions-admob'
