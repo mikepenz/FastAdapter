@@ -179,7 +179,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @return the global position
      */
     public int getGlobalPosition(int position) {
-        return position + getFastAdapter().getPreItemCount(position);
+        return position + getFastAdapter().getPreItemCountByOrder(getOrder());
     }
 
     /**
