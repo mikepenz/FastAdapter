@@ -29,75 +29,36 @@
 
 <p>The FastAdapter is here to simplify this process. You don't have to worry about the adapter anymore. Just write the logic for how your view/item should look like, and you are done.
 This library has a fast and highly optimized core which provides core functionality, most apps require. It also prevents common mistakes by taking away those steps from the devs. 
-Beside being blazing fast, minimizing the code you need to write, it is also really easy to extend. Just provide another Adapter implementation, hook into the adapter chain, custom select / deselection behaviors. Everything is possible.</p>
+Beside being blazing fast, minimizing the code you need to write, it is also really easy to extend. Just provide another adapter implementation, hook into the adapter chain, custom select / deselection behaviors. Everything is possible.</p>
 
 <h2>
 <a id="a-quick-overview" class="anchor" href="#a-quick-overview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>A quick overview:</h2>
 
 <ul>
 <li>Click / Long-Click listeners</li>
-<li>Selection / Multi-Selection [
-
-<ul>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java">MultiselectSample</a></li>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/CheckBoxSampleActivity.java">CheckBoxSample</a></li>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/RadioButtonSampleActivity.java">RadioButtonSample</a></li>
-</ul>
-</li>
-<li>Expandable items
-
-<ul>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/ExpandableSampleActivity.java">ExpandableSample</a></li>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/IconGridActivity.java">IconGridSample</a></li>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/AdvancedSampleActivity.java">AdvancedSample</a></li>
-</ul>
-</li>
+<li>Selection / Multi-Selection (<a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java">MultiselectSample</a>, <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/CheckBoxSampleActivity.java">CheckBoxSample</a>, <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/RadioButtonSampleActivity.java">RadioButtonSample</a>)</li>
+<li>Expandable items (<a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/ExpandableSampleActivity.java">ExpandableSample</a>, <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/IconGridActivity.java">IconGridSample</a> ,<a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/AdvancedSampleActivity.java">AdvancedSample</a>)</li>
 <li>Write less code, get better results</li>
 <li>Highly optimized code</li>
-<li>Simple Drag &amp; Drop <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java">(SimpleItemListSample)</a>
-</li>
-<li>Headers 
-
-<ul>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/StickyHeaderSampleActivity.java">StickyHeaderSample</a></li>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/AdvancedSampleActivity.java">AdvancedSample</a></li>
-</ul>
-</li>
+<li>Simple Drag &amp; Drop (<a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java">SimpleItemListSample</a>)</li>
+<li>Headers (<a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/StickyHeaderSampleActivity.java">StickyHeaderSample</a>, <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/AdvancedSampleActivity.java">AdvancedSample</a>)</li>
 <li>Footers</li>
-<li>Filter <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java">(SimpleItemListSample)</a>
-</li>
+<li>Filter (<a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java">SimpleItemListSample</a>)</li>
 <li>Includes suggestions from the Android Team</li>
 <li>Easily extensible</li>
-<li>Endless Scroll <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/EndlessScrollListActivity.java">(EndlessScrollSample)</a>
-</li>
-<li>"Leave-Behind"-Pattern <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SwipeListActivity.java">(SwipeListSample)</a>
-</li>
-<li>Split item view and model
-
-<ul>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/GenericItemActivity.java">GenericItem</a></li>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiTypeGenericItemActivity.java">MultiTypeGenericItem</a></li>
-</ul>
-</li>
-<li>Chain other Adapters
-
-<ul>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java">SimpleItemListSample</a></li>
-<li><a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/StickyHeaderSampleActivity.java">StickyHeaderSample</a></li>
-</ul>
-</li>
+<li>Endless Scroll (<a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/EndlessScrollListActivity.java">EndlessScrollSample</a>)</li>
+<li>"Leave-Behind"-Pattern (<a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SwipeListActivity.java">SwipeListSample</a>)</li>
+<li>Split item view and model (<a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/GenericItemActivity.java">GenericItem</a>, <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiTypeGenericItemActivity.java">MultiTypeGenericItem</a>)</li>
+<li>Chain other Adapters (<a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java">SimpleItemListSample</a>, <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/StickyHeaderSampleActivity.java">StickyHeaderSample</a>)</li>
 <li>Comes with useful Helpers
 
 <ul>
-<li>ActionModeHelper <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java">(MultiselectSample)</a>
-</li>
-<li>UndoHelper <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java">(MultiselectSample)</a>
-</li>
+<li>ActionModeHelper (<a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java">MultiselectSample</a>)</li>
+<li>UndoHelper (<a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java">MultiselectSample</a>)</li>
 <li>More to come...</li>
 </ul>
 </li>
-<li>FastScroller (external lib) <a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java">(SimpleItemListSample)</a>
-</li>
+<li>FastScroller (external lib) (<a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java">SimpleItemListSample</a>)</li>
 </ul>
 
 <h1>
@@ -121,13 +82,13 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 
 <p>The library is split up into core, and extensions. The core functions are included in the following dependency.</p>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:1.2.0@aar<span class="pl-pds">'</span></span>) {
+<div class="highlight highlight-source-groovy-gradle"><pre>compile(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:1.2.3@aar<span class="pl-pds">'</span></span>) {
     transitive <span class="pl-k">=</span> <span class="pl-c1">true</span>
 }</pre></div>
 
 <p>All additions are included in the following dependency.</p>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter-extensions:1.2.0@aar<span class="pl-pds">'</span></span></pre></div>
+<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter-extensions:1.2.3@aar<span class="pl-pds">'</span></span></pre></div>
 
 <h2>
 <a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>How to use</h2>
