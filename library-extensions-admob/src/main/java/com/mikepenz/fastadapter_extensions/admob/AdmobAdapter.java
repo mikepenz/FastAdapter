@@ -5,6 +5,7 @@ import android.content.Context;
 import com.google.android.gms.ads.formats.NativeAd;
 import com.google.android.gms.ads.formats.NativeContentAd;
 import com.mikepenz.fastadapter_extensions.adapters.AbstractWrapAdapter;
+import com.mikepenz.fastadapter_extensions.admob.items.AdBannerItem;
 import com.mikepenz.fastadapter_extensions.admob.items.AdContentItem;
 
 import java.util.LinkedList;
@@ -13,7 +14,7 @@ import java.util.List;
 /**
  * Created by mikepenz on 06.03.16.
  */
-public class AdmobAdapter extends AbstractWrapAdapter<AdContentItem> implements AdmobFetcher.AdmobListener {
+public class AdmobAdapter extends AbstractWrapAdapter implements AdmobFetcher.AdmobListener {
 
     protected int mAdCount;
     protected AdmobFetcher mAdFetcher;
@@ -24,14 +25,21 @@ public class AdmobAdapter extends AbstractWrapAdapter<AdContentItem> implements 
     }
 
     public static AdmobAdapter fromAdCount(Context ctx, int adCount) {
-        AdmobAdapter adMobAdapter = new AdmobAdapter(new LinkedList<AdContentItem>());
+        LinkedList ads = new LinkedList();
+        for (int i = 0; i < adCount; i++) {
+            ads.add(new AdBannerItem());
+        }
+
+        AdmobAdapter adMobAdapter = new AdmobAdapter(ads);
         adMobAdapter.mAdCount = adCount;
 
+        /*
         adMobAdapter.mAdFetcher = new AdmobFetcher();
         adMobAdapter.mAdFetcher.setTestDeviceId("DEBC2FA2BFD4A2460CC0BE330DFFCFD5");
         adMobAdapter.mAdFetcher.addListener(adMobAdapter);
         // Start prefetching ads
         adMobAdapter.mAdFetcher.prefetchAds(ctx.getApplicationContext());
+*/
 
         return adMobAdapter;
     }

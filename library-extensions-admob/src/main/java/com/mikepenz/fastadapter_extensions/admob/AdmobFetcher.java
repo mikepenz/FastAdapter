@@ -252,7 +252,7 @@ public class AdmobFetcher {
      */
     private synchronized void setupAds() {
         String admobUnitId = TextUtils.isEmpty(getAdmobReleaseUnitId()) ?
-                mContext.get().getResources().getString(R.string.test_admob_unit_id)
+                mContext.get().getResources().getString(R.string.admob_unit_id)
                 : getAdmobReleaseUnitId();
         adLoader = new AdLoader.Builder(mContext.get(), admobUnitId)
                 .forAppInstallAd(new NativeAppInstallAd.OnAppInstallAdLoadedListener() {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <item name="ad_banner_item_id" type="id" />
     <item name="ad_content_item_id" type="id" />
     <item name="ad_install_item_id" type="id" />
 </resources>
