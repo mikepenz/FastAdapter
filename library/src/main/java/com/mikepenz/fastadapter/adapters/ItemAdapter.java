@@ -213,7 +213,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      *
      * @param items the items to set
      */
-    public void set(List<Item> items) {
+    public ItemAdapter<Item> set(List<Item> items) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
@@ -259,6 +259,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         } else {
             getFastAdapter().notifyAdapterDataSetChanged();
         }
+
+        return this;
     }
 
     /**
@@ -266,7 +268,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      *
      * @param items the new items to set
      */
-    public void setNewList(List<Item> items) {
+    public ItemAdapter<Item> setNewList(List<Item> items) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
@@ -278,6 +280,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         }
 
         getFastAdapter().notifyAdapterDataSetChanged();
+
+        return this;
     }
 
     /**
@@ -286,8 +290,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items the items to add
      */
     @SafeVarargs
-    public final void add(Item... items) {
-        add(asList(items));
+    public final ItemAdapter<Item> add(Item... items) {
+        return add(asList(items));
     }
 
     /**
@@ -295,7 +299,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      *
      * @param items the items to add
      */
-    public void add(List<Item> items) {
+    public ItemAdapter<Item> add(List<Item> items) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
@@ -309,6 +313,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             Collections.sort(mItems, mComparator);
             getFastAdapter().notifyAdapterDataSetChanged();
         }
+        return this;
     }
 
     /**
@@ -318,8 +323,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items    the items to add
      */
     @SafeVarargs
-    public final void add(int position, Item... items) {
-        add(position, asList(items));
+    public final ItemAdapter<Item> add(int position, Item... items) {
+        return add(position, asList(items));
     }
 
     /**
@@ -328,7 +333,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param position the global position
      * @param items    the items to add
      */
-    public void add(int position, List<Item> items) {
+    public ItemAdapter<Item> add(int position, List<Item> items) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
@@ -338,6 +343,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
 
             getFastAdapter().notifyAdapterItemRangeInserted(position, items.size());
         }
+        return this;
     }
 
     /**
@@ -346,7 +352,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param position the global position
      * @param item     the item to set
      */
-    public void set(int position, Item item) {
+    public ItemAdapter<Item> set(int position, Item item) {
         if (mUseIdDistributor) {
             IdDistributor.checkId(item);
         }
@@ -354,6 +360,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         mapPossibleType(item);
 
         getFastAdapter().notifyAdapterItemChanged(position);
+        return this;
     }
 
     /**
@@ -361,9 +368,10 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      *
      * @param position the global position
      */
-    public void remove(int position) {
+    public ItemAdapter<Item> remove(int position) {
         mItems.remove(position - getFastAdapter().getPreItemCount(position));
         getFastAdapter().notifyAdapterItemRemoved(position);
+        return this;
     }
 
     /**
@@ -372,7 +380,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param position  the global position
      * @param itemCount the count of items which were removed
      */
-    public void removeRange(int position, int itemCount) {
+    public ItemAdapter<Item> removeRange(int position, int itemCount) {
         //global position to relative
         int length = mItems.size();
         int preItemCount = getFastAdapter().getPreItemCount(position);
@@ -384,15 +392,17 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         }
 
         getFastAdapter().notifyAdapterItemRangeRemoved(position, saveItemCount);
+        return this;
     }
 
     /**
      * removes all items of this adapter
      */
-    public void clear() {
+    public ItemAdapter<Item> clear() {
         int count = mItems.size();
         mItems.clear();
         getFastAdapter().notifyAdapterItemRangeRemoved(getFastAdapter().getPreItemCountByOrder(getOrder()), count);
+        return this;
     }
 
     /**

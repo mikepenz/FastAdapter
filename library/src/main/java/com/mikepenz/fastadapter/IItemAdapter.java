@@ -21,28 +21,28 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
      *
      * @param items
      */
-    void set(List<Item> items);
+    IItemAdapter<Item> set(List<Item> items);
 
     /**
      * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
      *
      * @param items
      */
-    void setNewList(List<Item> items);
+    IItemAdapter<Item> setNewList(List<Item> items);
 
     /**
      * add an array of items to the end of the existing items
      *
      * @param items
      */
-    void add(Item... items);
+    IItemAdapter<Item> add(Item... items);
 
     /**
      * add a list of items to the end of the existing items
      *
      * @param items
      */
-    void add(List<Item> items);
+    IItemAdapter<Item> add(List<Item> items);
 
     /**
      * add an array of items at the given position within the existing items
@@ -50,7 +50,7 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
      * @param position the global position
      * @param items
      */
-    void add(int position, Item... items);
+    IItemAdapter<Item> add(int position, Item... items);
 
     /**
      * add a list of items at the given position within the existing items
@@ -58,7 +58,7 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
      * @param position the global position
      * @param items
      */
-    void add(int position, List<Item> items);
+    IItemAdapter<Item> add(int position, List<Item> items);
 
     /**
      * sets an item at the given position, overwriting the previous item
@@ -66,14 +66,14 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
      * @param position the global position
      * @param item
      */
-    void set(int position, Item item);
+    IItemAdapter<Item> set(int position, Item item);
 
     /**
      * removes an item at the given position within the existing icons
      *
      * @param position the global position
      */
-    void remove(int position);
+    IItemAdapter<Item> remove(int position);
 
     /**
      * removes a range of items starting with the given position within the existing icons
@@ -81,12 +81,12 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
      * @param position  the global position
      * @param itemCount
      */
-    void removeRange(int position, int itemCount);
+    IItemAdapter<Item> removeRange(int position, int itemCount);
 
     /**
      * removes all items of this adapter
      */
-    void clear();
+    IItemAdapter<Item> clear();
 
     /**
      * the interface used to filter the list inside the ItemFilter
