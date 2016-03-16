@@ -33,6 +33,19 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model, I
     }
 
     /**
+     * returns the list of the model generated from the list of items
+     *
+     * @return the list with all model objects
+     */
+    public List<Model> getModels() {
+        List<Model> models = new ArrayList<>();
+        for (Item item : getAdapterItems()) {
+            models.add(item.getModel());
+        }
+        return models;
+    }
+
+    /**
      * set a new list of models for this adapter
      *
      * @param models the set models
