@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter_extensions.adapters;
+package com.mikepenz.fastadapter.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
