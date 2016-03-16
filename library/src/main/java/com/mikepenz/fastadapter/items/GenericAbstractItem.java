@@ -19,8 +19,9 @@ public abstract class GenericAbstractItem<Model, Item extends GenericAbstractIte
         return mModel;
     }
 
-    public void setModel(Model model) {
+    public GenericAbstractItem<?, ?, ?> setModel(Model model) {
         this.mModel = model;
+        return this;
     }
 
     @Override
