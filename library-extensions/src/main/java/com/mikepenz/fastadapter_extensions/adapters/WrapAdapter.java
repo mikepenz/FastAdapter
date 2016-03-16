@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter_extensions.adapters;
 
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.adapters.AbstractWrapAdapter;
 
 import java.util.List;
 
