@@ -114,7 +114,7 @@ fastAdapter.add(ITEMS);
 ##Advanced Usage
 ###Proguard
 If you use the `FastAdapter` and enabled **Proguard** you have to implement a `ViewHolderFactory` for you `Item`. ([SampleItem#L143](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/items/SampleItem.java#L143))
-```
+```java
 //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
 private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
