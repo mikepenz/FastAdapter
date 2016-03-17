@@ -5,6 +5,7 @@ import com.mikepenz.fastadapter.utils.Function;
 
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static java.util.Arrays.asList;
@@ -156,7 +157,10 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model, I
      * @return the list of items referencing the models
      */
     protected List<Item> toItems(List<Model> models) {
-        if (models == null) return new ArrayList<>(0);
+        if (models == null) {
+            return Collections.emptyList();
+        }
+
         List<Item> items = new ArrayList<>(models.size());
         for (Model model : models) {
             items.add(toItem(model));
