@@ -82,7 +82,7 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 
 <p>The library is split up into core, and extensions. The core functions are included in the following dependency.</p>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:1.2.5@aar<span class="pl-pds">'</span></span>) {
+<div class="highlight highlight-source-groovy-gradle"><pre>compile(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:1.2.6@aar<span class="pl-pds">'</span></span>) {
     transitive <span class="pl-k">=</span> <span class="pl-c1">true</span>
 }</pre></div>
 
@@ -152,6 +152,38 @@ recyclerView<span class="pl-k">.</span>setAdapter(fastAdapter);
 
 <span class="pl-c">//set the items to your ItemAdapter</span>
 fastAdapter<span class="pl-k">.</span>add(<span class="pl-c1">ITEMS</span>);</pre></div>
+
+<h2>
+<a id="advanced-usage" class="anchor" href="#advanced-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Advanced Usage</h2>
+
+<h3>
+<a id="proguard" class="anchor" href="#proguard" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Proguard</h3>
+
+<p>If you use the <code>FastAdapter</code> and enabled <strong>Proguard</strong> you have to implement a <code>ViewHolderFactory</code> for you <code>Item</code>. (<a href="https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/items/SampleItem.java#L143">SampleItem#L143</a>)</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-c">//the static ViewHolderFactory which will be used to generate the ViewHolder for this Item</span>
+<span class="pl-k">private</span> <span class="pl-k">static</span> <span class="pl-k">final</span> <span class="pl-k">ViewHolderFactory&lt;? extends <span class="pl-smi">ViewHolder</span>&gt;</span> <span class="pl-c1">FACTORY</span> <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">ItemFactory</span>();
+
+<span class="pl-c">/**</span>
+<span class="pl-c">* our ItemFactory implementation which creates the ViewHolder for our adapter.</span>
+<span class="pl-c">* It is highly recommended to implement a ViewHolderFactory as it is 0-1ms faster for ViewHolder creation,</span>
+<span class="pl-c">* and it is also many many times more efficient if you define custom listeners on views within your item.</span>
+<span class="pl-c">*/</span>
+<span class="pl-k">protected</span> <span class="pl-k">static</span> <span class="pl-k">class</span> <span class="pl-en">ItemFactory</span> <span class="pl-k">implements</span> <span class="pl-e">ViewHolderFactory&lt;<span class="pl-smi">ViewHolder</span>&gt;</span> {
+   <span class="pl-k">public</span> <span class="pl-smi">ViewHolder</span> <span class="pl-en">create</span>(<span class="pl-smi">View</span> <span class="pl-v">v</span>) {
+       <span class="pl-k">return</span> <span class="pl-k">new</span> <span class="pl-smi">ViewHolder</span>(v);
+   }
+}
+
+<span class="pl-c">/**</span>
+<span class="pl-c">* return our ViewHolderFactory implementation here</span>
+<span class="pl-c">*</span>
+<span class="pl-c">* @return</span>
+<span class="pl-c">*/</span>
+@<span class="pl-smi">Override</span>
+<span class="pl-k">public</span> <span class="pl-k">ViewHolderFactory&lt;? extends <span class="pl-smi">ViewHolder</span>&gt;</span> getFactory() {
+   <span class="pl-k">return</span> <span class="pl-c1">FACTORY</span>;
+}</pre></div>
 
 <h2>
 <a id="libs-used-in-sample-app" class="anchor" href="#libs-used-in-sample-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Libs used in sample app:</h2>
