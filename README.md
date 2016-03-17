@@ -111,6 +111,35 @@ recyclerView.setAdapter(fastAdapter);
 fastAdapter.add(ITEMS);
 ```
 
+##Advanced Usage
+###Proguard
+If you use the `FastAdapter` and enabled **Proguard** you have to implement a `ViewHolderFactory` for you `Item`. ([SampleItem#L143](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/items/SampleItem.java#L143))
+```
+//the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
+private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
+
+/**
+* our ItemFactory implementation which creates the ViewHolder for our adapter.
+* It is highly recommended to implement a ViewHolderFactory as it is 0-1ms faster for ViewHolder creation,
+* and it is also many many times more efficient if you define custom listeners on views within your item.
+*/
+protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
+   public ViewHolder create(View v) {
+       return new ViewHolder(v);
+   }
+}
+
+/**
+* return our ViewHolderFactory implementation here
+*
+* @return
+*/
+@Override
+public ViewHolderFactory<? extends ViewHolder> getFactory() {
+   return FACTORY;
+}
+```
+
 ## Libs used in sample app:
 Mike Penz:
 - AboutLibraries https://github.com/mikepenz/AboutLibraries
