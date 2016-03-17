@@ -40,7 +40,7 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, and extensions. The core functions are included in the following dependency.
 ```gradle
-compile('com.mikepenz:fastadapter:1.2.5@aar') {
+compile('com.mikepenz:fastadapter:1.2.6@aar') {
 	transitive = true
 }
 ```
@@ -109,6 +109,35 @@ recyclerView.setAdapter(fastAdapter);
 
 //set the items to your ItemAdapter
 fastAdapter.add(ITEMS);
+```
+
+##Advanced Usage
+###Proguard
+If you use the `FastAdapter` and enabled **Proguard** you have to implement a `ViewHolderFactory` for you `Item`. ([SampleItem#L143](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/items/SampleItem.java#L143))
+```java
+//the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
+private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
+
+/**
+* our ItemFactory implementation which creates the ViewHolder for our adapter.
+* It is highly recommended to implement a ViewHolderFactory as it is 0-1ms faster for ViewHolder creation,
+* and it is also many many times more efficient if you define custom listeners on views within your item.
+*/
+protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
+   public ViewHolder create(View v) {
+       return new ViewHolder(v);
+   }
+}
+
+/**
+* return our ViewHolderFactory implementation here
+*
+* @return
+*/
+@Override
+public ViewHolderFactory<? extends ViewHolder> getFactory() {
+   return FACTORY;
+}
 ```
 
 ## Libs used in sample app:
