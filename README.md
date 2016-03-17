@@ -40,7 +40,7 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, and extensions. The core functions are included in the following dependency.
 ```gradle
-compile('com.mikepenz:fastadapter:1.2.5@aar') {
+compile('com.mikepenz:fastadapter:1.2.6@aar') {
 	transitive = true
 }
 ```
