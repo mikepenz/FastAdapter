@@ -156,11 +156,10 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model, I
      * @return the list of items referencing the models
      */
     protected List<Item> toItems(List<Model> models) {
-        List<Item> items = new ArrayList<>();
-        if (models != null) {
-            for (Model model : models) {
-                items.add(toItem(model));
-            }
+        if (models == null) return new ArrayList<>(0);
+        List<Item> items = new ArrayList<>(models.size());
+        for (Model model : models) {
+            items.add(toItem(model));
         }
         return items;
     }
