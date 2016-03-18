@@ -86,7 +86,8 @@ public class AdapterUtil {
     public static SparseIntArray adjustPosition(SparseIntArray positions, int startPosition, int endPosition, int adjustBy) {
         SparseIntArray newPositions = new SparseIntArray();
 
-        for (int i = 0; i < positions.size(); i++) {
+        int length = positions.size();
+        for (int i = 0; i < length; i++) {
             int position = positions.keyAt(i);
 
             //if our current position is not within the bounds to check for we can add it
