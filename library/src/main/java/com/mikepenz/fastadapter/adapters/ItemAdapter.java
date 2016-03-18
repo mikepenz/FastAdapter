@@ -164,7 +164,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      */
     @Override
     public int getAdapterPosition(Item item) {
-        for (int i = 0; i < mItems.size(); i++) {
+        int length = mItems.size();
+        for (int i = 0; i < length; i++) {
             if (mItems.get(i).getIdentifier() == item.getIdentifier()) {
                 return i;
             }
