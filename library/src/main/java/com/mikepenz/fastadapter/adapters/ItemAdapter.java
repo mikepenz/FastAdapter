@@ -164,7 +164,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      */
     @Override
     public int getAdapterPosition(Item item) {
-        for (int i = 0; i < mItems.size(); i++) {
+        int length = mItems.size();
+        for (int i = 0; i < length; i++) {
             if (mItems.get(i).getIdentifier() == item.getIdentifier()) {
                 return i;
             }
@@ -360,6 +361,22 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         mapPossibleType(item);
 
         getFastAdapter().notifyAdapterItemChanged(position);
+        return this;
+    }
+
+    /**
+     * moves an item within the list from a position to a position
+     *
+     * @param fromPosition the position global from which we want to move
+     * @param toPosition   the global position to which to move
+     * @return this
+     */
+    public ItemAdapter<Item> move(int fromPosition, int toPosition) {
+        int preItemCount = getFastAdapter().getPreItemCount(fromPosition);
+        Item item = mItems.get(fromPosition - preItemCount);
+        mItems.remove(fromPosition - preItemCount);
+        mItems.set(toPosition - preItemCount, item);
+        getFastAdapter().notifyAdapterItemMoved(fromPosition, toPosition);
         return this;
     }
 
