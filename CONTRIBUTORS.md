@@ -17,3 +17,7 @@ FastAdapter contributors (sorted alphabeticaly)
 * **[rubengees](https://github.com/rubengees)**
 
   * SortSample with comparator
+
+* **[Shubham Chaudhary](https://github.com/shubhamchaudhary)**
+  
+  * Basic Unit-Tests
