@@ -226,6 +226,18 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
     }
 
     /**
+     * moves an item within the list from a position to a position
+     *
+     * @param fromPosition the position global from which we want to move
+     * @param toPosition   the global position to which to move
+     * @return this
+     */
+    public FastItemAdapter<Item> move(int fromPosition, int toPosition) {
+        mItemAdapter.move(fromPosition, toPosition);
+        return this;
+    }
+
+    /**
      * removes an item at the given position within the existing icons
      *
      * @param position the global position

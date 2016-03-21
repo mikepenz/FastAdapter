@@ -365,6 +365,22 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     /**
+     * moves an item within the list from a position to a position
+     *
+     * @param fromPosition the position global from which we want to move
+     * @param toPosition   the global position to which to move
+     * @return this
+     */
+    public ItemAdapter<Item> move(int fromPosition, int toPosition) {
+        int preItemCount = getFastAdapter().getPreItemCount(fromPosition);
+        Item item = mItems.get(fromPosition - preItemCount);
+        mItems.remove(fromPosition - preItemCount);
+        mItems.set(toPosition - preItemCount, item);
+        getFastAdapter().notifyAdapterItemMoved(fromPosition, toPosition);
+        return this;
+    }
+
+    /**
      * removes an item at the given position within the existing icons
      *
      * @param position the global position
