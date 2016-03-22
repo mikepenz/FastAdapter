@@ -8,7 +8,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
     private int mPreviousTotal = 0;
     private boolean mLoading = true;
-    private int mVisibleThreshold = 30;
+    private int mVisibleThreshold = -1;
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
 
     private int mCurrentPage = 1;
@@ -17,7 +17,6 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
     public EndlessRecyclerOnScrollListener(RecyclerView.LayoutManager layoutManager) {
         this.mLayoutManager = layoutManager;
-        this.mVisibleThreshold = -1;
     }
 
     public EndlessRecyclerOnScrollListener(RecyclerView.LayoutManager layoutManager, int visibleThreshold) {
