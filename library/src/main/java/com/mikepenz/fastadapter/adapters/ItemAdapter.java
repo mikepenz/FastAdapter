@@ -375,7 +375,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         int preItemCount = getFastAdapter().getPreItemCount(fromPosition);
         Item item = mItems.get(fromPosition - preItemCount);
         mItems.remove(fromPosition - preItemCount);
-        mItems.set(toPosition - preItemCount, item);
+        mItems.add(toPosition - preItemCount, item);
         getFastAdapter().notifyAdapterItemMoved(fromPosition, toPosition);
         return this;
     }
