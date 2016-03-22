@@ -8,7 +8,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
     private int mPreviousTotal = 0;
     private boolean mLoading = true;
-    private int mVisibleThreshold = 30;
+    private int mVisibleThreshold = -1;
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
 
     private int mCurrentPage = 1;
@@ -29,6 +29,11 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         return child == null ? RecyclerView.NO_POSITION : recyclerView.getChildAdapterPosition(child);
     }
 
+    private int findLastVisibleItemPosition(RecyclerView recyclerView) {
+        final View child = findOneVisibleChild(recyclerView.getChildCount() - 1, -1, false, true);
+        return child == null ? RecyclerView.NO_POSITION : recyclerView.getChildAdapterPosition(child);
+    }
+
     private View findOneVisibleChild(int fromIndex, int toIndex, boolean completelyVisible,
                                      boolean acceptPartiallyVisible) {
         OrientationHelper helper;
@@ -44,17 +49,19 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         View partiallyVisible = null;
         for (int i = fromIndex; i != toIndex; i += next) {
             final View child = mLayoutManager.getChildAt(i);
-            final int childStart = helper.getDecoratedStart(child);
-            final int childEnd = helper.getDecoratedEnd(child);
-            if (childStart < end && childEnd > start) {
-                if (completelyVisible) {
-                    if (childStart >= start && childEnd <= end) {
+            if (child != null) {
+                final int childStart = helper.getDecoratedStart(child);
+                final int childEnd = helper.getDecoratedEnd(child);
+                if (childStart < end && childEnd > start) {
+                    if (completelyVisible) {
+                        if (childStart >= start && childEnd <= end) {
+                            return child;
+                        } else if (acceptPartiallyVisible && partiallyVisible == null) {
+                            partiallyVisible = child;
+                        }
+                    } else {
                         return child;
-                    } else if (acceptPartiallyVisible && partiallyVisible == null) {
-                        partiallyVisible = child;
                     }
-                } else {
-                    return child;
                 }
             }
         }
@@ -64,6 +71,9 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
+        if (mVisibleThreshold == -1)
+            mVisibleThreshold = findLastVisibleItemPosition(recyclerView) - findFirstVisibleItemPosition(recyclerView);
+
         mVisibleItemCount = recyclerView.getChildCount();
         mTotalItemCount = mLayoutManager.getItemCount();
         mFirstVisibleItem = findFirstVisibleItemPosition(recyclerView);

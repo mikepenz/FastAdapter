@@ -1,0 +1,27 @@
+language: android
+
+android:
+  components:
+    - tools
+    - build-tools-23.0.2
+    - android-23
+    - extra
+
+jdk:
+  - oraclejdk7
+  - oraclejdk8
+
+script: ./gradlew clean test
+
+branches:
+  except:
+    - gh-pages
+
+notifications:
+  email: false
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.m2
