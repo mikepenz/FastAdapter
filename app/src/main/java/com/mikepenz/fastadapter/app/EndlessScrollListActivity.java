@@ -38,7 +38,6 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
 
     //save our FastAdapter
     private FastItemAdapter<SampleItem> fastItemAdapter;
-
     private FooterAdapter<ProgressItem> footerAdapter;
 
     //drag & drop
@@ -92,7 +91,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         recyclerView.setLayoutManager(manager);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(footerAdapter.wrap(fastItemAdapter));
-        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(manager, 15) {
+        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(manager) {
             @Override
             public void onLoadMore(final int currentPage) {
                 footerAdapter.clear();
