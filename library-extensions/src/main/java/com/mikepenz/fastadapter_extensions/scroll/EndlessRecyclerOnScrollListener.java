@@ -50,7 +50,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         View partiallyVisible = null;
         for (int i = fromIndex; i != toIndex; i += next) {
             final View child = mLayoutManager.getChildAt(i);
-            if(child != null) {
+            if (child != null) {
                 final int childStart = helper.getDecoratedStart(child);
                 final int childEnd = helper.getDecoratedEnd(child);
                 if (childStart < end && childEnd > start) {
