@@ -4,8 +4,6 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import static android.support.v7.widget.RecyclerView.NO_POSITION;
-
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 
     private int mPreviousTotal = 0;
@@ -34,7 +32,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
     private int findLastVisibleItemPosition(RecyclerView recyclerView) {
         final View child = findOneVisibleChild(recyclerView.getChildCount() - 1, -1, false, true);
-        return child == null ? NO_POSITION : recyclerView.getChildAdapterPosition(child);
+        return child == null ? RecyclerView.NO_POSITION : recyclerView.getChildAdapterPosition(child);
     }
 
     private View findOneVisibleChild(int fromIndex, int toIndex, boolean completelyVisible,
