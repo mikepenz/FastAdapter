@@ -51,6 +51,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private boolean mAllowDeselection = true;
     // if items are selectable in general
     private boolean mSelectable = true;
+    // only one expanded section
+    private boolean mOnlyOneExpandedItem = false;
 
     // we need to remember all selections to recreate them after orientation change
     private SortedSet<Integer> mSelections = new TreeSet<>();
@@ -203,7 +205,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * set if no item is selectable
      *
      * @param selectable true if items are selectable
-     * @return
+     * @return this
      */
     public FastAdapter<Item> withSelectable(boolean selectable) {
         this.mSelectable = selectable;
@@ -215,6 +217,25 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public boolean isSelectable() {
         return mSelectable;
+    }
+
+    /**
+     * set if there should only be one opened expandable item
+     * DEFAULT: false
+     *
+     * @param mOnlyOneExpandedItem true if there should be only one expanded, expandable item in the list
+     * @return this
+     */
+    public FastAdapter<Item> withOnlyOneExpandedItem(boolean mOnlyOneExpandedItem) {
+        this.mOnlyOneExpandedItem = mOnlyOneExpandedItem;
+        return this;
+    }
+
+    /**
+     * @return if there should be only one expanded, expandable item in the list
+     */
+    public boolean isOnlyOneExpandedItem() {
+        return mOnlyOneExpandedItem;
     }
 
     /**
@@ -332,6 +353,16 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                         if (!consumed && item instanceof IExpandable) {
                             if (((IExpandable) item).getSubItems() != null) {
                                 toggleExpandable(pos);
+                            }
+                        }
+
+                        //if there should be only one expanded item we want to collapse all the others but the current one
+                        if (mOnlyOneExpandedItem) {
+                            int[] expandedItems = getExpandedItems();
+                            for (int i = expandedItems.length - 1; i >= 0; i--) {
+                                if (expandedItems[i] != pos) {
+                                    collapse(expandedItems[i], true);
+                                }
                             }
                         }
 
