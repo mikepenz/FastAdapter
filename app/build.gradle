@@ -65,7 +65,7 @@ dependencies {
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
-    compile('com.mikepenz:materialdrawer:5.1.4@aar') {
+    compile('com.mikepenz:materialdrawer:5.1.6@aar') {
         transitive = true
         exclude module: "fastadapter"
     }
@@ -74,7 +74,7 @@ dependencies {
     compile 'com.mikepenz:itemanimators:0.2.3@aar'
     //used to generate the Open Source section
     //https://github.com/mikepenz/AboutLibraries
-    compile('com.mikepenz:aboutlibraries:5.5.9@aar') {
+    compile('com.mikepenz:aboutlibraries:5.6.1@aar') {
         transitive = true
         exclude module: "fastadapter"
     }
