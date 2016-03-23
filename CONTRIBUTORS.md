@@ -4,6 +4,7 @@ FastAdapter contributors (sorted alphabeticaly)
 * **[Fabian Terhorst](https://github.com/FabianTerhorst)**
 
   * EndlessScroll-Listener (EndlessScroll Sample)
+  * Improvements to the `SimpleDragCallback`
 
 * **[Mattias Isegran Bergander](https://github.com/mattiasbe)**
 
