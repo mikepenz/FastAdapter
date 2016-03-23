@@ -220,7 +220,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         }
 
         //first collapse all items
-        getFastAdapter().collapse();
+        getFastAdapter().collapse(false);
 
         //get sizes
         int newItemsCount = items.size();
