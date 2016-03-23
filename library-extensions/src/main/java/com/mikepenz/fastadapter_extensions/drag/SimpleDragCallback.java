@@ -1,9 +1,13 @@
 package com.mikepenz.fastadapter_extensions.drag;
 
+import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
 import com.mikepenz.fastadapter.IDraggable;
+
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 /**
  * based on the sample from
