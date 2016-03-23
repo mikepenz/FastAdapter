@@ -901,10 +901,21 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * collapses all expanded items
      */
     public void collapse() {
-        for (int expandedItem : getExpandedItems()) {
-            collapse(expandedItem);
+        collapse(true);
+    }
+
+    /**
+     * collapses all expanded items
+     *
+     * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
+     */
+    public void collapse(boolean notifyItemChanged) {
+        int[] expandedItems = getExpandedItems();
+        for (int i = expandedItems.length - 1; i >= 0; i--) {
+            collapse(expandedItems[i], notifyItemChanged);
         }
     }
+
 
     /**
      * collapses (closes) the given collapsible item at the given position
@@ -912,6 +923,16 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      */
     public void collapse(int position) {
+        collapse(position, false);
+    }
+
+    /**
+     * collapses (closes) the given collapsible item at the given position
+     *
+     * @param position          the global position
+     * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
+     */
+    public void collapse(int position, boolean notifyItemChanged) {
         Item item = getItem(position);
         if (item != null && item instanceof IExpandable) {
             IExpandable expandable = (IExpandable) item;
@@ -943,28 +964,28 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                         totalAddedItems = totalAddedItems - mExpanded.get(mExpanded.keyAt(i));
 
                         //we collapse the item
-                        internalCollapse(mExpanded.keyAt(i));
+                        internalCollapse(mExpanded.keyAt(i), notifyItemChanged);
                     }
                 }
 
                 //we collapse our root element
-                internalCollapse(expandable, position);
+                internalCollapse(expandable, position, notifyItemChanged);
             }
         }
     }
 
-    private void internalCollapse(int position) {
+    private void internalCollapse(int position, boolean notifyItemChanged) {
         Item item = getItem(position);
         if (item != null && item instanceof IExpandable) {
             IExpandable expandable = (IExpandable) item;
             //if this item is not already collapsed and has sub items we go on
             if (expandable.isExpanded() && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
-                internalCollapse(expandable, position);
+                internalCollapse(expandable, position, notifyItemChanged);
             }
         }
     }
 
-    private void internalCollapse(IExpandable expandable, int position) {
+    private void internalCollapse(IExpandable expandable, int position, boolean notifyItemChanged) {
         IAdapter adapter = getAdapter(position);
         if (adapter != null && adapter instanceof IItemAdapter) {
             ((IItemAdapter) adapter).removeRange(position + 1, expandable.getSubItems().size());
@@ -977,6 +998,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (indexOfKey >= 0) {
             mExpanded.removeAt(indexOfKey);
         }
+        //we need to notify to get the correct drawable if there is one showing the current state
+        if (notifyItemChanged) {
+            notifyItemChanged(position);
+        }
     }
 
     /**
@@ -985,6 +1010,17 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      */
     public void expand(int position) {
+        expand(position, false);
+    }
+
+
+    /**
+     * opens the expandable item at the given position
+     *
+     * @param position          the global position
+     * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
+     */
+    public void expand(int position, boolean notifyItemChanged) {
         Item item = getItem(position);
         if (item != null && item instanceof IExpandable) {
             IExpandable<?, Item> expandable = (IExpandable<?, Item>) item;
@@ -998,6 +1034,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
                 //remember that this item is now opened (not collapsed)
                 expandable.withIsExpanded(true);
+
+                //we need to notify to get the correct drawable if there is one showing the current state
+                if (notifyItemChanged) {
+                    notifyItemChanged(position);
+                }
+
                 //store it in the list of opened expandable items
                 mExpanded.put(position, expandable.getSubItems() != null ? expandable.getSubItems().size() : 0);
             }
