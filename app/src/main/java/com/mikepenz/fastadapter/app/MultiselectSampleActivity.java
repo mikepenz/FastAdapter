@@ -156,7 +156,9 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             mUndoHelper.remove(findViewById(android.R.id.content), "Item removed", "Undo", Snackbar.LENGTH_LONG, mFastAdapter.getSelections());
-            //return true as we consumed the event
+            //as we no longer have a selection so the actionMode can be finished
+            mode.finish();
+            //we consume the event
             return true;
         }
 
