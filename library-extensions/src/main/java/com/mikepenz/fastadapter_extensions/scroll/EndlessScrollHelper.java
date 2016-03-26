@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter_extensions.scroll;
 
 import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.View;
 
@@ -53,21 +52,21 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         super(layoutManager, visibleThreshold);
     }
 
-    public interface ResultReceiver<R> {
+    public interface ResultReceiver<Model> {
 
         int getReceiverPage();
 
-        boolean deliverNewItems(@NonNull List<R> result);
+        boolean deliverNewItems(@NonNull List<Model> result);
     }
 
-    public interface OnLoadMoreHandler<R> {
+    public interface OnLoadMoreHandler<Model> {
 
-        void onLoadMore(ResultReceiver out, int currentPage);
+        void onLoadMore(ResultReceiver<Model> out, int currentPage);
     }
 
-    public interface OnNewItemsListener<R> {
+    public interface OnNewItemsListener<Model> {
 
-        void onNewItems(List<R> newItems, int page);
+        void onNewItems(List<Model> newItems, int page);
     }
 
     public EndlessScrollHelper<Model> withOnLoadMoreHandler(OnLoadMoreHandler<Model> onLoadMoreHandler) {
@@ -105,7 +104,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         return this;
     }
 
-    protected void onLoadMore(ResultReceiver out, int currentPage) {
+    protected void onLoadMore(ResultReceiver<Model> out, int currentPage) {
         OnLoadMoreHandler<Model> loadMoreHandler = this.mOnLoadMoreHandler;
         try {
             loadMoreHandler.onLoadMore(out, currentPage);
@@ -136,12 +135,12 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         onLoadMore(new ResultReceiverImpl<>(this, currentPage), currentPage);
     }
 
-    private static final class ResultReceiverImpl<R> extends WeakReference<EndlessScrollHelper<R>> implements ResultReceiver<R>, Runnable {
+    private static final class ResultReceiverImpl<Model> extends WeakReference<EndlessScrollHelper<Model>> implements ResultReceiver<Model>, Runnable {
         private final int mReceiverPage;
-        private EndlessScrollHelper<R> mHelperStrongRef;
-        private List<R> mResult;
+        private EndlessScrollHelper<Model> mHelperStrongRef;
+        private List<Model> mResult;
 
-        ResultReceiverImpl(EndlessScrollHelper<R> helper, int receiverPage) {
+        ResultReceiverImpl(EndlessScrollHelper<Model> helper, int receiverPage) {
             super(helper); // We use WeakReferences to outer class to avoid memory leaks.
             mReceiverPage = receiverPage;
         }
@@ -152,7 +151,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         }
 
         @Override
-        public boolean deliverNewItems(@NonNull List<R> result) {
+        public boolean deliverNewItems(@NonNull List<Model> result) {
             if (mResult != null) // We might also see `null` here if more than 1 thread is modifying this.
                 throw new IllegalStateException("`result` already provided!");
             mResult = result;
