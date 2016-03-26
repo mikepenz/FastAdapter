@@ -40,16 +40,13 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
     private View findOneVisibleChild(int fromIndex, int toIndex, boolean completelyVisible,
                                      boolean acceptPartiallyVisible) {
-        if (mLayoutManager.canScrollVertically()) {
-            if (mOrientationHelper == null || mOrientationHelperOrientation == LinearLayout.HORIZONTAL) {
-                mOrientationHelperOrientation = LinearLayout.VERTICAL;
-                mOrientationHelper = OrientationHelper.createVerticalHelper(mLayoutManager);
-            }
-        } else {
-            if (mOrientationHelper == null || mOrientationHelperOrientation == LinearLayout.VERTICAL) {
-                mOrientationHelperOrientation = LinearLayout.HORIZONTAL;
-                mOrientationHelper = OrientationHelper.createHorizontalHelper(mLayoutManager);
-            }
+        if (mLayoutManager.canScrollVertically() && (mOrientationHelper == null
+                || mOrientationHelperOrientation == LinearLayout.HORIZONTAL)) {
+            mOrientationHelperOrientation = LinearLayout.VERTICAL;
+            mOrientationHelper = OrientationHelper.createVerticalHelper(mLayoutManager);
+        } else if (mOrientationHelper == null || mOrientationHelperOrientation == LinearLayout.VERTICAL) {
+            mOrientationHelperOrientation = LinearLayout.HORIZONTAL;
+            mOrientationHelper = OrientationHelper.createHorizontalHelper(mLayoutManager);
         }
 
         final int start = mOrientationHelper.getStartAfterPadding();
