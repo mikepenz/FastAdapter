@@ -3,6 +3,7 @@ package com.mikepenz.fastadapter_extensions.scroll;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.LinearLayout;
 
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 
@@ -10,6 +11,9 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     private boolean mLoading = true;
     private int mVisibleThreshold = -1;
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
+
+    private int mOrientationHelperOrientation;
+    private OrientationHelper mOrientationHelper;
 
     private int mCurrentPage = 1;
 
@@ -36,22 +40,27 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
     private View findOneVisibleChild(int fromIndex, int toIndex, boolean completelyVisible,
                                      boolean acceptPartiallyVisible) {
-        OrientationHelper helper;
         if (mLayoutManager.canScrollVertically()) {
-            helper = OrientationHelper.createVerticalHelper(mLayoutManager);
+            if (mOrientationHelper == null || mOrientationHelperOrientation == LinearLayout.HORIZONTAL) {
+                mOrientationHelperOrientation = LinearLayout.VERTICAL;
+                mOrientationHelper = OrientationHelper.createVerticalHelper(mLayoutManager);
+            }
         } else {
-            helper = OrientationHelper.createHorizontalHelper(mLayoutManager);
+            if (mOrientationHelper == null || mOrientationHelperOrientation == LinearLayout.VERTICAL) {
+                mOrientationHelperOrientation = LinearLayout.HORIZONTAL;
+                mOrientationHelper = OrientationHelper.createHorizontalHelper(mLayoutManager);
+            }
         }
 
-        final int start = helper.getStartAfterPadding();
-        final int end = helper.getEndAfterPadding();
+        final int start = mOrientationHelper.getStartAfterPadding();
+        final int end = mOrientationHelper.getEndAfterPadding();
         final int next = toIndex > fromIndex ? 1 : -1;
         View partiallyVisible = null;
         for (int i = fromIndex; i != toIndex; i += next) {
             final View child = mLayoutManager.getChildAt(i);
             if (child != null) {
-                final int childStart = helper.getDecoratedStart(child);
-                final int childEnd = helper.getDecoratedEnd(child);
+                final int childStart = mOrientationHelper.getDecoratedStart(child);
+                final int childEnd = mOrientationHelper.getDecoratedEnd(child);
                 if (childStart < end && childEnd > start) {
                     if (completelyVisible) {
                         if (childStart >= start && childEnd <= end) {
