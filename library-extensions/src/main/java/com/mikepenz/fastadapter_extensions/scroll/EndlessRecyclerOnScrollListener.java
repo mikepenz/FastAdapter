@@ -3,7 +3,6 @@ package com.mikepenz.fastadapter_extensions.scroll;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.LinearLayout;
 
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 
@@ -12,7 +11,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     private int mVisibleThreshold = -1;
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
 
-    private int mOrientationHelperOrientation;
+    private boolean mIsOrientationHelperVertical;
     private OrientationHelper mOrientationHelper;
 
     private int mCurrentPage = 1;
@@ -40,13 +39,12 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
     private View findOneVisibleChild(int fromIndex, int toIndex, boolean completelyVisible,
                                      boolean acceptPartiallyVisible) {
-        if (mLayoutManager.canScrollVertically() && (mOrientationHelper == null
-                || mOrientationHelperOrientation == LinearLayout.HORIZONTAL)) {
-            mOrientationHelperOrientation = LinearLayout.VERTICAL;
-            mOrientationHelper = OrientationHelper.createVerticalHelper(mLayoutManager);
-        } else if (mOrientationHelper == null || mOrientationHelperOrientation == LinearLayout.VERTICAL) {
-            mOrientationHelperOrientation = LinearLayout.HORIZONTAL;
-            mOrientationHelper = OrientationHelper.createHorizontalHelper(mLayoutManager);
+        if (mLayoutManager.canScrollVertically() != mIsOrientationHelperVertical
+                || mOrientationHelper == null) {
+            mIsOrientationHelperVertical = mLayoutManager.canScrollVertically();
+            mOrientationHelper = mIsOrientationHelperVertical
+                    ? OrientationHelper.createVerticalHelper(mLayoutManager)
+                    : OrientationHelper.createHorizontalHelper(mLayoutManager);
         }
 
         final int start = mOrientationHelper.getStartAfterPadding();
