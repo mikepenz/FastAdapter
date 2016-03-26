@@ -16,7 +16,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
     private int mCurrentPage = 1;
 
-    private RecyclerView.LayoutManager mLayoutManager;
+    RecyclerView.LayoutManager mLayoutManager;
 
     public EndlessRecyclerOnScrollListener(RecyclerView.LayoutManager layoutManager) {
         this.mLayoutManager = layoutManager;
