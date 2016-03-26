@@ -19,13 +19,13 @@ import static android.support.v7.widget.com_mikepenz_fastadapter_extensions_scro
 /**
  * This is an extension of {@link EndlessRecyclerOnScrollListener}, providing a more powerful API
  * for endless scrolling.
- * <p>
+ * <p/>
  * This class exposes 2 callbacks to separate the loading logic from delivering the results:
  * <ul>
  * <li>{@link OnLoadMoreHandler OnLoadMoreHandler}</li>
  * <li>{@link OnNewItemsListener OnNewItemsListener}</li>
  * </ul>
- * <p>
+ * <p/>
  * This class also takes care of other various stuffs like:
  * <ul>
  * <li>Ensuring the results are delivered on the RecyclerView's handler &ndash; which also ensures
@@ -37,7 +37,7 @@ import static android.support.v7.widget.com_mikepenz_fastadapter_extensions_scro
  * Function)  IItemAdapter} or {@link #withNewItemsDeliveredTo(GenericItemAdapter)
  * GenericItemAdapter}.</li>
  * </ul>
- * <p>
+ * <p/>
  * Created by jayson on 3/26/2016.
  */
 public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener {
@@ -52,20 +52,54 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         super(layoutManager, visibleThreshold);
     }
 
+    /**
+     * A callback interface provided by the {@link EndlessScrollHelper} where
+     * {@link #onLoadMore(ResultReceiver, int) onLoadMore()} results are to be delivered.
+     * The underlying implementation is thread-safe as long as only 1 thread is using it.
+     *
+     * @param <Model>
+     */
     public interface ResultReceiver<Model> {
 
+        /**
+         * @return the current page where the results will be delivered.
+         */
         int getReceiverPage();
 
+        /**
+         * Delivers the result of an {@link #onLoadMore(ResultReceiver, int) onLoadMore()} for the
+         * current {@linkplain #getReceiverPage() page}. This method must be called only once.
+         *
+         * @param result the result of an {@link #onLoadMore(ResultReceiver, int) onLoadMore()}
+         * @return whether results where delivered successfully or not, possibly because the
+         * RecyclerView is no longer attached or the {@link EndlessScrollHelper} is no longer
+         * in use (and it has been garbage collected).
+         * @throws IllegalStateException when more than one results are delivered.
+         */
         boolean deliverNewItems(@NonNull List<Model> result);
     }
 
     public interface OnLoadMoreHandler<Model> {
 
+        /**
+         * Handles loading of the specified page and delivers the results to the specified
+         * {@link ResultReceiver}.
+         *
+         * @param out
+         * @param currentPage
+         */
         void onLoadMore(ResultReceiver<Model> out, int currentPage);
     }
 
     public interface OnNewItemsListener<Model> {
 
+        /**
+         * Called on the RecyclerView's message queue to receive the results of a previous
+         * {@link #onLoadMore(ResultReceiver, int) onLoadMore()}.
+         *
+         * @param newItems
+         * @param page
+         */
         void onNewItems(List<Model> newItems, int page);
     }
 
@@ -85,6 +119,16 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         return this;
     }
 
+    /**
+     * Registers an {@link OnNewItemsListener OnNewItemsListener} that delivers results to the
+     * specified {@link IItemAdapter}. Converting each result to an {@link IItem} using the given
+     * {@code itemFactory}.
+     *
+     * @param adapter
+     * @param itemFactory
+     * @param <Item>
+     * @return
+     */
     public <Item extends IItem> EndlessScrollHelper<Model> withNewItemsDeliveredTo(IItemAdapter<Item> adapter, Function<Model, Item> itemFactory) {
         if (adapter == null) {
             throw new NullPointerException("adapter == null");
@@ -96,6 +140,13 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         return this;
     }
 
+    /**
+     * Registers an {@link OnNewItemsListener OnNewItemsListener} that delivers results to the
+     * specified {@link GenericItemAdapter} through its {@link GenericItemAdapter#addModel} method.
+     *
+     * @param adapter
+     * @return
+     */
     public EndlessScrollHelper<Model> withNewItemsDeliveredTo(GenericItemAdapter<Model, ?> adapter) {
         if (adapter == null) {
             throw new NullPointerException("adapter == null");
