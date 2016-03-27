@@ -219,7 +219,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
 //                    throw new IllegalStateException("Inconsistent state! "
 //                            + "Page might have already been loaded! "
 //                            + "Or `loadMore(result)` might have been used by more than 1 thread!");
-                    return; // Let it fail and load again
+                    return; // Let it fail and possibly load correctly
                 }
             } catch (NullPointerException npe) {
                 if (mHelperStrongRef == null) {
