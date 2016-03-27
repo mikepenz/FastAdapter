@@ -205,11 +205,9 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         try {
             loadMoreHandler.onLoadMore(out, currentPage);
         } catch (NullPointerException npe) {
-            // Lazy null checking!
-            if (loadMoreHandler == null) {
-                throw new NullPointerException("You must provide an `OnLoadMoreHandler`");
-            }
-            throw npe;
+            // Lazy null checking! If this was our npe, then throw with an appropriate message.
+            throw loadMoreHandler != null ? npe
+                    : new NullPointerException("You must provide an `OnLoadMoreHandler`");
         }
     }
 
@@ -226,11 +224,9 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         try {
             onNewItemsListener.onNewItems(newItems, page);
         } catch (NullPointerException npe) {
-            // Lazy null checking!
-            if (onNewItemsListener == null) {
-                throw new NullPointerException("You must provide an `OnNewItemsListener`");
-            }
-            throw npe;
+            // Lazy null checking! If this was our npe, then throw with an appropriate message.
+            throw onNewItemsListener != null ? npe
+                    : new NullPointerException("You must provide an `OnNewItemsListener`");
         }
     }
 
