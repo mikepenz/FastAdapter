@@ -103,11 +103,27 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         void onNewItems(@NonNull List<Model> newItems, int page);
     }
 
+    /**
+     * Define the {@link OnLoadMoreHandler OnLoadMoreHandler} which will be used for loading new
+     * items.
+     *
+     * @param onLoadMoreHandler
+     * @return
+     */
     public EndlessScrollHelper<Model> withOnLoadMoreHandler(@NonNull OnLoadMoreHandler<Model> onLoadMoreHandler) {
         mOnLoadMoreHandler = onLoadMoreHandler;
         return this;
     }
 
+    /**
+     * Define the {@link OnNewItemsListener OnNewItemsListener} which will receive the new items
+     * loaded by {@link #onLoadMore(ResultReceiver, int) onLoadMore()}.
+     *
+     * @param onNewItemsListener
+     * @return
+     * @see #withNewItemsDeliveredTo(IItemAdapter, Function) withNewItemsDeliveredTo(IItemAdapter, Function)
+     * @see #withNewItemsDeliveredTo(GenericItemAdapter) withNewItemsDeliveredTo(GenericItemAdapter)
+     */
     public EndlessScrollHelper<Model> withOnNewItemsListener(@NonNull OnNewItemsListener<Model> onNewItemsListener) {
         mOnNewItemsListener = onNewItemsListener;
         return this;
@@ -122,6 +138,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
      * @param itemFactory
      * @param <Item>
      * @return
+     * @see #withNewItemsDeliveredTo(IItemAdapter, Function, OnNewItemsListener) withNewItemsDeliveredTo(IItemAdapter, Function, OnNewItemsListener)
      */
     public <Item extends IItem> EndlessScrollHelper<Model> withNewItemsDeliveredTo(@NonNull IItemAdapter<Item> itemAdapter, @NonNull Function<Model, Item> itemFactory) {
         mOnNewItemsListener = new DeliverToIItemAdapter<>(itemAdapter, itemFactory);
@@ -134,6 +151,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
      *
      * @param genericItemAdapter
      * @return
+     * @see #withNewItemsDeliveredTo(GenericItemAdapter, OnNewItemsListener) withNewItemsDeliveredTo(GenericItemAdapter, OnNewItemsListener)
      */
     public EndlessScrollHelper<Model> withNewItemsDeliveredTo(@NonNull GenericItemAdapter<Model, ?> genericItemAdapter) {
         mOnNewItemsListener = new DeliverToGenericItemAdapter<>(genericItemAdapter);
@@ -174,6 +192,14 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
     //-------------------------
     //-------------------------
 
+    /**
+     * The default implementation takes care of calling the previously set
+     * {@link OnLoadMoreHandler OnLoadMoreHandler}.
+     *
+     * @param out
+     * @param currentPage
+     * @see #withOnLoadMoreHandler(OnLoadMoreHandler) withOnLoadMoreHandler(OnLoadMoreHandler)
+     */
     protected void onLoadMore(@NonNull ResultReceiver<Model> out, int currentPage) {
         OnLoadMoreHandler<Model> loadMoreHandler = this.mOnLoadMoreHandler;
         try {
@@ -187,6 +213,14 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         }
     }
 
+    /**
+     * The default implementation takes care of calling the previously set
+     * {@link OnNewItemsListener OnNewItemsListener}.
+     *
+     * @param newItems
+     * @param page
+     * @see #withOnNewItemsListener(OnNewItemsListener) withOnNewItemsListener(OnNewItemsListener)
+     */
     protected void onNewItems(@NonNull List<Model> newItems, int page) {
         OnNewItemsListener<Model> onNewItemsListener = this.mOnNewItemsListener;
         try {
