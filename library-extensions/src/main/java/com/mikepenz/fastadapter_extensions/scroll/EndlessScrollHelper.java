@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter_extensions.scroll;
 
 import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.View;
 
@@ -50,6 +51,11 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
 
     public EndlessScrollHelper(LayoutManager layoutManager, int visibleThreshold) {
         super(layoutManager, visibleThreshold);
+    }
+
+    public EndlessScrollHelper<Model> addTo(RecyclerView recyclerView) {
+        recyclerView.addOnScrollListener(this);
+        return this;
     }
 
     /**
