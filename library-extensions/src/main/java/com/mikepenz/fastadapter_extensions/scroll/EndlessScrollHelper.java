@@ -168,6 +168,12 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         return this;
     }
 
+    //-------------------------
+    //-------------------------
+    //Override-able methods
+    //-------------------------
+    //-------------------------
+
     protected void onLoadMore(@NonNull ResultReceiver<Model> out, int currentPage) {
         OnLoadMoreHandler<Model> loadMoreHandler = this.mOnLoadMoreHandler;
         try {
@@ -193,6 +199,12 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
             throw npe;
         }
     }
+
+    //-------------------------
+    //-------------------------
+    //Internal stuff
+    //-------------------------
+    //-------------------------
 
     @Override
     public void onLoadMore(int currentPage) {
@@ -243,6 +255,12 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
             mHelperStrongRef.onNewItems(mResult, mReceiverPage);
         }
     }
+
+    //-----------------------------------------
+    //-----------------------------------------
+    //`withNewItemsDeliveredTo()` stuff
+    //-----------------------------------------
+    //-----------------------------------------
 
     private static class DeliverToIItemAdapter<Model, Item extends IItem> implements OnNewItemsListener<Model> {
         @NonNull private final IItemAdapter<Item> mItemAdapter;
