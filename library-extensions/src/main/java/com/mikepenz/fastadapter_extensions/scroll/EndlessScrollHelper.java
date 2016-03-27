@@ -155,6 +155,49 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         return this;
     }
 
+    /**
+     * An overload of {@link #withNewItemsDeliveredTo(IItemAdapter, Function) withNewItemsDeliveredTo()}
+     * that allows additional callbacks.
+     *
+     * @param adapter
+     * @param itemFactory
+     * @param extraOnNewItemsListener
+     * @param <Item>
+     * @return
+     */
+    public <Item extends IItem> EndlessScrollHelper<Model> withNewItemsDeliveredTo(IItemAdapter<Item> adapter, Function<Model, Item> itemFactory, OnNewItemsListener<Model> extraOnNewItemsListener) {
+        if (adapter == null) {
+            throw new NullPointerException("adapter == null");
+        }
+        if (itemFactory == null) {
+            throw new NullPointerException("itemFactory == null");
+        }
+        if (extraOnNewItemsListener == null) {
+            throw new NullPointerException("extraOnNewItemsListener == null");
+        }
+        mOnNewItemsListener = new DeliverToIItemAdapter2<>(adapter, itemFactory, extraOnNewItemsListener);
+        return this;
+    }
+
+    /**
+     * An overload of {@link #withNewItemsDeliveredTo(GenericItemAdapter) withNewItemsDeliveredTo()}
+     * that allows additional callbacks.
+     *
+     * @param adapter
+     * @param extraOnNewItemsListener
+     * @return
+     */
+    public EndlessScrollHelper<Model> withNewItemsDeliveredTo(GenericItemAdapter<Model, ?> adapter, OnNewItemsListener<Model> extraOnNewItemsListener) {
+        if (adapter == null) {
+            throw new NullPointerException("adapter == null");
+        }
+        if (extraOnNewItemsListener == null) {
+            throw new NullPointerException("extraOnNewItemsListener == null");
+        }
+        mOnNewItemsListener = new DeliverToGenericItemAdapter2<>(adapter, extraOnNewItemsListener);
+        return this;
+    }
+
     protected void onLoadMore(ResultReceiver<Model> out, int currentPage) {
         OnLoadMoreHandler<Model> loadMoreHandler = this.mOnLoadMoreHandler;
         try {
@@ -260,6 +303,36 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         @Override
         public void onNewItems(List<Model> newItems, int page) {
             mGenericItemAdapter.addModel(newItems);
+        }
+    }
+
+    private static class DeliverToIItemAdapter2<Model, Item extends IItem> extends DeliverToIItemAdapter<Model, Item> {
+        private final OnNewItemsListener<Model> mExtraOnNewItemsListener;
+
+        DeliverToIItemAdapter2(IItemAdapter<Item> itemAdapter, Function<Model, Item> itemFactory, OnNewItemsListener<Model> extraOnNewItemsListener) {
+            super(itemAdapter, itemFactory);
+            mExtraOnNewItemsListener = extraOnNewItemsListener;
+        }
+
+        @Override
+        public void onNewItems(List<Model> newItems, int page) {
+            super.onNewItems(newItems, page);
+            mExtraOnNewItemsListener.onNewItems(newItems, page);
+        }
+    }
+
+    private static class DeliverToGenericItemAdapter2<Model, Item extends GenericAbstractItem<Model, Item, ?>> extends DeliverToGenericItemAdapter<Model, Item> {
+        private final OnNewItemsListener<Model> mExtraOnNewItemsListener;
+
+        DeliverToGenericItemAdapter2(GenericItemAdapter<Model, Item> itemAdapter, OnNewItemsListener<Model> extraOnNewItemsListener) {
+            super(itemAdapter);
+            mExtraOnNewItemsListener = extraOnNewItemsListener;
+        }
+
+        @Override
+        public void onNewItems(List<Model> newItems, int page) {
+            super.onNewItems(newItems, page);
+            mExtraOnNewItemsListener.onNewItems(newItems, page);
         }
     }
 }
