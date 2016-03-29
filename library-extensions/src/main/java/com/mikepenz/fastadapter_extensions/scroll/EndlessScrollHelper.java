@@ -346,8 +346,8 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
 
         @Override
         public void onNewItems(@NonNull List<Model> newItems, int page) {
-            super.onNewItems(newItems, page);
             mExtraOnNewItemsListener.onNewItems(newItems, page);
+            super.onNewItems(newItems, page);
         }
     }
 
@@ -361,8 +361,8 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
 
         @Override
         public void onNewItems(@NonNull List<Model> newItems, int page) {
-            super.onNewItems(newItems, page);
             mExtraOnNewItemsListener.onNewItems(newItems, page);
+            super.onNewItems(newItems, page);
         }
     }
 }
