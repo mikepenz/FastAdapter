@@ -18,7 +18,6 @@ import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData;
 import com.mikepenz.fastadapter.app.items.SimpleImageItem;
@@ -206,10 +205,7 @@ public class SampleActivity extends AppCompatActivity {
             case R.id.item_move:
                 List items = mItemAdapter.getAdapterItems();
                 if (items.size() > position + 3) {
-                    IItem i = (IItem) items.get(position + 1);
-                    items.remove(position + 1);
-                    items.add(position + 3, i);
-                    mFastAdapter.notifyAdapterItemMoved(position + 1, position + 3);
+                    mItemAdapter.move(position + 1, position + 3);
                 }
                 return true;
             case R.id.item_delete:
