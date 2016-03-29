@@ -93,25 +93,19 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
             @Override
             public void onLoadMore(final int currentPage) {
-                new Handler().postDelayed(new Runnable() {
+                footerAdapter.clear();
+                footerAdapter.add(new ProgressItem());
+                //simulate networking (2 seconds)
+                Handler handler = new Handler();
+                handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
                         footerAdapter.clear();
-                        footerAdapter.add(new ProgressItem());
-                        //simulate networking (2 seconds)
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                footerAdapter.clear();
-                                for (int i = 1; i < 16; i++) {
-                                    fastItemAdapter.add(fastItemAdapter.getAdapterItemCount(), new SampleItem().withName("Item " + i + " Page " + currentPage));
-                                }
-                            }
-                        }, 2000);
+                        for (int i = 1; i < 16; i++) {
+                            fastItemAdapter.add(fastItemAdapter.getAdapterItemCount(), new SampleItem().withName("Item " + i + " Page " + currentPage));
+                        }
                     }
-                }, 10);
-
+                }, 2000);
             }
         });
 
