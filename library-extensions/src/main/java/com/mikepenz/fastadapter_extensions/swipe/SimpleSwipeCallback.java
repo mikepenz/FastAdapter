@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.ColorInt;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
@@ -92,8 +93,8 @@ public class SimpleSwipeCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        viewHolder.itemView.setTranslationX(0);
-        viewHolder.itemView.setTranslationY(0);
+        ViewCompat.setTranslationX(viewHolder.itemView, 0);
+        ViewCompat.setTranslationY(viewHolder.itemView, 0);
         int position = viewHolder.getAdapterPosition();
         if (position != RecyclerView.NO_POSITION) {
             itemSwipeCallback.itemSwiped(position, direction);
