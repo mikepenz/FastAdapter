@@ -20,13 +20,11 @@ import static android.support.v7.widget.com_mikepenz_fastadapter_extensions_scro
 /**
  * This is an extension of {@link EndlessRecyclerOnScrollListener}, providing a more powerful API
  * for endless scrolling.
- * <p/>
  * This class exposes 2 callbacks to separate the loading logic from delivering the results:
  * <ul>
  * <li>{@link OnLoadMoreHandler OnLoadMoreHandler}</li>
  * <li>{@link OnNewItemsListener OnNewItemsListener}</li>
  * </ul>
- * <p/>
  * This class also takes care of other various stuffs like:
  * <ul>
  * <li>Ensuring the results are delivered on the RecyclerView's handler &ndash; which also ensures
@@ -38,7 +36,6 @@ import static android.support.v7.widget.com_mikepenz_fastadapter_extensions_scro
  * Function)  IItemAdapter} or {@link #withNewItemsDeliveredTo(GenericItemAdapter)
  * GenericItemAdapter}.</li>
  * </ul>
- * <p/>
  * Created by jayson on 3/26/2016.
  */
 public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener {
@@ -64,7 +61,6 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
     /**
      * A callback interface provided by the {@link EndlessScrollHelper} where
      * {@link #onLoadMore(ResultReceiver, int) onLoadMore()} results are to be delivered.
-     * <p/>
      * The underlying implementation is safe to use by any background-thread, as long as only 1
      * thread is using it. Results delivered via {@link #deliverNewItems(List)} are automatically
      * dispatched to the RecyclerView's message queue (i.e. to be delivered in the ui thread).
@@ -305,8 +301,10 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
     //-----------------------------------------
 
     private static class DeliverToIItemAdapter<Model, Item extends IItem> implements OnNewItemsListener<Model> {
-        @NonNull private final IItemAdapter<Item> mItemAdapter;
-        @NonNull private final Function<Model, Item> mItemFactory;
+        @NonNull
+        private final IItemAdapter<Item> mItemAdapter;
+        @NonNull
+        private final Function<Model, Item> mItemFactory;
 
         DeliverToIItemAdapter(@NonNull IItemAdapter<Item> itemAdapter, @NonNull Function<Model, Item> itemFactory) {
             mItemAdapter = itemAdapter;
@@ -324,7 +322,8 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
     }
 
     private static class DeliverToGenericItemAdapter<Model, Item extends GenericAbstractItem<Model, Item, ?>> implements OnNewItemsListener<Model> {
-        @NonNull private final GenericItemAdapter<Model, Item> mGenericItemAdapter;
+        @NonNull
+        private final GenericItemAdapter<Model, Item> mGenericItemAdapter;
 
         DeliverToGenericItemAdapter(@NonNull GenericItemAdapter<Model, Item> genericItemAdapter) {
             mGenericItemAdapter = genericItemAdapter;
@@ -337,7 +336,8 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
     }
 
     private static class DeliverToIItemAdapter2<Model, Item extends IItem> extends DeliverToIItemAdapter<Model, Item> {
-        @NonNull private final OnNewItemsListener<Model> mExtraOnNewItemsListener;
+        @NonNull
+        private final OnNewItemsListener<Model> mExtraOnNewItemsListener;
 
         DeliverToIItemAdapter2(@NonNull IItemAdapter<Item> itemAdapter, @NonNull Function<Model, Item> itemFactory, @NonNull OnNewItemsListener<Model> extraOnNewItemsListener) {
             super(itemAdapter, itemFactory);
@@ -352,7 +352,8 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
     }
 
     private static class DeliverToGenericItemAdapter2<Model, Item extends GenericAbstractItem<Model, Item, ?>> extends DeliverToGenericItemAdapter<Model, Item> {
-        @NonNull private final OnNewItemsListener<Model> mExtraOnNewItemsListener;
+        @NonNull
+        private final OnNewItemsListener<Model> mExtraOnNewItemsListener;
 
         DeliverToGenericItemAdapter2(@NonNull GenericItemAdapter<Model, Item> genericItemAdapter, @NonNull OnNewItemsListener<Model> extraOnNewItemsListener) {
             super(genericItemAdapter);
