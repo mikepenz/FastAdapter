@@ -87,11 +87,10 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
 
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(manager);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(footerAdapter.wrap(fastItemAdapter));
-        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(manager) {
+        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
             @Override
             public void onLoadMore(final int currentPage) {
                 new Handler().postDelayed(new Runnable() {
