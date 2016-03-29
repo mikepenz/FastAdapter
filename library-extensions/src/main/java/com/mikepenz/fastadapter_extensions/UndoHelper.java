@@ -8,6 +8,7 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -40,13 +41,13 @@ public class UndoHelper<Item extends IItem> {
      * @param positions  the positions where the items were removed
      * @return the generated Snackbar
      */
-    public Snackbar remove(View view, String text, String actionText, @Snackbar.Duration int duration, Set<Integer> positions) {
+    public Snackbar remove(final View view, final String text, final String actionText, @Snackbar.Duration int duration, final Set<Integer> positions) {
         if (mHistory != null) {
             notifyCommit();
         }
 
         History history = new History();
-        history.positions = positions;
+        history.positions = new HashSet<>(positions);
         history.action = ACTION_REMOVE;
         for (int position : positions) {
             history.items.add(mAdapter.getRelativeInfo(position));

@@ -11,9 +11,15 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     private int mVisibleThreshold = -1;
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
 
+    private boolean mIsOrientationHelperVertical;
+    private OrientationHelper mOrientationHelper;
+
     private int mCurrentPage = 1;
 
     private RecyclerView.LayoutManager mLayoutManager;
+
+    public EndlessRecyclerOnScrollListener() {
+    }
 
     public EndlessRecyclerOnScrollListener(RecyclerView.LayoutManager layoutManager) {
         this.mLayoutManager = layoutManager;
@@ -36,22 +42,23 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
     private View findOneVisibleChild(int fromIndex, int toIndex, boolean completelyVisible,
                                      boolean acceptPartiallyVisible) {
-        OrientationHelper helper;
-        if (mLayoutManager.canScrollVertically()) {
-            helper = OrientationHelper.createVerticalHelper(mLayoutManager);
-        } else {
-            helper = OrientationHelper.createHorizontalHelper(mLayoutManager);
+        if (mLayoutManager.canScrollVertically() != mIsOrientationHelperVertical
+                || mOrientationHelper == null) {
+            mIsOrientationHelperVertical = mLayoutManager.canScrollVertically();
+            mOrientationHelper = mIsOrientationHelperVertical
+                    ? OrientationHelper.createVerticalHelper(mLayoutManager)
+                    : OrientationHelper.createHorizontalHelper(mLayoutManager);
         }
 
-        final int start = helper.getStartAfterPadding();
-        final int end = helper.getEndAfterPadding();
+        final int start = mOrientationHelper.getStartAfterPadding();
+        final int end = mOrientationHelper.getEndAfterPadding();
         final int next = toIndex > fromIndex ? 1 : -1;
         View partiallyVisible = null;
         for (int i = fromIndex; i != toIndex; i += next) {
             final View child = mLayoutManager.getChildAt(i);
             if (child != null) {
-                final int childStart = helper.getDecoratedStart(child);
-                final int childEnd = helper.getDecoratedEnd(child);
+                final int childStart = mOrientationHelper.getDecoratedStart(child);
+                final int childEnd = mOrientationHelper.getDecoratedEnd(child);
                 if (childStart < end && childEnd > start) {
                     if (completelyVisible) {
                         if (childStart >= start && childEnd <= end) {
@@ -71,6 +78,9 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
+        if(mLayoutManager == null)
+            mLayoutManager = recyclerView.getLayoutManager();
+
         if (mVisibleThreshold == -1)
             mVisibleThreshold = findLastVisibleItemPosition(recyclerView) - findFirstVisibleItemPosition(recyclerView);
 
@@ -93,6 +103,10 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
             mLoading = true;
         }
+    }
+
+    public RecyclerView.LayoutManager getLayoutManager() {
+        return mLayoutManager;
     }
 
     public int getTotalItemCount() {

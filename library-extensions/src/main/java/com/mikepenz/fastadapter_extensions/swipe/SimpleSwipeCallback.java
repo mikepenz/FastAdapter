@@ -5,10 +5,12 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
+import android.view.animation.TranslateAnimation;
 
 
 /**
@@ -92,8 +94,15 @@ public class SimpleSwipeCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        viewHolder.itemView.setTranslationX(0);
-        viewHolder.itemView.setTranslationY(0);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            viewHolder.itemView.setTranslationX(0);
+            viewHolder.itemView.setTranslationY(0);
+        } else {
+            TranslateAnimation anim = new TranslateAnimation(0, 0, 0, 0);
+            anim.setFillAfter(true);
+            anim.setDuration(0);
+            viewHolder.itemView.startAnimation(anim);
+        }
         int position = viewHolder.getAdapterPosition();
         if (position != RecyclerView.NO_POSITION) {
             itemSwipeCallback.itemSwiped(position, direction);
