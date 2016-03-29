@@ -5,6 +5,7 @@ FastAdapter contributors (sorted alphabeticaly)
 
   * EndlessScroll-Listener (EndlessScroll Sample)
   * Improvements to the `SimpleDragCallback`
+  * Add additional tests
 
 * **[Mattias Isegran Bergander](https://github.com/mattiasbe)**
 
@@ -22,3 +23,7 @@ FastAdapter contributors (sorted alphabeticaly)
 * **[Shubham Chaudhary](https://github.com/shubhamchaudhary)**
   
   * Basic Unit-Tests
+
+* **[jasonsparc](https://github.com/jasonsparc)**
+
+  * Added `EndlessScrollHelper`
