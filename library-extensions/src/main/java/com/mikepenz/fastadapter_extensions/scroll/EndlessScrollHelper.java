@@ -45,6 +45,9 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
     private OnLoadMoreHandler<Model> mOnLoadMoreHandler;
     private OnNewItemsListener<Model> mOnNewItemsListener;
 
+    public EndlessScrollHelper() {
+    }
+
     public EndlessScrollHelper(LayoutManager layoutManager) {
         super(layoutManager);
     }
@@ -272,7 +275,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
             mResult = result;
             mHelperStrongRef = super.get();
             return mHelperStrongRef != null
-                    && postOnRecyclerView(mHelperStrongRef.mLayoutManager, this);
+                    && postOnRecyclerView(mHelperStrongRef.getLayoutManager(), this);
         }
 
         @Override
