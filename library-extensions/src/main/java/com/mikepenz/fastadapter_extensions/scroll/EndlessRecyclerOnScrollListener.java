@@ -18,6 +18,9 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
     private RecyclerView.LayoutManager mLayoutManager;
 
+    public EndlessRecyclerOnScrollListener() {
+    }
+
     public EndlessRecyclerOnScrollListener(RecyclerView.LayoutManager layoutManager) {
         this.mLayoutManager = layoutManager;
     }
@@ -75,6 +78,9 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
+        if(mLayoutManager == null)
+            mLayoutManager = recyclerView.getLayoutManager();
+
         if (mVisibleThreshold == -1)
             mVisibleThreshold = findLastVisibleItemPosition(recyclerView) - findFirstVisibleItemPosition(recyclerView);
 
@@ -97,6 +103,10 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
             mLoading = true;
         }
+    }
+
+    public RecyclerView.LayoutManager getLayoutManager() {
+        return mLayoutManager;
     }
 
     public int getTotalItemCount() {
