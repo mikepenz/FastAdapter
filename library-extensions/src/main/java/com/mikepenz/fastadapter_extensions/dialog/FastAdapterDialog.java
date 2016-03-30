@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
@@ -61,7 +62,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
         return this;
     }
 
-    public FastAdapterDialog<Item> withItems(@NonNull ArrayList<Item> items) {
+    public FastAdapterDialog<Item> withItems(@NonNull List<Item> items) {
         if (mFastItemAdapter == null) {
             mFastItemAdapter = new FastItemAdapter<>();
         }
@@ -153,7 +154,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
     /**
      * Adds a negative button to the dialog. The button click will close the dialog.
      *
-     * @param textRes  The resource id of the text to display in the negative button
+     * @param textRes The resource id of the text to display in the negative button
      * @return This Builder object to allow for chaining of calls to set methods
      */
     public FastAdapterDialog<Item> withNegativeButton(@StringRes int textRes) {
@@ -163,7 +164,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
     /**
      * Adds a negative button to the dialog. The button click will close the dialog.
      *
-     * @param text     The text to display in the negative button
+     * @param text The text to display in the negative button
      * @return This Builder object to allow for chaining of calls to set methods
      */
     public FastAdapterDialog<Item> withNegativeButton(String text) {
@@ -233,6 +234,9 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
     public void show() {
         if (mFastItemAdapter == null && mAdapter == null) {
             mFastItemAdapter = new FastItemAdapter<>();
+        }
+        if (mLayoutManager == null) {
+            mLayoutManager = new LinearLayoutManager(getContext());
         }
         this.mRecyclerView = createRecyclerView(getContext(), mLayoutManager, mAdapter == null ? mFastItemAdapter : mAdapter);
         if (mOnScrollListener != null) {
