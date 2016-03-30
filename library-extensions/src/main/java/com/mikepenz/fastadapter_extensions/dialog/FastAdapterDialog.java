@@ -58,7 +58,6 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
 
     public FastAdapterDialog<Item> withFastItemAdapter(@NonNull FastItemAdapter<Item> fastItemAdapter) {
         this.mFastItemAdapter = fastItemAdapter;
-        mFastItemAdapter.setHasStableIds(false);
         return this;
     }
 
@@ -234,7 +233,6 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
     public void show() {
         if (mFastItemAdapter == null && mAdapter == null) {
             mFastItemAdapter = new FastItemAdapter<>();
-            mFastItemAdapter.setHasStableIds(false);
         }
         this.mRecyclerView = createRecyclerView(getContext(), mLayoutManager, mAdapter == null ? mFastItemAdapter : mAdapter);
         if (mOnScrollListener != null) {
