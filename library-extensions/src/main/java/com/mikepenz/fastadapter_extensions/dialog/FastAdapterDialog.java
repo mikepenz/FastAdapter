@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter_extensions.dialog;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
@@ -55,9 +56,25 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
         return this;
     }
 
-    public FastAdapterDialog<Item> withFastItemAdapter(FastItemAdapter<Item> fastItemAdapter) {
+    public FastAdapterDialog<Item> withFastItemAdapter(@NonNull FastItemAdapter<Item> fastItemAdapter) {
         this.mFastItemAdapter = fastItemAdapter;
         mFastItemAdapter.setHasStableIds(false);
+        return this;
+    }
+
+    public FastAdapterDialog<Item> withItems(@NonNull ArrayList<Item> items) {
+        if (mFastItemAdapter == null) {
+            mFastItemAdapter = new FastItemAdapter<>();
+        }
+        mFastItemAdapter.set(items);
+        return this;
+    }
+
+    public FastAdapterDialog<Item> withItems(@NonNull Item... items) {
+        if (mFastItemAdapter == null) {
+            mFastItemAdapter = new FastItemAdapter<>();
+        }
+        mFastItemAdapter.add(items);
         return this;
     }
 
@@ -68,7 +85,6 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
 
     /**
      * Set the {@link RecyclerView.LayoutManager} that the RecyclerView will use.
-     *
      *
      * @param layoutManager LayoutManager to use
      */
@@ -105,7 +121,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
     /**
      * Set a listener to be invoked when the positive button of the dialog is pressed.
      *
-     * @param textRes   The resource id of the text to display in the positive button
+     * @param textRes  The resource id of the text to display in the positive button
      * @param listener The {@link DialogInterface.OnClickListener} to use.
      * @return This Builder object to allow for chaining of calls to set methods
      */
@@ -127,7 +143,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
     /**
      * Set a listener to be invoked when the negative button of the dialog is pressed.
      *
-     * @param textRes   The resource id of the text to display in the negative button
+     * @param textRes  The resource id of the text to display in the negative button
      * @param listener The {@link DialogInterface.OnClickListener} to use.
      * @return This Builder object to allow for chaining of calls to set methods
      */
@@ -149,7 +165,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
     /**
      * Set a listener to be invoked when the neutral button of the dialog is pressed.
      *
-     * @param textRes   The resource id of the text to display in the neutral button
+     * @param textRes  The resource id of the text to display in the neutral button
      * @param listener The {@link DialogInterface.OnClickListener} to use.
      * @return This Builder object to allow for chaining of calls to set methods
      */
@@ -181,7 +197,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      *                    {@link DialogInterface#BUTTON_POSITIVE},
      *                    {@link DialogInterface#BUTTON_NEGATIVE}, or
      *                    {@link DialogInterface#BUTTON_NEUTRAL}
-     * @param textRes        The text to display in positive button.
+     * @param textRes     The text to display in positive button.
      * @param listener    The {@link DialogInterface.OnClickListener} to use.
      */
     public FastAdapterDialog<Item> withButton(int whichButton, @StringRes int textRes, OnClickListener listener) {
