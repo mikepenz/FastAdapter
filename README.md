@@ -47,7 +47,7 @@ compile('com.mikepenz:fastadapter:1.3.0@aar') {
 
 All additions are included in the following dependency.
 ```gradle
-compile 'com.mikepenz:fastadapter-extensions:1.3.0@aar'
+compile 'com.mikepenz:fastadapter-extensions:1.3.0.1@aar'
 ```
 
 
