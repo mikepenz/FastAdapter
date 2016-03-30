@@ -152,6 +152,26 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
     }
 
     /**
+     * Adds a negative button to the dialog. The button click will close the dialog.
+     *
+     * @param textRes  The resource id of the text to display in the negative button
+     * @return This Builder object to allow for chaining of calls to set methods
+     */
+    public FastAdapterDialog<Item> withNegativeButton(@StringRes int textRes) {
+        return withButton(BUTTON_NEGATIVE, textRes, null);
+    }
+
+    /**
+     * Adds a negative button to the dialog. The button click will close the dialog.
+     *
+     * @param text     The text to display in the negative button
+     * @return This Builder object to allow for chaining of calls to set methods
+     */
+    public FastAdapterDialog<Item> withNegativeButton(String text) {
+        return withButton(BUTTON_NEGATIVE, text, null);
+    }
+
+    /**
      * Set a listener to be invoked when the neutral button of the dialog is pressed.
      *
      * @param text     The text to display in the neutral button
