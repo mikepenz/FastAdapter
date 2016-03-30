@@ -33,4 +33,6 @@ dependencies {
     compile project(':library')
     compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
+
+    compile 'com.mikepenz:materialize:0.8.6@aar'
 }
