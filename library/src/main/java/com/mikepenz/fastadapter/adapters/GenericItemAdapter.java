@@ -151,6 +151,18 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model, I
     }
 
     /**
+     * moves an model within the list from a position to a position
+     *
+     * @param fromPosition the position global from which we want to move
+     * @param toPosition   the global position to which to move
+     * @return this
+     */
+    public GenericItemAdapter<Model, Item> move(int fromPosition, int toPosition) {
+        super.move(fromPosition, toPosition);
+        return this;
+    }
+
+    /**
      * helper to get a list of item from a list o model
      *
      * @param models the models

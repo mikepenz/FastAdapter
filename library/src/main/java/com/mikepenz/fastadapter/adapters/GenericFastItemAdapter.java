@@ -151,4 +151,16 @@ public class GenericFastItemAdapter<Model, Item extends GenericAbstractItem<Mode
         mItemAdapter.removeModel(position);
         return this;
     }
+
+    /**
+     * moves an model within the list from a position to a position
+     *
+     * @param fromPosition the position global from which we want to move
+     * @param toPosition   the global position to which to move
+     * @return this
+     */
+    public GenericFastItemAdapter<Model, Item> move(int fromPosition, int toPosition) {
+        mItemAdapter.move(fromPosition, toPosition);
+        return this;
+    }
 }
