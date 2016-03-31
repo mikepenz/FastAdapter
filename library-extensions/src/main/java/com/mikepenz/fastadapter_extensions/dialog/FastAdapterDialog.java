@@ -14,27 +14,36 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
 
     private RecyclerView mRecyclerView;
 
-    private RecyclerView.Adapter mAdapter;
-
     private FastItemAdapter<Item> mFastItemAdapter;
-
-    private RecyclerView.LayoutManager mLayoutManager;
-
-    private List<RecyclerView.OnScrollListener> mOnScrollListener;
 
     public FastAdapterDialog(Context context) {
         super(context);
+        this.mRecyclerView = createRecyclerView();
     }
 
     public FastAdapterDialog(Context context, int theme) {
         super(context, theme);
+        this.mRecyclerView = createRecyclerView();
+    }
+
+    /**
+     * Create the RecyclerView and set it as the dialog view.
+     *
+     * @return the created RecyclerView
+     */
+    private RecyclerView createRecyclerView() {
+        RecyclerView recyclerView = new RecyclerView(getContext());
+        RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        recyclerView.setLayoutParams(params);
+        setView(recyclerView);
+        return recyclerView;
     }
 
     /**
@@ -59,12 +68,14 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
 
     public FastAdapterDialog<Item> withFastItemAdapter(@NonNull FastItemAdapter<Item> fastItemAdapter) {
         this.mFastItemAdapter = fastItemAdapter;
+        mRecyclerView.setAdapter(mFastItemAdapter);
         return this;
     }
 
     public FastAdapterDialog<Item> withItems(@NonNull List<Item> items) {
         if (mFastItemAdapter == null) {
             mFastItemAdapter = new FastItemAdapter<>();
+            mRecyclerView.setAdapter(mFastItemAdapter);
         }
         mFastItemAdapter.set(items);
         return this;
@@ -73,13 +84,14 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
     public FastAdapterDialog<Item> withItems(@NonNull Item... items) {
         if (mFastItemAdapter == null) {
             mFastItemAdapter = new FastItemAdapter<>();
+            mRecyclerView.setAdapter(mFastItemAdapter);
         }
         mFastItemAdapter.add(items);
         return this;
     }
 
     public FastAdapterDialog<Item> withAdapter(AbstractAdapter<Item> adapter) {
-        this.mAdapter = adapter;
+        this.mRecyclerView.setAdapter(adapter);
         return this;
     }
 
@@ -89,7 +101,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param layoutManager LayoutManager to use
      */
     public FastAdapterDialog<Item> withLayoutManager(RecyclerView.LayoutManager layoutManager) {
-        this.mLayoutManager = layoutManager;
+        this.mRecyclerView.setLayoutManager(layoutManager);
         return this;
     }
 
@@ -100,10 +112,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param listener listener to set or null to clear
      */
     public FastAdapterDialog<Item> withOnScrollListener(RecyclerView.OnScrollListener listener) {
-        if (mOnScrollListener == null) {
-            mOnScrollListener = new ArrayList<>();
-        }
-        this.mOnScrollListener.add(listener);
+        mRecyclerView.addOnScrollListener(listener);
         return this;
     }
 
@@ -232,32 +241,17 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * that in {@link #onStart}.
      */
     public void show() {
-        if (mFastItemAdapter == null && mAdapter == null) {
+        if (mRecyclerView.getLayoutManager() == null) {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        }
+        if (mFastItemAdapter == null && mRecyclerView.getAdapter() == null) {
             mFastItemAdapter = new FastItemAdapter<>();
+            mRecyclerView.setAdapter(mFastItemAdapter);
         }
-        if (mLayoutManager == null) {
-            mLayoutManager = new LinearLayoutManager(getContext());
-        }
-        this.mRecyclerView = createRecyclerView(getContext(), mLayoutManager, mAdapter == null ? mFastItemAdapter : mAdapter);
-        if (mOnScrollListener != null) {
-            for (RecyclerView.OnScrollListener onScrollListener : mOnScrollListener) {
-                mRecyclerView.addOnScrollListener(onScrollListener);
-            }
-        }
-        setView(mRecyclerView);
         super.show();
     }
 
-    private RecyclerView createRecyclerView(Context context, RecyclerView.LayoutManager layoutManager, RecyclerView.Adapter adapter) {
-        RecyclerView recyclerView = new RecyclerView(context);
-        RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT);
-        recyclerView.setLayoutParams(params);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-        return recyclerView;
-    }
-
+    @NonNull
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
     }
