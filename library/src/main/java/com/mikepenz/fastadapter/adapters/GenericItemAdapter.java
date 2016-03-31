@@ -130,6 +130,19 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model, I
     }
 
     /**
+     * moves an model within the list from a position to a position
+     *
+     * @param fromPosition the position global from which we want to move
+     * @param toPosition   the global position to which to move
+     * @return this
+     */
+    public GenericItemAdapter<Model, Item> moveModel(int fromPosition, int toPosition) {
+        super.move(fromPosition, toPosition);
+        return this;
+    }
+
+
+    /**
      * remove a range oof model items starting with the (global) position and the size
      *
      * @param position  the global position
@@ -147,18 +160,6 @@ public class GenericItemAdapter<Model, Item extends GenericAbstractItem<Model, I
      */
     public GenericItemAdapter<Model, Item> removeModel(int position) {
         super.remove(position);
-        return this;
-    }
-
-    /**
-     * moves an model within the list from a position to a position
-     *
-     * @param fromPosition the position global from which we want to move
-     * @param toPosition   the global position to which to move
-     * @return this
-     */
-    public GenericItemAdapter<Model, Item> move(int fromPosition, int toPosition) {
-        super.move(fromPosition, toPosition);
         return this;
     }
 
