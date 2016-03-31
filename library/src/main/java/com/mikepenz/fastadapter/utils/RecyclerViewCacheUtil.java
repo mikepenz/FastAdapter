@@ -16,7 +16,7 @@ public class RecyclerViewCacheUtil<Item extends IItem> {
     private int mCacheSize = 2;
 
     /**
-     * define the amount of elements which should be cached for a specific drawerItem type
+     * define the amount of elements which should be cached for a specific item type
      *
      * @param cacheSize
      * @return
