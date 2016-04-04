@@ -431,6 +431,10 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+            //we can not filter on expanded or selected items, because the remembered positions will change
+            getFastAdapter().deselect();
+            getFastAdapter().collapse(false);
+
             if (mOriginalItems == null) {
                 mOriginalItems = new ArrayList<>(mItems);
             }
