@@ -60,6 +60,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = new FastItemAdapter<>();
+        fastItemAdapter.withSelectable(true);
 
         //create our FooterAdapter which will manage the progress items
         footerAdapter = new FooterAdapter<>();
