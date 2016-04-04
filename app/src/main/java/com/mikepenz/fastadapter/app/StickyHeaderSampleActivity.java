@@ -47,6 +47,7 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
 
         //create our FastAdapter
         fastAdapter = new FastAdapter();
+        fastAdapter.withSelectable(true);
 
         //create our adapters
         final StickyHeaderAdapter stickyHeaderAdapter = new StickyHeaderAdapter();

@@ -14,7 +14,7 @@ buildscript {
 // project and then reference this from the modules
 ext {
     compileSdkVersion = 23
-    buildToolsVersion = "23.0.2"
+    buildToolsVersion = "23.0.3"
     supportLibVersion = "23.2.1"
 }
 

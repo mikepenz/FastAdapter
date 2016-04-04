@@ -45,6 +45,7 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
 
         //create our FastAdapter which will manage everything
         fastAdapter = new FastAdapter();
+        fastAdapter.withSelectable(true);
 
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);

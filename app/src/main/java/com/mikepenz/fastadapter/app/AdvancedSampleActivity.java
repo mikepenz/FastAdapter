@@ -76,6 +76,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
+        mFastAdapter.withSelectable(true);
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withSelectOnLongClick(true);
         mFastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<IItem>() {

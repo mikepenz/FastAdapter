@@ -47,6 +47,7 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = new FastItemAdapter<>();
+        fastItemAdapter.withSelectable(true);
 
         //configure our fastAdapter
         fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<RadioButtonSampleItem>() {

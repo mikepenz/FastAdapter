@@ -14,7 +14,7 @@ public class IdDistributor {
     private static final AtomicLong idDistributor = new AtomicLong(9000000000000000000L);
 
     /**
-     * set an unique identifier for all drawerItems which do not have one set already
+     * set an unique identifier for all items which do not have one set already
      *
      * @param items
      * @return
@@ -27,7 +27,7 @@ public class IdDistributor {
     }
 
     /**
-     * set an unique identifier for all drawerItems which do not have one set already
+     * set an unique identifier for all items which do not have one set already
      *
      * @param items
      * @return
@@ -40,7 +40,7 @@ public class IdDistributor {
     }
 
     /**
-     * set an unique identifier for the drawerItem which do not have one set already
+     * set an unique identifier for the item which do not have one set already
      *
      * @param item
      * @return

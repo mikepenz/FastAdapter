@@ -135,6 +135,7 @@ public class SampleActivity extends AppCompatActivity {
 
         //create our FastAdapter which will manage everything
         mFastAdapter = new FastAdapter<>();
+        mFastAdapter.withSelectable(true);
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withSelectOnLongClick(false);
         //create our ItemAdapter which will host our items

@@ -88,7 +88,7 @@ public class IconGridActivity extends AppCompatActivity {
 
             ArrayList<IItem> icons = new ArrayList<>();
             for (String icon : font.getIcons()) {
-                icons.add(new IconItem().withIcon(font.getIcon(icon)).withSelectable(false));
+                icons.add(new IconItem().withIcon(font.getIcon(icon)));
             }
             expandableItem.withSubItems(icons);
 

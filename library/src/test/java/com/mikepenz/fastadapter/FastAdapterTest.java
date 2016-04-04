@@ -37,7 +37,7 @@ public class FastAdapterTest {
 
     @Test
     public void constructor_Default_IsSelectable() throws Exception {
-        assertThat(adapter.isSelectable()).isTrue();    //default
+        assertThat(adapter.isSelectable()).isFalse();    //default
     }
 
     @Test
@@ -63,7 +63,7 @@ public class FastAdapterTest {
         assertThat(itemAdapter.getAdapterItemCount()).isEqualTo(11);
         TestItem movedItem = itemAdapter.getAdapterItem(0);
         TestItem changedItem = itemAdapter.getAdapterItem(1);
-        itemAdapter.move(0,10);
+        itemAdapter.move(0, 10);
         assertThat(itemAdapter.getAdapterItemCount()).isEqualTo(11);
         assertThat(movedItem).isEqualTo(itemAdapter.getAdapterItem(10));
         assertThat(changedItem).isEqualTo(itemAdapter.getAdapterItem(0));

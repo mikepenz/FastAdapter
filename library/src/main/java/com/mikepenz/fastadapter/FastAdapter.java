@@ -50,7 +50,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     // if a user can deselect a selection via click. required if there is always one selected item!
     private boolean mAllowDeselection = true;
     // if items are selectable in general
-    private boolean mSelectable = true;
+    private boolean mSelectable = false;
     // only one expanded section
     private boolean mOnlyOneExpandedItem = false;
 
