@@ -47,7 +47,9 @@ compile('com.mikepenz:fastadapter:1.4.0@aar') {
 
 All additions are included in the following dependency.
 ```gradle
-compile 'com.mikepenz:fastadapter-extensions:1.4.0@aar'
+compile('com.mikepenz:fastadapter-extensions:1.4.0@aar') {
+	transitive = true
+}
 ```
 
 > If you upgrade from < 1.4.0 follow the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md)
