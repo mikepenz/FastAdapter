@@ -82,7 +82,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-        if(mLayoutManager == null)
+        if (mLayoutManager == null)
             mLayoutManager = recyclerView.getLayoutManager();
 
         if (mVisibleThreshold == -1)
@@ -107,6 +107,17 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
             mLoading = true;
         }
+    }
+
+    public void resetPageCount(int page) {
+        mPreviousTotal = 0;
+        mLoading = true;
+        mCurrentPage = page;
+        onLoadMore(mCurrentPage);
+    }
+
+    public void resetPageCount() {
+        resetPageCount(0);
     }
 
     public RecyclerView.LayoutManager getLayoutManager() {
