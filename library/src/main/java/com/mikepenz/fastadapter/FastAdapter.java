@@ -507,6 +507,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (entry != null) {
             relativeInfo.item = entry.getValue().getAdapterItem(position - entry.getKey());
             relativeInfo.adapter = entry.getValue();
+            relativeInfo.position = position;
         }
         return relativeInfo;
     }
@@ -1367,5 +1368,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public static class RelativeInfo<Item extends IItem> {
         public IAdapter<Item> adapter = null;
         public Item item = null;
+        public int position = -1;
     }
 }

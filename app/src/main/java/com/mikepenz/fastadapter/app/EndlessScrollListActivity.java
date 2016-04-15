@@ -95,7 +95,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
             @Override
             public void onLoadMore(final int currentPage) {
                 footerAdapter.clear();
-                footerAdapter.add(new ProgressItem());
+                footerAdapter.add(new ProgressItem().withEnabled(false));
                 //simulate networking (2 seconds)
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
