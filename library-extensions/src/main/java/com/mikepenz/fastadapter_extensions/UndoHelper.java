@@ -8,8 +8,11 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  * Created by mikepenz on 04.01.16.
@@ -27,7 +30,7 @@ public class UndoHelper<Item extends IItem> {
      * @param adapter      the root FastAdapter
      * @param undoListener the listener which gets called when an item was really removed
      */
-    public UndoHelper(FastAdapter adapter, UndoListener undoListener) {
+    public UndoHelper(FastAdapter<Item> adapter, UndoListener undoListener) {
         this.mAdapter = adapter;
         this.mUndoListener = undoListener;
     }
@@ -47,11 +50,17 @@ public class UndoHelper<Item extends IItem> {
         }
 
         History history = new History();
-        history.positions = new HashSet<>(positions);
         history.action = ACTION_REMOVE;
         for (int position : positions) {
             history.items.add(mAdapter.getRelativeInfo(position));
         }
+        Collections.sort(history.items, new Comparator<FastAdapter.RelativeInfo<Item>>() {
+            @Override
+            public int compare(FastAdapter.RelativeInfo<Item> lhs, FastAdapter.RelativeInfo<Item> rhs) {
+                return Integer.valueOf(lhs.position).compareTo(rhs.position);
+            }
+        });
+
         mHistory = history;
 
         Snackbar snackbar = Snackbar.make(view, text, duration).setCallback(new Snackbar.Callback() {
@@ -87,7 +96,17 @@ public class UndoHelper<Item extends IItem> {
     private void notifyCommit() {
         if (mHistory != null) {
             if (mHistory.action == ACTION_REMOVE) {
-                mUndoListener.commitRemove(mHistory.positions, mHistory.items);
+                SortedSet<Integer> positions = new TreeSet<>(new Comparator<Integer>() {
+                    @Override
+                    public int compare(Integer lhs, Integer rhs) {
+                        return lhs.compareTo(rhs);
+                    }
+                });
+                for (FastAdapter.RelativeInfo<Item> relativeInfo : mHistory.items) {
+                    positions.add(relativeInfo.position);
+                }
+
+                mUndoListener.commitRemove(positions, mHistory.items);
                 mHistory = null;
             }
         }
@@ -96,12 +115,10 @@ public class UndoHelper<Item extends IItem> {
     private void doChange() {
         if (mHistory != null) {
             if (mHistory.action == ACTION_REMOVE) {
-                Integer[] positions = new Integer[mHistory.positions.size()];
-                mHistory.positions.toArray(positions);
-                for (int i = positions.length - 1; i >= 0; i--) {
+                for (int i = mHistory.items.size() - 1; i >= 0; i--) {
                     FastAdapter.RelativeInfo<Item> relativeInfo = mHistory.items.get(i);
                     if (relativeInfo.adapter instanceof IItemAdapter) {
-                        ((IItemAdapter) relativeInfo.adapter).remove(positions[i]);
+                        ((IItemAdapter) relativeInfo.adapter).remove(relativeInfo.position);
                     }
                 }
             }
@@ -111,17 +128,15 @@ public class UndoHelper<Item extends IItem> {
     private void undoChange() {
         if (mHistory != null) {
             if (mHistory.action == ACTION_REMOVE) {
-                int count = 0;
-                for (Integer position : mHistory.positions) {
-                    FastAdapter.RelativeInfo<Item> relativeInfo = mHistory.items.get(count);
+                for (int i = 0; i < mHistory.items.size(); i++) {
+                    FastAdapter.RelativeInfo<Item> relativeInfo = mHistory.items.get(i);
                     if (relativeInfo.adapter instanceof IItemAdapter) {
                         IItemAdapter<Item> adapter = (IItemAdapter<Item>) relativeInfo.adapter;
-                        adapter.add(position, relativeInfo.item);
+                        adapter.add(relativeInfo.position, relativeInfo.item);
                         if (relativeInfo.item.isSelected()) {
-                            mAdapter.select(position);
+                            mAdapter.select(relativeInfo.position);
                         }
                     }
-                    count++;
                 }
             }
         }
@@ -134,7 +149,6 @@ public class UndoHelper<Item extends IItem> {
 
     private class History {
         public int action;
-        public Set<Integer> positions;
         public ArrayList<FastAdapter.RelativeInfo<Item>> items = new ArrayList<>();
     }
 }
