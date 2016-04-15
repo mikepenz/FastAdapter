@@ -40,14 +40,14 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, and extensions. The core functions are included in the following dependency.
 ```gradle
-compile('com.mikepenz:fastadapter:1.4.1@aar') {
+compile('com.mikepenz:fastadapter:1.4.2@aar') {
 	transitive = true
 }
 ```
 
 All additions are included in the following dependency.
 ```gradle
-compile 'com.mikepenz:fastadapter-extensions:1.4.1.1@aar'
+compile 'com.mikepenz:fastadapter-extensions:1.4.2@aar'
 //The tiny Materialize library used for its useful helper classes
 compile 'com.mikepenz:materialize:0.8.8@aar'
 ```
