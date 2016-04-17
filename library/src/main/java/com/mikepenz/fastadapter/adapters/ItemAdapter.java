@@ -219,6 +219,13 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             IdDistributor.checkIds(items);
         }
 
+        //we remember the filter so we can reset it at the end
+        CharSequence constraint = null;
+        if (mFilterPredicate != null && mItemFilter.getConstraint() != null && mItemFilter.getConstraint().length() > 0) {
+            constraint = mItemFilter.getConstraint();
+            mItemFilter.performFiltering("");
+        }
+
         //first collapse all items
         getFastAdapter().collapse(false);
 
@@ -261,6 +268,11 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             getFastAdapter().notifyAdapterDataSetChanged();
         }
 
+        //set filter again
+        if (constraint != null) {
+            mItemFilter.performFiltering(constraint);
+        }
+
         return this;
     }
 
@@ -273,6 +285,14 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
+
+        //we remember the filter so we can reset it at the end
+        CharSequence constraint = null;
+        if (mFilterPredicate != null && mItemFilter.getConstraint() != null && mItemFilter.getConstraint().length() > 0) {
+            constraint = mItemFilter.getConstraint();
+            mItemFilter.performFiltering("");
+        }
+
         mItems = new ArrayList<>(items);
         mapPossibleTypes(mItems);
 
@@ -281,6 +301,11 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         }
 
         getFastAdapter().notifyAdapterDataSetChanged();
+
+        //set filter again
+        if (constraint != null) {
+            mItemFilter.performFiltering(constraint);
+        }
 
         return this;
     }
@@ -428,12 +453,15 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      */
     public class ItemFilter extends Filter {
         private List<Item> mOriginalItems;
+        private CharSequence mConstraint;
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
             //we can not filter on expanded or selected items, because the remembered positions will change
             getFastAdapter().deselect();
             getFastAdapter().collapse(false);
+
+            mConstraint = constraint;
 
             if (mOriginalItems == null) {
                 mOriginalItems = new ArrayList<>(mItems);
@@ -463,6 +491,10 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 results.count = filteredItems.size();
             }
             return results;
+        }
+
+        public CharSequence getConstraint() {
+            return mConstraint;
         }
 
         @Override
