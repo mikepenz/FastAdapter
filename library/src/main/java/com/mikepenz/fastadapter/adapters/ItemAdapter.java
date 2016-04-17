@@ -473,6 +473,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 // No filter implemented we return all the list
                 results.values = mOriginalItems;
                 results.count = mOriginalItems.size();
+                //our filter was cleared we can now vorget the old OriginalItems
+                mOriginalItems = null;
             } else {
                 List<Item> filteredItems = new ArrayList<>();
 
