@@ -219,13 +219,6 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             IdDistributor.checkIds(items);
         }
 
-        //we remember the filter so we can reset it at the end
-        CharSequence constraint = null;
-        if (mFilterPredicate != null && mItemFilter.getConstraint() != null && mItemFilter.getConstraint().length() > 0) {
-            constraint = mItemFilter.getConstraint();
-            mItemFilter.performFiltering("");
-        }
-
         //first collapse all items
         getFastAdapter().collapse(false);
 
@@ -268,11 +261,6 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             getFastAdapter().notifyAdapterDataSetChanged();
         }
 
-        //set filter again
-        if (constraint != null) {
-            mItemFilter.performFiltering(constraint);
-        }
-
         return this;
     }
 
@@ -286,13 +274,6 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             IdDistributor.checkIds(items);
         }
 
-        //we remember the filter so we can reset it at the end
-        CharSequence constraint = null;
-        if (mFilterPredicate != null && mItemFilter.getConstraint() != null && mItemFilter.getConstraint().length() > 0) {
-            constraint = mItemFilter.getConstraint();
-            mItemFilter.performFiltering("");
-        }
-
         mItems = new ArrayList<>(items);
         mapPossibleTypes(mItems);
 
@@ -301,11 +282,6 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         }
 
         getFastAdapter().notifyAdapterDataSetChanged();
-
-        //set filter again
-        if (constraint != null) {
-            mItemFilter.performFiltering(constraint);
-        }
 
         return this;
     }
@@ -473,7 +449,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 // No filter implemented we return all the list
                 results.values = mOriginalItems;
                 results.count = mOriginalItems.size();
-                //our filter was cleared we can now vorget the old OriginalItems
+                //our filter was cleared we can now forget the old OriginalItems
                 mOriginalItems = null;
             } else {
                 List<Item> filteredItems = new ArrayList<>();
