@@ -4,6 +4,8 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.mikepenz.fastadapter.adapters.FooterAdapter;
+
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 
     private int mPreviousTotal = 0;
@@ -16,9 +18,15 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
 
     private int mCurrentPage = 1;
 
+    private FooterAdapter mFooterAdapter;
+
     private RecyclerView.LayoutManager mLayoutManager;
 
     public EndlessRecyclerOnScrollListener() {
+    }
+
+    public EndlessRecyclerOnScrollListener(FooterAdapter adapter) {
+        this.mFooterAdapter = adapter;
     }
 
     public EndlessRecyclerOnScrollListener(RecyclerView.LayoutManager layoutManager) {
@@ -85,11 +93,13 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         if (mLayoutManager == null)
             mLayoutManager = recyclerView.getLayoutManager();
 
-        if (mVisibleThreshold == -1)
-            mVisibleThreshold = findLastVisibleItemPosition(recyclerView) - findFirstVisibleItemPosition(recyclerView);
+        int footerItemCount = mFooterAdapter != null ? mFooterAdapter.getAdapterItemCount() : 0;
 
-        mVisibleItemCount = recyclerView.getChildCount();
-        mTotalItemCount = mLayoutManager.getItemCount();
+        if (mVisibleThreshold == -1)
+            mVisibleThreshold = findLastVisibleItemPosition(recyclerView) - findFirstVisibleItemPosition(recyclerView) - footerItemCount;
+
+        mVisibleItemCount = recyclerView.getChildCount() - footerItemCount;
+        mTotalItemCount = mLayoutManager.getItemCount() - footerItemCount;
         mFirstVisibleItem = findFirstVisibleItemPosition(recyclerView);
 
         if (mLoading) {
