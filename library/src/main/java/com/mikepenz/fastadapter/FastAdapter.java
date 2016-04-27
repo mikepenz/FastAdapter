@@ -983,9 +983,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 }
 
                 //we will deselect starting with the lowest one
-                for (Integer value : mSelections) {
+                Iterator<Integer> selectionsIterator = mSelections.iterator();
+                while (selectionsIterator.hasNext()) {
+                    Integer value = selectionsIterator.next();
                     if (value > position && value <= position + totalAddedItems) {
-                        deselect(value);
+                        deselect(value, selectionsIterator);
                     }
                 }
 
