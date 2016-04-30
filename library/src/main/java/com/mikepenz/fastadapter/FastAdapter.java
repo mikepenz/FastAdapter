@@ -54,7 +54,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private boolean mSelectable = false;
     // only one expanded section
     private boolean mOnlyOneExpandedItem = false;
-    //
+    // if we use the positionBasedStateManagement or the "stateless" managment
     private boolean mPositionBasedStateManagement = false;
 
     // we need to remember all selections to recreate them after orientation change
@@ -212,6 +212,18 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public FastAdapter<Item> withSelectable(boolean selectable) {
         this.mSelectable = selectable;
+        return this;
+    }
+
+    /**
+     * set if we want to use the positionBasedStateManagement (high performant for lists up to Integer.MAX_INT)
+     * set to false if you want to use the new stateManagement which will come with more flexibility (but worse performance on long lists)
+     *
+     * @param mPositionBasedStateManagement false to enable the alternative "stateLess" stateManagement
+     * @return this
+     */
+    public FastAdapter<Item> withPositionBasedStateManagement(boolean mPositionBasedStateManagement) {
+        this.mPositionBasedStateManagement = mPositionBasedStateManagement;
         return this;
     }
 
