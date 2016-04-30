@@ -6,6 +6,8 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
@@ -109,5 +111,43 @@ public class AdapterUtil {
         }
 
         return newPositions;
+    }
+
+    /**
+     * internal method to restore the selection state of subItems
+     *
+     * @param item          the parent item
+     * @param selectedItems the list of selectedItems from the savedInstanceState
+     */
+    public static void restoreSubItemSelectionStatesForAlternativeStateManagement(IItem item, ArrayList<String> selectedItems) {
+        if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
+            List<IItem> subItems = (List<IItem>) ((IExpandable<IItem, ?>) item).getSubItems();
+            for (IItem subItem : subItems) {
+                String id = String.valueOf(subItem.getIdentifier());
+                if (selectedItems != null && selectedItems.contains(id)) {
+                    subItem.withSetSelected(true);
+                }
+                restoreSubItemSelectionStatesForAlternativeStateManagement(subItem, selectedItems);
+            }
+        }
+    }
+
+    /**
+     * internal method to find all selections from subItems and sub sub items so we can save those inside our savedInstanceState
+     *
+     * @param item       the parent item
+     * @param selections the ArrayList which will be stored in the savedInstanceState
+     */
+    public static void findSubItemSelections(IItem item, ArrayList<String> selections) {
+        if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
+            List<IItem> subItems = (List<IItem>) ((IExpandable<IItem, ?>) item).getSubItems();
+            for (IItem subItem : subItems) {
+                String id = String.valueOf(subItem.getIdentifier());
+                if (subItem.isSelected()) {
+                    selections.add(id);
+                }
+                findSubItemSelections(subItem, selections);
+            }
+        }
     }
 }

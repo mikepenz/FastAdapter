@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 
 import com.mikepenz.fastadapter.utils.AdapterUtil;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -54,7 +55,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     // only one expanded section
     private boolean mOnlyOneExpandedItem = false;
     //
-    private boolean mAlternativeStateManagement = false;
+    private boolean mPositionBasedStateManagement = false;
 
     // we need to remember all selections to recreate them after orientation change
     private SortedSet<Integer> mSelections = new TreeSet<>();
@@ -222,6 +223,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * @return if this FastAdapter is configured with the PositionBasedStateManagement
+     */
+    public boolean isPositionBasedStateManagement() {
+        return mPositionBasedStateManagement;
+    }
+
+    /**
      * set if there should only be one opened expandable item
      * DEFAULT: false
      *
@@ -268,19 +276,38 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             //make sure already done selections are removed
             deselect();
 
-            //first restore opened collasable items, as otherwise may not all selections could be restored
-            int[] expandedItems = savedInstanceState.getIntArray(BUNDLE_EXPANDED + prefix);
-            if (expandedItems != null) {
-                for (Integer expandedItem : expandedItems) {
-                    expand(expandedItem);
+            if (mPositionBasedStateManagement) {
+                //first restore opened collasable items, as otherwise may not all selections could be restored
+                int[] expandedItems = savedInstanceState.getIntArray(BUNDLE_EXPANDED + prefix);
+                if (expandedItems != null) {
+                    for (Integer expandedItem : expandedItems) {
+                        expand(expandedItem);
+                    }
                 }
-            }
 
-            //restore the selections
-            int[] selections = savedInstanceState.getIntArray(BUNDLE_SELECTIONS + prefix);
-            if (selections != null) {
-                for (Integer selection : selections) {
-                    select(selection);
+                //restore the selections
+                int[] selections = savedInstanceState.getIntArray(BUNDLE_SELECTIONS + prefix);
+                if (selections != null) {
+                    for (Integer selection : selections) {
+                        select(selection);
+                    }
+                }
+            } else {
+                ArrayList<String> expandedItems = savedInstanceState.getStringArrayList(BUNDLE_EXPANDED + prefix);
+                ArrayList<String> selectedItems = savedInstanceState.getStringArrayList(BUNDLE_SELECTIONS + prefix);
+
+                for (int i = 0; i < getItemCount(); i++) {
+                    Item item = getItem(i);
+                    String id = String.valueOf(item.getIdentifier());
+                    if (expandedItems != null && expandedItems.contains(id)) {
+                        expand(i);
+                    }
+                    if (selectedItems != null && selectedItems.contains(id)) {
+                        select(i);
+                    }
+
+                    //we also have to restore the selections for subItems
+                    AdapterUtil.restoreSubItemSelectionStatesForAlternativeStateManagement(item, selectedItems);
                 }
             }
         }
@@ -613,7 +640,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public int getExpandedItemsCount(int from, int position) {
         int totalAddedItems = 0;
-        if (mAlternativeStateManagement) {
+        if (mPositionBasedStateManagement) {
             int length = mExpanded.size();
             for (int i = 0; i < length; i++) {
                 //now we count the amount of expanded items within our range we check
@@ -625,7 +652,17 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 }
             }
         } else {
-            //TODO
+            //first we find out how many items were added in total
+            //also counting subItems
+            for (int i = position; i < position + totalAddedItems; i++) {
+                Item tmp = getItem(i);
+                if (tmp instanceof IExpandable) {
+                    IExpandable tmpExpandable = ((IExpandable) tmp);
+                    if (tmpExpandable.getSubItems() != null && tmpExpandable.isExpanded()) {
+                        totalAddedItems = totalAddedItems + tmpExpandable.getSubItems().size();
+                    }
+                }
+            }
         }
         return totalAddedItems;
     }
@@ -654,8 +691,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public Bundle saveInstanceState(Bundle savedInstanceState, String prefix) {
         if (savedInstanceState != null) {
-            //remember the selections
-            if (mAlternativeStateManagement) {
+            if (mPositionBasedStateManagement) {
+                //remember the selections
                 int[] selections = new int[mSelections.size()];
                 int index = 0;
                 for (Integer selection : mSelections) {
@@ -663,12 +700,32 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                     index++;
                 }
                 savedInstanceState.putIntArray(BUNDLE_SELECTIONS + prefix, selections);
-            } else {
-                //TODO
-            }
 
-            //remember the collapsed states
-            savedInstanceState.putIntArray(BUNDLE_EXPANDED + prefix, getExpandedItems());
+                //remember the collapsed states
+                savedInstanceState.putIntArray(BUNDLE_EXPANDED + prefix, getExpandedItems());
+            } else {
+                ArrayList<String> selections = new ArrayList<>();
+                ArrayList<String> expandedItems = new ArrayList<>();
+
+                int length = getItemCount();
+                for (int i = 0; i < length; i++) {
+                    Item item = getItem(i);
+                    if (item instanceof IExpandable && ((IExpandable) item).isExpanded()) {
+                        expandedItems.add(String.valueOf(item.getIdentifier()));
+                    }
+                    if (item.isSelected()) {
+                        selections.add(String.valueOf(item.getIdentifier()));
+                    }
+                    //we also have to find all selections in the sub hirachies
+                    AdapterUtil.findSubItemSelections(item, selections);
+                }
+
+                //remember the selections
+                savedInstanceState.putStringArrayList(BUNDLE_SELECTIONS + prefix, selections);
+
+                //remember the collapsed states
+                savedInstanceState.putStringArrayList(BUNDLE_EXPANDED + prefix, expandedItems);
+            }
         }
         return savedInstanceState;
     }
@@ -704,12 +761,19 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return a set with the global positions of all selected items
      */
     public Set<Integer> getSelections() {
-        if (mAlternativeStateManagement) {
-            //TODO
+        if (mPositionBasedStateManagement) {
+            return mSelections;
         } else {
-            //TODO
+            Set<Integer> selections = new HashSet<>();
+            int length = getItemCount();
+            for (int i = 0; i < length; i++) {
+                Item item = getItem(i);
+                if (item.isSelected()) {
+                    selections.add(i);
+                }
+            }
+            return selections;
         }
-        return mSelections;
     }
 
     /**
@@ -729,13 +793,18 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      */
     public void toggleSelection(int position) {
-        if (mAlternativeStateManagement) {
-            //TODO
-        }
-        if (mSelections.contains(position)) {
-            deselect(position);
+        if (mPositionBasedStateManagement) {
+            if (mSelections.contains(position)) {
+                deselect(position);
+            } else {
+                select(position);
+            }
         } else {
-            select(position);
+            if (getItem(position).isSelected()) {
+                deselect(position);
+            } else {
+                select(position);
+            }
         }
     }
 
@@ -769,7 +838,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             if (!mMultiSelect) {
                 //we have to separately handle deselection here because if we toggle the current item we do not want to deselect this first!
 
-                if (mAlternativeStateManagement) {
+                if (mPositionBasedStateManagement) {
                     Iterator<Integer> entries = mSelections.iterator();
                     while (entries.hasNext()) {
                         //deselect all but the current one! this is important!
@@ -779,7 +848,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                         }
                     }
                 } else {
-                    //TODO
+                    Set<Integer> selections = getSelections();
+                    for (int pos : selections) {
+                        if (pos != position) {
+                            deselect(pos);
+                        }
+                    }
                 }
             }
 
@@ -788,7 +862,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             view.setSelected(!selected);
 
             //now we make sure we remember the selection!
-            if (mAlternativeStateManagement) {
+            if (mPositionBasedStateManagement) {
                 if (selected) {
                     if (mSelections.contains(position)) {
                         mSelections.remove(position);
@@ -796,8 +870,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 } else {
                     mSelections.add(position);
                 }
-            } else {
-                //TODO
             }
         }
     }
@@ -833,10 +905,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (item != null) {
             item.withSetSelected(true);
 
-            if (mAlternativeStateManagement) {
+            if (mPositionBasedStateManagement) {
                 mSelections.add(position);
-            } else {
-                //TODO
             }
         }
         notifyItemChanged(position);
@@ -850,10 +920,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * deselects all selections
      */
     public void deselect() {
-        if (mAlternativeStateManagement) {
+        if (mPositionBasedStateManagement) {
             deselect(mSelections);
         } else {
-            //TODO
+            deselect(getSelections());
         }
     }
 
@@ -891,12 +961,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             item.withSetSelected(false);
         }
         if (entries == null) {
-            if (mAlternativeStateManagement) {
+            if (mPositionBasedStateManagement) {
                 if (mSelections.contains(position)) {
                     mSelections.remove(position);
                 }
-            } else {
-                //TODO
             }
         } else {
             entries.remove();
@@ -913,7 +981,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         List<Item> deletedItems = new LinkedList<>();
         //we have to re-fetch the selections array again and again as the position will change after one item is deleted
 
-        if (mAlternativeStateManagement) {
+        if (mPositionBasedStateManagement) {
             Set<Integer> selections = getSelections();
             while (selections.size() > 0) {
                 Iterator<Integer> iterator = selections.iterator();
@@ -928,7 +996,15 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 selections = getSelections();
             }
         } else {
-            //TODO
+            int length = getItemCount();
+            for (int i = length - 1; i >= 0; i--) {
+                RelativeInfo<Item> ri = getRelativeInfo(i);
+                if (ri.item.isSelected()) {
+                    if (ri.adapter != null && ri.adapter instanceof IItemAdapter) {
+                        ((IItemAdapter) ri.adapter).remove(i);
+                    }
+                }
+            }
         }
         return deletedItems;
     }
@@ -946,13 +1022,19 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return the expanded items
      */
     public SparseIntArray getExpanded() {
-
-        if (mAlternativeStateManagement) {
-            //TODO
+        if (mPositionBasedStateManagement) {
+            return mExpanded;
         } else {
-            //TODO
+            SparseIntArray expandedItems = new SparseIntArray();
+            int length = getItemCount();
+            for (int i = 0; i < length; i++) {
+                Item item = getItem(i);
+                if (item instanceof IExpandable && ((IExpandable) item).isExpanded()) {
+                    expandedItems.put(i, ((IExpandable) item).getSubItems().size());
+                }
+            }
+            return expandedItems;
         }
-        return mExpanded;
     }
 
     /**
@@ -960,15 +1042,27 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public int[] getExpandedItems() {
         int[] expandedItems;
-        if (mAlternativeStateManagement) {
+        if (mPositionBasedStateManagement) {
             int length = mExpanded.size();
             expandedItems = new int[length];
             for (int i = 0; i < length; i++) {
                 expandedItems[i] = mExpanded.keyAt(i);
             }
         } else {
-            expandedItems = new int[1];
-            //TODO
+            ArrayList<Integer> expandedItemsList = new ArrayList<>();
+            int length = getItemCount();
+            for (int i = 0; i < length; i++) {
+                Item item = getItem(i);
+                if (item instanceof IExpandable && ((IExpandable) item).isExpanded()) {
+                    expandedItemsList.add(i);
+                }
+            }
+
+            int expandedItemsListLength = expandedItemsList.size();
+            expandedItems = new int[expandedItemsListLength];
+            for (int i = 0; i < expandedItemsListLength; i++) {
+                expandedItems[i] = expandedItemsList.get(i);
+            }
         }
         return expandedItems;
     }
@@ -979,14 +1073,19 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      */
     public void toggleExpandable(int position) {
-        if (mAlternativeStateManagement) {
+        if (mPositionBasedStateManagement) {
             if (mExpanded.indexOfKey(position) >= 0) {
                 collapse(position);
             } else {
                 expand(position);
             }
         } else {
-            //TODO
+            Item item = getItem(position);
+            if (item instanceof IExpandable && ((IExpandable) item).isExpanded()) {
+                collapse(position);
+            } else {
+                expand(position);
+            }
         }
     }
 
@@ -1029,12 +1128,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         Item item = getItem(position);
         if (item != null && item instanceof IExpandable) {
             IExpandable expandable = (IExpandable) item;
-
-
-            if (mAlternativeStateManagement) {
-                //as we now know the item we will collapse we can collapse all subitems
-                //if this item is not already collapsed and has sub items we go on
-                if (expandable.isExpanded() && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
+            //as we now know the item we will collapse we can collapse all subitems
+            //if this item is not already collapsed and has sub items we go on
+            if (expandable.isExpanded() && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
+                if (mPositionBasedStateManagement) {
                     //first we find out how many items were added in total
                     int totalAddedItems = expandable.getSubItems().size();
 
@@ -1067,9 +1164,37 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
                     //we collapse our root element
                     internalCollapse(expandable, position, notifyItemChanged);
+                } else {
+                    //first we find out how many items were added in total
+                    //also counting subitems
+                    int totalAddedItems = expandable.getSubItems().size();
+                    for (int i = position + 1; i < position + totalAddedItems; i++) {
+                        Item tmp = getItem(i);
+                        if (tmp instanceof IExpandable) {
+                            IExpandable tmpExpandable = ((IExpandable) tmp);
+                            if (tmpExpandable.getSubItems() != null && tmpExpandable.isExpanded()) {
+                                totalAddedItems = totalAddedItems + tmpExpandable.getSubItems().size();
+                            }
+                        }
+                    }
+
+                    //why... WHY?!
+                    for (int i = position + totalAddedItems - 1; i > position; i--) {
+                        Item tmp = getItem(i);
+                        if (tmp instanceof IExpandable) {
+                            IExpandable tmpExpandable = ((IExpandable) tmp);
+                            if (tmpExpandable.isExpanded()) {
+                                collapse(i);
+                                if (tmpExpandable.getSubItems() != null) {
+                                    i = i - tmpExpandable.getSubItems().size();
+                                }
+                            }
+                        }
+                    }
+
+                    //we collapse our root element
+                    internalCollapse(expandable, position, notifyItemChanged);
                 }
-            } else {
-                //TODO
             }
         }
     }
@@ -1095,13 +1220,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         expandable.withIsExpanded(false);
         //remove the information that this item was opened
 
-        if (mAlternativeStateManagement) {
+        if (mPositionBasedStateManagement) {
             int indexOfKey = mExpanded.indexOfKey(position);
             if (indexOfKey >= 0) {
                 mExpanded.removeAt(indexOfKey);
             }
-        } else {
-            //TODO
         }
         //we need to notify to get the correct drawable if there is one showing the current state
         if (notifyItemChanged) {
@@ -1130,8 +1253,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (item != null && item instanceof IExpandable) {
             IExpandable<?, Item> expandable = (IExpandable<?, Item>) item;
 
-
-            if (mAlternativeStateManagement) {
+            if (mPositionBasedStateManagement) {
                 //if this item is not already expanded and has sub items we go on
                 if (mExpanded.indexOfKey(position) < 0 && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
                     IAdapter<Item> adapter = getAdapter(position);
@@ -1151,7 +1273,21 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                     mExpanded.put(position, expandable.getSubItems() != null ? expandable.getSubItems().size() : 0);
                 }
             } else {
-                //TODO
+                //if this item is not already expanded and has sub items we go on
+                if (!expandable.isExpanded() && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
+                    IAdapter<Item> adapter = getAdapter(position);
+                    if (adapter != null && adapter instanceof IItemAdapter) {
+                        ((IItemAdapter<Item>) adapter).add(position + 1, expandable.getSubItems());
+                    }
+
+                    //remember that this item is now opened (not collapsed)
+                    expandable.withIsExpanded(true);
+
+                    //we need to notify to get the correct drawable if there is one showing the current state
+                    if (notifyItemChanged) {
+                        notifyItemChanged(position);
+                    }
+                }
             }
         }
     }
@@ -1166,17 +1302,17 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * wraps notifyDataSetChanged
      */
     public void notifyAdapterDataSetChanged() {
-        if (mAlternativeStateManagement) {
+        if (mPositionBasedStateManagement) {
             mSelections.clear();
             mExpanded.clear();
-        } else {
-            //TODO
         }
         cacheSizes();
         notifyDataSetChanged();
 
-        //we make sure the new items are displayed properly
-        AdapterUtil.handleStates(this, 0, getItemCount() - 1);
+        if (mPositionBasedStateManagement) {
+            //we make sure the new items are displayed properly
+            AdapterUtil.handleStates(this, 0, getItemCount() - 1);
+        }
     }
 
     /**
@@ -1197,18 +1333,18 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public void notifyAdapterItemRangeInserted(int position, int itemCount) {
         //we have to update all current stored selection and expandable states in our map
 
-        if (mAlternativeStateManagement) {
+        if (mPositionBasedStateManagement) {
             mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount);
             mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, itemCount);
-        } else {
-            //TODO
         }
         cacheSizes();
 
         notifyItemRangeInserted(position, itemCount);
 
-        //we make sure the new items are displayed properly
-        AdapterUtil.handleStates(this, position, position + itemCount - 1);
+        if (mPositionBasedStateManagement) {
+            //we make sure the new items are displayed properly
+            AdapterUtil.handleStates(this, position, position + itemCount - 1);
+        }
     }
 
     /**
@@ -1228,13 +1364,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public void notifyAdapterItemRangeRemoved(int position, int itemCount) {
         //we have to update all current stored selection and expandable states in our map
-
-        if (mAlternativeStateManagement) {
+        if (mPositionBasedStateManagement) {
             mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount * (-1));
             mExpanded = AdapterUtil.adjustPosition(mExpanded, position, Integer.MAX_VALUE, itemCount * (-1));
-        } else {
-            //TODO
         }
+
         cacheSizes();
         notifyItemRangeRemoved(position, itemCount);
     }
@@ -1250,7 +1384,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         collapse(fromPosition);
         collapse(toPosition);
 
-        if (mAlternativeStateManagement) {
+        if (mPositionBasedStateManagement) {
             if (!mSelections.contains(fromPosition) && mSelections.contains(toPosition)) {
                 mSelections.remove(toPosition);
                 mSelections.add(fromPosition);
@@ -1258,8 +1392,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 mSelections.remove(fromPosition);
                 mSelections.add(toPosition);
             }
-        } else {
-            //TODO
         }
 
         notifyItemMoved(fromPosition, toPosition);
@@ -1303,13 +1435,15 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public void notifyAdapterItemRangeChanged(int position, int itemCount, Object payload) {
         for (int i = position; i < position + itemCount; i++) {
-
-            if (mAlternativeStateManagement) {
+            if (mPositionBasedStateManagement) {
                 if (mExpanded.indexOfKey(i) >= 0) {
                     collapse(i);
                 }
             } else {
-                //TODO
+                Item item = getItem(position);
+                if (item instanceof IExpandable && ((IExpandable) item).isExpanded()) {
+                    collapse(position);
+                }
             }
         }
 
@@ -1319,8 +1453,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             notifyItemRangeChanged(position, itemCount, payload);
         }
 
-        //we make sure the new items are displayed properly
-        AdapterUtil.handleStates(this, position, position + itemCount - 1);
+        if (mPositionBasedStateManagement) {
+            //we make sure the new items are displayed properly
+            AdapterUtil.handleStates(this, position, position + itemCount - 1);
+        }
     }
 
     /**
@@ -1330,31 +1466,40 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position of the parent item
      */
     public void notifyAdapterSubItemsChanged(int position) {
+        //TODO ALSO CARE ABOUT SUB SUB ... HIRACHIES
+
+        if (mPositionBasedStateManagement) {
+            //we only need to do something if this item is expanded
+            if (mExpanded.indexOfKey(position) > -1) {
+                int previousCount = mExpanded.get(position);
+                int itemsCount = notifyAdapterSubItemsChanged(position, previousCount);
+                mExpanded.put(position, itemsCount);
+            }
+        } else {
+            Log.e("FastAdapter", "please use the notifyAdapterSubItemsChanged(int position, int previousCount) method instead in the PositionBasedStateManagement mode, as we are not able to calculate the previous count ");
+        }
+    }
+
+    /**
+     * notifies the fastAdapter about new / removed items within a sub hierarchy
+     * NOTE this currently only works for sub items with only 1 level
+     *
+     * @param position      the global position of the parent item
+     * @param previousCount the previous count of sub items
+     * @return the new count of subItems
+     */
+    public int notifyAdapterSubItemsChanged(int position, int previousCount) {
         Item item = getItem(position);
         if (item != null && item instanceof IExpandable) {
             IExpandable expandable = (IExpandable) item;
-
-            //TODO ALSO CARE ABOUT SUB SUB ... HIRACHIES
-
-            //first we find out how many items this parent item contains
-            int itemsCount = expandable.getSubItems().size();
-
-
-            if (mAlternativeStateManagement) {
-                //we only need to do something if this item is expanded
-                if (mExpanded.indexOfKey(position) > -1) {
-                    int previousCount = mExpanded.get(position);
-                    IAdapter adapter = getAdapter(position);
-                    if (adapter != null && adapter instanceof IItemAdapter) {
-                        ((IItemAdapter) adapter).removeRange(position + 1, previousCount);
-                        ((IItemAdapter) adapter).add(position + 1, expandable.getSubItems());
-                    }
-                    mExpanded.put(position, itemsCount);
-                }
-            } else {
-                //TODO
+            IAdapter adapter = getAdapter(position);
+            if (adapter != null && adapter instanceof IItemAdapter) {
+                ((IItemAdapter) adapter).removeRange(position + 1, previousCount);
+                ((IItemAdapter) adapter).add(position + 1, expandable.getSubItems());
             }
+            return expandable.getSubItems().size();
         }
+        return 0;
     }
 
     //listeners
