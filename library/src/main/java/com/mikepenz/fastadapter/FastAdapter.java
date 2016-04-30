@@ -908,8 +908,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return a set with the global positions of all expanded items
      */
     public int[] getExpandedItems() {
-        int[] expandedItems = new int[mExpanded.size()];
         int length = mExpanded.size();
+        int[] expandedItems = new int[length];
         for (int i = 0; i < length; i++) {
             expandedItems[i] = mExpanded.keyAt(i);
         }
