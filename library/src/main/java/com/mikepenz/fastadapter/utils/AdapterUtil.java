@@ -6,7 +6,6 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
@@ -119,7 +118,7 @@ public class AdapterUtil {
      * @param item          the parent item
      * @param selectedItems the list of selectedItems from the savedInstanceState
      */
-    public static void restoreSubItemSelectionStatesForAlternativeStateManagement(IItem item, ArrayList<String> selectedItems) {
+    public static void restoreSubItemSelectionStatesForAlternativeStateManagement(IItem item, List<String> selectedItems) {
         if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
             List<IItem> subItems = (List<IItem>) ((IExpandable<IItem, ?>) item).getSubItems();
             for (IItem subItem : subItems) {
@@ -138,7 +137,7 @@ public class AdapterUtil {
      * @param item       the parent item
      * @param selections the ArrayList which will be stored in the savedInstanceState
      */
-    public static void findSubItemSelections(IItem item, ArrayList<String> selections) {
+    public static void findSubItemSelections(IItem item, List<String> selections) {
         if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
             List<IItem> subItems = (List<IItem>) ((IExpandable<IItem, ?>) item).getSubItems();
             for (IItem subItem : subItems) {
