@@ -788,6 +788,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         }
     }
 
+
     /**
      * @return a set with the items which are currently selected
      */
@@ -836,7 +837,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             return;
         }
 
-        boolean selected = mSelections.contains(position);
+        boolean selected = false;
+        if (mPositionBasedStateManagement) {
+            selected = mSelections.contains(position);
+        } else {
+            selected = item.isSelected();
+        }
+
         if (mSelectWithItemUpdate || view == null) {
             if (!mMultiSelect) {
                 deselect();
