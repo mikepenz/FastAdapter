@@ -942,7 +942,27 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (mPositionBasedStateManagement) {
             deselect(mSelections);
         } else {
-            deselect(getSelections());
+            for (IItem item : AdapterUtil.getAllItems(this)) {
+                item.withSetSelected(false);
+            }
+            notifyDataSetChanged();
+        }
+    }
+
+    /**
+     * select all items
+     */
+    public void select() {
+        if (mPositionBasedStateManagement) {
+            int length = getItemCount();
+            for (int i = 0; i < length; i++) {
+                select(i);
+            }
+        } else {
+            for (IItem item : AdapterUtil.getAllItems(this)) {
+                item.withSetSelected(true);
+            }
+            notifyDataSetChanged();
         }
     }
 
