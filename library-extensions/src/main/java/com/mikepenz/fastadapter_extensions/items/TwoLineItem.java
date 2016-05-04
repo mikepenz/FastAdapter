@@ -90,6 +90,10 @@ public class TwoLineItem extends AbstractItem<TwoLineItem, TwoLineItem.ViewHolde
         return mName;
     }
 
+    public StringHolder getDescription() {
+        return mDescription;
+    }
+
     public ImageHolder getAvatar() {
         return mAvatar;
     }
