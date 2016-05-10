@@ -54,8 +54,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private boolean mSelectable = false;
     // only one expanded section
     private boolean mOnlyOneExpandedItem = false;
-    // if we use the positionBasedStateManagement or the "stateless" managment
-    private boolean mPositionBasedStateManagement = false;
+    // if we use the positionBasedStateManagement or the "stateless" management
+    private boolean mPositionBasedStateManagement = true;
 
     // we need to remember all selections to recreate them after orientation change
     private SortedSet<Integer> mSelections = new TreeSet<>();
