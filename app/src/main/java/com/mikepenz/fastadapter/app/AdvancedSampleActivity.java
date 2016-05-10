@@ -130,14 +130,15 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         //init cache with the added items, this is useful for shorter lists with many many different view types (at least 4 or more
         //new RecyclerViewCacheUtil().withCacheSize(2).apply(rv, items);
 
-        //restore selections (this has to be done after the items were added
-        mFastAdapter.withSavedInstanceState(savedInstanceState);
-
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
 
+        //we define the items
         setItems();
+
+        //restore selections (this has to be done after the items were added
+        mFastAdapter.withSavedInstanceState(savedInstanceState);
     }
 
     private void setItems() {
@@ -146,9 +147,8 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         List<IItem> items = new ArrayList<>();
         int size = new Random().nextInt(25) + 10;
         for (int i = 1; i <= size; i++) {
-
             if (i % 6 == 0) {
-                ExpandableItem expandableItem = new ExpandableItem().withName("Test " + i).withHeader(headers[i / 5]);
+                ExpandableItem expandableItem = new ExpandableItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(100 + i);
                 List<IItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 3; ii++) {
                     ExpandableItem subItem = new ExpandableItem().withName("-- SubTest " + ii).withHeader(headers[i / 5]).withIdentifier(1000 + ii);
@@ -164,7 +164,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 expandableItem.withSubItems(subItems);
                 items.add(expandableItem);
             } else {
-                items.add(new SampleItem().withName("Test " + i).withHeader(headers[i / 5]));
+                items.add(new SampleItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(i));
             }
         }
         mItemAdapter.set(items);

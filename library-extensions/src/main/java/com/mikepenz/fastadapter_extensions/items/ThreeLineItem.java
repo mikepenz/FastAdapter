@@ -85,6 +85,10 @@ public class ThreeLineItem extends AbstractItem<ThreeLineItem, ThreeLineItem.Vie
         return mName;
     }
 
+    public StringHolder getDescription() {
+        return mDescription;
+    }
+
     public ImageHolder getAvatar() {
         return mAvatar;
     }
