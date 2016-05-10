@@ -13,7 +13,7 @@ android {
         minSdkVersion 11
         targetSdkVersion 23
         versionCode 150
-        versionName '1.5.0.b2-SNAPSHOT'
+        versionName '1.5.0'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
