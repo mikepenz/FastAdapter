@@ -44,7 +44,7 @@ public class SampleActivity extends AppCompatActivity {
     private ItemAdapter<SimpleImageItem> mItemAdapter;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         findViewById(android.R.id.content).setSystemUiVisibility(findViewById(android.R.id.content).getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         //create the activity
         super.onCreate(savedInstanceState);
@@ -151,15 +151,15 @@ public class SampleActivity extends AppCompatActivity {
         mRecyclerView.getItemAnimator().setAddDuration(500);
         mRecyclerView.getItemAnimator().setRemoveDuration(500);
 
-        //restore selections (this has to be done after the items were added
-        mFastAdapter.withSavedInstanceState(savedInstanceState);
-
         //if we do this. the first added items will be animated :D
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 //add some dummy data
                 mItemAdapter.add(ImageDummyData.getSimpleImageItems());
+
+                //restore selections (this has to be done after the items were added
+                mFastAdapter.withSavedInstanceState(savedInstanceState);
             }
         }, 50);
     }
