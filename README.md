@@ -47,7 +47,7 @@ compile('com.mikepenz:fastadapter:1.5.0@aar') {
 
 All additions are included in the following dependency.
 ```gradle
-compile 'com.mikepenz:fastadapter-extensions:1.5.0@aar'
+compile 'com.mikepenz:fastadapter-extensions:1.5.1@aar'
 //The tiny Materialize library used for its useful helper classes
 compile 'com.mikepenz:materialize:0.8.8@aar'
 ```
