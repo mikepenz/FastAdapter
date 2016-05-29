@@ -11,7 +11,9 @@ import com.mikepenz.fastadapter.utils.IdDistributor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import static java.util.Arrays.asList;
 
@@ -498,6 +500,45 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             if (mItemFilterListener != null) {
                 mItemFilterListener.itemsFiltered();
             }
+        }
+
+        /**
+         * helper method to get all selections from the ItemAdapter's original item list
+         *
+         * @return a Set with the global positions of all selected Items
+         */
+        public Set<Integer> getSelections() {
+            Set<Integer> selections = new HashSet<>();
+            if (mOriginalItems != null) {
+                int length = mOriginalItems.size();
+                int adapterOffset = getFastAdapter().getPreItemCountByOrder(getOrder());
+                for (int i = 0; i < length; i++) {
+                    Item item = mOriginalItems.get(i);
+                    if (item.isSelected()) {
+                        selections.add(i + adapterOffset);
+                    }
+                }
+            }
+            return selections;
+        }
+
+        /**
+         * helper method to get all selections from the ItemAdapter's original item list
+         *
+         * @return a Set with the selected items out of all items in this itemAdapter (not the listed ones)
+         */
+        public Set<Item> getSelectedItems() {
+            Set<Item> selections = new HashSet<>();
+            if (mOriginalItems != null) {
+                int length = mOriginalItems.size();
+                for (int i = 0; i < length; i++) {
+                    Item item = mOriginalItems.get(i);
+                    if (item.isSelected()) {
+                        selections.add(item);
+                    }
+                }
+            }
+            return selections;
         }
     }
 }
