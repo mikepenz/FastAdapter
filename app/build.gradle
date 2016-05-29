@@ -65,7 +65,7 @@ dependencies {
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
-    compile('com.mikepenz:materialdrawer:5.2.5@aar') {
+    compile('com.mikepenz:materialdrawer:5.2.7@aar') {
         transitive = true
         exclude module: "fastadapter"
     }
@@ -93,7 +93,7 @@ dependencies {
 
     //Used to provide the FastScrollBar
     //https://github.com/krimin-killr21/MaterialScrollBar
-    compile 'com.turingtechnologies.materialscrollbar:lib:8.1.0'
+    compile 'com.turingtechnologies.materialscrollbar:lib:10.0.1'
 
     //https://github.com/JakeWharton/butterknife
     compile 'com.jakewharton:butterknife:7.0.1'
