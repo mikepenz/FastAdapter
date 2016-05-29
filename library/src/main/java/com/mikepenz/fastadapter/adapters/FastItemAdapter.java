@@ -1,5 +1,7 @@
 package com.mikepenz.fastadapter.adapters;
 
+import android.widget.Filter;
+
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
@@ -43,7 +45,7 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
     /**
      * @return the filter used to filter items
      */
-    public ItemAdapter.ItemFilter getItemFilter() {
+    public Filter getItemFilter() {
         return mItemAdapter.getItemFilter();
     }
 

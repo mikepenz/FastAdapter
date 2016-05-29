@@ -39,12 +39,23 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     //filters the items
-    private final ItemFilter mItemFilter = new ItemFilter();
+    private Filter mItemFilter = new ItemFilter();
+
+    /**
+     * allows you to define your own Filter implementation instead of the default `ItemFilter`
+     *
+     * @param itemFilter the filter to use
+     * @return this
+     */
+    public ItemAdapter<Item> withItemFilter(Filter itemFilter) {
+        this.mItemFilter = itemFilter;
+        return this;
+    }
 
     /**
      * @return the filter used to filter items
      */
-    public ItemFilter getItemFilter() {
+    public Filter getItemFilter() {
         return mItemFilter;
     }
 
