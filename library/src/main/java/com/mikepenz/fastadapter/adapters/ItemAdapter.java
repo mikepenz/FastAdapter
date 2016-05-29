@@ -491,7 +491,9 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // Now we have to inform the adapter about the new list filtered
-            set((List<Item>) results.values);
+            if (results.values != null) {
+                set((List<Item>) results.values);
+            }
 
             if (mItemFilterListener != null) {
                 mItemFilterListener.itemsFiltered();
