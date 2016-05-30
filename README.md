@@ -144,6 +144,9 @@ public ViewHolderFactory<? extends ViewHolder> getFactory() {
 }
 ```
 
+Using the `GenericItemAdapter` with `proguard` requires you to use the non generic implementation by providing a `Function` to the following constructur: [GenericItemAdapter(Function<Model, Item> itemFactory) ](https://github.com/mikepenz/FastAdapter/blob/develop/library/src/main/java/com/mikepenz/fastadapter/adapters/GenericItemAdapter.java#L32)
+
+
 ## Libs used in sample app:
 Mike Penz:
 - AboutLibraries https://github.com/mikepenz/AboutLibraries
