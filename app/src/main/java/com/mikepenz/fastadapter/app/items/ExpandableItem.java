@@ -39,6 +39,8 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
     private List<IItem> mSubItems;
     private boolean mExpanded = false;
 
+    private FastAdapter.OnClickListener<ExpandableItem> mOnClickListener;
+
     public ExpandableItem withHeader(String header) {
         this.header = header;
         return this;
@@ -85,6 +87,15 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
         return this;
     }
 
+    public FastAdapter.OnClickListener<ExpandableItem> getOnClickListener() {
+        return mOnClickListener;
+    }
+
+    public ExpandableItem withOnClickListener(FastAdapter.OnClickListener<ExpandableItem> mOnClickListener) {
+        this.mOnClickListener = mOnClickListener;
+        return this;
+    }
+
     //we define a clickListener in here so we can directly animate
     final private FastAdapter.OnClickListener<ExpandableItem> onClickListener = new FastAdapter.OnClickListener<ExpandableItem>() {
         @Override
@@ -95,9 +106,9 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
                 } else {
                     ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
                 }
-                return true;
+                return mOnClickListener != null ? mOnClickListener.onClick(v, adapter, item, position) : true;
             }
-            return false;
+            return mOnClickListener != null ? mOnClickListener.onClick(v, adapter, item, position) : false;
         }
     };
 
