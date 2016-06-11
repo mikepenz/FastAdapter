@@ -508,8 +508,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
          * @return a Set with the global positions of all selected Items
          */
         public Set<Integer> getSelections() {
-            Set<Integer> selections = new HashSet<>();
             if (mOriginalItems != null) {
+                Set<Integer> selections = new HashSet<>();
                 int length = mOriginalItems.size();
                 int adapterOffset = getFastAdapter().getPreItemCountByOrder(getOrder());
                 for (int i = 0; i < length; i++) {
@@ -518,8 +518,10 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                         selections.add(i + adapterOffset);
                     }
                 }
+                return selections;
+            } else {
+                return getFastAdapter().getSelections();
             }
-            return selections;
         }
 
         /**
@@ -528,8 +530,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
          * @return a Set with the selected items out of all items in this itemAdapter (not the listed ones)
          */
         public Set<Item> getSelectedItems() {
-            Set<Item> selections = new HashSet<>();
             if (mOriginalItems != null) {
+                Set<Item> selections = new HashSet<>();
                 int length = mOriginalItems.size();
                 for (int i = 0; i < length; i++) {
                     Item item = mOriginalItems.get(i);
@@ -537,8 +539,10 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                         selections.add(item);
                     }
                 }
+                return selections;
+            } else {
+                return getFastAdapter().getSelectedItems();
             }
-            return selections;
         }
     }
 }
