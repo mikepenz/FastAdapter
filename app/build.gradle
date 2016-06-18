@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         minSdkVersion 11
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 152
         versionName '1.5.2'
 
