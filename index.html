@@ -82,15 +82,15 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 
 <p>The library is split up into core, and extensions. The core functions are included in the following dependency.</p>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:1.5.2@aar<span class="pl-pds">'</span></span>) {
+<div class="highlight highlight-source-groovy-gradle"><pre>compile(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:1.5.5@aar<span class="pl-pds">'</span></span>) {
     transitive <span class="pl-k">=</span> <span class="pl-c1">true</span>
 }</pre></div>
 
 <p>All additions are included in the following dependency.</p>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter-extensions:1.5.1@aar<span class="pl-pds">'</span></span>
+<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter-extensions:1.5.5@aar<span class="pl-pds">'</span></span>
 <span class="pl-c">//The tiny Materialize library used for its useful helper classes</span>
-compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:materialize:0.8.8@aar<span class="pl-pds">'</span></span></pre></div>
+compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:materialize:0.9.0@aar<span class="pl-pds">'</span></span></pre></div>
 
 <blockquote>
 <p>If you upgrade from &lt; 1.4.0 follow the <a href="https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md">MIGRATION GUIDE</a></p>
@@ -190,6 +190,8 @@ fastAdapter<span class="pl-k">.</span>add(<span class="pl-c1">ITEMS</span>);</pr
 <span class="pl-k">public</span> <span class="pl-k">ViewHolderFactory&lt;? extends <span class="pl-smi">ViewHolder</span>&gt;</span> getFactory() {
    <span class="pl-k">return</span> <span class="pl-c1">FACTORY</span>;
 }</pre></div>
+
+<p>Using the <code>GenericItemAdapter</code> with <code>proguard</code> requires you to use the non generic implementation by providing a <code>Function</code> to the following constructur: <a href="https://github.com/mikepenz/FastAdapter/blob/develop/library/src/main/java/com/mikepenz/fastadapter/adapters/GenericItemAdapter.java#L32">GenericItemAdapter(Function itemFactory) </a></p>
 
 <h2>
 <a id="libs-used-in-sample-app" class="anchor" href="#libs-used-in-sample-app" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Libs used in sample app:</h2>
