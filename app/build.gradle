@@ -11,9 +11,9 @@ android {
 
     defaultConfig {
         minSdkVersion 11
-        targetSdkVersion 23
-        versionCode 152
-        versionName '1.5.2'
+        targetSdkVersion 24
+        versionCode 155
+        versionName '1.5.5'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
@@ -56,16 +56,16 @@ dependencies {
     // contains util classes to support various android versions, and clean up code
     // comes with the awesome "Holder"-Pattern
     // https://github.com/mikepenz/Materialize
-    compile 'com.mikepenz:materialize:0.8.8@aar'
+    compile 'com.mikepenz:materialize:0.9.0@aar'
 
     // used to provide out of the box icon font support. simplifies development,
     // and provides scalable icons. the core is very very light
     // https://github.com/mikepenz/Android-Iconics
-    compile 'com.mikepenz:iconics-core:2.5.11@aar'
+    compile 'com.mikepenz:iconics-core:2.6.5@aar'
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
-    compile('com.mikepenz:materialdrawer:5.2.7@aar') {
+    compile('com.mikepenz:materialdrawer:5.3.0@aar') {
         transitive = true
         exclude module: "fastadapter"
     }
@@ -74,7 +74,7 @@ dependencies {
     compile 'com.mikepenz:itemanimators:0.2.4@aar'
     //used to generate the Open Source section
     //https://github.com/mikepenz/AboutLibraries
-    compile('com.mikepenz:aboutlibraries:5.6.5@aar') {
+    compile('com.mikepenz:aboutlibraries:5.6.7@aar') {
         transitive = true
         exclude module: "fastadapter"
     }
