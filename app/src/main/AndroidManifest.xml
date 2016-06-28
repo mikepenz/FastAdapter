@@ -47,17 +47,38 @@
         <activity
             android:name=".MultiTypeGenericItemActivity"
             android:label="@string/sample_multi_generic_item" />
-		<activity
-			android:name=".CheckBoxSampleActivity"
-			android:label="@string/sample_checkbox_item" />
-		<activity
-			android:name=".RadioButtonSampleActivity"
-			android:label="@string/sample_radiobutton_item" />
+        <activity
+            android:name=".CheckBoxSampleActivity"
+            android:label="@string/sample_checkbox_item" />
+        <activity
+            android:name=".RadioButtonSampleActivity"
+            android:label="@string/sample_radiobutton_item" />
         <activity
             android:name=".EndlessScrollListActivity"
             android:label="@string/sample_endless_scroll_item" />
         <activity
             android:name=".SortActivity"
             android:label="@string/sample_sort" />
+        <activity
+            android:name=".MopubAdsActivity"
+            android:label="@string/sample_mopub" />
+
+        <!-- USED FOR THE MopubAdsActivity sample-->
+        <activity
+            android:name="com.mopub.common.MoPubBrowser"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name="com.mopub.mobileads.MoPubActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name="com.mopub.mobileads.MraidActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+        <activity
+            android:name="com.mopub.mobileads.MraidVideoPlayerActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
+
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="210d996df73a8513659f9aceb9798d6092c91333" />
     </application>
 </manifest>
