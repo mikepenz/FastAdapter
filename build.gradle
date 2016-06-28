@@ -2,13 +2,10 @@
 buildscript {
     repositories {
         jcenter()
-        maven { url 'https://maven.fabric.io/public' }
-
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:2.1.0'
         classpath 'com.novoda:bintray-release:0.3.4'
-        classpath 'io.fabric.tools:gradle:1.+'
     }
 }
 
@@ -24,7 +21,6 @@ allprojects {
     repositories {
         jcenter()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url 'https://maven.fabric.io/public' }
     }
 }
 

@@ -60,7 +60,7 @@ public class MopubAdsActivity extends AppCompatActivity implements FastAdapter.O
 
         MoPubRecyclerAdapter adapter = new MoPubRecyclerAdapter(this, mAdapter);
         adapter.registerAdRenderer(new MoPubStaticNativeAdRenderer(viewBinder));
-        adapter.loadAds("4f9b52a799d84ac1a1cbec3afe7e6711");
+        adapter.loadAds("76a3fefaced247959582d2d2df6f4757");
 
         mRecyclerView.setLayoutManager(new GridLayoutManager(this, 1));
         mRecyclerView.setAdapter(adapter);

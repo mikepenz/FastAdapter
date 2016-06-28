@@ -14,7 +14,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.crashlytics.android.Crashlytics;
 import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
@@ -33,8 +32,6 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.List;
 
-import io.fabric.sdk.android.Fabric;
-
 public class SampleActivity extends AppCompatActivity {
 
     //our rv
@@ -51,9 +48,6 @@ public class SampleActivity extends AppCompatActivity {
         findViewById(android.R.id.content).setSystemUiVisibility(findViewById(android.R.id.content).getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         //create the activity
         super.onCreate(savedInstanceState);
-
-        //init fabric
-        Fabric.with(this, new Crashlytics());
 
         setContentView(R.layout.activity_main);
 
