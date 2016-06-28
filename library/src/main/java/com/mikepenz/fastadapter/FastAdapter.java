@@ -360,6 +360,17 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * helper method to get the position from a holder
+     * overwrite this if you have an adapter adding additional items inbetwean
+     *
+     * @param holder the viewHolder of the item
+     * @return the position of the holder
+     */
+    public int getHolderAdapterPosition(RecyclerView.ViewHolder holder) {
+        return holder.getAdapterPosition();
+    }
+
+    /**
      * Creates the ViewHolder by the viewType
      *
      * @param parent   the parent view (the RecyclerView)
@@ -374,7 +385,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int pos = holder.getAdapterPosition();
+                int pos = getHolderAdapterPosition(holder);
                 if (pos != RecyclerView.NO_POSITION) {
                     boolean consumed = false;
                     RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
@@ -430,7 +441,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                int pos = holder.getAdapterPosition();
+                int pos = getHolderAdapterPosition(holder);
                 if (pos != RecyclerView.NO_POSITION) {
                     boolean consumed = false;
                     RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
@@ -461,7 +472,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (mOnTouchListener != null) {
-                    int pos = holder.getAdapterPosition();
+                    int pos = getHolderAdapterPosition(holder);
                     if (pos != RecyclerView.NO_POSITION) {
                         RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
                         return mOnTouchListener.onTouch(v, event, relativeInfo.adapter, relativeInfo.item, pos);
