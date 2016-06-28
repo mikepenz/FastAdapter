@@ -13,6 +13,7 @@ import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
 import com.mikepenz.fastadapter.app.generic.GenericIconItem;
 import com.mikepenz.fastadapter.app.generic.IconModel;
 import com.mikepenz.fastadapter.app.generic.RightGenericIconItem;
+import com.mikepenz.fastadapter.app.generic.RightIconModel;
 import com.mikepenz.fastadapter.utils.Function;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
@@ -57,10 +58,10 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
         GenericItemAdapter<IconModel, GenericIconItem> itemAdapter = new GenericItemAdapter<>(new Function<IconModel, GenericIconItem>() {
             @Override
             public GenericIconItem apply(IconModel o) {
-                if (o.normal) {
-                    return new GenericIconItem(o);
-                } else {
+                if (o instanceof RightIconModel) {
                     return new RightGenericIconItem(o);
+                } else {
+                    return new GenericIconItem(o);
                 }
             }
         });
@@ -86,7 +87,7 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
                 if (i % 3 == 0) {
                     models.add(new IconModel(font.getIcon(icon)));
                 } else {
-                    models.add(new IconModel(font.getIcon(icon), false));
+                    models.add(new RightIconModel(font.getIcon(icon)));
                 }
                 i++;
             }
