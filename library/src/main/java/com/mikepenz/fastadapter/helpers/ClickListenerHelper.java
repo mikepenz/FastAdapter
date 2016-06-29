@@ -33,7 +33,7 @@ public class ClickListenerHelper<Item extends IItem> {
             @Override
             public void onClick(View v) {
                 //we get the adapterPosition from the viewHolder
-                int pos = viewHolder.getAdapterPosition();
+                int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
                 //make sure the click was done on a valid item
                 if (pos != RecyclerView.NO_POSITION) {
                     //we update our item with the changed property
@@ -54,7 +54,7 @@ public class ClickListenerHelper<Item extends IItem> {
             @Override
             public void onClick(View v) {
                 //we get the adapterPosition from the viewHolder
-                int pos = viewHolder.getAdapterPosition();
+                int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
                 //make sure the click was done on a valid item
                 if (pos != RecyclerView.NO_POSITION) {
                     //we update our item with the changed property
