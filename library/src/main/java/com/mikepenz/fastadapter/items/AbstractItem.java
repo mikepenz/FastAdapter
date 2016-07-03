@@ -196,10 +196,10 @@ public abstract class AbstractItem<Item extends AbstractItem<?, ?>, VH extends R
      */
     @Override
     public View generateView(Context ctx) {
-        RecyclerView.ViewHolder viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), null, false));
+        VH viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), null, false));
 
         //as we already know the type of our ViewHolder cast it to our type
-        bindView((VH) viewHolder);
+        bindView(viewHolder);
 
         //return the bound view
         return viewHolder.itemView;
