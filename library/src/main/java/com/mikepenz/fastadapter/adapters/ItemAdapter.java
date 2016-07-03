@@ -353,7 +353,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             IdDistributor.checkIds(items);
         }
         if (items != null) {
-            mItems.addAll(position - getFastAdapter().getPreItemCount(position), items);
+            mItems.addAll(position - getFastAdapter().getPreItemCountByOrder(getOrder()), items);
             mapPossibleTypes(items);
 
             getFastAdapter().notifyAdapterItemRangeInserted(position, items.size());
