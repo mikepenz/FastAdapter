@@ -72,7 +72,7 @@ public class SimpleDragCallback extends ItemTouchHelper.SimpleCallback {
                 itemAdapter = (ItemAdapter) adapter;
             }
             if (itemAdapter != null) {
-                itemAdapter.move(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                itemAdapter.move(itemAdapter.getFastAdapter().getHolderAdapterPosition(viewHolder), itemAdapter.getFastAdapter().getHolderAdapterPosition(target));
                 return true;
             }
             throw new RuntimeException("SimpleDragCallback without an callback is only allowed when using the ItemAdapter or the FastItemAdapter");

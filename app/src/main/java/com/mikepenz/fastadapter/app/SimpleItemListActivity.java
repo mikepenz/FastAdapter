@@ -62,6 +62,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         //create our FastAdapter which will manage everything
         fastItemAdapter = new FastItemAdapter<>();
         fastItemAdapter.withSelectable(true);
+        fastItemAdapter.withPositionBasedStateManagement(false);
 
         final FastScrollIndicatorAdapter<SampleItem> fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter<>();
 
