@@ -1,11 +1,14 @@
 package com.mikepenz.fastadapter.app;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -14,21 +17,25 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.RealmSampleUserItem;
+import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.LinkedList;
 import java.util.List;
 
 import io.realm.Realm;
-import io.realm.RealmQuery;
+import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class RealmActivity extends AppCompatActivity {
     //save our FastAdapter
     private FastItemAdapter<RealmSampleUserItem> mFastItemAdapter;
+    //save our Realm instance to close it later
+    private Realm mRealm;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(final Bundle savedInstanceState) {
         findViewById(android.R.id.content).setSystemUiVisibility(findViewById(android.R.id.content).getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -59,43 +66,55 @@ public class RealmActivity extends AppCompatActivity {
         rv.setItemAnimator(new DefaultItemAnimator());
         rv.setAdapter(mFastItemAdapter);
 
-        //fill with some sample data
-        mFastItemAdapter.add(getAndCreateData());
+        //Get a realm instance for this activity
+        mRealm = Realm.getDefaultInstance();
 
-        //restore selections (this has to be done after the items were added
-        mFastItemAdapter.withSavedInstanceState(savedInstanceState);
+        //Add a realm on change listener (don´t forget to close this realm instance before adding this listener again)
+        mRealm.where(RealmSampleUserItem.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<RealmSampleUserItem>>() {
+            @Override
+            public void onChange(RealmResults<RealmSampleUserItem> userItems) {
+                //This will call twice
+                //1.) from findAllAsync()
+                //2.) from createData()
+                mFastItemAdapter.set(userItems);
+            }
+        });
+
+        //fill with some sample data
+        createData();
 
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
+
+        //restore selections (this has to be done after the items were added
+        mFastItemAdapter.withSavedInstanceState(savedInstanceState);
     }
 
-    private List<RealmSampleUserItem> getAndCreateData() {
-        // Obtain a Realm instance
-        Realm realm = Realm.getDefaultInstance();
+    private void createData() {
+        //Execute transaction
+        mRealm.executeTransactionAsync(new Realm.Transaction() {
+            @Override
+            public void execute(Realm realm) {
+                List<RealmSampleUserItem> users = new LinkedList<>();
+                for (int i = 1; i <= 50; i++) {
+                    RealmSampleUserItem user = new RealmSampleUserItem();
+                    user.withName("Sample Realm Element " + i).withIdentifier(i);
+                    users.add(user);
+                }
+                //insert the created objects to realm
+                //a bulk insert has lower object allocations then a copy
+                realm.insertOrUpdate(users);
+            }
+        });
+    }
 
-        // Build the query looking at all users:
-        RealmQuery<RealmSampleUserItem> query = realm.where(RealmSampleUserItem.class);
-
-        // Execute the query:
-        RealmResults<RealmSampleUserItem> result = query.findAll();
-
-        if (result.size() > 0) {
-            return result.subList(0, result.size() - 1);
-        }
-
-        realm.beginTransaction();
-
-        List<RealmSampleUserItem> users = new LinkedList<>();
-        for (int i = 1; i <= 1500; i++) {
-            RealmSampleUserItem user = realm.createObject(RealmSampleUserItem.class);
-            user.withName("Sample Realm Element " + i).withIdentifier(i);
-            users.add(user);
-        }
-        //... add or update objects here ...
-        realm.commitTransaction();
-
-        return users;
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu_add, menu);
+        menu.findItem(R.id.item_add).setIcon(new IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_plus_square).color(Color.BLACK).actionBar());
+        return true;
     }
 
     @Override
@@ -112,9 +131,38 @@ public class RealmActivity extends AppCompatActivity {
             case android.R.id.home:
                 onBackPressed();
                 return true;
+            case R.id.item_add:
+                mRealm.where(RealmSampleUserItem.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<RealmSampleUserItem>>() {
+                    @Override
+                    public void onChange(RealmResults<RealmSampleUserItem> userItems) {
+                        //This transaction has to be in the same thread to access the userItems
+                        mRealm.beginTransaction();
+                        long newPrimaryKey = userItems.last().getIdentifier() + 1;
+                        RealmSampleUserItem newUser = mRealm.createObject(RealmSampleUserItem.class);
+                        newUser.withName("Sample Realm Element " + newPrimaryKey)
+                                .withIdentifier(newPrimaryKey);
+                        mRealm.commitTransaction();
 
+                        //Remove the change listener
+                        userItems.removeChangeListener(this);
+                    }
+                });
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
+        }
+    }
+
+    //Prevent the realm instance from leaking
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        closeRealm();
+    }
+
+    private void closeRealm() {
+        if (!mRealm.isClosed()) {
+            mRealm.close();
         }
     }
 }
