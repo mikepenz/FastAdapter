@@ -135,16 +135,18 @@ public class RealmActivity extends AppCompatActivity {
                 mRealm.where(RealmSampleUserItem.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<RealmSampleUserItem>>() {
                     @Override
                     public void onChange(RealmResults<RealmSampleUserItem> userItems) {
-                        //This transaction has to be in the same thread to access the userItems
-                        mRealm.beginTransaction();
-                        long newPrimaryKey = userItems.last().getIdentifier() + 1;
-                        RealmSampleUserItem newUser = mRealm.createObject(RealmSampleUserItem.class);
-                        newUser.withName("Sample Realm Element " + newPrimaryKey)
-                                .withIdentifier(newPrimaryKey);
-                        mRealm.commitTransaction();
-
                         //Remove the change listener
                         userItems.removeChangeListener(this);
+                        //Store the primary key to get access from a other thread
+                        final long newPrimaryKey = userItems.last().getIdentifier() + 1;
+                        mRealm.executeTransactionAsync(new Realm.Transaction() {
+                            @Override
+                            public void execute(Realm realm) {
+                                RealmSampleUserItem newUser = realm.createObject(RealmSampleUserItem.class);
+                                newUser.withName("Sample Realm Element " + newPrimaryKey)
+                                        .withIdentifier(newPrimaryKey);
+                            }
+                        });
                     }
                 });
                 return true;
