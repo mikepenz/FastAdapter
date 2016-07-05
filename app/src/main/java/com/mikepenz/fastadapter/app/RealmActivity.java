@@ -3,7 +3,6 @@ package com.mikepenz.fastadapter.app;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -18,6 +17,7 @@ import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.RealmSampleUserItem;
 import com.mikepenz.iconics.IconicsDrawable;
+import com.mikepenz.itemanimators.AlphaInAnimator;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialize.MaterializeBuilder;
 
@@ -63,7 +63,7 @@ public class RealmActivity extends AppCompatActivity {
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
-        rv.setItemAnimator(new DefaultItemAnimator());
+        rv.setItemAnimator(new AlphaInAnimator());
         rv.setAdapter(mFastItemAdapter);
 
         //Get a realm instance for this activity
@@ -76,7 +76,7 @@ public class RealmActivity extends AppCompatActivity {
                 //This will call twice
                 //1.) from findAllAsync()
                 //2.) from createData()
-                mFastItemAdapter.set(userItems);
+                mFastItemAdapter.setNewList(userItems);
             }
         });
 
@@ -97,7 +97,7 @@ public class RealmActivity extends AppCompatActivity {
             @Override
             public void execute(Realm realm) {
                 List<RealmSampleUserItem> users = new LinkedList<>();
-                for (int i = 1; i <= 50; i++) {
+                for (int i = 1; i <= 5; i++) {
                     RealmSampleUserItem user = new RealmSampleUserItem();
                     user.withName("Sample Realm Element " + i).withIdentifier(i);
                     users.add(user);
