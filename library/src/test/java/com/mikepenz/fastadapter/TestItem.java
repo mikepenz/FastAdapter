@@ -41,6 +41,11 @@ public class TestItem extends AbstractItem<TestItem, TestItem.ViewHolder> implem
         return mSubItems;
     }
 
+    @Override
+    public boolean isAutoExpanding() {
+        return true;
+    }
+
     public TestItem withSubItems(List<TestItem> subItems) {
         this.mSubItems = subItems;
         return this;

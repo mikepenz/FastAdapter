@@ -8,8 +8,9 @@
     <item name="fastadapter_icon_item_id" type="id" />
     <item name="fastadapter_generic_icon_item_id" type="id" />
     <item name="fastadapter_right_generic_icon_item_id" type="id" />
-	<item name="fastadapter_checkbox_sample_item_id" type="id" />
-	<item name="fastadapter_radiobutton_sample_item_id" type="id" />
-    <item name="fastadapter_swipable_item_id" type="id"/>
-    <item name="fastadapter_letter_item_id" type="id"/>
+    <item name="fastadapter_checkbox_sample_item_id" type="id" />
+    <item name="fastadapter_radiobutton_sample_item_id" type="id" />
+    <item name="fastadapter_swipable_item_id" type="id" />
+    <item name="fastadapter_letter_item_id" type="id" />
+    <item name="fastadapter_realm_sample_user_item_id" type="id" />
 </resources>

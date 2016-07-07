@@ -79,6 +79,7 @@ public class SampleActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName(R.string.sample_endless_scroll_list).withDescription(R.string.sample_endless_scroll_list_descr).withSelectable(false).withIdentifier(13).withIcon(MaterialDesignIconic.Icon.gmi_long_arrow_down),
                         new PrimaryDrawerItem().withName(R.string.sample_sort).withDescription(R.string.sample_sort_descr).withSelectable(false).withIdentifier(14).withIcon(MaterialDesignIconic.Icon.gmi_sort_by_alpha),
                         new PrimaryDrawerItem().withName(R.string.sample_mopub).withDescription(R.string.sample_mopub_descr).withSelectable(false).withIdentifier(15).withIcon(MaterialDesignIconic.Icon.gmi_accounts_list),
+                        new PrimaryDrawerItem().withName(R.string.sample_realm_list).withDescription(R.string.sample_realm_list_descr).withSelectable(false).withIdentifier(16).withIcon(MaterialDesignIconic.Icon.gmi_format_color_text),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.open_source).withSelectable(false).withIdentifier(100).withIcon(MaterialDesignIconic.Icon.gmi_github)
                 )
@@ -117,6 +118,8 @@ public class SampleActivity extends AppCompatActivity {
                                 intent = new Intent(SampleActivity.this, EndlessScrollListActivity.class);
                             } else if (drawerItem.getIdentifier() == 15) {
                                 intent = new Intent(SampleActivity.this, MopubAdsActivity.class);
+                            } else if (drawerItem.getIdentifier() == 16) {
+                                intent = new Intent(SampleActivity.this, RealmActivity.class);
                             } else if (drawerItem.getIdentifier() == 100) {
                                 intent = new LibsBuilder()
                                         .withFields(R.string.class.getFields())

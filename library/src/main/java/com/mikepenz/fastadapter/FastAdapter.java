@@ -403,7 +403,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
                         //if this is a expandable item :D
                         if (!consumed && item instanceof IExpandable) {
-                            if (((IExpandable) item).getSubItems() != null) {
+                            if (((IExpandable) item).isAutoExpanding() && ((IExpandable) item).getSubItems() != null) {
                                 toggleExpandable(pos);
                             }
                         }
