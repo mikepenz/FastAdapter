@@ -13,8 +13,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 24
-        versionCode 158
-        versionName '1.5.8'
+        versionCode 160
+        versionName '1.6.0'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
