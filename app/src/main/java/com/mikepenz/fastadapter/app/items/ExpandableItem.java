@@ -82,6 +82,11 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
         return mSubItems;
     }
 
+    @Override
+    public boolean isAutoExpanding() {
+        return false;
+    }
+
     public ExpandableItem withSubItems(List<IItem> subItems) {
         this.mSubItems = subItems;
         return this;

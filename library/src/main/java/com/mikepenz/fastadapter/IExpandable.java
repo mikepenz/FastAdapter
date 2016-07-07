@@ -31,4 +31,11 @@ public interface IExpandable<T, Item extends IItem> {
      * @return the list of subItems
      */
     List<Item> getSubItems();
+
+    /**
+     * overwrite this method and return true if the item should auto expand on click, false if you want to disable this
+     *
+     * @return true if this item should auto expand in the adapter
+     */
+    boolean isAutoExpanding();
 }

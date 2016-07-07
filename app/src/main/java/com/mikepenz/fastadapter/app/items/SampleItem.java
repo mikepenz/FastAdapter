@@ -74,6 +74,11 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
     }
 
     @Override
+    public boolean isAutoExpanding() {
+        return true;
+    }
+
+    @Override
     public List<IItem> getSubItems() {
         return mSubItems;
     }
