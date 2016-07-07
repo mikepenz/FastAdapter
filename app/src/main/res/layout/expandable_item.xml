@@ -44,9 +44,9 @@
 
     <ImageView
         android:id="@+id/material_drawer_icon"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:layout_marginTop="@dimen/material_drawer_vertical_padding"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:padding="@dimen/material_drawer_vertical_padding"
         app:ico_color="@color/md_black_1000"
         app:ico_icon="gmd-keyboard-arrow-up"
         app:ico_size="16dp" />

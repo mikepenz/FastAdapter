@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.R;
@@ -101,32 +100,6 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
         return this;
     }
 
-    //we define a clickListener in here so we can directly animate
-    final private FastAdapter.OnClickListener<ExpandableItem> onClickListener = new FastAdapter.OnClickListener<ExpandableItem>() {
-        @Override
-        public boolean onClick(View v, IAdapter adapter, ExpandableItem item, int position) {
-            if (item.getSubItems() != null) {
-                if (!item.isExpanded()) {
-                    ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(180).start();
-                } else {
-                    ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
-                }
-                return mOnClickListener != null ? mOnClickListener.onClick(v, adapter, item, position) : true;
-            }
-            return mOnClickListener != null ? mOnClickListener.onClick(v, adapter, item, position) : false;
-        }
-    };
-
-    /**
-     * we overwrite the item specific click listener so we can automatically animate within the item
-     *
-     * @return
-     */
-    @Override
-    public FastAdapter.OnClickListener<ExpandableItem> getOnItemClickListener() {
-        return onClickListener;
-    }
-
     @Override
     public boolean isSelectable() {
         //this might not be true for your application
@@ -207,13 +180,14 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
     /**
      * our ViewHolder
      */
-    protected static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         protected final View view;
         @Bind(R.id.material_drawer_name)
         TextView name;
         @Bind(R.id.material_drawer_description)
         TextView description;
         @Bind(R.id.material_drawer_icon)
+        public
         ImageView icon;
 
         public ViewHolder(View view) {

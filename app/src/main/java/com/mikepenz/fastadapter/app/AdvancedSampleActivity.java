@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
 import android.support.v4.view.LayoutInflaterCompat;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -11,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
@@ -21,6 +23,7 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
 import com.mikepenz.fastadapter.app.items.ExpandableItem;
 import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -44,6 +47,8 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     private HeaderAdapter<SampleItem> mHeaderAdapter;
     private ItemAdapter<IItem> mItemAdapter;
 
+    private ClickListenerHelper<IItem> mClickListenerHelper;
+
     private ActionModeHelper mActionModeHelper;
 
     @Override
@@ -65,6 +70,9 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         //create our FastAdapter
         mFastAdapter = new FastAdapter<>();
+
+        //init the ClickListenerHelper which simplifies custom click listeners on views of the Adapter
+        mClickListenerHelper = new ClickListenerHelper<>(mFastAdapter);
 
         //we init our ActionModeHelper
         mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
@@ -108,6 +116,42 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 return actionMode != null;
             }
         });
+
+        //a custom OnCreateViewHolder listener class which is used to create the viewHolders
+        //we define the listener for the imageLovedContainer here for better performance
+        //you can also define the listener within the items bindView method but performance is better if you do it like this
+        mFastAdapter.withOnCreateViewHolderListener(new FastAdapter.OnCreateViewHolderListener() {
+            @Override
+            public RecyclerView.ViewHolder onPreCreateViewHolder(ViewGroup parent, int viewType) {
+                return mFastAdapter.getTypeInstance(viewType).getViewHolder(parent);
+            }
+
+            @Override
+            public RecyclerView.ViewHolder onPostCreateViewHolder(final RecyclerView.ViewHolder viewHolder) {
+                //we do this for our ImageItem.ViewHolder
+                if (viewHolder instanceof ExpandableItem.ViewHolder) {
+                    //if we click on the imageLovedContainer
+                    mClickListenerHelper.listen(viewHolder, ((ExpandableItem.ViewHolder) viewHolder).icon, new ClickListenerHelper.OnClickListener<IItem>() {
+                        @Override
+                        public void onClick(View v, int position, IItem item) {
+                            if (item instanceof ExpandableItem) {
+                                mFastAdapter.toggleExpandable(position);
+                                if (((ExpandableItem) item).getSubItems() != null) {
+                                    if (!((ExpandableItem) item).isExpanded()) {
+                                        ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(180).start();
+                                    } else {
+                                        ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+
+                return viewHolder;
+            }
+        });
+
 
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
