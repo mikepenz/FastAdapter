@@ -82,13 +82,13 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 
 <p>The library is split up into core, and extensions. The core functions are included in the following dependency.</p>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:1.5.8@aar<span class="pl-pds">'</span></span>) {
+<div class="highlight highlight-source-groovy-gradle"><pre>compile(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:1.6.0@aar<span class="pl-pds">'</span></span>) {
     transitive <span class="pl-k">=</span> <span class="pl-c1">true</span>
 }</pre></div>
 
 <p>All additions are included in the following dependency.</p>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter-extensions:1.5.6@aar<span class="pl-pds">'</span></span>
+<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter-extensions:1.6.0@aar<span class="pl-pds">'</span></span>
 <span class="pl-c">//The tiny Materialize library used for its useful helper classes</span>
 compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:materialize:0.9.0@aar<span class="pl-pds">'</span></span></pre></div>
 
@@ -158,6 +158,93 @@ recyclerView<span class="pl-k">.</span>setAdapter(fastAdapter);
 
 <span class="pl-c">//set the items to your ItemAdapter</span>
 fastAdapter<span class="pl-k">.</span>add(<span class="pl-c1">ITEMS</span>);</pre></div>
+
+<h3>
+<a id="3-click-listener" class="anchor" href="#3-click-listener" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>3. Click listener</h3>
+
+<div class="highlight highlight-source-java"><pre>fastAdapter<span class="pl-k">.</span>withSelectable(<span class="pl-c1">true</span>);
+fastAdapter<span class="pl-k">.</span>withOnClickListener(<span class="pl-k">new</span> <span class="pl-smi">FastAdapter</span>.<span class="pl-k">OnClickListener&lt;<span class="pl-smi">Item</span>&gt;</span>() {
+            <span class="pl-k">@Override</span>
+            <span class="pl-k">public</span> <span class="pl-k">boolean</span> <span class="pl-en">onClick</span>(<span class="pl-smi">View</span> <span class="pl-v">v</span>, <span class="pl-k">IAdapter&lt;<span class="pl-smi">Item</span>&gt;</span> <span class="pl-v">adapter</span>, <span class="pl-smi">Item</span> <span class="pl-v">item</span>, <span class="pl-k">int</span> <span class="pl-v">position</span>) {
+               <span class="pl-c">// Handle click here</span>
+                <span class="pl-k">return</span> <span class="pl-c1">true</span>;
+            }
+        });</pre></div>
+
+<h3>
+<a id="4-filter" class="anchor" href="#4-filter" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>4. Filter</h3>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-c">// Call this in onQueryTextSubmit() &amp; onQueryTextChange() when using SearchView</span>
+fastAdapter<span class="pl-k">.</span>filter(<span class="pl-s"><span class="pl-pds">"</span>yourSearchTerm<span class="pl-pds">"</span></span>);
+
+fastAdapter<span class="pl-k">.</span>withFilterPredicate(<span class="pl-k">new</span> <span class="pl-smi">IItemAdapter</span>.<span class="pl-k">Predicate&lt;<span class="pl-smi">Item</span>&gt;</span>() {
+            <span class="pl-k">@Override</span>
+            <span class="pl-k">public</span> <span class="pl-k">boolean</span> <span class="pl-en">filter</span>(<span class="pl-smi">Item</span> <span class="pl-v">item</span>, <span class="pl-smi">CharSequence</span> <span class="pl-v">constraint</span>) {
+                <span class="pl-k">return</span> item<span class="pl-k">.</span>getName()<span class="pl-k">.</span>startsWith(<span class="pl-smi">String</span><span class="pl-k">.</span>valueOf(constraint));
+            }
+});</pre></div>
+
+<p><code>filter()</code> will return true to indicate which items will be removed. Returning false indicates items that will be retained.</p>
+
+<h3>
+<a id="5-drag-and-drop" class="anchor" href="#5-drag-and-drop" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>5. Drag and drop</h3>
+
+<p>First, attach <code>ItemTouchHelper</code> to RecyclerView.</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">SimpleDragCallback</span> dragCallback <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">SimpleDragCallback</span>(<span class="pl-v">this</span>);
+<span class="pl-smi">ItemTouchHelper</span> touchHelper <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-smi">ItemTouchHelper</span>(dragCallback);
+touchHelper<span class="pl-k">.</span>attachToRecyclerView(recyclerView);</pre></div>
+
+<p>Implement <code>ItemTouchCallback</code> interface in your Activity, and override the <code>itemTouchOnMove()</code> method.</p>
+
+<div class="highlight highlight-source-java"><pre>@<span class="pl-smi">Override</span>
+   <span class="pl-k">public</span> <span class="pl-k">boolean</span> itemTouchOnMove(<span class="pl-k">int</span> oldPosition, <span class="pl-k">int</span> newPosition) {
+       <span class="pl-smi">Collections</span><span class="pl-k">.</span>swap(fastAdapter<span class="pl-k">.</span>getAdapterItems(), oldPosition, newPosition); <span class="pl-c">// change position</span>
+       fastAdapter<span class="pl-k">.</span>notifyAdapterItemMoved(oldPosition, newPosition);
+       <span class="pl-k">return</span> <span class="pl-c1">true</span>;
+   }</pre></div>
+
+<h3>
+<a id="6-using-different-viewholders-like-headerview" class="anchor" href="#6-using-different-viewholders-like-headerview" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>6. Using different ViewHolders (like HeaderView)</h3>
+
+<p>Start by initializing your adapters:</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-smi">FastItemAdapter</span> fastAdapter <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-k">FastItemAdapter&lt;&gt;</span>();
+<span class="pl-c">// Head is a model class for your header</span>
+<span class="pl-k">HeaderAdapter&lt;<span class="pl-smi">Header</span>&gt;</span> headerAdapter <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-k">HeaderAdapter&lt;&gt;</span>();</pre></div>
+
+<p>Initialize a generic FastAdapter:</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">FastItemAdapter&lt;<span class="pl-smi">IItem</span>&gt;</span> fastAdapter <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-k">FastItemAdapter&lt;&gt;</span>();</pre></div>
+
+<p>Finally, set the adapter:</p>
+
+<div class="highlight highlight-source-java"><pre>recyclerView<span class="pl-k">.</span>setAdapter(headerAdapter<span class="pl-k">.</span>wrap(fastAdapter));</pre></div>
+
+<p>It is also possible to add in a third ViewHolder type by using the <code>wrap()</code> method again.</p>
+
+<div class="highlight highlight-source-java"><pre>recyclerView<span class="pl-k">.</span>setAdapter(thirdAdapter<span class="pl-k">.</span>wrap(headerAdapter<span class="pl-k">.</span>wrap(fastAdapter)));</pre></div>
+
+<h3>
+<a id="7-infinite-endless-scrolling" class="anchor" href="#7-infinite-endless-scrolling" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>7. Infinite (endless) scrolling</h3>
+
+<p>Create a FooterAdapter. We need this to display a loading ProgressBar at the end of our list.</p>
+
+<div class="highlight highlight-source-java"><pre><span class="pl-k">FooterAdapter&lt;<span class="pl-smi">ProgressItem</span>&gt;</span> footerAdapter <span class="pl-k">=</span> <span class="pl-k">new</span> <span class="pl-k">FooterAdapter&lt;&gt;</span>();</pre></div>
+
+<p>Keep in mind that ProgressItem is provided by FastAdapter’s extensions.</p>
+
+<div class="highlight highlight-source-java"><pre>recyclerView<span class="pl-k">.</span>addOnScrollListener(<span class="pl-k">new</span> <span class="pl-smi">EndlessRecyclerOnScrollListener</span>() {
+            <span class="pl-k">@Override</span>
+            <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onLoadMore</span>(<span class="pl-k">int</span> <span class="pl-v">currentPage</span>) {
+                footerAdapter<span class="pl-k">.</span>clear();
+                footerAdapter<span class="pl-k">.</span>add(<span class="pl-k">new</span> <span class="pl-smi">ProgressItem</span>()<span class="pl-k">.</span>withEnabled(<span class="pl-c1">false</span>));
+                <span class="pl-c">// Load your items here and add it to FastAdapter</span>
+                fastAdapter<span class="pl-k">.</span>add(<span class="pl-c1">NEWITEMS</span>);
+            }
+});</pre></div>
+
+<p>For the complete tutorial and more features such as multi-select and CAB check out the <a href="https://github.com/mikepenz/FastAdapter/tree/develop/app">sample app</a> or, read <a href="http://blog.grafixartist.com/recyclerview-adapter-android-made-fast-easy/">blog post</a>.</p>
 
 <h2>
 <a id="advanced-usage" class="anchor" href="#advanced-usage" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Advanced Usage</h2>
