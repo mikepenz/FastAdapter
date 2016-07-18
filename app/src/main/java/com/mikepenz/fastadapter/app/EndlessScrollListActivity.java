@@ -94,7 +94,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(footerAdapter.wrap(fastItemAdapter));
-        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(footerAdapter) {
             @Override
             public void onLoadMore(final int currentPage) {
                 footerAdapter.clear();
@@ -135,7 +135,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //add the values which need to be saved from the adapter to the bundel
+        //add the values which need to be saved from the adapter to the bundle
         outState = fastItemAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
