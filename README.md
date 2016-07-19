@@ -185,7 +185,7 @@ FooterAdapter<ProgressItem> footerAdapter = new FooterAdapter<>();
 ```
 Keep in mind that ProgressItem is provided by FastAdapter’s extensions.
 ```java
-recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(footerAdapter) {
             @Override
             public void onLoadMore(int currentPage) {
                 footerAdapter.clear();
