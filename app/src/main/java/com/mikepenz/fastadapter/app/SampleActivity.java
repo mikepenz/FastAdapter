@@ -185,22 +185,17 @@ public class SampleActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //find out the current visible position
-        int position = 0;
+        int firstVisiblePosition = 0;
         if (mRecyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-            position = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+            firstVisiblePosition = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         } else if (mRecyclerView.getLayoutManager() instanceof GridLayoutManager) {
-            position = ((GridLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
+            firstVisiblePosition = ((GridLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
         }
 
         //handle the menu item click
         switch (item.getItemId()) {
             case R.id.item_add:
-                if (mRecyclerView.getLayoutManager() instanceof LinearLayoutManager) {
-                    position = ((LinearLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-                } else if (mRecyclerView.getLayoutManager() instanceof GridLayoutManager) {
-                    position = ((GridLayoutManager) mRecyclerView.getLayoutManager()).findFirstVisibleItemPosition();
-                }
-                mItemAdapter.add(position + 1, ImageDummyData.getDummyItem());
+                mItemAdapter.add(firstVisiblePosition + 1, ImageDummyData.getDummyItem());
                 return true;
             case R.id.item_change:
                 for (Integer pos : mFastAdapter.getSelections()) {
@@ -212,8 +207,8 @@ public class SampleActivity extends AppCompatActivity {
                 return true;
             case R.id.item_move:
                 List items = mItemAdapter.getAdapterItems();
-                if (items.size() > position + 3) {
-                    mItemAdapter.move(position + 1, position + 3);
+                if (items.size() > firstVisiblePosition + 3) {
+                    mItemAdapter.move(firstVisiblePosition + 1, firstVisiblePosition + 3);
                 }
                 return true;
             case R.id.item_delete:

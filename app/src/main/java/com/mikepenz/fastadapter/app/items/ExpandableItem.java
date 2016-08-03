@@ -84,7 +84,7 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
 
     @Override
     public boolean isAutoExpanding() {
-        return false;
+        return true;
     }
 
     public ExpandableItem withSubItems(List<IItem> subItems) {

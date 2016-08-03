@@ -13,8 +13,8 @@ android {
     defaultConfig {
         minSdkVersion 11
         targetSdkVersion 24
-        versionCode 160
-        versionName '1.6.0'
+        versionCode 161
+        versionName '1.6.1'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
@@ -62,11 +62,11 @@ dependencies {
     // used to provide out of the box icon font support. simplifies development,
     // and provides scalable icons. the core is very very light
     // https://github.com/mikepenz/Android-Iconics
-    compile 'com.mikepenz:iconics-core:2.6.5@aar'
+    compile 'com.mikepenz:iconics-core:2.7.2@aar'
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
-    compile('com.mikepenz:materialdrawer:5.3.0@aar') {
+    compile('com.mikepenz:materialdrawer:5.3.6@aar') {
         transitive = true
         exclude module: "fastadapter"
     }
@@ -75,7 +75,7 @@ dependencies {
     compile 'com.mikepenz:itemanimators:0.2.4@aar'
     //used to generate the Open Source section
     //https://github.com/mikepenz/AboutLibraries
-    compile('com.mikepenz:aboutlibraries:5.6.7@aar') {
+    compile('com.mikepenz:aboutlibraries:5.7.1@aar') {
         transitive = true
         exclude module: "fastadapter"
     }
@@ -83,8 +83,8 @@ dependencies {
     //https://github.com/mikepenz/Android-Iconics
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
     compile 'com.mikepenz:community-material-typeface:1.3.41.1@aar'
-    compile 'com.mikepenz:google-material-typeface:2.2.0.1.original@aar'
-    compile 'com.mikepenz:fontawesome-typeface:4.5.0.1@aar'
+    compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
+    compile 'com.mikepenz:fontawesome-typeface:4.6.0.3@aar'
 
     //Used for the StickyHeaderSample
     //https://github.com/timehop/sticky-headers-recyclerview

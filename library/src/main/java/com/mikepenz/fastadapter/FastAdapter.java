@@ -931,14 +931,32 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param fireEvent true if the onClick listener should be called
      */
     public void select(int position, boolean fireEvent) {
-        Item item = getItem(position);
-        if (item != null) {
-            item.withSetSelected(true);
+        select(position, fireEvent, false);
+    }
 
-            if (mPositionBasedStateManagement) {
-                mSelections.add(position);
-            }
+    /**
+     * selects an item and remembers it's position in the selections list
+     *
+     * @param position               the global position
+     * @param fireEvent              true if the onClick listener should be called
+     * @param considerSelectableFlag true if the select method should not select an item if its not selectable
+     */
+    public void select(int position, boolean fireEvent, boolean considerSelectableFlag) {
+        Item item = getItem(position);
+
+        if (item == null) {
+            return;
         }
+        if (considerSelectableFlag && !item.isSelectable()) {
+            return;
+        }
+
+        item.withSetSelected(true);
+
+        if (mPositionBasedStateManagement) {
+            mSelections.add(position);
+        }
+
         notifyItemChanged(position);
 
         if (mOnClickListener != null && fireEvent) {
@@ -964,13 +982,25 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * select all items
      */
     public void select() {
+        select(false);
+    }
+
+    /**
+     * select all items
+     *
+     * @param considerSelectableFlag true if the select method should not select an item if its not selectable
+     */
+    public void select(boolean considerSelectableFlag) {
         if (mPositionBasedStateManagement) {
             int length = getItemCount();
             for (int i = 0; i < length; i++) {
-                select(i);
+                select(i, false, considerSelectableFlag);
             }
         } else {
             for (IItem item : AdapterUtil.getAllItems(this)) {
+                if (considerSelectableFlag && !item.isSelectable()) {
+                    continue;
+                }
                 item.withSetSelected(true);
             }
             notifyDataSetChanged();

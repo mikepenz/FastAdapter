@@ -40,14 +40,14 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, and extensions. The core functions are included in the following dependency.
 ```gradle
-compile('com.mikepenz:fastadapter:1.6.0@aar') {
+compile('com.mikepenz:fastadapter:1.6.1@aar') {
 	transitive = true
 }
 ```
 
 All additions are included in the following dependency.
 ```gradle
-compile 'com.mikepenz:fastadapter-extensions:1.6.0@aar'
+compile 'com.mikepenz:fastadapter-extensions:1.6.1@aar'
 //The tiny Materialize library used for its useful helper classes
 compile 'com.mikepenz:materialize:0.9.0@aar'
 ```
@@ -185,7 +185,7 @@ FooterAdapter<ProgressItem> footerAdapter = new FooterAdapter<>();
 ```
 Keep in mind that ProgressItem is provided by FastAdapter’s extensions.
 ```java
-recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener() {
+recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(footerAdapter) {
             @Override
             public void onLoadMore(int currentPage) {
                 footerAdapter.clear();
