@@ -115,7 +115,7 @@ public class SampleActivity extends AppCompatActivity {
                             } else if (drawerItem.getIdentifier() == 13) {
                                 intent = new Intent(SampleActivity.this, EndlessScrollListActivity.class);
                             } else if (drawerItem.getIdentifier() == 14) {
-                                intent = new Intent(SampleActivity.this, EndlessScrollListActivity.class);
+                                intent = new Intent(SampleActivity.this, SortActivity.class);
                             } else if (drawerItem.getIdentifier() == 15) {
                                 intent = new Intent(SampleActivity.this, MopubAdsActivity.class);
                             } else if (drawerItem.getIdentifier() == 16) {
