@@ -1,2 +1,5 @@
-include ':app', ':library-extensions', ':library-extensions-realm'
+include ':app'
+include ':library-extensions'
+include ':library-extensions-realm'
+include ':library-extensions-firebase'
 include ':library'

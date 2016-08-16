@@ -1,0 +1,36 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion 10
+        targetSdkVersion 24
+        versionCode 1610
+        versionName '1.6.1'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    productFlavors {
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+if (project.hasProperty('pushall') || project.hasProperty('libraryextensionrealmonly')) {
+    apply from: '../gradle-mvn-push.gradle'
+    apply plugin: 'com.novoda.bintray-release'
+    apply from: '../gradle-jcenter-push.gradle'
+}
+
+dependencies {
+    compile project(':library')
+
+    compile 'com.google.firebase:firebase-database:9.2.1'
+}
