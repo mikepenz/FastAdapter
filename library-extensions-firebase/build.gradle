@@ -23,7 +23,7 @@ android {
     }
 }
 
-if (project.hasProperty('pushall') || project.hasProperty('libraryextensiononly')) {
+if (project.hasProperty('pushall') || project.hasProperty('libraryextensionrealmonly')) {
     apply from: '../gradle-mvn-push.gradle'
     apply plugin: 'com.novoda.bintray-release'
     apply from: '../gradle-jcenter-push.gradle'
@@ -31,8 +31,6 @@ if (project.hasProperty('pushall') || project.hasProperty('libraryextensiononly'
 
 dependencies {
     compile project(':library')
-    compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
-    compile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
 
-    compile 'com.mikepenz:materialize:0.9.0@aar'
+    compile 'com.google.firebase:firebase-database:9.2.1'
 }

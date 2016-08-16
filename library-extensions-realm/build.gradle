@@ -1,4 +1,14 @@
 apply plugin: 'com.android.library'
+apply plugin: 'realm-android'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "io.realm:realm-gradle-plugin:1.1.1"
+    }
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -23,7 +33,7 @@ android {
     }
 }
 
-if (project.hasProperty('pushall') || project.hasProperty('libraryextensiononly')) {
+if (project.hasProperty('pushall') || project.hasProperty('libraryextensionrealmonly')) {
     apply from: '../gradle-mvn-push.gradle'
     apply plugin: 'com.novoda.bintray-release'
     apply from: '../gradle-jcenter-push.gradle'
@@ -31,8 +41,4 @@ if (project.hasProperty('pushall') || project.hasProperty('libraryextensiononly'
 
 dependencies {
     compile project(':library')
-    compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
-    compile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
-
-    compile 'com.mikepenz:materialize:0.9.0@aar'
 }
