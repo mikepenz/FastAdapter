@@ -40,6 +40,13 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         return this;
     }
 
+    /**
+     * @return if we use the idDistributor with this adapter
+     */
+    public boolean isUseIdDistributor() {
+        return mUseIdDistributor;
+    }
+
     //filters the items
     private Filter mItemFilter = new ItemFilter();
 
