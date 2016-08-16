@@ -82,13 +82,13 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 
 <p>The library is split up into core, and extensions. The core functions are included in the following dependency.</p>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:1.6.0@aar<span class="pl-pds">'</span></span>) {
+<div class="highlight highlight-source-groovy-gradle"><pre>compile(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:1.6.2@aar<span class="pl-pds">'</span></span>) {
     transitive <span class="pl-k">=</span> <span class="pl-c1">true</span>
 }</pre></div>
 
 <p>All additions are included in the following dependency.</p>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter-extensions:1.6.0@aar<span class="pl-pds">'</span></span>
+<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter-extensions:1.6.1@aar<span class="pl-pds">'</span></span>
 <span class="pl-c">//The tiny Materialize library used for its useful helper classes</span>
 compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:materialize:0.9.0@aar<span class="pl-pds">'</span></span></pre></div>
 
@@ -234,7 +234,7 @@ touchHelper<span class="pl-k">.</span>attachToRecyclerView(recyclerView);</pre><
 
 <p>Keep in mind that ProgressItem is provided by FastAdapter’s extensions.</p>
 
-<div class="highlight highlight-source-java"><pre>recyclerView<span class="pl-k">.</span>addOnScrollListener(<span class="pl-k">new</span> <span class="pl-smi">EndlessRecyclerOnScrollListener</span>() {
+<div class="highlight highlight-source-java"><pre>recyclerView<span class="pl-k">.</span>addOnScrollListener(<span class="pl-k">new</span> <span class="pl-smi">EndlessRecyclerOnScrollListener</span>(footerAdapter) {
             <span class="pl-k">@Override</span>
             <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">onLoadMore</span>(<span class="pl-k">int</span> <span class="pl-v">currentPage</span>) {
                 footerAdapter<span class="pl-k">.</span>clear();
