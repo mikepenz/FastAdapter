@@ -1,0 +1,44 @@
+apply plugin: 'com.android.library'
+apply plugin: 'realm-android'
+
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath "io.realm:realm-gradle-plugin:1.1.1"
+    }
+}
+
+android {
+    compileSdkVersion rootProject.ext.compileSdkVersion
+    buildToolsVersion rootProject.ext.buildToolsVersion
+
+    defaultConfig {
+        minSdkVersion 10
+        targetSdkVersion 24
+        versionCode 1610
+        versionName '1.6.1'
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.txt'
+        }
+    }
+    productFlavors {
+    }
+    lintOptions {
+        abortOnError false
+    }
+}
+
+if (project.hasProperty('pushall') || project.hasProperty('libraryextensionrealmonly')) {
+    apply from: '../gradle-mvn-push.gradle'
+    apply plugin: 'com.novoda.bintray-release'
+    apply from: '../gradle-jcenter-push.gradle'
+}
+
+dependencies {
+    compile project(':library')
+}
