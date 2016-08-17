@@ -8,7 +8,6 @@ import android.view.View;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
-import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.mikepenz.fastadapter.utils.Function;
 
 import java.lang.ref.WeakReference;
@@ -321,11 +320,11 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         }
     }
 
-    private static class DeliverToGenericItemAdapter<Model, Item extends GenericAbstractItem<Model, Item, ?>> implements OnNewItemsListener<Model> {
+    private static class DeliverToGenericItemAdapter<Model> implements OnNewItemsListener<Model> {
         @NonNull
-        private final GenericItemAdapter<Model, Item> mGenericItemAdapter;
+        private final GenericItemAdapter<Model, ?> mGenericItemAdapter;
 
-        DeliverToGenericItemAdapter(@NonNull GenericItemAdapter<Model, Item> genericItemAdapter) {
+        DeliverToGenericItemAdapter(@NonNull GenericItemAdapter<Model, ?> genericItemAdapter) {
             mGenericItemAdapter = genericItemAdapter;
         }
 
@@ -351,11 +350,11 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         }
     }
 
-    private static class DeliverToGenericItemAdapter2<Model, Item extends GenericAbstractItem<Model, Item, ?>> extends DeliverToGenericItemAdapter<Model, Item> {
+    private static class DeliverToGenericItemAdapter2<Model> extends DeliverToGenericItemAdapter<Model> {
         @NonNull
         private final OnNewItemsListener<Model> mExtraOnNewItemsListener;
 
-        DeliverToGenericItemAdapter2(@NonNull GenericItemAdapter<Model, Item> genericItemAdapter, @NonNull OnNewItemsListener<Model> extraOnNewItemsListener) {
+        DeliverToGenericItemAdapter2(@NonNull GenericItemAdapter<Model, ?> genericItemAdapter, @NonNull OnNewItemsListener<Model> extraOnNewItemsListener) {
             super(genericItemAdapter);
             mExtraOnNewItemsListener = extraOnNewItemsListener;
         }
