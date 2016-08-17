@@ -18,9 +18,12 @@ import com.mikepenz.aboutlibraries.Libs;
 import com.mikepenz.aboutlibraries.LibsBuilder;
 import com.mikepenz.community_material_typeface_library.CommunityMaterial;
 import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData;
+import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.fastadapter.app.items.SimpleImageItem;
+import com.mikepenz.fastadapter_extensions.HeaderHelper;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
@@ -30,6 +33,8 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class SampleActivity extends AppCompatActivity {
@@ -39,9 +44,9 @@ public class SampleActivity extends AppCompatActivity {
     //save our header or result
     private Drawer mResult = null;
     //save our FastAdapter
-    private FastAdapter<SimpleImageItem> mFastAdapter;
+    private FastAdapter<IItem> mFastAdapter;
     //save our FastAdapter
-    private ItemAdapter<SimpleImageItem> mItemAdapter;
+    private ItemAdapter<IItem> mItemAdapter;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -158,12 +163,37 @@ public class SampleActivity extends AppCompatActivity {
         mRecyclerView.getItemAnimator().setAddDuration(500);
         mRecyclerView.getItemAnimator().setRemoveDuration(500);
 
+        final HeaderHelper<IItem> headerHelper = new HeaderHelper<>(mItemAdapter, new HeaderHelper.GroupingFunction<IItem>() {
+            @Override
+            public IItem group(IItem currentItem, IItem nextItem, int currentPosition) {
+                if (currentItem == null) {
+                    return new SampleItem().withName(((SimpleImageItem) nextItem).mName.charAt(0) + "");
+                } else if (nextItem != null) {
+                    if (((SimpleImageItem) currentItem).mName.charAt(0) != ((SimpleImageItem) nextItem).mName.charAt(0)) {
+                        return new SampleItem().withName(((SimpleImageItem) nextItem).mName.charAt(0) + "");
+                    }
+                }
+                return null;
+            }
+        });
+
+        headerHelper.setComparator(new Comparator<IItem>() {
+            public int compare(IItem f1, IItem f2) {
+                if (f1 instanceof SimpleImageItem && f2 instanceof SimpleImageItem) {
+                    return ((SimpleImageItem) f1).mName.compareTo(((SimpleImageItem) f2).mName);
+                } else {
+                    return f1.toString().compareTo(f2.toString());
+                }
+            }
+        });
+
         //if we do this. the first added items will be animated :D
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 //add some dummy data
-                mItemAdapter.add(ImageDummyData.getSimpleImageItems());
+                //mItemAdapter.add(ImageDummyData.getSimpleImageItems());
+                headerHelper.apply(new ArrayList<>(ImageDummyData.getSimpleImageItems()));
 
                 //restore selections (this has to be done after the items were added
                 mFastAdapter.withSavedInstanceState(savedInstanceState);
@@ -199,7 +229,7 @@ public class SampleActivity extends AppCompatActivity {
                 return true;
             case R.id.item_change:
                 for (Integer pos : mFastAdapter.getSelections()) {
-                    SimpleImageItem i = mItemAdapter.getItem(pos);
+                    SimpleImageItem i = (SimpleImageItem) mItemAdapter.getItem(pos);
                     i.withName("CHANGED");
                     i.withDescription("This item was modified");
                     mItemAdapter.set(pos, i);

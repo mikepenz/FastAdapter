@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter.app.dummy;
 
+import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.items.ImageItem;
 import com.mikepenz.fastadapter.app.items.SimpleImageItem;
 
@@ -60,7 +61,7 @@ public class ImageDummyData {
         }
     }
 
-    public static List<SimpleImageItem> getSimpleImageItems() {
+    public static List<IItem> getSimpleImageItems() {
         return toList(
                 new SimpleImageItem().withIdentifier(1L).withName("Yang Zhuo Yong Cuo, Tibet China").withDescription("#100063").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/yang_zhuo_yong_cuo,_tibet-china-63.jpg"),
                 new SimpleImageItem().withIdentifier(2L).withName("Yellowstone United States").withDescription("#100017").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/yellowstone-united_states-17.jpg"),
@@ -100,7 +101,7 @@ public class ImageDummyData {
         return Arrays.asList(imageItems);
     }
 
-    private static List<SimpleImageItem> toList(SimpleImageItem... imageItems) {
+    private static List<IItem> toList(IItem... imageItems) {
         return Arrays.asList(imageItems);
     }
 }
