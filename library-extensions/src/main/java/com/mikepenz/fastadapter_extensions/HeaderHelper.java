@@ -1,6 +1,6 @@
 package com.mikepenz.fastadapter_extensions;
 
-import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 
 import java.util.Collections;
@@ -11,8 +11,9 @@ import java.util.List;
  * Created by mikepenz on 17.08.16.
  */
 
-public class HeaderHelper<Item extends IItem> {
-    private ItemAdapter<Item> itemAdapter;
+public class HeaderHelper<Item> {
+    private ItemAdapter itemAdapter;
+    private GenericItemAdapter genericItemAdapter;
     private GroupingFunction<Item> groupingFunction;
     private Comparator<Item> comparator;
 
@@ -27,8 +28,17 @@ public class HeaderHelper<Item extends IItem> {
      * @param itemAdapter
      * @param groupingFunction
      */
-    public HeaderHelper(ItemAdapter<Item> itemAdapter, GroupingFunction<Item> groupingFunction) {
+    public HeaderHelper(ItemAdapter itemAdapter, GroupingFunction<Item> groupingFunction) {
         this.itemAdapter = itemAdapter;
+        this.groupingFunction = groupingFunction;
+    }
+
+    /**
+     * @param genericItemAdapter
+     * @param groupingFunction
+     */
+    public HeaderHelper(GenericItemAdapter genericItemAdapter, GroupingFunction<Item> groupingFunction) {
+        this.genericItemAdapter = genericItemAdapter;
         this.groupingFunction = groupingFunction;
     }
 
@@ -66,6 +76,9 @@ public class HeaderHelper<Item extends IItem> {
         if (itemAdapter != null) {
             itemAdapter.set(items);
         }
+        if (genericItemAdapter != null) {
+            genericItemAdapter.setModel(items);
+        }
     }
 
     /**
@@ -85,15 +98,31 @@ public class HeaderHelper<Item extends IItem> {
     /**
      * @return the ItemAdapter
      */
-    public ItemAdapter<Item> getItemAdapter() {
+    public ItemAdapter getItemAdapter() {
         return itemAdapter;
     }
 
     /**
      * @param itemAdapter the ItemAdapter
      */
-    public void setItemAdapter(ItemAdapter<Item> itemAdapter) {
+    public void setItemAdapter(ItemAdapter itemAdapter) {
         this.itemAdapter = itemAdapter;
+        this.genericItemAdapter = null;
+    }
+
+    /**
+     * @return the GenericItemAdapter
+     */
+    public GenericItemAdapter getGenericItemAdapter() {
+        return genericItemAdapter;
+    }
+
+    /**
+     * @param genericItemAdapter the GenericItemAdapter
+     */
+    public void setGenericItemAdapter(GenericItemAdapter genericItemAdapter) {
+        this.genericItemAdapter = genericItemAdapter;
+        this.itemAdapter = null;
     }
 
     /**
@@ -111,7 +140,7 @@ public class HeaderHelper<Item extends IItem> {
     }
 
 
-    public interface GroupingFunction<Item extends IItem> {
+    public interface GroupingFunction<Item> {
         /**
          * @param currentItem     the current item we check
          * @param nextItem        the item comming after the current item
