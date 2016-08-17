@@ -23,7 +23,7 @@ android {
     }
 }
 
-if (project.hasProperty('pushall') || project.hasProperty('libraryextensionrealmonly')) {
+if (project.hasProperty('pushall') || project.hasProperty('libraryextensionfirebaseonly')) {
     apply from: '../gradle-mvn-push.gradle'
     apply plugin: 'com.novoda.bintray-release'
     apply from: '../gradle-jcenter-push.gradle'
