@@ -5,10 +5,10 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 10
+        minSdkVersion 14
         targetSdkVersion 24
-        versionCode 1610
-        versionName '1.6.1'
+        versionCode 1700
+        versionName '1.7.0'
     }
     buildTypes {
         release {
@@ -34,5 +34,5 @@ dependencies {
     compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
 
-    compile 'com.mikepenz:materialize:0.9.0@aar'
+    compile 'com.mikepenz:materialize:1.0.0@aar'
 }

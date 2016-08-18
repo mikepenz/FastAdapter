@@ -11,10 +11,10 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
 
     defaultConfig {
-        minSdkVersion 11
+        minSdkVersion 14
         targetSdkVersion 24
-        versionCode 162
-        versionName '1.6.2'
+        versionCode 170
+        versionName '1.7.0'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
@@ -62,11 +62,11 @@ dependencies {
     // used to provide out of the box icon font support. simplifies development,
     // and provides scalable icons. the core is very very light
     // https://github.com/mikepenz/Android-Iconics
-    compile 'com.mikepenz:iconics-core:2.7.2@aar'
+    compile 'com.mikepenz:iconics-core:2.8.0@aar'
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
-    compile('com.mikepenz:materialdrawer:5.3.6@aar') {
+    compile('com.mikepenz:materialdrawer:5.4.0@aar') {
         transitive = true
         exclude module: "fastadapter"
     }
@@ -75,7 +75,7 @@ dependencies {
     compile 'com.mikepenz:itemanimators:0.2.4@aar'
     //used to generate the Open Source section
     //https://github.com/mikepenz/AboutLibraries
-    compile('com.mikepenz:aboutlibraries:5.7.1@aar') {
+    compile('com.mikepenz:aboutlibraries:5.7.3@aar') {
         transitive = true
         exclude module: "fastadapter"
     }
