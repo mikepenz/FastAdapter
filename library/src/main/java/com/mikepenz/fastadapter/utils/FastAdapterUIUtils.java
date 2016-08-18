@@ -3,7 +3,6 @@ package com.mikepenz.fastadapter.utils;
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.StateListDrawable;
-import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
@@ -31,11 +30,9 @@ public class FastAdapterUIUtils {
 
         states.addState(new int[]{}, ContextCompat.getDrawable(ctx, getSelectableBackground(ctx)));
         //if possible we enable animating across states
-        if (animate && Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            int duration = ctx.getResources().getInteger(android.R.integer.config_shortAnimTime);
-            states.setEnterFadeDuration(duration);
-            states.setExitFadeDuration(duration);
-        }
+        int duration = ctx.getResources().getInteger(android.R.integer.config_shortAnimTime);
+        states.setEnterFadeDuration(duration);
+        states.setExitFadeDuration(duration);
         return states;
     }
 
@@ -73,17 +70,11 @@ public class FastAdapterUIUtils {
      * @return
      */
     public static int getSelectableBackground(Context ctx) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            // If we're running on Honeycomb or newer, then we can use the Theme's
-            // selectableItemBackground to ensure that the View has a pressed state
-            TypedValue outValue = new TypedValue();
-            //it is important here to not use the android.R because this wouldn't add the latest drawable
-            ctx.getTheme().resolveAttribute(R.attr.selectableItemBackground, outValue, true);
-            return outValue.resourceId;
-        } else {
-            TypedValue outValue = new TypedValue();
-            ctx.getTheme().resolveAttribute(android.R.attr.itemBackground, outValue, true);
-            return outValue.resourceId;
-        }
+        // If we're running on Honeycomb or newer, then we can use the Theme's
+        // selectableItemBackground to ensure that the View has a pressed state
+        TypedValue outValue = new TypedValue();
+        //it is important here to not use the android.R because this wouldn't add the latest drawable
+        ctx.getTheme().resolveAttribute(R.attr.selectableItemBackground, outValue, true);
+        return outValue.resourceId;
     }
 }
