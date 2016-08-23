@@ -7,6 +7,8 @@ import android.widget.TextView;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -19,9 +21,9 @@ public class LetterItem extends AbstractItem<LetterItem, LetterItem.ViewHolder> 
     }
 
     @Override
-    public void bindView(ViewHolder holder) {
-        super.bindView(holder);
-        holder.text.setText(letter);
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
+        super.bindView(viewHolder, payloads);
+        viewHolder.text.setText(letter);
     }
 
     @Override

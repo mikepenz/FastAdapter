@@ -12,6 +12,8 @@ import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -87,8 +89,8 @@ public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.Vie
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder) {
-        super.bindView(viewHolder);
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
+        super.bindView(viewHolder, payloads);
 
         //set the text for the name
         StringHolder.applyTo(name, viewHolder.name);

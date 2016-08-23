@@ -10,6 +10,8 @@ import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.iconics.typeface.IIcon;
 import com.mikepenz.iconics.view.IconicsImageView;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -59,8 +61,8 @@ public class IconItem extends AbstractItem<IconItem, IconItem.ViewHolder> {
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder) {
-        super.bindView(viewHolder);
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
+        super.bindView(viewHolder, payloads);
 
         //define our data for the view
         viewHolder.image.setIcon(mIcon);
