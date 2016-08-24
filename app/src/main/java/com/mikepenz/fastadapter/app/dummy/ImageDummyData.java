@@ -77,10 +77,25 @@ public class ImageDummyData {
                 new SimpleImageItem().withIdentifier(13L).withName("Texas United States").withDescription("#100084").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/texas-united_states-84.jpg"),
                 new SimpleImageItem().withIdentifier(14L).withName("Tabuaeran Kiribati").withDescription("#100050").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/tabuaeran-kiribati-50.jpg"),
                 new SimpleImageItem().withIdentifier(15L).withName("Stanislaus River United States").withDescription("#100061").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/stanislaus_river-united_states-61.jpg"),
-                new SimpleImageItem().withIdentifier(16L).withName("Salinas Grandes Argentina").withDescription("#100025").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/salinas_grandes-argentina-25.jpg"),
-                new SimpleImageItem().withIdentifier(17L).withName("Shadegan Refuge Iran").withDescription("#100012").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/shadegan_refuge-iran-12.jpg"),
-                new SimpleImageItem().withIdentifier(18L).withName("San Pedro De Atacama Chile").withDescription("#100043").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/san_pedro_de_atacama-chile-43.jpg"),
-                new SimpleImageItem().withIdentifier(19L).withName("Ragged Island The Bahamas").withDescription("#100064").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/ragged_island-the_bahamas-64.jpg"),
+                new SimpleImageItem().withIdentifier(27L).withName("Ningaloo Australia").withDescription("#100073").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/ningaloo-australia-73.jpg"),
+                new SimpleImageItem().withIdentifier(28L).withName("Niederzier Germany").withDescription("#100079").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/niederzier-germany-79.jpg"),
+                new SimpleImageItem().withIdentifier(29L).withName("Olympic Dam Australia").withDescription("#100065").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/olympic_dam-australia-65.jpg"),
+                new SimpleImageItem().withIdentifier(30L).withName("Peedamulla Australia").withDescription("#100040").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/peedamulla-australia-40.jpg"),
+                new SimpleImageItem().withIdentifier(31L).withName("Nevado Tres Cruces Park Chile").withDescription("#100089").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/nevado_tres_cruces_park-chile-89.jpg")
+        );
+    }
+
+    public static List<SimpleImageItem> getSimpleImageItems2() {
+        return toList(
+                new SimpleImageItem().withIdentifier(1L).withName("TEST Yang Zhuo Yong Cuo, Tibet China").withDescription("#100063").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/yang_zhuo_yong_cuo,_tibet-china-63.jpg"),
+                new SimpleImageItem().withIdentifier(2L).withName("TESTYellowstone United States").withDescription("#100017").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/yellowstone-united_states-17.jpg"),
+                new SimpleImageItem().withIdentifier(3L).withName("TESTVictoria Australia").withDescription("#100031").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/victoria-australia-31.jpg"),
+                new SimpleImageItem().withIdentifier(4L).withName("TESTValencia Spain").withDescription("#100082").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/valencia-spain-82.jpg"),
+                new SimpleImageItem().withIdentifier(5L).withName("Xigaze, Tibet China").withDescription("#100030").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/xigaze,_tibet-china-30.jpg"),
+                new SimpleImageItem().withIdentifier(6L).withName("TESTUtah United States").withDescription("#100096").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/utah-united_states-96.jpg"),
+                new SimpleImageItem().withIdentifier(7L).withName("TESTUtah United States").withDescription("#100015").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/utah-united_states-15.jpg"),
+                new SimpleImageItem().withIdentifier(8L).withName("Utah United States").withDescription("#100088").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/utah-united_states-88.jpg"),
+                new SimpleImageItem().withIdentifier(19L).withName("Raed Island The Bahamas").withDescription("#100064").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/ragged_island-the_bahamas-64.jpg"),
                 new SimpleImageItem().withIdentifier(20L).withName("Qinghai Lake China").withDescription("#100080").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/qinghai_lake-china-80.jpg"),
                 new SimpleImageItem().withIdentifier(21L).withName("Qesm Al Wahat Ad Dakhlah Egypt").withDescription("#100056").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/qesm_al_wahat_ad_dakhlah-egypt-56.jpg"),
                 new SimpleImageItem().withIdentifier(22L).withName("Riedstadt Germany").withDescription("#100042").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/riedstadt-germany-42.jpg"),
@@ -89,10 +104,7 @@ public class ImageDummyData {
                 new SimpleImageItem().withIdentifier(25L).withName("Ngari, Tibet China").withDescription("#100057").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/ngari,_tibet-china-57.jpg"),
                 new SimpleImageItem().withIdentifier(26L).withName("Pozoantiguo Spain").withDescription("#100099").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/pozoantiguo-spain-99.jpg"),
                 new SimpleImageItem().withIdentifier(27L).withName("Ningaloo Australia").withDescription("#100073").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/ningaloo-australia-73.jpg"),
-                new SimpleImageItem().withIdentifier(28L).withName("Niederzier Germany").withDescription("#100079").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/niederzier-germany-79.jpg"),
-                new SimpleImageItem().withIdentifier(29L).withName("Olympic Dam Australia").withDescription("#100065").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/olympic_dam-australia-65.jpg"),
-                new SimpleImageItem().withIdentifier(30L).withName("Peedamulla Australia").withDescription("#100040").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/peedamulla-australia-40.jpg"),
-                new SimpleImageItem().withIdentifier(31L).withName("Nevado Tres Cruces Park Chile").withDescription("#100089").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/nevado_tres_cruces_park-chile-89.jpg")
+                new SimpleImageItem().withIdentifier(28L).withName("Niederzier Germany").withDescription("#100079").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/niederzier-germany-79.jpg")
         );
     }
 

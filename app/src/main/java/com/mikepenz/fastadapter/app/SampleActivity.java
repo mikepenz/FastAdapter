@@ -3,6 +3,7 @@ package com.mikepenz.fastadapter.app;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -75,6 +76,37 @@ public class SampleActivity extends AppCompatActivity {
                 mFastAdapter.withSavedInstanceState(savedInstanceState);
             }
         }, 50);
+
+        //if we do this. the first added items will be animated :D
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //add some dummy data
+                mItemAdapter.set(ImageDummyData.getSimpleImageItems2(), new ItemAdapter.DiffCallback<SimpleImageItem>() {
+                    @Override
+                    public boolean areItemsTheSame(SimpleImageItem oldItem, SimpleImageItem newItem) {
+                        return oldItem.getIdentifier() == newItem.getIdentifier();
+                    }
+
+                    @Override
+                    public boolean areContentsTheSame(SimpleImageItem oldItem, SimpleImageItem newItem) {
+                        return oldItem.mName.equals(newItem.mName);
+                    }
+
+                    @Nullable
+                    @Override
+                    public Object getChangePayload(SimpleImageItem oldItem, int oldItemPosition, SimpleImageItem newItem, int newItemPosition) {
+                        if (!oldItem.mName.equals(newItem.mName)) {
+                            return newItem.mName;
+                        }
+                        return null;
+                    }
+                }, true);
+
+                //restore selections (this has to be done after the items were added
+                mFastAdapter.withSavedInstanceState(savedInstanceState);
+            }
+        }, 5000);
     }
 
     @Override

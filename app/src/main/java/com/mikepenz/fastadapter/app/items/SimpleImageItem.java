@@ -74,21 +74,25 @@ public class SimpleImageItem extends AbstractItem<SimpleImageItem, SimpleImageIt
     public void bindView(SimpleImageItem.ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
 
-        //get the context
-        Context ctx = viewHolder.itemView.getContext();
+        if (payloads != null && payloads.size() > 0) {
+            viewHolder.imageName.setText(payloads.get(0).toString());
+        } else {
+            //get the context
+            Context ctx = viewHolder.itemView.getContext();
 
-        //define our data for the view
-        viewHolder.imageName.setText(mName);
-        viewHolder.imageDescription.setText(mDescription);
-        viewHolder.imageView.setImageBitmap(null);
+            //define our data for the view
+            viewHolder.imageName.setText(mName);
+            viewHolder.imageDescription.setText(mDescription);
+            viewHolder.imageView.setImageBitmap(null);
 
-        //set the background for the item
-        int color = UIUtils.getThemeColor(ctx, R.attr.colorPrimary);
-        viewHolder.view.setForeground(FastAdapterUIUtils.getSelectablePressedBackground(ctx, FastAdapterUIUtils.adjustAlpha(color, 100), 50, true));
+            //set the background for the item
+            int color = UIUtils.getThemeColor(ctx, R.attr.colorPrimary);
+            viewHolder.view.setForeground(FastAdapterUIUtils.getSelectablePressedBackground(ctx, FastAdapterUIUtils.adjustAlpha(color, 100), 50, true));
 
-        //load glide
-        Glide.clear(viewHolder.imageView);
-        Glide.with(ctx).load(mImageUrl).animate(R.anim.alpha_on).into(viewHolder.imageView);
+            //load glide
+            Glide.clear(viewHolder.imageView);
+            Glide.with(ctx).load(mImageUrl).animate(R.anim.alpha_on).into(viewHolder.imageView);
+        }
     }
 
     /**
