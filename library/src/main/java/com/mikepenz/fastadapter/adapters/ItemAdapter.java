@@ -232,95 +232,6 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     /**
-     * this sets a new list of items using the DiffCallback to calculate the difference of the two lists (uses the DiffUtils)
-     *
-     * @param items       the list of the new items
-     * @param callback    the callback to check if items are different or equal
-     * @param detectMoves is a bit slower as it will also check if items were moved
-     * @return this
-     */
-    public ItemAdapter<Item> set(final List<Item> items, final DiffCallback<Item> callback, boolean detectMoves) {
-        if (mUseIdDistributor) {
-            IdDistributor.checkIds(items);
-        }
-
-        //first collapse all items
-        getFastAdapter().collapse(false);
-
-        //make sure the new items list is not a reference of the already mItems list
-        if (items != mItems) {
-            //remove all previous items
-            if (!mItems.isEmpty()) {
-                mItems.clear();
-            }
-
-            //add all new items to the list
-            mItems.addAll(items);
-        }
-
-        //map the types
-        mapPossibleTypes(items);
-
-        //if we have a comparator then sort
-        if (mComparator != null) {
-            Collections.sort(mItems, mComparator);
-        }
-
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
-            @Override
-            public int getOldListSize() {
-                return mItems.size();
-            }
-
-            @Override
-            public int getNewListSize() {
-                return items.size();
-            }
-
-            @Override
-            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-                return callback.areItemsTheSame(mItems.get(oldItemPosition), items.get(newItemPosition));
-            }
-
-            @Override
-            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-                return callback.areContentsTheSame(mItems.get(oldItemPosition), items.get(newItemPosition));
-            }
-
-            @Nullable
-            @Override
-            public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-                Object result = callback.getChangePayload(mItems.get(oldItemPosition), oldItemPosition, items.get(newItemPosition), newItemPosition);
-                return result == null ? super.getChangePayload(oldItemPosition, newItemPosition) : result;
-            }
-        }, detectMoves);
-
-        result.dispatchUpdatesTo(new ListUpdateCallback() {
-            @Override
-            public void onInserted(int position, int count) {
-                getFastAdapter().notifyAdapterItemRangeInserted(position, count);
-            }
-
-            @Override
-            public void onRemoved(int position, int count) {
-                getFastAdapter().notifyAdapterItemRangeRemoved(position, count);
-            }
-
-            @Override
-            public void onMoved(int fromPosition, int toPosition) {
-                getFastAdapter().notifyAdapterItemMoved(fromPosition, toPosition);
-            }
-
-            @Override
-            public void onChanged(int position, int count, Object payload) {
-                getFastAdapter().notifyAdapterItemRangeChanged(position, count, payload);
-            }
-        });
-
-        return this;
-    }
-
-    /**
      * set a new list of items and apply it to the existing list (clear - add) for this adapter
      * NOTE may consider using setNewList if the items list is a reference to the list which is used inside the adapter
      * NOTE this will not sort
@@ -373,6 +284,95 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         } else {
             getFastAdapter().notifyAdapterDataSetChanged();
         }
+
+        return this;
+    }
+
+    /**
+     * this sets a new list of items using the DiffCallback to calculate the difference of the two lists (uses the DiffUtils)
+     *
+     * @param items       the list of the new items
+     * @param callback    the callback to check if items are different or equal
+     * @param detectMoves is a bit slower as it will also check if items were moved
+     * @return this
+     */
+    public ItemAdapter<Item> set(final List<Item> items, final DiffCallback<Item> callback, boolean detectMoves) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkIds(items);
+        }
+
+        //first collapse all items
+        getFastAdapter().collapse(false);
+
+        //if we have a comparator then sort
+        if (mComparator != null) {
+            Collections.sort(items, mComparator);
+        }
+
+        //map the types
+        mapPossibleTypes(items);
+
+        DiffUtil.DiffResult result = DiffUtil.calculateDiff(new DiffUtil.Callback() {
+            @Override
+            public int getOldListSize() {
+                return mItems.size();
+            }
+
+            @Override
+            public int getNewListSize() {
+                return items.size();
+            }
+
+            @Override
+            public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+                return callback.areItemsTheSame(mItems.get(oldItemPosition), items.get(newItemPosition));
+            }
+
+            @Override
+            public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+                return callback.areContentsTheSame(mItems.get(oldItemPosition), items.get(newItemPosition));
+            }
+
+            @Nullable
+            @Override
+            public Object getChangePayload(int oldItemPosition, int newItemPosition) {
+                Object result = callback.getChangePayload(mItems.get(oldItemPosition), oldItemPosition, items.get(newItemPosition), newItemPosition);
+                return result == null ? super.getChangePayload(oldItemPosition, newItemPosition) : result;
+            }
+        }, detectMoves);
+
+        //make sure the new items list is not a reference of the already mItems list
+        if (items != mItems) {
+            //remove all previous items
+            if (!mItems.isEmpty()) {
+                mItems.clear();
+            }
+
+            //add all new items to the list
+            mItems.addAll(items);
+        }
+
+        result.dispatchUpdatesTo(new ListUpdateCallback() {
+            @Override
+            public void onInserted(int position, int count) {
+                getFastAdapter().notifyAdapterItemRangeInserted(position, count);
+            }
+
+            @Override
+            public void onRemoved(int position, int count) {
+                getFastAdapter().notifyAdapterItemRangeRemoved(position, count);
+            }
+
+            @Override
+            public void onMoved(int fromPosition, int toPosition) {
+                getFastAdapter().notifyAdapterItemMoved(fromPosition, toPosition);
+            }
+
+            @Override
+            public void onChanged(int position, int count, Object payload) {
+                getFastAdapter().notifyAdapterItemRangeChanged(position, count, payload);
+            }
+        });
 
         return this;
     }
