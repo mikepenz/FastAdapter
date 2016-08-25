@@ -26,7 +26,7 @@ public class ProgressItem extends AbstractItem<ProgressItem, ProgressItem.ViewHo
     }
 
     @Override
-    public void bindView(ViewHolder holder, List<Object> payloads) {
+    public void bindView(ViewHolder holder, List payloads) {
         super.bindView(holder, payloads);
     }
 

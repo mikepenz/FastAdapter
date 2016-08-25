@@ -182,7 +182,7 @@ public abstract class AbstractItem<Item extends AbstractItem<?, ?>, VH extends R
 
     @Override
     @CallSuper
-    public void bindView(VH holder, List<Object> payloads) {
+    public void bindView(VH holder, List payloads) {
         //set the selected state of this item. force this otherwise it may is missed when implementing an item
         holder.itemView.setSelected(isSelected());
         //set the tag of this item to this object (can be used when retrieving the view)

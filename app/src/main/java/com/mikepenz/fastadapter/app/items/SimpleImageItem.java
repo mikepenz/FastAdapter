@@ -71,7 +71,7 @@ public class SimpleImageItem extends AbstractItem<SimpleImageItem, SimpleImageIt
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(SimpleImageItem.ViewHolder viewHolder, List<Object> payloads) {
+    public void bindView(SimpleImageItem.ViewHolder viewHolder, List payloads) {
         super.bindView(viewHolder, payloads);
 
         //get the context

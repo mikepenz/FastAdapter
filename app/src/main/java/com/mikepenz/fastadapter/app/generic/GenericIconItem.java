@@ -51,7 +51,7 @@ public class GenericIconItem extends GenericAbstractItem<IconModel, GenericIconI
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
+    public void bindView(ViewHolder viewHolder, List payloads) {
         super.bindView(viewHolder, payloads);
 
         //define our data for the view

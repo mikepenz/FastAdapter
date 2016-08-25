@@ -487,7 +487,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     /**
      * Binds the data to the created ViewHolder and sets the listeners to the holder.itemView
-     * Note that you should use the `onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads`
+     * Note that you should use the `onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads`
      * as it allows you to implement a more efficient adapter implementation
      *
      * @param holder   the viewHolder we bind the data on
@@ -506,7 +506,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param payloads the payloads for the bindViewHolder event containing data which allows to improve view animating
      */
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads) {
         super.onBindViewHolder(holder, position, payloads);
         mOnBindViewHolderListener.onBindViewHolder(holder, position, payloads);
     }
@@ -1693,7 +1693,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          * @param position   the position of this viewHolder
          * @param payloads   the payloads provided by the adapter
          */
-        void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List<Object> payloads);
+        void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List payloads);
     }
 
     public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
@@ -1705,7 +1705,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          * @param payloads   the payloads provided by the adapter
          */
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List<Object> payloads) {
+        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List payloads) {
             getItem(position).bindView(viewHolder, payloads);
         }
     }

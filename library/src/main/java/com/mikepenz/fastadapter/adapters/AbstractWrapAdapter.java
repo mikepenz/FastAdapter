@@ -168,7 +168,7 @@ public abstract class AbstractWrapAdapter<Item extends IItem> extends RecyclerVi
 
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        //empty implementation as the one with the List<Object> payloads is already called
+        //empty implementation as the one with the List payloads is already called
     }
 
     /**
