@@ -82,13 +82,13 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 
 <p>The library is split up into core, and extensions. The core functions are included in the following dependency.</p>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:1.7.0@aar<span class="pl-pds">'</span></span>) {
+<div class="highlight highlight-source-groovy-gradle"><pre>compile(<span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter:1.8.0@aar<span class="pl-pds">'</span></span>) {
     transitive <span class="pl-k">=</span> <span class="pl-c1">true</span>
 }</pre></div>
 
 <p>All additions are included in the following dependency.</p>
 
-<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter-extensions:1.7.0@aar<span class="pl-pds">'</span></span>
+<div class="highlight highlight-source-groovy-gradle"><pre>compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:fastadapter-extensions:1.8.0@aar<span class="pl-pds">'</span></span>
 <span class="pl-c">//The tiny Materialize library used for its useful helper classes</span>
 compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:materialize:1.0.0@aar<span class="pl-pds">'</span></span></pre></div>
 
@@ -122,9 +122,9 @@ compile <span class="pl-s"><span class="pl-pds">'</span>com.mikepenz:materialize
 
     <span class="pl-c">//The logic to bind your data to the view</span>
     <span class="pl-k">@Override</span>
-    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">bindView</span>(<span class="pl-smi">ViewHolder</span> <span class="pl-v">viewHolder</span>) {
+    <span class="pl-k">public</span> <span class="pl-k">void</span> <span class="pl-en">bindView</span>(<span class="pl-smi">ViewHolder</span> <span class="pl-v">viewHolder</span>, <span class="pl-smi">List</span> <span class="pl-v">payloads</span>) {
         <span class="pl-c">//call super so the selection is already handled for you</span>
-        <span class="pl-v">super</span><span class="pl-k">.</span>bindView(viewHolder);
+        <span class="pl-v">super</span><span class="pl-k">.</span>bindView(viewHolder, payloads);
 
         <span class="pl-c">//bind our data</span>
         <span class="pl-c">//set the text for the name</span>
