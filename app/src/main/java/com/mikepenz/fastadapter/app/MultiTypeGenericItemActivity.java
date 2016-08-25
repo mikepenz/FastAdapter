@@ -10,11 +10,15 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
+import com.mikepenz.fastadapter.app.generic.GenericHeaderItem;
 import com.mikepenz.fastadapter.app.generic.GenericIconItem;
+import com.mikepenz.fastadapter.app.generic.HeaderIconModel;
 import com.mikepenz.fastadapter.app.generic.IconModel;
 import com.mikepenz.fastadapter.app.generic.RightGenericIconItem;
 import com.mikepenz.fastadapter.app.generic.RightIconModel;
+import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.mikepenz.fastadapter.utils.Function;
+import com.mikepenz.fastadapter_extensions.HeaderHelper;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
@@ -55,13 +59,15 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
 
         //if you need multiple items for different models you can also do this be defining a Function which get's the model object and returns the item (extends IItem)
-        GenericItemAdapter<IconModel, GenericIconItem> itemAdapter = new GenericItemAdapter<>(new Function<IconModel, GenericIconItem>() {
+        GenericItemAdapter<Object, GenericAbstractItem<Object, ?, ?>> itemAdapter = new GenericItemAdapter<>(new Function<Object, GenericAbstractItem<Object, ?, ?>>() {
             @Override
-            public GenericIconItem apply(IconModel o) {
-                if (o instanceof RightIconModel) {
-                    return new RightGenericIconItem(o);
+            public GenericAbstractItem apply(Object o) {
+                if (o instanceof HeaderIconModel) {
+                    return new GenericHeaderItem((HeaderIconModel) o);
+                } else if (o instanceof RightIconModel) {
+                    return new RightGenericIconItem((IconModel) o);
                 } else {
-                    return new GenericIconItem(o);
+                    return new GenericIconItem((IconModel) o);
                 }
             }
         });
@@ -80,7 +86,7 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
         });
 
         //add all icons of all registered Fonts to the list
-        ArrayList<IconModel> models = new ArrayList<>();
+        ArrayList models = new ArrayList();
         int i = 0;
         for (ITypeface font : mFonts) {
             for (String icon : font.getIcons()) {
@@ -93,8 +99,23 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
             }
         }
 
+        final HeaderHelper<IconModel, HeaderIconModel> headerHelper = new HeaderHelper<>(new HeaderHelper.GroupingFunction<IconModel, HeaderIconModel>() {
+            @Override
+            public HeaderIconModel group(IconModel currentItem, IconModel nextItem, int currentPosition) {
+                if (currentItem == null)
+                    return new HeaderIconModel(nextItem.icon);
+                else if (nextItem != null)
+                    return null;
+                else
+                    return null;
+            }
+        });
+
+        //apply
+        headerHelper.apply(models);
+
         //fill with some sample data
-        itemAdapter.addModel(models);
+        itemAdapter.setModel(models);
 
         //restore selections (this has to be done after the items were added
         fastAdapter.withSavedInstanceState(savedInstanceState);
