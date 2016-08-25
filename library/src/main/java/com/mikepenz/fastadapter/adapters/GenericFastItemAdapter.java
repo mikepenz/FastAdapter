@@ -1,7 +1,7 @@
 package com.mikepenz.fastadapter.adapters;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.items.GenericAbstractItem;
+import com.mikepenz.fastadapter.IGenericItem;
 import com.mikepenz.fastadapter.utils.Function;
 
 import java.util.List;
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created by fabianterhorst on 31.03.16.
  */
-public class GenericFastItemAdapter<Model, Item extends GenericAbstractItem<Model, Item, ?>> extends FastAdapter<Item> {
+public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item, ?>> extends FastAdapter<Item> {
 
     private final GenericItemAdapter<Model, Item> mItemAdapter;
 
