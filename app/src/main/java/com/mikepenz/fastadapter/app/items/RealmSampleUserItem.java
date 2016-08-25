@@ -11,6 +11,9 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
 
+import java.util.Collections;
+import java.util.List;
+
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -183,7 +186,7 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
         ViewHolder viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), null, false));
 
         //as we already know the type of our ViewHolder cast it to our type
-        bindView(viewHolder);
+        bindView(viewHolder, Collections.EMPTY_LIST);
 
         //return the bound view
         return viewHolder.itemView;
@@ -201,7 +204,7 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
         ViewHolder viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), parent, false));
 
         //as we already know the type of our ViewHolder cast it to our type
-        bindView(viewHolder);
+        bindView(viewHolder, Collections.EMPTY_LIST);
         //return the bound and generatedView
         return viewHolder.itemView;
     }
@@ -234,7 +237,7 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
      * @param holder
      */
     @Override
-    public void bindView(ViewHolder holder) {
+    public void bindView(ViewHolder holder, List payloads) {
         //set the selected state of this item. force this otherwise it may is missed when implementing an item
         holder.itemView.setSelected(isSelected());
         //set the tag of this item to this object (can be used when retrieving the view)

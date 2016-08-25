@@ -27,14 +27,16 @@ public class AdapterUtil {
     public static void handleStates(FastAdapter fastAdapter, int startPosition, int endPosition) {
         for (int i = endPosition; i >= startPosition; i--) {
             IItem updateItem = fastAdapter.getItem(i);
-            if (updateItem.isSelected()) {
-                fastAdapter.getSelections().add(i);
-            } else if (fastAdapter.getSelections().contains(i)) {
-                fastAdapter.getSelections().remove(i);
-            }
-            if (updateItem instanceof IExpandable) {
-                if (((IExpandable) updateItem).isExpanded() && fastAdapter.getExpanded().indexOfKey(i) < 0) {
-                    fastAdapter.expand(i);
+            if (updateItem != null) {
+                if (updateItem.isSelected()) {
+                    fastAdapter.getSelections().add(i);
+                } else if (fastAdapter.getSelections().contains(i)) {
+                    fastAdapter.getSelections().remove(i);
+                }
+                if (updateItem instanceof IExpandable) {
+                    if (((IExpandable) updateItem).isExpanded() && fastAdapter.getExpanded().indexOfKey(i) < 0) {
+                        fastAdapter.expand(i);
+                    }
                 }
             }
         }

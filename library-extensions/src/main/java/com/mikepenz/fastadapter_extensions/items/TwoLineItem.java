@@ -15,6 +15,8 @@ import com.mikepenz.library_extensions.R;
 import com.mikepenz.materialize.holder.ImageHolder;
 import com.mikepenz.materialize.holder.StringHolder;
 
+import java.util.List;
+
 /**
  * Created by fabianterhorst on 30.03.16.
  */
@@ -112,10 +114,9 @@ public class TwoLineItem extends AbstractItem<TwoLineItem, TwoLineItem.ViewHolde
         return R.layout.two_line_item;
     }
 
-
     @Override
-    public void bindView(ViewHolder holder) {
-        super.bindView(holder);
+    public void bindView(ViewHolder holder, List payloads) {
+        super.bindView(holder, payloads);
         mName.applyTo(holder.name);
         mDescription.applyTo(holder.description);
         if (mAvatar != null) {

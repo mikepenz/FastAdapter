@@ -7,6 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import java.util.List;
+
 /**
  * Created by mikepenz on 03.02.15.
  */
@@ -117,8 +119,9 @@ public interface IItem<T, VH extends RecyclerView.ViewHolder> extends IIdentifya
      * Binds the data of this item to the given holder
      *
      * @param holder
+     * @param payloads
      */
-    void bindView(VH holder);
+    void bindView(VH holder, List payloads);
 
     /**
      * If this item equals to the given identifier

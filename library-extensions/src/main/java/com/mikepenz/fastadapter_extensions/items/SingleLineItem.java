@@ -15,6 +15,8 @@ import com.mikepenz.library_extensions.R;
 import com.mikepenz.materialize.holder.ImageHolder;
 import com.mikepenz.materialize.holder.StringHolder;
 
+import java.util.List;
+
 /**
  * Created by fabianterhorst on 30.03.16.
  */
@@ -104,8 +106,8 @@ public class SingleLineItem extends AbstractItem<SingleLineItem, SingleLineItem.
     }
 
     @Override
-    public void bindView(ViewHolder holder) {
-        super.bindView(holder);
+    public void bindView(ViewHolder holder, List payloads) {
+        super.bindView(holder, payloads);
         mName.applyTo(holder.name);
         if (mAvatar != null) {
             if (holder.avatar.getVisibility() == View.GONE) {

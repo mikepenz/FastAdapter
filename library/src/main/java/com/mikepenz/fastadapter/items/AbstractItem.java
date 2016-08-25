@@ -14,6 +14,8 @@ import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.ParameterizedType;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by mikepenz on 14.07.15.
@@ -178,10 +180,9 @@ public abstract class AbstractItem<Item extends AbstractItem<?, ?>, VH extends R
         return mOnItemClickListener;
     }
 
-
     @Override
     @CallSuper
-    public void bindView(VH holder) {
+    public void bindView(VH holder, List payloads) {
         //set the selected state of this item. force this otherwise it may is missed when implementing an item
         holder.itemView.setSelected(isSelected());
         //set the tag of this item to this object (can be used when retrieving the view)
@@ -199,7 +200,7 @@ public abstract class AbstractItem<Item extends AbstractItem<?, ?>, VH extends R
         VH viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), null, false));
 
         //as we already know the type of our ViewHolder cast it to our type
-        bindView(viewHolder);
+        bindView(viewHolder, Collections.EMPTY_LIST);
 
         //return the bound view
         return viewHolder.itemView;
@@ -217,7 +218,7 @@ public abstract class AbstractItem<Item extends AbstractItem<?, ?>, VH extends R
         VH viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), parent, false));
 
         //as we already know the type of our ViewHolder cast it to our type
-        bindView(viewHolder);
+        bindView(viewHolder, Collections.EMPTY_LIST);
         //return the bound and generatedView
         return viewHolder.itemView;
     }

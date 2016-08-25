@@ -9,6 +9,8 @@ import com.mikepenz.fastadapter.items.GenericAbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.iconics.view.IconicsImageView;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -49,8 +51,8 @@ public class GenericIconItem extends GenericAbstractItem<IconModel, GenericIconI
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder) {
-        super.bindView(viewHolder);
+    public void bindView(ViewHolder viewHolder, List payloads) {
+        super.bindView(viewHolder, payloads);
 
         //define our data for the view
         viewHolder.image.setIcon(getModel().icon);

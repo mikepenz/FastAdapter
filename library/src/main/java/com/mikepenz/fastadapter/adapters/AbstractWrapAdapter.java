@@ -165,6 +165,12 @@ public abstract class AbstractWrapAdapter<Item extends IItem> extends RecyclerVi
         return mAdapter.onCreateViewHolder(parent, viewType);
     }
 
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        //empty implementation as the one with the List payloads is already called
+    }
+
     /**
      * the onBindViewHolder is managed by the FastAdapter so forward this correctly
      *
@@ -172,11 +178,11 @@ public abstract class AbstractWrapAdapter<Item extends IItem> extends RecyclerVi
      * @param position
      */
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads) {
         if (shouldInsertItemAtPosition(position)) {
-            getItem(position).bindView(holder);
+            getItem(position).bindView(holder, payloads);
         } else {
-            mAdapter.onBindViewHolder(holder, position - itemInsertedBeforeCount(position));
+            mAdapter.onBindViewHolder(holder, position - itemInsertedBeforeCount(position), payloads);
         }
     }
 

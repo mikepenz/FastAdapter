@@ -8,6 +8,8 @@ import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.library_extensions.R;
 
+import java.util.List;
+
 
 public class ProgressItem extends AbstractItem<ProgressItem, ProgressItem.ViewHolder> {
 
@@ -24,8 +26,8 @@ public class ProgressItem extends AbstractItem<ProgressItem, ProgressItem.ViewHo
     }
 
     @Override
-    public void bindView(ViewHolder holder) {
-        super.bindView(holder);
+    public void bindView(ViewHolder holder, List payloads) {
+        super.bindView(holder, payloads);
     }
 
     protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {

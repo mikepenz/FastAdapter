@@ -159,8 +159,8 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder) {
-        super.bindView(viewHolder);
+    public void bindView(ViewHolder viewHolder, List payloads) {
+        super.bindView(viewHolder, payloads);
 
         //get the context
         Context ctx = viewHolder.itemView.getContext();

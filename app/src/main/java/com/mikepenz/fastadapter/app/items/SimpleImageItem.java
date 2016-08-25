@@ -14,6 +14,8 @@ import com.mikepenz.fastadapter.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.materialize.util.UIUtils;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -69,8 +71,8 @@ public class SimpleImageItem extends AbstractItem<SimpleImageItem, SimpleImageIt
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(SimpleImageItem.ViewHolder viewHolder) {
-        super.bindView(viewHolder);
+    public void bindView(SimpleImageItem.ViewHolder viewHolder, List payloads) {
+        super.bindView(viewHolder, payloads);
 
         //get the context
         Context ctx = viewHolder.itemView.getContext();

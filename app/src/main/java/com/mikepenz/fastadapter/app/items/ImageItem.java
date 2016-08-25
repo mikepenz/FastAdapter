@@ -16,6 +16,8 @@ import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.iconics.view.IconicsImageView;
 
+import java.util.List;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -77,8 +79,8 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder) {
-        super.bindView(viewHolder);
+    public void bindView(ViewHolder viewHolder, List payloads) {
+        super.bindView(viewHolder, payloads);
 
         //get the context
         Context ctx = viewHolder.itemView.getContext();

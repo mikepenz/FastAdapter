@@ -487,13 +487,28 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     /**
      * Binds the data to the created ViewHolder and sets the listeners to the holder.itemView
+     * Note that you should use the `onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads`
+     * as it allows you to implement a more efficient adapter implementation
      *
      * @param holder   the viewHolder we bind the data on
      * @param position the global position
      */
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        mOnBindViewHolderListener.onBindViewHolder(holder, position);
+        //empty implementation we want the users to use the payloads too
+    }
+
+    /**
+     * Binds the data to the created ViewHolder and sets the listeners to the holder.itemView
+     *
+     * @param holder   the viewHolder we bind the data on
+     * @param position the global position
+     * @param payloads the payloads for the bindViewHolder event containing data which allows to improve view animating
+     */
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+        mOnBindViewHolderListener.onBindViewHolder(holder, position, payloads);
     }
 
     /**
@@ -1675,9 +1690,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          * is called in onBindViewHolder to bind the data on the ViewHolder
          *
          * @param viewHolder the viewHolder for the type at this position
-         * @param position   the position of thsi viewHolder
+         * @param position   the position of this viewHolder
+         * @param payloads   the payloads provided by the adapter
          */
-        void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position);
+        void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List payloads);
     }
 
     public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
@@ -1686,10 +1702,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          *
          * @param viewHolder the viewHolder for the type at this position
          * @param position   the position of this viewHolder
+         * @param payloads   the payloads provided by the adapter
          */
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-            getItem(position).bindView(viewHolder);
+        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List payloads) {
+            getItem(position).bindView(viewHolder, payloads);
         }
     }
 

@@ -1,6 +1,6 @@
 package com.mikepenz.fastadapter.adapters;
 
-import com.mikepenz.fastadapter.items.GenericAbstractItem;
+import com.mikepenz.fastadapter.IGenericItem;
 import com.mikepenz.fastadapter.utils.Function;
 
 import java.lang.reflect.Constructor;
@@ -15,7 +15,7 @@ import static java.util.Arrays.asList;
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  * This adapter has the order of 500 which is the centered order
  */
-public class GenericItemAdapter<Model, Item extends GenericAbstractItem<? extends Model, ?, ?>> extends ItemAdapter<Item> {
+public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model, ?, ?>> extends ItemAdapter<Item> {
     private final Function<Model, Item> mItemFactory;
 
     /**

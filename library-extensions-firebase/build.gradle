@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 24
-        versionCode 1700
-        versionName '1.7.0-SNAPSHOT'
+        versionCode 1800
+        versionName '1.8.0-SNAPSHOT'
     }
     buildTypes {
         release {
