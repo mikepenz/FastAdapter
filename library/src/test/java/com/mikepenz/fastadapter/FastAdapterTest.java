@@ -9,6 +9,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -187,8 +188,8 @@ public class FastAdapterTest {
         RecyclerView.ViewHolder holder = mock(RecyclerView.ViewHolder.class);
         adapter.withOnBindViewHolderListener(listener);
 
-        adapter.onBindViewHolder(holder, 10);
+        adapter.onBindViewHolder(holder, 10, new ArrayList());
 
-        verify(listener, only()).onBindViewHolder(holder, 10);
+        verify(listener, only()).onBindViewHolder(holder, 10, new ArrayList());
     }
 }
