@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import com.mikepenz.fastadapter.utils.AdapterUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -56,6 +57,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private boolean mOnlyOneExpandedItem = false;
     // if we use the positionBasedStateManagement or the "stateless" management
     private boolean mPositionBasedStateManagement = true;
+    // legacy bindView mode. if activated we will forward onBindView without paylodas to the method with payloads
+    private boolean mLegacyBindViewMode = false;
 
     // we need to remember all selections to recreate them after orientation change
     private SortedSet<Integer> mSelections = new TreeSet<>();
@@ -224,6 +227,17 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public FastAdapter<Item> withPositionBasedStateManagement(boolean mPositionBasedStateManagement) {
         this.mPositionBasedStateManagement = mPositionBasedStateManagement;
+        return this;
+    }
+
+
+    /**
+     * set to true if you want the FastAdapter to forward all calls from onBindViewHolder(final RecyclerView.ViewHolder holder, int position) to onBindViewHolder(final RecyclerView.ViewHolder holder, int position, List payloads)
+     * @param legacyBindViewMode true if you want to activate it (default = false)
+     * @return this
+     */
+    public FastAdapter<Item> withLegacyBindViewMode(boolean legacyBindViewMode) {
+        this.mLegacyBindViewMode = legacyBindViewMode;
         return this;
     }
 
@@ -495,6 +509,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+        if(mLegacyBindViewMode) {
+            onBindViewHolder(holder, position, Collections.EMPTY_LIST);
+        }
         //empty implementation we want the users to use the payloads too
     }
 
