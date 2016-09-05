@@ -355,22 +355,22 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         result.dispatchUpdatesTo(new ListUpdateCallback() {
             @Override
             public void onInserted(int position, int count) {
-                getFastAdapter().notifyAdapterItemRangeInserted(position, count);
+                getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getPreItemCountByOrder(getOrder()) + position, count);
             }
 
             @Override
             public void onRemoved(int position, int count) {
-                getFastAdapter().notifyAdapterItemRangeRemoved(position, count);
+                getFastAdapter().notifyAdapterItemRangeRemoved(getFastAdapter().getPreItemCountByOrder(getOrder()) + position, count);
             }
 
             @Override
             public void onMoved(int fromPosition, int toPosition) {
-                getFastAdapter().notifyAdapterItemMoved(fromPosition, toPosition);
+                getFastAdapter().notifyAdapterItemMoved(getFastAdapter().getPreItemCountByOrder(getOrder()) + fromPosition, toPosition);
             }
 
             @Override
             public void onChanged(int position, int count, Object payload) {
-                getFastAdapter().notifyAdapterItemRangeChanged(position, count, payload);
+                getFastAdapter().notifyAdapterItemRangeChanged(getFastAdapter().getPreItemCountByOrder(getOrder()) + position, count, payload);
             }
         });
 
