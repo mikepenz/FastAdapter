@@ -116,8 +116,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      *
      * @param models the set models
      */
-    public GenericItemAdapter<Model, Item> setModel(List<Model> models, DiffCallback<Item> callback,
-            boolean detectMove) {
+    public GenericItemAdapter<Model, Item> setModel(List<Model> models, DiffCallback<Item> callback, boolean detectMove) {
         set(toItems(models), callback, detectMove);
         return this;
     }

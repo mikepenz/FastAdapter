@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.adapters;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IGenericItem;
+import com.mikepenz.fastadapter.utils.DiffCallback;
 import com.mikepenz.fastadapter.utils.Function;
 
 import java.util.List;
@@ -120,6 +121,16 @@ public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item
      */
     public GenericFastItemAdapter<Model, Item> setModel(int position, Model model) {
         mItemAdapter.setModel(position, model);
+        return this;
+    }
+
+    /**
+     * set a new list of models for this adapter using the DiffCallback
+     *
+     * @param models the set models
+     */
+    public GenericFastItemAdapter<Model, Item> setModel(List<Model> models, DiffCallback<Item> callback, boolean detectMove) {
+        mItemAdapter.setModel(models, callback, detectMove);
         return this;
     }
 
