@@ -48,25 +48,28 @@ public class HeaderHelper<Item, HeaderItem> {
      * @param items the list which will get the headers added inbetween
      */
     public void apply(List items) {
-        //sort beforehand
-        if (comparator != null) {
-            Collections.sort(items, comparator);
-        }
-
-        //we have to get the list size each time, as we will add the headers to it
-        for (int i = -1; i < items.size(); i++) {
-            HeaderItem headerItem;
-            if (i == -1) {
-                headerItem = groupingFunction.group(null, (Item) items.get(i + 1), i);
-            } else if (i == items.size() - 1) {
-                headerItem = groupingFunction.group((Item) items.get(i), null, i);
-            } else {
-                headerItem = groupingFunction.group((Item) items.get(i), (Item) items.get(i + 1), i);
+        //If the list is empty avoid sorting and adding headers.
+        if (items.size() > 0) {
+            //sort beforehand
+            if (comparator != null) {
+                Collections.sort(items, comparator);
             }
-
-            if (headerItem != null) {
-                items.add(i + 1, headerItem);
-                i = i + 1;
+    
+            //we have to get the list size each time, as we will add the headers to it
+            for (int i = -1; i < items.size(); i++) {
+                HeaderItem headerItem;
+                if (i == -1) {
+                    headerItem = groupingFunction.group(null, (Item) items.get(i + 1), i);
+                } else if (i == items.size() - 1) {
+                    headerItem = groupingFunction.group((Item) items.get(i), null, i);
+                } else {
+                    headerItem = groupingFunction.group((Item) items.get(i), (Item) items.get(i + 1), i);
+                }
+    
+                if (headerItem != null) {
+                    items.add(i + 1, headerItem);
+                    i = i + 1;
+                }
             }
         }
 
