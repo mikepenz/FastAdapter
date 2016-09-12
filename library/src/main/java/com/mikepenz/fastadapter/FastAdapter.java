@@ -510,7 +510,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if(mLegacyBindViewMode) {
-            onBindViewHolder(holder, position, Collections.EMPTY_LIST);
+            mOnBindViewHolderListener.onBindViewHolder(holder, position, Collections.EMPTY_LIST);
         }
         //empty implementation we want the users to use the payloads too
     }
