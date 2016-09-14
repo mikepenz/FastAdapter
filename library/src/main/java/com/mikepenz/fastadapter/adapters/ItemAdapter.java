@@ -594,7 +594,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // Now we have to inform the adapter about the new list filtered
             if (results.values != null) {
-                set((List<Item>) results.values);
+                ItemAdapter.this.set((List<Item>) results.values);
             }
 
             if (mItemFilterListener != null) {
@@ -642,6 +642,156 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 return selections;
             } else {
                 return getFastAdapter().getSelectedItems();
+            }
+        }
+
+        /**
+         * add an array of items to the end of the existing items
+         *
+         * @param items the items to add
+         */
+        @SafeVarargs
+        public final ItemAdapter<Item> add(Item... items) {
+            return add(asList(items));
+        }
+
+        /**
+         * add a list of items to the end of the existing items
+         * will prior check if we are currently filtering
+         *
+         * @param items the items to add
+         */
+        public ItemAdapter<Item> add(List<Item> items) {
+            if (mOriginalItems != null) {
+                if (mUseIdDistributor) {
+                    IdDistributor.checkIds(items);
+                }
+                mOriginalItems.addAll(items);
+                performFiltering(mConstraint);
+                return ItemAdapter.this;
+            } else {
+                return ItemAdapter.this.add(items);
+            }
+        }
+
+        /**
+         * add an array of items at the given position within the existing items
+         *
+         * @param position the global position
+         * @param items    the items to add
+         */
+        @SafeVarargs
+        public final ItemAdapter<Item> add(int position, Item... items) {
+            return add(position, asList(items));
+        }
+
+        /**
+         * add a list of items at the given position within the existing items
+         *
+         * @param position the global position
+         * @param items    the items to add
+         */
+        public ItemAdapter<Item> add(int position, List<Item> items) {
+            if (mOriginalItems != null) {
+                if (mUseIdDistributor) {
+                    IdDistributor.checkIds(items);
+                }
+                mOriginalItems.addAll(position - getFastAdapter().getPreItemCountByOrder(getOrder()), items);
+                performFiltering(mConstraint);
+                return ItemAdapter.this;
+            } else {
+                return ItemAdapter.this.add(position, items);
+            }
+        }
+
+        /**
+         * sets an item at the given position, overwriting the previous item
+         *
+         * @param position the global position
+         * @param item     the item to set
+         */
+        public ItemAdapter<Item> set(int position, Item item) {
+            if (mOriginalItems != null) {
+                if (mUseIdDistributor) {
+                    IdDistributor.checkId(item);
+                }
+                mOriginalItems.set(position - getFastAdapter().getPreItemCount(position), item);
+                performFiltering(mConstraint);
+                return ItemAdapter.this;
+            } else {
+                return ItemAdapter.this.set(position, item);
+            }
+        }
+
+        /**
+         * moves an item within the list from a position to a position
+         *
+         * @param fromPosition the position global from which we want to move
+         * @param toPosition   the global position to which to move
+         * @return this
+         */
+        public ItemAdapter<Item> move(int fromPosition, int toPosition) {
+            if (mOriginalItems != null) {
+                int preItemCount = getFastAdapter().getPreItemCount(fromPosition);
+                Item item = mOriginalItems.get(fromPosition - preItemCount);
+                mOriginalItems.remove(fromPosition - preItemCount);
+                mOriginalItems.add(toPosition - preItemCount, item);
+                performFiltering(mConstraint);
+                return ItemAdapter.this;
+            } else {
+                return ItemAdapter.this.move(fromPosition, toPosition);
+            }
+        }
+
+        /**
+         * removes an item at the given position within the existing icons
+         *
+         * @param position the global position
+         */
+        public ItemAdapter<Item> remove(int position) {
+            if (mOriginalItems != null) {
+                mItems.remove(position - getFastAdapter().getPreItemCount(position));
+                performFiltering(mConstraint);
+                return ItemAdapter.this;
+            } else {
+                return ItemAdapter.this.remove(position);
+            }
+        }
+
+        /**
+         * removes a range of items starting with the given position within the existing icons
+         *
+         * @param position  the global position
+         * @param itemCount the count of items which were removed
+         */
+        public ItemAdapter<Item> removeRange(int position, int itemCount) {
+            if (mOriginalItems != null) {
+                //global position to relative
+                int length = mOriginalItems.size();
+                int preItemCount = getFastAdapter().getPreItemCount(position);
+                //make sure we do not delete to many items
+                int saveItemCount = Math.min(itemCount, length - position + preItemCount);
+                for (int i = 0; i < saveItemCount; i++) {
+                    mOriginalItems.remove(position - preItemCount);
+                }
+                performFiltering(mConstraint);
+                return ItemAdapter.this;
+            } else {
+                return ItemAdapter.this.removeRange(position, itemCount);
+            }
+        }
+
+        /**
+         * removes all items of this adapter
+         */
+        public ItemAdapter<Item> clear() {
+            if (mOriginalItems != null) {
+                int count = mOriginalItems.size();
+                mOriginalItems.clear();
+                performFiltering(mConstraint);
+                return ItemAdapter.this;
+            } else {
+                return ItemAdapter.this.clear();
             }
         }
     }
