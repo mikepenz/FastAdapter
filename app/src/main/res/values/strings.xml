@@ -11,6 +11,8 @@
     <string name="sample_image_list_descr">View Click Listener</string>
     <string name="sample_multi_select">MultiSelect Sample</string>
     <string name="sample_multi_select_descr">MultiSelect, CAB, Remove, Undo</string>
+    <string name="sample_collapsible_multi_select_delete">Expandable MultiSelect Delete Sample</string>
+    <string name="sample_collapsible_multi_select_delete_descr">Expandable, MultiSelect, CAB, Remove</string>
     <string name="sample_collapsible">Expandable Sample</string>
     <string name="sample_collapsible_descr">Expandable, Select</string>
     <string name="sample_sticky_header">StickyHeader Sample</string>
