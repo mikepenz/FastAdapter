@@ -25,7 +25,7 @@ public class ActionModeHelper {
 
     private boolean mAutoDeselect = true;
 
-    private ActionModeTitleProvider mTitleProvider = null;
+    private ActionModeTitleProvider mTitleProvider;
 
     public ActionModeHelper(FastAdapter fastAdapter, int cabMenu) {
         this.mFastAdapter = fastAdapter;
@@ -89,8 +89,7 @@ public class ActionModeHelper {
             return false;
         }
 
-        if (mActionMode != null)
-        {
+        if (mActionMode != null) {
             // calculate the selection count for the action mode
             // because current selection is not reflecting the future state yet!
             int selected = mFastAdapter.getSelections().size();
@@ -144,11 +143,9 @@ public class ActionModeHelper {
                 mActionMode = null;
             }
         }
-        else {
-            if (mActionMode == null) {
-                if (act != null) // without an activity, we cannot start the action mode
-                    mActionMode = act.startSupportActionMode(mInternalCallback);
-            }
+        else if (mActionMode == null) {
+            if (act != null) // without an activity, we cannot start the action mode
+                mActionMode = act.startSupportActionMode(mInternalCallback);
         }
         updateTitle(selected);
         return mActionMode;
@@ -160,8 +157,7 @@ public class ActionModeHelper {
      * @param selected      number of selected items
      */
     private void updateTitle(int selected) {
-        if (mActionMode != null)
-        {
+        if (mActionMode != null) {
             if (mTitleProvider != null)
                 mActionMode.setTitle(mTitleProvider.getTitle(selected));
             else
