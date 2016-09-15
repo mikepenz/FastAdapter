@@ -23,6 +23,8 @@ public class ActionModeHelper {
     private ActionMode.Callback mCallback;
     private ActionMode mActionMode;
 
+    private boolean mAutoDeselect = true;
+
     private ActionModeTitleProvider mTitleProvider = null;
 
     public ActionModeHelper(FastAdapter fastAdapter, int cabMenu) {
@@ -43,6 +45,11 @@ public class ActionModeHelper {
         return this;
     }
 
+    public ActionModeHelper withAutoDeselect(boolean enabled) {
+        this.mAutoDeselect = enabled;
+        return this;
+    }
+
     public ActionMode getActionMode() {
         return mActionMode;
     }
@@ -54,6 +61,17 @@ public class ActionModeHelper {
      */
     public boolean isActive() {
         return mActionMode != null;
+    }
+
+    /**
+     * implements the basic behavior of a CAB and multi select behavior,
+     * including logics if the clicked item is collapsible
+     *
+     * @param item the current item
+     * @return null if nothing was done, or a boolean to inform if the event was consumed
+     */
+    public Boolean onClick(IItem item) {
+        return onClick(null, item);
     }
 
     /**
@@ -128,7 +146,8 @@ public class ActionModeHelper {
         }
         else {
             if (mActionMode == null) {
-                mActionMode = act.startSupportActionMode(mInternalCallback);
+                if (act != null) // without an activity, we cannot start the action mode
+                    mActionMode = act.startSupportActionMode(mInternalCallback);
             }
         }
         updateTitle(selected);
@@ -140,7 +159,7 @@ public class ActionModeHelper {
      *
      * @param selected      number of selected items
      */
-    private void updateTitle(Integer selected) {
+    private void updateTitle(int selected) {
         if (mActionMode != null)
         {
             if (mTitleProvider != null)
@@ -188,7 +207,8 @@ public class ActionModeHelper {
             mFastAdapter.withSelectOnLongClick(true);
 
             //actionMode end. deselect everything
-            mFastAdapter.deselect();
+            if (mAutoDeselect)
+                mFastAdapter.deselect();
 
             if (mCallback != null) {
                 //we notify the provided callback
