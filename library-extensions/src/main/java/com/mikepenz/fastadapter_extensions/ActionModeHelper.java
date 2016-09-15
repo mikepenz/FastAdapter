@@ -146,7 +146,7 @@ public class ActionModeHelper {
             if (mTitleProvider != null)
                 mActionMode.setTitle(mTitleProvider.getTitle(selected));
             else
-                mActionMode.setTitle(selected);
+                mActionMode.setTitle(String.valueOf(selected));
         }
     }
 
