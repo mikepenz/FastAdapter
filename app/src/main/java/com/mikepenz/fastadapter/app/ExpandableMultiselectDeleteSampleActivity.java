@@ -127,20 +127,27 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
             if (i % 2 == 0) {
                 ExpandableItem expandableItem = new ExpandableItem()
                         .withName("Test " + (i + 1))
-                        .withIdentifier(100 + i)
+                        .withIdentifier(i + 1)
+                        .withDescription("ID: " + (i + 1))
                         .withIsExpanded(true) // => breaks example in combination with id based state management
                         ;
 
                 //add subitems so we can showcase the collapsible functionality
                 List<IItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 5; ii++) {
-                    subItems.add(new SampleItem().withName("-- Test " + (i + 1) + "." + ii).withIdentifier(1000 + i * 100 + ii));
+                    subItems.add(new SampleItem()
+                            .withName("-- Test " + (i + 1) + "." + ii)
+                            .withIdentifier((i + 1) * 100 + ii)
+                            .withDescription("ID: " + (i + 1) * 100 + ii));
                 }
                 expandableItem.withSubItems(subItems);
 
                 items.add(expandableItem);
             } else {
-                items.add(new SampleItem().withName("Test " + (i + 1)).withIdentifier(100 + i));
+                items.add(new SampleItem()
+                        .withName("Test " + (i + 1))
+                        .withIdentifier(i + 1)
+                        .withDescription("ID: " + (i + 1)));
             }
         }
         fastItemAdapter.add(items);

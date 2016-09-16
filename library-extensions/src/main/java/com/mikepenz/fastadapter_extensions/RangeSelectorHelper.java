@@ -40,7 +40,7 @@ public class RangeSelectorHelper {
     }
 
     /**
-     * resets the last long pressed index, we only want to respect two consecutive long clicks for selecting a range of items
+     * resets the last long pressed index, we only want to respect two consecutive long presses for selecting a range of items
      */
     public void reset() {
         mLastLongPressIndex = null;
