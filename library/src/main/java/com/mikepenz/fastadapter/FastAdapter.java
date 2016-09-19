@@ -1345,6 +1345,24 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * expands all expandable items
+     */
+    public void expand() {
+        expand(false);
+    }
+
+    /**
+     * expands all expandable items
+     * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
+     */
+    public void expand(boolean notifyItemChanged) {
+        int length = getItemCount();
+        for(int i = length - 1; i >= 0 ; i--) {
+            expand(i);
+        }
+    }
+
+    /**
      * opens the expandable item at the given position
      *
      * @param position the global position
