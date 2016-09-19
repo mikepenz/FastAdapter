@@ -1603,7 +1603,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             if (mExpanded.indexOfKey(position) > -1) {
                 int previousCount = mExpanded.get(position);
                 int itemsCount = notifyAdapterSubItemsChanged(position, previousCount);
-                mExpanded.put(position, itemsCount);
+                if(itemsCount == 0) {
+                    mExpanded.delete(position);
+                } else {
+                    mExpanded.put(position, itemsCount);
+                }
             }
         } else {
             Log.e("FastAdapter", "please use the notifyAdapterSubItemsChanged(int position, int previousCount) method instead in the PositionBasedStateManagement mode, as we are not able to calculate the previous count ");
