@@ -188,8 +188,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      */
     @Override
     public int getAdapterPosition(Item item) {
-        int length = mItems.size();
-        for (int i = 0; i < length; i++) {
+        for (int i = 0, size = mItems.size(); i < size; i++) {
             if (mItems.get(i).getIdentifier() == item.getIdentifier()) {
                 return i;
             }
@@ -610,9 +609,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         public Set<Integer> getSelections() {
             if (mOriginalItems != null) {
                 Set<Integer> selections = new HashSet<>();
-                int length = mOriginalItems.size();
                 int adapterOffset = getFastAdapter().getPreItemCountByOrder(getOrder());
-                for (int i = 0; i < length; i++) {
+                for (int i = 0, size = mOriginalItems.size(); i < size; i++) {
                     Item item = mOriginalItems.get(i);
                     if (item.isSelected()) {
                         selections.add(i + adapterOffset);
@@ -632,8 +630,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         public Set<Item> getSelectedItems() {
             if (mOriginalItems != null) {
                 Set<Item> selections = new HashSet<>();
-                int length = mOriginalItems.size();
-                for (int i = 0; i < length; i++) {
+                for (int i = 0, size = mOriginalItems.size(); i < size; i++) {
                     Item item = mOriginalItems.get(i);
                     if (item.isSelected()) {
                         selections.add(item);

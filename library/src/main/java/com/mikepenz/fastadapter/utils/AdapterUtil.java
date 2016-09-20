@@ -90,8 +90,7 @@ public class AdapterUtil {
     public static SparseIntArray adjustPosition(SparseIntArray positions, int startPosition, int endPosition, int adjustBy) {
         SparseIntArray newPositions = new SparseIntArray();
 
-        int length = positions.size();
-        for (int i = 0; i < length; i++) {
+        for (int i = 0, size = positions.size(); i < size; i++) {
             int position = positions.keyAt(i);
 
             //if our current position is not within the bounds to check for we can add it
@@ -160,9 +159,9 @@ public class AdapterUtil {
      * @return a list of all items including the whole subItem hirachy
      */
     public static List<IItem> getAllItems(FastAdapter fastAdapter) {
-        List<IItem> items = new ArrayList<>();
-        int length = fastAdapter.getItemCount();
-        for (int i = 0; i < length; i++) {
+        int size = fastAdapter.getItemCount();
+        List<IItem> items = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
             IItem item = fastAdapter.getItem(i);
             items.add(item);
             addAllSubItems(item, items);
