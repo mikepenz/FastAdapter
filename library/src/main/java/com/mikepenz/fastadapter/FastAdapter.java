@@ -322,9 +322,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 ArrayList<String> expandedItems = savedInstanceState.getStringArrayList(BUNDLE_EXPANDED + prefix);
                 ArrayList<String> selectedItems = savedInstanceState.getStringArrayList(BUNDLE_SELECTIONS + prefix);
 
-                for (int i = 0; i < getItemCount(); i++) {
-                    Item item = getItem(i);
-                    String id = String.valueOf(item.getIdentifier());
+                Item item;
+                String id;
+                for (int i = 0, size = getItemCount(); i < size; i++) {
+                    item = getItem(i);
+                    id = String.valueOf(item.getIdentifier());
                     if (expandedItems != null && expandedItems.contains(id)) {
                         expand(i);
                     }
@@ -541,8 +543,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         }
 
         int position = 0;
-        int length = mAdapters.size();
-        for (int i = 0; i < length; i++) {
+        for (int i = 0, size = mAdapters.size(); i < size; i++) {
             IAdapter<Item> adapter = mAdapters.valueAt(i);
             if (adapter.getOrder() < 0) {
                 continue;
@@ -696,8 +697,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public int getExpandedItemsCount(int from, int position) {
         int totalAddedItems = 0;
         if (mPositionBasedStateManagement) {
-            int length = mExpanded.size();
-            for (int i = 0; i < length; i++) {
+            for (int i = 0, size = mExpanded.size(); i < size; i++) {
                 //now we count the amount of expanded items within our range we check
                 if (mExpanded.keyAt(i) >= from && mExpanded.keyAt(i) < position) {
                     totalAddedItems = totalAddedItems + mExpanded.get(mExpanded.keyAt(i));
@@ -709,8 +709,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         } else {
             //first we find out how many items were added in total
             //also counting subItems
+            Item tmp;
             for (int i = from; i < position; i++) {
-                Item tmp = getItem(i);
+                tmp = getItem(i);
                 if (tmp instanceof IExpandable) {
                     IExpandable tmpExpandable = ((IExpandable) tmp);
                     if (tmpExpandable.getSubItems() != null && tmpExpandable.isExpanded()) {
@@ -762,9 +763,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 ArrayList<String> selections = new ArrayList<>();
                 ArrayList<String> expandedItems = new ArrayList<>();
 
-                int length = getItemCount();
-                for (int i = 0; i < length; i++) {
-                    Item item = getItem(i);
+                Item item;
+                for (int i = 0, size = getItemCount(); i < size; i++) {
+                    item = getItem(i);
                     if (item instanceof IExpandable && ((IExpandable) item).isExpanded()) {
                         expandedItems.add(String.valueOf(item.getIdentifier()));
                     }
@@ -820,9 +821,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             return mSelections;
         } else {
             Set<Integer> selections = new HashSet<>();
-            int length = getItemCount();
-            for (int i = 0; i < length; i++) {
-                Item item = getItem(i);
+            Item item;
+            for (int i = 0, size = getItemCount(); i < size; i++) {
+                item = getItem(i);
                 if (item.isSelected()) {
                     selections.add(i);
                 }
@@ -1024,8 +1025,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public void select(boolean considerSelectableFlag) {
         if (mPositionBasedStateManagement) {
-            int length = getItemCount();
-            for (int i = 0; i < length; i++) {
+            for (int i = 0, size = getItemCount(); i < size; i++) {
                 select(i, false, considerSelectableFlag);
             }
         } else {
@@ -1108,8 +1108,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 selections = getSelections();
             }
         } else {
-            int length = getItemCount();
-            for (int i = length - 1; i >= 0; i--) {
+            for (int i = getItemCount() - 1; i >= 0; i--) {
                 RelativeInfo<Item> ri = getRelativeInfo(i);
                 if (ri.item.isSelected()) {
                     if (ri.adapter != null && ri.adapter instanceof IItemAdapter) {
@@ -1138,9 +1137,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             return mExpanded;
         } else {
             SparseIntArray expandedItems = new SparseIntArray();
-            int length = getItemCount();
-            for (int i = 0; i < length; i++) {
-                Item item = getItem(i);
+            Item item;
+            for (int i = 0, size = getItemCount(); i < size; i++) {
+                item = getItem(i);
                 if (item instanceof IExpandable && ((IExpandable) item).isExpanded()) {
                     expandedItems.put(i, ((IExpandable) item).getSubItems().size());
                 }
@@ -1162,9 +1161,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             }
         } else {
             ArrayList<Integer> expandedItemsList = new ArrayList<>();
-            int length = getItemCount();
-            for (int i = 0; i < length; i++) {
-                Item item = getItem(i);
+            Item item;
+            for (int i = 0, size = getItemCount(); i < size; i++) {
+                item = getItem(i);
                 if (item instanceof IExpandable && ((IExpandable) item).isExpanded()) {
                     expandedItemsList.add(i);
                 }

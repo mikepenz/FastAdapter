@@ -312,9 +312,10 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
 
         @Override
         public void onNewItems(@NonNull List<Model> newItems, int page) {
-            List<Item> iitems = new ArrayList<>(newItems.size());
-            for (Model model : newItems) {
-                iitems.add(mItemFactory.apply(model));
+            int size = newItems.size();
+            List<Item> iitems = new ArrayList<>(size);
+            for (int i = 0; i < size; i++) {
+                iitems.add(mItemFactory.apply(newItems.get(i)));
             }
             mItemAdapter.add(iitems);
         }

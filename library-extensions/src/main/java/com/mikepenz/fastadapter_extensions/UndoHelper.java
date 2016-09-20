@@ -128,7 +128,7 @@ public class UndoHelper<Item extends IItem> {
     private void undoChange() {
         if (mHistory != null) {
             if (mHistory.action == ACTION_REMOVE) {
-                for (int i = 0; i < mHistory.items.size(); i++) {
+                for (int i = 0, size = mHistory.items.size(); i < size; i++) {
                     FastAdapter.RelativeInfo<Item> relativeInfo = mHistory.items.get(i);
                     if (relativeInfo.adapter instanceof IItemAdapter) {
                         IItemAdapter<Item> adapter = (IItemAdapter<Item>) relativeInfo.adapter;

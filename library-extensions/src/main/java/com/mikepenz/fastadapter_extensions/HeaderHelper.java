@@ -56,7 +56,7 @@ public class HeaderHelper<Item, HeaderItem> {
             }
     
             //we have to get the list size each time, as we will add the headers to it
-            for (int i = -1; i < items.size(); i++) {
+            for (int i = -1, size = items.size(); i < size; i++) {
                 HeaderItem headerItem;
                 if (i == -1) {
                     headerItem = groupingFunction.group(null, (Item) items.get(i + 1), i);
