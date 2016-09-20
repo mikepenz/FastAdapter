@@ -452,7 +452,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
-        if (items != null) {
+        if (items != null && items.size() > 0) {
             mItems.addAll(position - getFastAdapter().getPreItemCountByOrder(getOrder()), items);
             mapPossibleTypes(items);
 
@@ -662,7 +662,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
          * @param items the items to add
          */
         public ItemAdapter<Item> add(List<Item> items) {
-            if (mOriginalItems != null) {
+            if (mOriginalItems != null && items.size() > 0) {
                 if (mUseIdDistributor) {
                     IdDistributor.checkIds(items);
                 }
@@ -692,7 +692,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
          * @param items    the items to add
          */
         public ItemAdapter<Item> add(int position, List<Item> items) {
-            if (mOriginalItems != null) {
+            if (mOriginalItems != null && items.size() > 0) {
                 if (mUseIdDistributor) {
                     IdDistributor.checkIds(items);
                 }

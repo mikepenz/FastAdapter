@@ -1345,6 +1345,24 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * expands all expandable items
+     */
+    public void expand() {
+        expand(false);
+    }
+
+    /**
+     * expands all expandable items
+     * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
+     */
+    public void expand(boolean notifyItemChanged) {
+        int length = getItemCount();
+        for(int i = length - 1; i >= 0 ; i--) {
+            expand(i);
+        }
+    }
+
+    /**
      * opens the expandable item at the given position
      *
      * @param position the global position
@@ -1585,7 +1603,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             if (mExpanded.indexOfKey(position) > -1) {
                 int previousCount = mExpanded.get(position);
                 int itemsCount = notifyAdapterSubItemsChanged(position, previousCount);
-                mExpanded.put(position, itemsCount);
+                if(itemsCount == 0) {
+                    mExpanded.delete(position);
+                } else {
+                    mExpanded.put(position, itemsCount);
+                }
             }
         } else {
             Log.e("FastAdapter", "please use the notifyAdapterSubItemsChanged(int position, int previousCount) method instead in the PositionBasedStateManagement mode, as we are not able to calculate the previous count ");
