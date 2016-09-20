@@ -99,7 +99,7 @@ public class SortActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             //Retrieve the previous sorting strategy from the instance state
-            sortingStrategy = savedInstanceState.getInt("sorting_strategy");
+            sortingStrategy = toSortingStrategy(savedInstanceState.getInt("sorting_strategy"));
         } else {
             //Set the default so
             sortingStrategy = SORT_NONE;
@@ -117,6 +117,10 @@ public class SortActivity extends AppCompatActivity {
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
+    }
+
+    @SortingStrategy int toSortingStrategy(int val) {
+        return val;
     }
 
     @Override

@@ -37,8 +37,7 @@ public class ClickListenerHelper<Item extends IItem> {
                 //make sure the click was done on a valid item
                 if (pos != RecyclerView.NO_POSITION) {
                     //we update our item with the changed property
-                    Item item = mFastAdapter.getItem(pos);
-                    onClickListener.onClick(v, pos, item);
+                    onClickListener.onClick(v, pos, mFastAdapter.getItem(pos));
                 }
             }
         });
@@ -58,8 +57,7 @@ public class ClickListenerHelper<Item extends IItem> {
                 //make sure the click was done on a valid item
                 if (pos != RecyclerView.NO_POSITION) {
                     //we update our item with the changed property
-                    Item item = mFastAdapter.getItem(pos);
-                    onClickListener.onClick(v, pos, item);
+                    onClickListener.onClick(v, pos, mFastAdapter.getItem(pos));
                 }
             }
         });
