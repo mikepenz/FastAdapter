@@ -6,6 +6,7 @@ import android.util.Log;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 
 import java.lang.reflect.Array;
@@ -20,6 +21,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Queue;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * Created by flisar on 15.09.2016.
@@ -28,19 +30,33 @@ public class SubItemUtils
 {
     /**
      * counts the items in the adapter, respecting subitems regardless of there current visibility
+     * ATTENTION: this function is slow on large lists
      *
+     * @param adapter      the adapter instance
+     * @param predicate      predicate against which each item will be checked before counting it
+     * @return number of items in the adapter that apply to the predicate
+     */
+    public static int countItems(final FastItemAdapter adapter, IPredicate predicate) {
+        return countItems(adapter, adapter.getAdapterItems(), true, false, predicate);
+    }
+
+    /**
+     * counts the items in the adapter, respecting subitems regardless of there current visibility
+     * * ATTENTION: this function is slow on large lists
+     *
+     * @param adapter      the adapter instance
      * @param countHeaders      if true, headers will be counted as well
      * @return number of items in the adapter
      */
     public static int countItems(final FastItemAdapter adapter, boolean countHeaders) {
-        return countItems(adapter, adapter.getAdapterItems(), countHeaders, false);
+        return countItems(adapter, adapter.getAdapterItems(), countHeaders, false, null);
     }
 
-    private static int countItems(final FastItemAdapter adapter, List<IItem> items, boolean countHeaders, boolean subItemsOnly) {
+    private static int countItems(final FastItemAdapter adapter, List<IItem> items, boolean countHeaders, boolean subItemsOnly, IPredicate predicate) {
         if (items == null || items.size() == 0)
             return 0;
 
-        int count = 0;
+        int temp,  count = 0;
         int itemCount = items.size();
         IItem item;
         List<IItem> subItems;
@@ -48,15 +64,30 @@ public class SubItemUtils
             item = items.get(i);
             if (item instanceof IExpandable && ((IExpandable)item).getSubItems() != null) {
                 subItems = ((IExpandable)item).getSubItems();
-                count += subItems != null ? subItems.size() : 0;
-                count += countItems(adapter, subItems, countHeaders, true);
-                if (countHeaders)
-                    count++;
+                if (predicate == null) {
+                    count += subItems != null ? subItems.size() : 0;
+                    count += countItems(adapter, subItems, countHeaders, true, predicate);
+                    if (countHeaders)
+                        count++;
+                } else {
+                    temp = subItems != null ? subItems.size() : 0;
+                    for (int j = 0; j < temp; j++) {
+                        if (predicate.apply(subItems.get(j)))
+                            count++;
+                    }
+                    if (countHeaders && predicate.apply(item))
+                        count++;
+                }
             }
             // in some cases, we must manually check, if the item is a sub item, process is optimised as much as possible via the subItemsOnly parameter already
             // sub items will be counted in above if statement!
-            else if (!subItemsOnly && getParent(adapter, item, adapter.getAdapterPosition(item)) == null)
-                count++;
+            else if (!subItemsOnly && getParent(adapter, item, adapter.getAdapterPosition(item)) == null) {
+                if (predicate == null)
+                    count++;
+                else if (predicate.apply(item))
+                    count++;
+            }
+
         }
         return count;
     }
@@ -228,5 +259,9 @@ public class SubItemUtils
         }
 
         return deleted;
+    }
+
+    public interface IPredicate<T>{
+        boolean apply(T data);
     }
 }
