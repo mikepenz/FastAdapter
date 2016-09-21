@@ -49,14 +49,15 @@ public class HeaderHelper<Item, HeaderItem> {
      */
     public void apply(List items) {
         //If the list is empty avoid sorting and adding headers.
-        if (items.size() > 0) {
+        int size = items.size();
+        if (size > 0) {
             //sort beforehand
             if (comparator != null) {
                 Collections.sort(items, comparator);
             }
     
             //we have to get the list size each time, as we will add the headers to it
-            for (int i = -1; i < items.size(); i++) {
+            for (int i = -1; i < size; i++) {
                 HeaderItem headerItem;
                 if (i == -1) {
                     headerItem = groupingFunction.group(null, (Item) items.get(i + 1), i);

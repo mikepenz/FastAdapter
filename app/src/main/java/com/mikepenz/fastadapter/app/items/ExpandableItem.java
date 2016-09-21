@@ -111,9 +111,9 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
                 } else {
                     ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
                 }
-                return mOnClickListener != null ? mOnClickListener.onClick(v, adapter, item, position) : true;
+                return mOnClickListener == null || mOnClickListener.onClick(v, adapter, item, position);
             }
-            return mOnClickListener != null ? mOnClickListener.onClick(v, adapter, item, position) : false;
+            return mOnClickListener != null && mOnClickListener.onClick(v, adapter, item, position);
         }
     };
 

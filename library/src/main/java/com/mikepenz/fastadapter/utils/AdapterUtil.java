@@ -90,8 +90,7 @@ public class AdapterUtil {
     public static SparseIntArray adjustPosition(SparseIntArray positions, int startPosition, int endPosition, int adjustBy) {
         SparseIntArray newPositions = new SparseIntArray();
 
-        int length = positions.size();
-        for (int i = 0; i < length; i++) {
+        for (int i = 0, size = positions.size(); i < size; i++) {
             int position = positions.keyAt(i);
 
             //if our current position is not within the bounds to check for we can add it
@@ -124,8 +123,11 @@ public class AdapterUtil {
     public static void restoreSubItemSelectionStatesForAlternativeStateManagement(IItem item, List<String> selectedItems) {
         if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
             List<IItem> subItems = (List<IItem>) ((IExpandable<IItem, ?>) item).getSubItems();
-            for (IItem subItem : subItems) {
-                String id = String.valueOf(subItem.getIdentifier());
+            IItem subItem;
+            String id;
+            for (int i=0, size = subItems.size(); i < size; i++) {
+                subItem = subItems.get(i);
+                id = String.valueOf(subItem.getIdentifier());
                 if (selectedItems != null && selectedItems.contains(id)) {
                     subItem.withSetSelected(true);
                 }
@@ -143,8 +145,11 @@ public class AdapterUtil {
     public static void findSubItemSelections(IItem item, List<String> selections) {
         if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
             List<IItem> subItems = (List<IItem>) ((IExpandable<IItem, ?>) item).getSubItems();
-            for (IItem subItem : subItems) {
-                String id = String.valueOf(subItem.getIdentifier());
+            IItem subItem;
+            String id;
+            for (int i=0, size = subItems.size(); i < size; i++) {
+                subItem = subItems.get(i);
+                id = String.valueOf(subItem.getIdentifier());
                 if (subItem.isSelected()) {
                     selections.add(id);
                 }
@@ -160,9 +165,9 @@ public class AdapterUtil {
      * @return a list of all items including the whole subItem hirachy
      */
     public static List<IItem> getAllItems(FastAdapter fastAdapter) {
-        List<IItem> items = new ArrayList<>();
-        int length = fastAdapter.getItemCount();
-        for (int i = 0; i < length; i++) {
+        int size = fastAdapter.getItemCount();
+        List<IItem> items = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
             IItem item = fastAdapter.getItem(i);
             items.add(item);
             addAllSubItems(item, items);
@@ -179,7 +184,9 @@ public class AdapterUtil {
     public static void addAllSubItems(IItem item, List<IItem> items) {
         if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
             List<IItem> subItems = (List<IItem>) ((IExpandable<IItem, ?>) item).getSubItems();
-            for (IItem subItem : subItems) {
+            IItem subItem;
+            for (int i=0, size = subItems.size(); i < size; i++) {
+                subItem = subItems.get(i);
                 items.add(subItem);
                 addAllSubItems(subItem, items);
             }

@@ -20,8 +20,8 @@ public class IdDistributor {
      * @return
      */
     public static <T extends IIdentifyable> List<T> checkIds(@NonNull List<T> items) {
-        for (T item : items) {
-            checkId(item);
+        for (int i = 0, size = items.size(); i < size; i++) {
+            checkId(items.get(i));
         }
         return items;
     }
