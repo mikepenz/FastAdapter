@@ -69,6 +69,12 @@ public class IconItem extends AbstractItem<IconItem, IconItem.ViewHolder> {
         viewHolder.name.setText(mIcon.getName());
     }
 
+    @Override
+    public void unbindView(ViewHolder holder) {
+        super.unbindView(holder);
+        holder.image.setImageDrawable(null);
+    }
+
     /**
      * our ItemFactory implementation which creates the ViewHolder for our adapter.
      * It is highly recommended to implement a ViewHolderFactory as it is 0-1ms faster for ViewHolder creation,

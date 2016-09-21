@@ -172,8 +172,6 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
         //set the text for the description or hide
         StringHolder.applyToOrHide(description, viewHolder.description);
 
-        //make sure all animations are stopped
-        viewHolder.icon.clearAnimation();
         if (isExpanded()) {
             ViewCompat.setRotation(viewHolder.icon, 0);
         } else {
@@ -181,6 +179,14 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
         }
     }
 
+    @Override
+    public void unbindView(ViewHolder holder) {
+        super.unbindView(holder);
+        holder.name.setText(null);
+        holder.description.setText(null);
+        //make sure all animations are stopped
+        holder.icon.clearAnimation();
+    }
 
     /**
      * our ItemFactory implementation which creates the ViewHolder for our adapter.

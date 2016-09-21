@@ -89,6 +89,12 @@ public class CheckBoxSampleItem extends AbstractItem<CheckBoxSampleItem, CheckBo
         StringHolder.applyToOrHide(description, viewHolder.description);
     }
 
+    @Override
+    public void unbindView(ViewHolder holder) {
+        super.unbindView(holder);
+        holder.name.setText(null);
+        holder.description.setText(null);
+    }
 
     /**
      * our ItemFactory implementation which creates the ViewHolder for our adapter.

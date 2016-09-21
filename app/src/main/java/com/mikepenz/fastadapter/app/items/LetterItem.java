@@ -27,6 +27,12 @@ public class LetterItem extends AbstractItem<LetterItem, LetterItem.ViewHolder> 
     }
 
     @Override
+    public void unbindView(ViewHolder holder) {
+        super.unbindView(holder);
+        holder.text.setText(null);
+    }
+
+    @Override
     public int getType() {
         return R.id.fastadapter_letter_item_id;
     }
