@@ -247,6 +247,11 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
         holder.name.setText(name);
     }
 
+    @Override
+    public void unbindView(ViewHolder holder) {
+        holder.name.setText(null);
+    }
+
     /**
      * If this item equals to the given identifier
      *
