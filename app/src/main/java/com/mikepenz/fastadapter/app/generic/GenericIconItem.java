@@ -59,6 +59,13 @@ public class GenericIconItem extends GenericAbstractItem<IconModel, GenericIconI
         viewHolder.name.setText(getModel().icon.getName());
     }
 
+    @Override
+    public void unbindView(ViewHolder holder) {
+        super.unbindView(holder);
+        holder.image.setImageDrawable(null);
+        holder.name.setText(null);
+    }
+
     /**
      * our ItemFactory implementation which creates the ViewHolder for our adapter.
      * It is highly recommended to implement a ViewHolderFactory as it is 0-1ms faster for ViewHolder creation,
