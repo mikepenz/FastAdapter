@@ -133,6 +133,14 @@ public class ThreeLineItem extends AbstractItem<ThreeLineItem, ThreeLineItem.Vie
         }
     }
 
+    @Override
+    public void unbindView(ViewHolder holder) {
+        holder.name.setText(null);
+        holder.description.setText(null);
+        holder.avatar.setImageDrawable(null);
+        holder.icon.setImageDrawable(null);
+    }
+
     protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
         public ViewHolder create(View v) {
             return new ViewHolder(v);
