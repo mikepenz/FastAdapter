@@ -72,6 +72,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private OnLongClickListener<Item> mOnLongClickListener;
     private OnTouchListener<Item> mOnTouchListener;
 
+    private ISelectionListener mSelectionListener;
+
     //the listeners for onCreateViewHolder or onBindViewHolder
     private OnCreateViewHolderListener mOnCreateViewHolderListener = new OnCreateViewHolderListenerImpl();
     private OnBindViewHolderListener mOnBindViewHolderListener = new OnBindViewHolderListenerImpl();
@@ -238,6 +240,16 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public FastAdapter<Item> withLegacyBindViewMode(boolean legacyBindViewMode) {
         this.mLegacyBindViewMode = legacyBindViewMode;
+        return this;
+    }
+
+    /**
+     * set a listener that get's notified whenever an item is selected or deselected
+     * @param selectionListener the listener that will be notified about selection changes
+     * @return this
+     */
+    public FastAdapter<Item> withSelectionListener(ISelectionListener selectionListener) {
+        this.mSelectionListener = selectionListener;
         return this;
     }
 
@@ -924,6 +936,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             item.withSetSelected(!selected);
             view.setSelected(!selected);
 
+            if (mSelectionListener != null)
+                mSelectionListener.onSelectionChanged(item, !selected);
+
             //now we make sure we remember the selection!
             if (mPositionBasedStateManagement) {
                 if (selected) {
@@ -992,6 +1007,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
         notifyItemChanged(position);
 
+        if (mSelectionListener != null)
+            mSelectionListener.onSelectionChanged(item, true);
+
         if (mOnClickListener != null && fireEvent) {
             mOnClickListener.onClick(null, getAdapter(position), item, position);
         }
@@ -1006,6 +1024,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         } else {
             for (IItem item : AdapterUtil.getAllItems(this)) {
                 item.withSetSelected(false);
+                if (mSelectionListener != null)
+                    mSelectionListener.onSelectionChanged(item, false);
             }
             notifyDataSetChanged();
         }
@@ -1082,6 +1102,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             entries.remove();
         }
         notifyItemChanged(position);
+
+        if (mSelectionListener != null)
+            mSelectionListener.onSelectionChanged(item, false);
     }
 
     /**
@@ -1380,7 +1403,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public void expand(int position, boolean notifyItemChanged) {
         Item item = getItem(position);
         if (item != null && item instanceof IExpandable) {
-            IExpandable<?, Item> expandable = (IExpandable<?, Item>) item;
+            IExpandable expandable = (IExpandable) item;
 
             if (mPositionBasedStateManagement) {
                 //if this item is not already expanded and has sub items we go on

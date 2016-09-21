@@ -86,11 +86,18 @@ public class IconGridActivity extends AppCompatActivity {
         ArrayList<ExpandableItem> items = new ArrayList<>(Iconics.getRegisteredFonts(this).size());
         for (ITypeface font : mFonts) {
             //we set the identifier from the count here, as I need a stable ID in the sample to showcase the state restore
-            ExpandableItem expandableItem = new ExpandableItem().withName(font.getFontName()).withIdentifier(count);
+            ExpandableItem expandableItem = new ExpandableItem();
+            expandableItem
+                    .withName(font.getFontName())
+                    .withIdentifier(count);
 
             ArrayList<IItem> icons = new ArrayList<>();
             for (String icon : font.getIcons()) {
-                icons.add(new IconItem().withIcon(font.getIcon(icon)));
+                IconItem iconItem = new IconItem();
+                iconItem
+                        .withIcon(font.getIcon(icon))
+                        .withParent(expandableItem);
+                icons.add(iconItem);
             }
             expandableItem.withSubItems(icons);
 

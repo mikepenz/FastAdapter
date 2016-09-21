@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by mikepenz on 30.12.15.
  */
-public interface IExpandable<T, Item extends IItem> {
+public interface IExpandable<T, Item extends IItem & ISubItem> {
     /**
      * @return true if expanded (opened)
      */

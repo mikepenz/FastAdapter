@@ -15,9 +15,11 @@ import android.widget.Toast;
 import com.mikepenz.aboutlibraries.util.UIUtils;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.ISelectionListener;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.app.items.ExpandableItem;
+import com.mikepenz.fastadapter.app.items.HeaderSelectionItem;
 import com.mikepenz.fastadapter.app.items.SampleItem;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.fastadapter_extensions.RangeSelectorHelper;
@@ -100,15 +102,16 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                     }
                 });
 
-        // provide a custom title provider that even shows the count of sub items only!
-        // this may not be what you want though, but shows the usage of the SubItemUtils function
+        // provide a custom title provider that even shows the count of sub items
         mActionModeHelper = new ActionModeHelper(fastItemAdapter, R.menu.cab, new ActionBarCallBack())
                 .withTitleProvider(new ActionModeHelper.ActionModeTitleProvider() {
                     @Override
                     public String getTitle(int selected) {
                         return selected + "/" + SubItemUtils.countItems(fastItemAdapter, false);
                     }
-                });
+                })
+                // important so that the helper knows, that is should use the SubItemUtils for validating it's state
+                .withSupportSubItems(true);
 
         // this will take care of selecting range of items via long press on the first and afterwards on the last item
         mRangeSelectorHelper = new RangeSelectorHelper(fastItemAdapter)
@@ -116,7 +119,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                 .withActionModeHelper(mActionModeHelper);
 
         //get our recyclerView and do basic setup
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        final RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new SlideDownAlphaAnimator());
         rv.setAdapter(fastItemAdapter);
@@ -125,33 +128,61 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
         List<IItem> items = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             if (i % 2 == 0) {
-                ExpandableItem expandableItem = new ExpandableItem()
+                final HeaderSelectionItem expandableItem = new HeaderSelectionItem();
+                expandableItem
+                        .withSubSelectionProvider(new HeaderSelectionItem.ISubSelectionProvider() {
+                            @Override
+                            public int getSelectedSubItems() {
+                                return SubItemUtils.countSelectedSubItems(fastItemAdapter, expandableItem);
+                            }
+                        })
                         .withName("Test " + (i + 1))
-                        .withIdentifier(i + 1)
                         .withDescription("ID: " + (i + 1))
+                        .withIdentifier(i + 1)
                         //.withIsExpanded(true) don't use this in such a setup, use adapter.expand() to expand all items instead
                         ;
 
                 //add subitems so we can showcase the collapsible functionality
                 List<IItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 5; ii++) {
-                    subItems.add(new SampleItem()
+                    final SampleItem sampleItem = new SampleItem();
+                    sampleItem
                             .withName("-- Test " + (i + 1) + "." + ii)
-                            .withIdentifier((i + 1) * 100 + ii)
-                            .withDescription("ID: " + (i + 1) * 100 + ii));
+                            .withDescription("ID: " + (i + 1) * 100 + ii)
+                            .withParent(expandableItem)
+                            .withIdentifier((i + 1) * 100 + ii);
+                    subItems.add(sampleItem);
+
                 }
                 expandableItem.withSubItems(subItems);
 
                 items.add(expandableItem);
             } else {
-                items.add(new SampleItem()
+                SampleItem sampleItem = new SampleItem();
+                sampleItem
                         .withName("Test " + (i + 1))
-                        .withIdentifier(i + 1)
-                        .withDescription("ID: " + (i + 1)));
+                        .withDescription("ID: " + (i + 1))
+                        .withIdentifier(i + 1);
+                items.add(sampleItem);
             }
         }
         fastItemAdapter.add(items);
         fastItemAdapter.expand();
+
+        fastItemAdapter.withSelectionListener(new ISelectionListener() {
+            @Override
+            public void onSelectionChanged(IItem item, boolean selected) {
+                if (item instanceof SampleItem) {
+                    IItem headerItem = ((SampleItem)item).getParent();
+                    if (headerItem != null) {
+                        int pos = fastItemAdapter.getAdapterPosition(headerItem);
+                        // Important: notify the header directly, not via the notifyadapterItemChanged!
+                        // we just want to update the view and we are sure, nothing else has to be done
+                        fastItemAdapter.notifyItemChanged(pos);
+                    }
+                }
+            }
+        });
 
         //restore selections (this has to be done after the items were added
         fastItemAdapter.withSavedInstanceState(savedInstanceState);

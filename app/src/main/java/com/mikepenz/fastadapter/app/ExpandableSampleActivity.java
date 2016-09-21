@@ -56,12 +56,20 @@ public class ExpandableSampleActivity extends AppCompatActivity {
         List<IItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
             if (i % 10 == 0) {
-                ExpandableItem expandableItem = new ExpandableItem().withName("Test " + i).withIdentifier(100 + 1);
+                ExpandableItem expandableItem = new ExpandableItem();
+                expandableItem
+                        .withName("Test " + i)
+                        .withIdentifier(100 + 1);
 
                 //add subitems so we can showcase the collapsible functionality
                 List<IItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 5; ii++) {
-                    subItems.add(new SampleItem().withName("-- Test " + ii).withIdentifier(1000 + ii));
+                    SampleItem sampleItem = new SampleItem();
+                    sampleItem
+                            .withName("-- Test " + ii)
+                            .withParent(expandableItem)
+                            .withIdentifier(1000 + ii);
+                    subItems.add(sampleItem);
                 }
                 expandableItem.withSubItems(subItems);
 

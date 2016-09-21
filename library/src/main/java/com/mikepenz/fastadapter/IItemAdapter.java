@@ -14,7 +14,7 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
      * @param subItems    the subItems for this collapsible item
      * @return the item type of the collapsible
      */
-    <T> T setSubItems(IExpandable<T, Item> collapsible, List<Item> subItems);
+    <T extends IItem &IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems);
 
     /**
      * set a new list of items and apply it to the existing list (clear - add) for this adapter

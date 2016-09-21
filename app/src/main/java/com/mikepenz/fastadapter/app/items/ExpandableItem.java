@@ -13,6 +13,7 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.FastAdapterUIUtils;
@@ -28,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.ViewHolder> implements IExpandable<ExpandableItem, IItem> {
+public class ExpandableItem<T extends IItem & IExpandable, S extends IItem & ISubItem> extends AbstractItem<ExpandableItem<T, S>, ExpandableItem.ViewHolder> implements IExpandable<ExpandableItem, S>, ISubItem<ExpandableItem, T> {
     //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
     private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
@@ -36,32 +37,33 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
     public StringHolder name;
     public StringHolder description;
 
-    private List<IItem> mSubItems;
+    private List<S> mSubItems;
+    private T mParent;
     private boolean mExpanded = false;
 
     private FastAdapter.OnClickListener<ExpandableItem> mOnClickListener;
 
-    public ExpandableItem withHeader(String header) {
+    public ExpandableItem<T, S> withHeader(String header) {
         this.header = header;
         return this;
     }
 
-    public ExpandableItem withName(String Name) {
+    public ExpandableItem<T, S> withName(String Name) {
         this.name = new StringHolder(Name);
         return this;
     }
 
-    public ExpandableItem withName(@StringRes int NameRes) {
+    public ExpandableItem<T, S> withName(@StringRes int NameRes) {
         this.name = new StringHolder(NameRes);
         return this;
     }
 
-    public ExpandableItem withDescription(String description) {
+    public ExpandableItem<T, S> withDescription(String description) {
         this.description = new StringHolder(description);
         return this;
     }
 
-    public ExpandableItem withDescription(@StringRes int descriptionRes) {
+    public ExpandableItem<T, S> withDescription(@StringRes int descriptionRes) {
         this.description = new StringHolder(descriptionRes);
         return this;
     }
@@ -72,13 +74,13 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
     }
 
     @Override
-    public ExpandableItem withIsExpanded(boolean expanded) {
+    public ExpandableItem<T, S> withIsExpanded(boolean expanded) {
         mExpanded = expanded;
         return this;
     }
 
     @Override
-    public List<IItem> getSubItems() {
+    public List<S> getSubItems() {
         return mSubItems;
     }
 
@@ -87,8 +89,20 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
         return true;
     }
 
-    public ExpandableItem withSubItems(List<IItem> subItems) {
+    @Override
+    public ExpandableItem<T, S> withSubItems(List<S> subItems) {
         this.mSubItems = subItems;
+        return this;
+    }
+
+    @Override
+    public T getParent() {
+        return mParent;
+    }
+
+    @Override
+    public ExpandableItem<T, S> withParent(T parent) {
+        this.mParent = parent;
         return this;
     }
 
@@ -96,13 +110,13 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
         return mOnClickListener;
     }
 
-    public ExpandableItem withOnClickListener(FastAdapter.OnClickListener<ExpandableItem> mOnClickListener) {
+    public ExpandableItem<T, S> withOnClickListener(FastAdapter.OnClickListener<ExpandableItem> mOnClickListener) {
         this.mOnClickListener = mOnClickListener;
         return this;
     }
 
     //we define a clickListener in here so we can directly animate
-    final private FastAdapter.OnClickListener<ExpandableItem> onClickListener = new FastAdapter.OnClickListener<ExpandableItem>() {
+    final private FastAdapter.OnClickListener<ExpandableItem<T, S>> onClickListener = new FastAdapter.OnClickListener<ExpandableItem<T, S>>() {
         @Override
         public boolean onClick(View v, IAdapter adapter, ExpandableItem item, int position) {
             if (item.getSubItems() != null) {
@@ -123,7 +137,7 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
      * @return
      */
     @Override
-    public FastAdapter.OnClickListener<ExpandableItem> getOnItemClickListener() {
+    public FastAdapter.OnClickListener<ExpandableItem<T, S>> getOnItemClickListener() {
         return onClickListener;
     }
 

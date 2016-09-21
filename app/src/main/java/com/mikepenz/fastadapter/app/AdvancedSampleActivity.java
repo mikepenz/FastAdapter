@@ -142,20 +142,40 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     }
 
     private void setItems() {
-        mHeaderAdapter.add(new SampleItem().withName("Header").withSelectable(false).withIdentifier(1));
+        SampleItem sampleItem = new SampleItem();
+        sampleItem
+                .withName("Header")
+                .withSelectable(false)
+                .withIdentifier(1);
+        mHeaderAdapter.add(sampleItem);
         //fill with some sample data
         List<IItem> items = new ArrayList<>();
         int size = new Random().nextInt(25) + 10;
         for (int i = 1; i <= size; i++) {
             if (i % 6 == 0) {
-                ExpandableItem expandableItem = new ExpandableItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(100 + i);
-                List<IItem> subItems = new LinkedList<>();
+                ExpandableItem<ExpandableItem, ExpandableItem> expandableItem = new ExpandableItem();
+                expandableItem
+                        .withName("Test " + i)
+                        .withHeader(headers[i / 5])
+                        .withIdentifier(100 + i);
+                List<ExpandableItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 3; ii++) {
-                    ExpandableItem subItem = new ExpandableItem().withName("-- SubTest " + ii).withHeader(headers[i / 5]).withIdentifier(1000 + ii);
+                    ExpandableItem<ExpandableItem, SampleItem> subItem = new ExpandableItem();
+                    expandableItem
+                            .withName("-- SubTest " + ii)
+                            .withHeader(headers[i / 5])
+                            .withIdentifier(1000 + ii)
+                            .withParent(expandableItem);
 
-                    List<IItem> subSubItems = new LinkedList<>();
+                    List<SampleItem> subSubItems = new LinkedList<>();
                     for (int iii = 1; iii <= 3; iii++) {
-                        subSubItems.add(new SampleItem().withName("---- SubSubTest " + iii).withHeader(headers[i / 5]).withIdentifier(10000 + iii));
+                        SampleItem<ExpandableItem> subSubItem = new SampleItem();
+                        subSubItem
+                                .withName("---- SubSubTest " + iii)
+                                .withHeader(headers[i / 5])
+                                .withIdentifier(10000 + iii)
+                                .withParent(subItem);
+                        subSubItems.add(subSubItem);
                     }
                     subItem.withSubItems(subSubItems);
 
