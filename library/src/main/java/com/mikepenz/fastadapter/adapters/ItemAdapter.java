@@ -400,6 +400,14 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     /**
+     * forces to remap all possible types for the RecyclerView
+     */
+    public void remapMappedTypes() {
+        clearMappedTypes();
+        mapPossibleTypes(mItems);
+    }
+
+    /**
      * add an array of items to the end of the existing items
      *
      * @param items the items to add

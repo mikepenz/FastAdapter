@@ -63,7 +63,7 @@ public class SubItemUtils {
      * @return number of items in the adapter that apply to the predicate
      */
     public static int countItems(final FastItemAdapter adapter, IPredicate predicate) {
-        return countItems(adapter, adapter.getAdapterItems(), true, false, predicate);
+        return countItems(adapter.getAdapterItems(), true, false, predicate);
     }
 
     /**
@@ -74,10 +74,10 @@ public class SubItemUtils {
      * @return number of items in the adapter
      */
     public static int countItems(final FastItemAdapter adapter, boolean countHeaders) {
-        return countItems(adapter, adapter.getAdapterItems(), countHeaders, false, null);
+        return countItems(adapter.getAdapterItems(), countHeaders, false, null);
     }
 
-    private static int countItems(final FastItemAdapter adapter, List<IItem> items, boolean countHeaders, boolean subItemsOnly, IPredicate predicate) {
+    private static int countItems(List<IItem> items, boolean countHeaders, boolean subItemsOnly, IPredicate predicate) {
         if (items == null || items.size() == 0)
             return 0;
 
@@ -91,7 +91,7 @@ public class SubItemUtils {
                 subItems = ((IExpandable)item).getSubItems();
                 if (predicate == null) {
                     count += subItems != null ? subItems.size() : 0;
-                    count += countItems(adapter, subItems, countHeaders, true, predicate);
+                    count += countItems(subItems, countHeaders, true, predicate);
                     if (countHeaders)
                         count++;
                 } else {
@@ -125,15 +125,19 @@ public class SubItemUtils {
      * @return number of selected items underneath the header
      */
     public static <T extends IItem & IExpandable> int countSelectedSubItems(final FastItemAdapter adapter, T header) {
+        Set<IItem> selections = getSelectedItems(adapter);
+        return countSelectedSubItems(selections, header);
+    }
+
+    public static <T extends IItem & IExpandable> int countSelectedSubItems(Set<IItem> selections, T header) {
         int count = 0;
-        Set<Integer> selections = adapter.getSelections();
-        int headerIndex = adapter.getPosition(header);
+        List<IItem> subItems = header.getSubItems();
         int items = header.getSubItems() != null ? header.getSubItems().size() : 0;
         for (int i = 0; i < items; i++) {
-            if (selections.contains(headerIndex + 1 + i))
+            if (selections.contains(subItems.get(i)))
                 count++;
-            if (header.getSubItems().get(i) instanceof IExpandable &&  ((IExpandable)header.getSubItems().get(i)).getSubItems() != null)
-                count += countSelectedSubItems(adapter, (T)header.getSubItems().get(i));
+            if (subItems.get(i) instanceof IExpandable &&  ((IExpandable)subItems.get(i)).getSubItems() != null)
+                count += countSelectedSubItems(selections, (T)subItems.get(i));
         }
         return count;
     }

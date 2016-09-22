@@ -243,4 +243,11 @@ public abstract class AbstractAdapter<Item extends IItem> extends RecyclerView.A
     public void mapPossibleType(Item item) {
         mFastAdapter.registerTypeInstance(item);
     }
+
+    /**
+     * clears the internal mapper - be sure, to remap everything before going on
+     */
+    public void clearMappedTypes() {
+        mFastAdapter.clearTypeInstance();
+    }
 }

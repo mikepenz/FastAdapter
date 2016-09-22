@@ -388,6 +388,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * clears the internal mapper - be sure, to remap everything before going on
+     */
+    public void clearTypeInstance() {
+       mTypeInstances.clear();
+    }
+
+    /**
      * helper method to get the position from a holder
      * overwrite this if you have an adapter adding additional items inbetwean
      *

@@ -282,4 +282,11 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
         mItemAdapter.clear();
         return this;
     }
+
+    /**
+     * convenient functions, to force to remap all possible types for the RecyclerView
+     */
+    public void remapMappedTypes() {
+        mItemAdapter.remapMappedTypes();
+    }
 }
