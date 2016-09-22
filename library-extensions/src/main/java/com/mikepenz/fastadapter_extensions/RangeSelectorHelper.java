@@ -64,7 +64,7 @@ public class RangeSelectorHelper {
                     mActionModeHelper.checkActionMode(null); // works with null as well, as the ActionMode is active for sure!
                 return true;
             }
-        } else {
+        } else if (mLastLongPressIndex != index){
             // select all items in the range between the two long clicks
             selectRange(mLastLongPressIndex, index, true);
             // reset the index
