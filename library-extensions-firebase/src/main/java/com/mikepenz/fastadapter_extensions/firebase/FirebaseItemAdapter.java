@@ -24,6 +24,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 
 import java.util.ArrayList;
@@ -198,7 +199,7 @@ public class FirebaseItemAdapter<Item extends IItem> extends ItemAdapter<Item> {
     }
 
     @Override
-    public <T> T setSubItems(IExpandable<T, Item> collapsible, List<Item> subItems) {
+    public <T extends IItem & IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems) {
         throw new UnsupportedOperationException("this is not supported by the FirebaseItemAdapter");
     }
 

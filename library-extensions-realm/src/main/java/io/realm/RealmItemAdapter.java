@@ -22,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.utils.IdDistributor;
 
@@ -203,7 +204,7 @@ public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapt
     }
 
     @Override
-    public <T> T setSubItems(IExpandable<T, Item> collapsible, List<Item> subItems) {
+    public <T extends IItem & IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems) {
         throw new UnsupportedOperationException("this is not supported by the RealmRecyclerViewAdapter");
     }
 
