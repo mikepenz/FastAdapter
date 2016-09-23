@@ -23,9 +23,9 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
             scrollDistance = (mDistanceScrolledVertical / (mCurrentPage - 1))
                     + (recyclerView.computeVerticalScrollRange() / mCurrentPage);
         }
-        if (scrollDistance == 0 && !isLoading()) {
-            mCurrentPage++;
+        if (scrollDistance == 0 && !mLoading) {
             onLoadMore(mCurrentPage);
+            mCurrentPage++;
         }
     }
 
