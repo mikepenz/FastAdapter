@@ -12,14 +12,29 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
 
     private int mCurrentPage = 1;
 
+    private boolean mLoading = false;
+
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
         mDistanceScrolledVertical += dy;
-        if (mDistanceScrolledVertical == 0) {
+        int scrollDistance = mDistanceScrolledVertical;
+        if (mCurrentPage > 1) {
+            scrollDistance = (mDistanceScrolledVertical / (mCurrentPage - 1))
+                    + (recyclerView.computeVerticalScrollRange() / mCurrentPage);
+        }
+        if (scrollDistance == 0 && !isLoading()) {
             mCurrentPage++;
             onLoadMore(mCurrentPage);
         }
+    }
+
+    public void setLoading(boolean loading) {
+        this.mLoading = loading;
+    }
+
+    public boolean isLoading() {
+        return mLoading;
     }
 
     public int getCurrentPage() {
