@@ -56,7 +56,7 @@ public class SubItemUtil {
      * @param predicate predicate against which each item will be checked before counting it
      * @return number of items in the adapter that apply to the predicate
      */
-    public static int countItems(final ItemAdapter adapter, IPredicate predicate) {
+    public static int countItems(final IItemAdapter adapter, IPredicate predicate) {
         return countItems(adapter.getAdapterItems(), true, false, predicate);
     }
 
@@ -67,7 +67,7 @@ public class SubItemUtil {
      * @param countHeaders if true, headers will be counted as well
      * @return number of items in the adapter
      */
-    public static int countItems(final ItemAdapter adapter, boolean countHeaders) {
+    public static int countItems(final IItemAdapter adapter, boolean countHeaders) {
         return countItems(adapter.getAdapterItems(), countHeaders, false, null);
     }
 
