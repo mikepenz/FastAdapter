@@ -1029,7 +1029,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (mPositionBasedStateManagement) {
             deselect(mSelections);
         } else {
-            for (IItem item : AdapterUtil.getAllItems(this)) {
+            for (Item item : AdapterUtil.getAllItems(this)) {
                 item.withSetSelected(false);
                 if (mSelectionListener != null)
                     mSelectionListener.onSelectionChanged(item, false);
@@ -1056,7 +1056,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 select(i, false, considerSelectableFlag);
             }
         } else {
-            for (IItem item : AdapterUtil.getAllItems(this)) {
+            for (Item item : AdapterUtil.getAllItems(this)) {
                 if (considerSelectableFlag && !item.isSelectable()) {
                     continue;
                 }

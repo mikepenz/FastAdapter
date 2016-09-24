@@ -24,9 +24,9 @@ public class AdapterUtil {
      * @param startPosition the position of the first item to handle
      * @param endPosition   the position of the last item to handle
      */
-    public static void handleStates(FastAdapter fastAdapter, int startPosition, int endPosition) {
+    public static <Item extends IItem> void handleStates(FastAdapter<Item> fastAdapter, int startPosition, int endPosition) {
         for (int i = endPosition; i >= startPosition; i--) {
-            IItem updateItem = fastAdapter.getItem(i);
+            Item updateItem = fastAdapter.getItem(i);
             if (updateItem != null) {
                 if (updateItem.isSelected()) {
                     fastAdapter.getSelections().add(i);
@@ -120,12 +120,12 @@ public class AdapterUtil {
      * @param item          the parent item
      * @param selectedItems the list of selectedItems from the savedInstanceState
      */
-    public static void restoreSubItemSelectionStatesForAlternativeStateManagement(IItem item, List<String> selectedItems) {
+    public static <Item extends IItem> void restoreSubItemSelectionStatesForAlternativeStateManagement(Item item, List<String> selectedItems) {
         if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
-            List<IItem> subItems = (List<IItem>) ((IExpandable<IItem, ?>) item).getSubItems();
-            IItem subItem;
+            List<Item> subItems = (List<Item>) ((IExpandable<Item, ?>) item).getSubItems();
+            Item subItem;
             String id;
-            for (int i=0, size = subItems.size(); i < size; i++) {
+            for (int i = 0, size = subItems.size(); i < size; i++) {
                 subItem = subItems.get(i);
                 id = String.valueOf(subItem.getIdentifier());
                 if (selectedItems != null && selectedItems.contains(id)) {
@@ -142,12 +142,12 @@ public class AdapterUtil {
      * @param item       the parent item
      * @param selections the ArrayList which will be stored in the savedInstanceState
      */
-    public static void findSubItemSelections(IItem item, List<String> selections) {
+    public static <Item extends IItem> void findSubItemSelections(Item item, List<String> selections) {
         if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
-            List<IItem> subItems = (List<IItem>) ((IExpandable<IItem, ?>) item).getSubItems();
-            IItem subItem;
+            List<Item> subItems = (List<Item>) ((IExpandable<Item, ?>) item).getSubItems();
+            Item subItem;
             String id;
-            for (int i=0, size = subItems.size(); i < size; i++) {
+            for (int i = 0, size = subItems.size(); i < size; i++) {
                 subItem = subItems.get(i);
                 id = String.valueOf(subItem.getIdentifier());
                 if (subItem.isSelected()) {
@@ -164,11 +164,11 @@ public class AdapterUtil {
      * @param fastAdapter the FastAdapter
      * @return a list of all items including the whole subItem hirachy
      */
-    public static List<IItem> getAllItems(FastAdapter fastAdapter) {
+    public static <Item extends IItem> List<Item> getAllItems(FastAdapter<Item> fastAdapter) {
         int size = fastAdapter.getItemCount();
-        List<IItem> items = new ArrayList<>(size);
+        List<Item> items = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
-            IItem item = fastAdapter.getItem(i);
+            Item item = fastAdapter.getItem(i);
             items.add(item);
             addAllSubItems(item, items);
         }
@@ -181,11 +181,11 @@ public class AdapterUtil {
      * @param item  the parent from which we add all items
      * @param items the list in which we add the subItems
      */
-    public static void addAllSubItems(IItem item, List<IItem> items) {
+    public static <Item extends IItem> void addAllSubItems(Item item, List<Item> items) {
         if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
-            List<IItem> subItems = (List<IItem>) ((IExpandable<IItem, ?>) item).getSubItems();
-            IItem subItem;
-            for (int i=0, size = subItems.size(); i < size; i++) {
+            List<Item> subItems = (List<Item>) ((IExpandable<Item, ?>) item).getSubItems();
+            Item subItem;
+            for (int i = 0, size = subItems.size(); i < size; i++) {
                 subItem = subItems.get(i);
                 items.add(subItem);
                 addAllSubItems(subItem, items);
