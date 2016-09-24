@@ -19,6 +19,7 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
+import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
@@ -41,7 +42,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
     //save our FastAdapter
     private FastAdapter<IItem> mFastAdapter;
-    private HeaderAdapter<SimpleSubItem> mHeaderAdapter;
+    private HeaderAdapter<SimpleItem> mHeaderAdapter;
     private ItemAdapter<IItem> mItemAdapter;
 
     private ActionModeHelper mActionModeHelper;
@@ -144,8 +145,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     }
 
     private void setItems() {
-        SimpleSubItem sampleItem = new SimpleSubItem();
-        sampleItem.withName("Header")
+        SimpleItem sampleItem = new SimpleItem().withName("Header")
                 .withSelectable(false)
                 .withIdentifier(1);
         mHeaderAdapter.add(sampleItem);
@@ -154,13 +154,13 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         int size = new Random().nextInt(25) + 10;
         for (int i = 1; i <= size; i++) {
             if (i % 6 == 0) {
-                SimpleSubExpandableItem expandableItem = new SimpleSubExpandableItem();
+                SimpleSubExpandableItem<SimpleSubExpandableItem, SimpleSubExpandableItem> expandableItem = new SimpleSubExpandableItem<>();
                 expandableItem.withName("Test " + i)
                         .withHeader(headers[i / 5])
                         .withIdentifier(100 + i);
                 List<SimpleSubExpandableItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 3; ii++) {
-                    SimpleSubExpandableItem subItem = new SimpleSubExpandableItem();
+                    SimpleSubExpandableItem<SimpleSubExpandableItem, SimpleSubItem> subItem = new SimpleSubExpandableItem<>();
                     subItem.withName("-- SubTest " + ii)
                             .withHeader(headers[i / 5])
                             .withIdentifier(1000 + ii);

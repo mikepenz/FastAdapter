@@ -7,11 +7,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.mikepenz.fastadapter.IClickable;
 import com.mikepenz.fastadapter.IDraggable;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
+import com.mikepenz.fastadapter.items.AbstractExpandableItem;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
@@ -23,7 +25,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class SimpleSubItem<S extends IItem & IExpandable> extends AbstractItem<SimpleSubItem<S>, SimpleSubItem.ViewHolder> implements IExpandable<SimpleSubItem, SimpleSubItem>, ISubItem<SimpleSubItem, S>, IDraggable<SimpleSubItem, IItem> {
+public class SimpleSubItem<Parent extends IItem & IExpandable & ISubItem & IClickable> extends AbstractExpandableItem<Parent, SimpleSubItem.ViewHolder, SimpleSubItem<Parent>> implements IDraggable<SimpleSubItem, IItem> {
     //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
     private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
@@ -31,71 +33,30 @@ public class SimpleSubItem<S extends IItem & IExpandable> extends AbstractItem<S
     public StringHolder name;
     public StringHolder description;
 
-    private List<SimpleSubItem> mSubItems;
-    private S mParent;
-    private boolean mExpanded = false;
     private boolean mIsDraggable = true;
 
-    public SimpleSubItem<S> withHeader(String header) {
+    public SimpleSubItem<Parent> withHeader(String header) {
         this.header = header;
         return this;
     }
 
-    public SimpleSubItem<S> withName(String Name) {
+    public SimpleSubItem<Parent> withName(String Name) {
         this.name = new StringHolder(Name);
         return this;
     }
 
-    public SimpleSubItem<S> withName(@StringRes int NameRes) {
+    public SimpleSubItem<Parent> withName(@StringRes int NameRes) {
         this.name = new StringHolder(NameRes);
         return this;
     }
 
-    public SimpleSubItem<S> withDescription(String description) {
+    public SimpleSubItem<Parent> withDescription(String description) {
         this.description = new StringHolder(description);
         return this;
     }
 
-    public SimpleSubItem<S> withDescription(@StringRes int descriptionRes) {
+    public SimpleSubItem<Parent> withDescription(@StringRes int descriptionRes) {
         this.description = new StringHolder(descriptionRes);
-        return this;
-    }
-
-    @Override
-    public boolean isExpanded() {
-        return mExpanded;
-    }
-
-    @Override
-    public SimpleSubItem<S> withIsExpanded(boolean expaned) {
-        mExpanded = expaned;
-        return this;
-    }
-
-    @Override
-    public boolean isAutoExpanding() {
-        return true;
-    }
-
-    @Override
-    public List<SimpleSubItem> getSubItems() {
-        return mSubItems;
-    }
-
-    @Override
-    public SimpleSubItem<S> withSubItems(List<SimpleSubItem> subItems) {
-        this.mSubItems = subItems;
-        return this;
-    }
-
-    @Override
-    public S getParent() {
-        return mParent;
-    }
-
-    @Override
-    public SimpleSubItem<S> withParent(S parent) {
-        this.mParent = parent;
         return this;
     }
 
@@ -109,7 +70,6 @@ public class SimpleSubItem<S extends IItem & IExpandable> extends AbstractItem<S
         this.mIsDraggable = draggable;
         return this;
     }
-
 
     /**
      * defines the type defining this item. must be unique. preferably an id
