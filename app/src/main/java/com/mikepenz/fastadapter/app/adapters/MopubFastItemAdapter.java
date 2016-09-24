@@ -6,8 +6,6 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 
-import java.util.Collections;
-
 /**
  * Created by mikepenz on 28.06.16.
  */
