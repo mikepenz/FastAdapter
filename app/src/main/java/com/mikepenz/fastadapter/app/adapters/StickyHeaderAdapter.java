@@ -53,7 +53,10 @@ public class StickyHeaderAdapter extends AbstractAdapter implements StickyRecycl
         TextView textView = (TextView) holder.itemView;
 
         IItem item = getItem(position);
-        if (item instanceof SimpleSubItem && ((SimpleSubItem) item).header != null) {
+        if (item instanceof SimpleItem && ((SimpleItem) item).header != null) {
+            //based on the position we set the headers text
+            textView.setText(String.valueOf(((SimpleItem) item).header.charAt(0)));
+        } else if (item instanceof SimpleSubItem && ((SimpleSubItem) item).header != null) {
             //based on the position we set the headers text
             textView.setText(String.valueOf(((SimpleSubItem) item).header.charAt(0)));
         } else if (item instanceof SimpleSubExpandableItem && ((SimpleSubExpandableItem) item).header != null) {
