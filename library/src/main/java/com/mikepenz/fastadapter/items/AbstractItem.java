@@ -189,6 +189,11 @@ public abstract class AbstractItem<Item extends AbstractItem<?, ?>, VH extends R
         holder.itemView.setTag(this);
     }
 
+    @Override
+    public void unbindView(VH holder) {
+
+    }
+
     /**
      * generates a view by the defined LayoutRes
      *

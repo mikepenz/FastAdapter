@@ -115,22 +115,18 @@ public class ThreeLineItem extends AbstractItem<ThreeLineItem, ThreeLineItem.Vie
         super.bindView(holder, payloads);
         mName.applyTo(holder.name);
         mDescription.applyTo(holder.description);
-        if (mAvatar != null) {
-            if (holder.avatar.getVisibility() == View.GONE) {
-                holder.avatar.setVisibility(View.VISIBLE);
-            }
-            mAvatar.applyTo(holder.avatar);
-        } else if (holder.avatar.getVisibility() == View.VISIBLE) {
-            holder.avatar.setVisibility(View.GONE);
-        }
-        if (mIcon != null) {
-            if (holder.icon.getVisibility() == View.GONE) {
-                holder.icon.setVisibility(View.VISIBLE);
-            }
-            mIcon.applyTo(holder.icon);
-        } else if (holder.icon.getVisibility() == View.VISIBLE) {
-            holder.icon.setVisibility(View.GONE);
-        }
+        ImageHolder.applyToOrSetInvisible(mAvatar, holder.avatar);
+        ImageHolder.applyToOrSetInvisible(mIcon, holder.icon);
+    }
+
+    @Override
+    public void unbindView(ViewHolder holder) {
+        holder.name.setText(null);
+        holder.description.setText(null);
+        holder.avatar.setImageDrawable(null);
+        holder.avatar.setVisibility(View.VISIBLE);
+        holder.icon.setImageDrawable(null);
+        holder.icon.setVisibility(View.VISIBLE);
     }
 
     protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {

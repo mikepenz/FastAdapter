@@ -95,8 +95,14 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
         style(viewHolder.imageLovedOff, mStarred ? 0 : 1);
 
         //load glide
-        Glide.clear(viewHolder.imageView);
         Glide.with(ctx).load(mImageUrl).animate(R.anim.alpha_on).into(viewHolder.imageView);
+    }
+
+    @Override
+    public void unbindView(ViewHolder holder) {
+        super.unbindView(holder);
+        Glide.clear(holder.imageView);
+        holder.imageView.setImageDrawable(null);
     }
 
     /**

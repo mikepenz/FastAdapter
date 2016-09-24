@@ -552,6 +552,17 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * Unbinds the data to the already existing ViewHolder and removes the listeners from the holder.itemView
+     *
+     * @param holder   the viewHolder we unbind the data from
+     */
+    @Override
+    public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        super.onViewRecycled(holder);
+        mOnBindViewHolderListener.unBindViewHolder(holder, holder.getAdapterPosition());
+    }
+
+    /**
      * Searches for the given item and calculates it's global position
      *
      * @param item the item which is searched for
@@ -1765,6 +1776,14 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          * @param payloads   the payloads provided by the adapter
          */
         void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List payloads);
+
+        /**
+         * is called in onViewRecycled to unbind the data on the ViewHolder
+         *
+         * @param viewHolder the viewHolder for the type at this position
+         * @param position   the position of this viewHolder
+         */
+        void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position);
     }
 
     public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
@@ -1778,6 +1797,17 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List payloads) {
             getItem(position).bindView(viewHolder, payloads);
+        }
+
+        /**
+         * is called in onViewRecycled to unbind the data on the ViewHolder
+         *
+         * @param viewHolder the viewHolder for the type at this position
+         * @param position   the position of this viewHolder
+         */
+        @Override
+        public void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
+            getItem(position).unbindView(viewHolder);
         }
     }
 

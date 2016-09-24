@@ -91,6 +91,14 @@ public class SimpleImageItem extends AbstractItem<SimpleImageItem, SimpleImageIt
         Glide.with(ctx).load(mImageUrl).animate(R.anim.alpha_on).into(viewHolder.imageView);
     }
 
+    @Override
+    public void unbindView(ViewHolder holder) {
+        super.unbindView(holder);
+        Glide.clear(holder.imageView);
+        holder.imageView.setImageDrawable(null);
+        holder.imageDescription.setText(null);
+    }
+
     /**
      * our ItemFactory implementation which creates the ViewHolder for our adapter.
      * It is highly recommended to implement a ViewHolderFactory as it is 0-1ms faster for ViewHolder creation,
