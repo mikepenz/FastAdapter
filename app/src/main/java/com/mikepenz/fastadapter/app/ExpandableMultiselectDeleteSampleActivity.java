@@ -19,10 +19,10 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISelectionListener;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.HeaderSelectionItem;
-import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.fastadapter_extensions.RangeSelectorHelper;
-import com.mikepenz.fastadapter_extensions.utilities.SubItemUtils;
+import com.mikepenz.fastadapter_extensions.utilities.SubItemUtil;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -79,7 +79,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                     public boolean onClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
                         // check if the actionMode consumes the click. This returns true, if it does, false if not
                         if (!mActionModeHelper.isActive())
-                            Toast.makeText(ExpandableMultiselectDeleteSampleActivity.this, ((SampleItem) item).name + " clicked!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ExpandableMultiselectDeleteSampleActivity.this, ((SimpleSubItem) item).name + " clicked!", Toast.LENGTH_SHORT).show();
 //                        else
 //                            mFastAdapter.notifyItemChanged(position); // im Bsp. ist das nicht nötig, k.A. warum ich das machen muss!
                         mRangeSelectorHelper.onClick();
@@ -106,10 +106,10 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                 .withTitleProvider(new ActionModeHelper.ActionModeTitleProvider() {
                     @Override
                     public String getTitle(int selected) {
-                        return selected + "/" + SubItemUtils.countItems(fastItemAdapter, false);
+                        return selected + "/" + SubItemUtil.countItems(fastItemAdapter.getItemAdapter(), false);
                     }
                 })
-                // important so that the helper knows, that is should use the SubItemUtils for validating it's state
+                // important so that the helper knows, that is should use the SubItemUtil for validating it's state
                 .withSupportSubItems(true);
 
         // this will take care of selecting range of items via long press on the first and afterwards on the last item
@@ -132,19 +132,18 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                         .withSubSelectionProvider(new HeaderSelectionItem.ISubSelectionProvider() {
                             @Override
                             public int getSelectedSubItems() {
-                                return SubItemUtils.countSelectedSubItems(fastItemAdapter, expandableItem);
+                                return SubItemUtil.countSelectedSubItems(fastItemAdapter, expandableItem);
                             }
                         })
                         .withName("Test " + (i + 1))
                         .withDescription("ID: " + (i + 1))
-                        .withIdentifier(i + 1)
+                        .withIdentifier(i + 1);
                 //.withIsExpanded(true) don't use this in such a setup, use adapter.expand() to expand all items instead
-                ;
 
                 //add subitems so we can showcase the collapsible functionality
                 List<IItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 5; ii++) {
-                    final SampleItem sampleItem = new SampleItem();
+                    final SimpleSubItem sampleItem = new SimpleSubItem();
                     sampleItem
                             .withName("-- Test " + (i + 1) + "." + ii)
                             .withDescription("ID: " + (i + 1) * 100 + ii)
@@ -157,7 +156,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
 
                 items.add(expandableItem);
             } else {
-                SampleItem sampleItem = new SampleItem();
+                SimpleSubItem sampleItem = new SimpleSubItem();
                 sampleItem
                         .withName("Test " + (i + 1))
                         .withDescription("ID: " + (i + 1))
@@ -171,8 +170,8 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
         fastItemAdapter.withSelectionListener(new ISelectionListener() {
             @Override
             public void onSelectionChanged(IItem item, boolean selected) {
-                if (item instanceof SampleItem) {
-                    IItem headerItem = ((SampleItem) item).getParent();
+                if (item instanceof SimpleSubItem) {
+                    IItem headerItem = ((SimpleSubItem) item).getParent();
                     if (headerItem != null) {
                         int pos = fastItemAdapter.getAdapterPosition(headerItem);
                         // Important: notify the header directly, not via the notifyadapterItemChanged!
@@ -226,9 +225,9 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
 
-            // delete the selected items with the SubItemUtils to correctly handle sub items
+            // delete the selected items with the SubItemUtil to correctly handle sub items
             // this will even delete empty headers if you want to
-            List<IItem> deleted = SubItemUtils.deleteSelected(fastItemAdapter, true, true);
+            List<IItem> deleted = SubItemUtil.deleteSelected(fastItemAdapter, true, true);
             //as we no longer have a selection so the actionMode can be finished
             mode.finish();
             //we consume the event

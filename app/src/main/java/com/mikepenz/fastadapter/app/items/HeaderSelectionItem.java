@@ -6,6 +6,7 @@ import android.graphics.Color;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;
+import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
 import com.mikepenz.fastadapter.utils.FastAdapterUIUtils;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialize.util.UIUtils;
@@ -16,7 +17,7 @@ import java.util.List;
  * Created by flisar on 21.09.2016.
  */
 
-public class HeaderSelectionItem<T extends IItem & IExpandable, S extends IItem & ISubItem> extends ExpandableItem<T, S> {
+public class HeaderSelectionItem<T extends IItem & IExpandable, S extends IItem & ISubItem> extends SimpleSubExpandableItem<T, S> {
 
     private ISubSelectionProvider mSubSelectionProvider;
 

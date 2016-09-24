@@ -554,7 +554,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * Unbinds the data to the already existing ViewHolder and removes the listeners from the holder.itemView
      *
-     * @param holder   the viewHolder we unbind the data from
+     * @param holder the viewHolder we unbind the data from
      */
     @Override
     public void onViewRecycled(RecyclerView.ViewHolder holder) {

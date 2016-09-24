@@ -12,6 +12,7 @@ import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
+import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
@@ -26,7 +27,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class SampleItem<S extends IItem & IExpandable> extends AbstractItem<SampleItem<S>, SampleItem.ViewHolder> implements IExpandable<SampleItem, SampleItem>, ISubItem<SampleItem, S>, IDraggable<SampleItem, IItem> {
+public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> implements IDraggable<SimpleItem, IItem> {
     //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
     private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
@@ -34,71 +35,30 @@ public class SampleItem<S extends IItem & IExpandable> extends AbstractItem<Samp
     public StringHolder name;
     public StringHolder description;
 
-    private List<SampleItem> mSubItems;
-    private S mParent;
-    private boolean mExpanded = false;
     private boolean mIsDraggable = true;
 
-    public SampleItem<S> withHeader(String header) {
+    public SimpleItem withHeader(String header) {
         this.header = header;
         return this;
     }
 
-    public SampleItem<S> withName(String Name) {
+    public SimpleItem withName(String Name) {
         this.name = new StringHolder(Name);
         return this;
     }
 
-    public SampleItem<S> withName(@StringRes int NameRes) {
+    public SimpleItem withName(@StringRes int NameRes) {
         this.name = new StringHolder(NameRes);
         return this;
     }
 
-    public SampleItem<S> withDescription(String description) {
+    public SimpleItem withDescription(String description) {
         this.description = new StringHolder(description);
         return this;
     }
 
-    public SampleItem<S> withDescription(@StringRes int descriptionRes) {
+    public SimpleItem withDescription(@StringRes int descriptionRes) {
         this.description = new StringHolder(descriptionRes);
-        return this;
-    }
-
-    @Override
-    public boolean isExpanded() {
-        return mExpanded;
-    }
-
-    @Override
-    public SampleItem<S> withIsExpanded(boolean expaned) {
-        mExpanded = expaned;
-        return this;
-    }
-
-    @Override
-    public boolean isAutoExpanding() {
-        return true;
-    }
-
-    @Override
-    public List<SampleItem> getSubItems() {
-        return mSubItems;
-    }
-
-    @Override
-    public SampleItem<S> withSubItems(List<SampleItem> subItems) {
-        this.mSubItems = subItems;
-        return this;
-    }
-
-    @Override
-    public S getParent() {
-        return mParent;
-    }
-
-    @Override
-    public SampleItem<S> withParent(S parent) {
-        this.mParent = parent;
         return this;
     }
 
@@ -108,11 +68,10 @@ public class SampleItem<S extends IItem & IExpandable> extends AbstractItem<Samp
     }
 
     @Override
-    public SampleItem withIsDraggable(boolean draggable) {
+    public SimpleItem withIsDraggable(boolean draggable) {
         this.mIsDraggable = draggable;
         return this;
     }
-
 
     /**
      * defines the type defining this item. must be unique. preferably an id

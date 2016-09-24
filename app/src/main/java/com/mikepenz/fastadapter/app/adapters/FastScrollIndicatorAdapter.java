@@ -3,7 +3,7 @@ package com.mikepenz.fastadapter.app.adapters;
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.generic.GenericIconItem;
-import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.turingtechnologies.materialscrollbar.ICustomAdapter;
 import com.turingtechnologies.materialscrollbar.INameableAdapter;
 
@@ -18,9 +18,9 @@ public class FastScrollIndicatorAdapter<Item extends IItem> extends AbstractAdap
     @Override
     public Character getCharacterForElement(int position) {
         IItem item = getItem(position);
-        if (item instanceof SampleItem && ((SampleItem) item).name != null) {
+        if (item instanceof SimpleSubItem && ((SimpleSubItem) item).name != null) {
             //based on the position we set the headers text
-            return ((SampleItem) item).name.getText().charAt(0);
+            return ((SimpleSubItem) item).name.getText().charAt(0);
         }
         return ' ';
     }

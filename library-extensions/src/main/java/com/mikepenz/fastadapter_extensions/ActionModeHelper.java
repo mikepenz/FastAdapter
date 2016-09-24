@@ -9,8 +9,7 @@ import android.view.MenuItem;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter_extensions.utilities.SubItemUtils;
+import com.mikepenz.fastadapter_extensions.utilities.SubItemUtil;
 
 /**
  * Created by mikepenz on 02.01.16.
@@ -92,7 +91,7 @@ public class ActionModeHelper {
      */
     public Boolean onClick(AppCompatActivity act, IItem item) {
         //if we are current in CAB mode, and we remove the last selection, we want to finish the actionMode
-        if (mActionMode != null && (mSupportSubItems ? SubItemUtils.getSelectedItems(mFastAdapter).size() == 1 : mFastAdapter.getSelections().size() == 1) && item.isSelected()) {
+        if (mActionMode != null && (mSupportSubItems ? SubItemUtil.getSelectedItems(mFastAdapter).size() == 1 : mFastAdapter.getSelections().size() == 1) && item.isSelected()) {
             mActionMode.finish();
             return false;
         }
@@ -100,7 +99,7 @@ public class ActionModeHelper {
         if (mActionMode != null) {
             // calculate the selection count for the action mode
             // because current selection is not reflecting the future state yet!
-            int selected = mSupportSubItems ? SubItemUtils.getSelectedItems(mFastAdapter).size() : mFastAdapter.getSelections().size();
+            int selected = mSupportSubItems ? SubItemUtil.getSelectedItems(mFastAdapter).size() : mFastAdapter.getSelections().size();
             if (item.isSelected())
                 selected--;
             else if (item.isSelectable())
@@ -140,7 +139,7 @@ public class ActionModeHelper {
      * @return the initialized ActionMode or null if no ActionMode is active after calling this function
      */
     public ActionMode checkActionMode(AppCompatActivity act) {
-        int selected = mSupportSubItems ? SubItemUtils.getSelectedItems(mFastAdapter).size() : mFastAdapter.getSelections().size();
+        int selected = mSupportSubItems ? SubItemUtil.getSelectedItems(mFastAdapter).size() : mFastAdapter.getSelections().size();
         return checkActionMode(act, selected);
     }
 
@@ -186,7 +185,7 @@ public class ActionModeHelper {
 
             if (!consumed) {
                 if (mSupportSubItems)
-                    SubItemUtils.deleteSelected((FastItemAdapter) mFastAdapter, true, false); // TODO: unsafe cast!!! for deleting, we need the FastItemAdapter.remove(pos) funtion... adopt this function to work with the FastAdpater instead and the cast can be removed
+                    SubItemUtil.deleteSelected(mFastAdapter, true, false); // TODO: unsafe cast!!! for deleting, we need the FastItemAdapter.remove(pos) funtion... adopt this function to work with the FastAdpater instead and the cast can be removed
                 else
                     mFastAdapter.deleteAllSelectedItems();
                 //finish the actionMode

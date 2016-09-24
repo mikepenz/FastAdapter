@@ -19,8 +19,8 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
-import com.mikepenz.fastadapter.app.items.ExpandableItem;
-import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
+import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -41,7 +41,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
     //save our FastAdapter
     private FastAdapter<IItem> mFastAdapter;
-    private HeaderAdapter<SampleItem> mHeaderAdapter;
+    private HeaderAdapter<SimpleSubItem> mHeaderAdapter;
     private ItemAdapter<IItem> mItemAdapter;
 
     private ActionModeHelper mActionModeHelper;
@@ -68,6 +68,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         //we init our ActionModeHelper
         mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
+        mActionModeHelper.withSupportSubItems(true);
 
         //create our adapters
         final StickyHeaderAdapter stickyHeaderAdapter = new StickyHeaderAdapter();
@@ -79,6 +80,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         mFastAdapter.withSelectable(true);
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withSelectOnLongClick(true);
+        mFastAdapter.withPositionBasedStateManagement(false);
         mFastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<IItem>() {
             @Override
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
@@ -142,9 +144,8 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     }
 
     private void setItems() {
-        SampleItem sampleItem = new SampleItem();
-        sampleItem
-                .withName("Header")
+        SimpleSubItem sampleItem = new SimpleSubItem();
+        sampleItem.withName("Header")
                 .withSelectable(false)
                 .withIdentifier(1);
         mHeaderAdapter.add(sampleItem);
@@ -153,28 +154,26 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         int size = new Random().nextInt(25) + 10;
         for (int i = 1; i <= size; i++) {
             if (i % 6 == 0) {
-                ExpandableItem<ExpandableItem, ExpandableItem> expandableItem = new ExpandableItem();
-                expandableItem
-                        .withName("Test " + i)
+                SimpleSubExpandableItem expandableItem = new SimpleSubExpandableItem();
+                expandableItem.withName("Test " + i)
                         .withHeader(headers[i / 5])
                         .withIdentifier(100 + i);
-                List<ExpandableItem> subItems = new LinkedList<>();
+                List<SimpleSubExpandableItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 3; ii++) {
-                    ExpandableItem<ExpandableItem, SampleItem> subItem = new ExpandableItem();
-                    expandableItem
+                    SimpleSubExpandableItem subItem = new SimpleSubExpandableItem();
+                    subItem
+                            .withParent(expandableItem)
                             .withName("-- SubTest " + ii)
                             .withHeader(headers[i / 5])
-                            .withIdentifier(1000 + ii)
-                            .withParent(expandableItem);
+                            .withIdentifier(1000 + ii);
 
-                    List<SampleItem> subSubItems = new LinkedList<>();
+                    List<SimpleSubItem> subSubItems = new LinkedList<>();
                     for (int iii = 1; iii <= 3; iii++) {
-                        SampleItem<ExpandableItem> subSubItem = new SampleItem();
-                        subSubItem
+                        SimpleSubItem subSubItem = new SimpleSubItem();
+                        subSubItem.withParent(subItem)
                                 .withName("---- SubSubTest " + iii)
                                 .withHeader(headers[i / 5])
-                                .withIdentifier(10000 + iii)
-                                .withParent(subItem);
+                                .withIdentifier(10000 + iii);
                         subSubItems.add(subSubItem);
                     }
                     subItem.withSubItems(subSubItems);
@@ -184,7 +183,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 expandableItem.withSubItems(subItems);
                 items.add(expandableItem);
             } else {
-                items.add(new SampleItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(i));
+                items.add(new SimpleSubItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(i));
             }
         }
         mItemAdapter.set(items);

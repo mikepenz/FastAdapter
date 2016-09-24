@@ -17,7 +17,7 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
-import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.fastadapter_extensions.UndoHelper;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
@@ -30,7 +30,7 @@ import java.util.Set;
 
 public class MultiselectSampleActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastAdapter<SampleItem> mFastAdapter;
+    private FastAdapter<SimpleItem> mFastAdapter;
 
     private UndoHelper mUndoHelper;
 
@@ -54,9 +54,9 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         mFastAdapter = new FastAdapter<>();
 
         //
-        mUndoHelper = new UndoHelper(mFastAdapter, new UndoHelper.UndoListener<SampleItem>() {
+        mUndoHelper = new UndoHelper(mFastAdapter, new UndoHelper.UndoListener<SimpleItem>() {
             @Override
-            public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<SampleItem>> removed) {
+            public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<SimpleItem>> removed) {
                 Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size());
             }
         });
@@ -65,8 +65,8 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
 
         //create our adapters
-        ItemAdapter<SampleItem> itemAdapter = new ItemAdapter<>();
-        final HeaderAdapter<SampleItem> headerAdapter = new HeaderAdapter<>();
+        ItemAdapter<SimpleItem> itemAdapter = new ItemAdapter<>();
+        final HeaderAdapter<SimpleItem> headerAdapter = new HeaderAdapter<>();
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
@@ -74,24 +74,24 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         mFastAdapter.withSelectable(true);
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withSelectOnLongClick(true);
-        mFastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<SampleItem>() {
+        mFastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<SimpleItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
+            public boolean onClick(View v, IAdapter<SimpleItem> adapter, SimpleItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
                 Boolean res = mActionModeHelper.onClick(item);
                 return res != null ? res : false;
             }
         });
-        mFastAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
+        mFastAdapter.withOnClickListener(new FastAdapter.OnClickListener<SimpleItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
+            public boolean onClick(View v, IAdapter<SimpleItem> adapter, SimpleItem item, int position) {
                 Toast.makeText(v.getContext(), "SelectedCount: " + mFastAdapter.getSelections().size() + " ItemsCount: " + mFastAdapter.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
-        mFastAdapter.withOnPreLongClickListener(new FastAdapter.OnLongClickListener<SampleItem>() {
+        mFastAdapter.withOnPreLongClickListener(new FastAdapter.OnLongClickListener<SimpleItem>() {
             @Override
-            public boolean onLongClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
+            public boolean onLongClick(View v, IAdapter<SimpleItem> adapter, SimpleItem item, int position) {
                 ActionMode actionMode = mActionModeHelper.onLongClick(MultiselectSampleActivity.this, position);
 
                 if (actionMode != null) {
@@ -111,15 +111,15 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         rv.setAdapter(itemAdapter.wrap(headerAdapter.wrap(mFastAdapter)));
 
         //fill with some sample data
-        SampleItem sampleItem = new SampleItem();
-        sampleItem
+        SimpleItem SimpleItem = new SimpleItem();
+        SimpleItem
                 .withName("Header")
                 .withIdentifier(1)
                 .withSelectable(false);
-        headerAdapter.add(sampleItem);
-        List<SampleItem> items = new ArrayList<>();
+        headerAdapter.add(SimpleItem);
+        List<SimpleItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
-            SampleItem item = new SampleItem();
+            SimpleItem item = new SimpleItem();
             item
                     .withName("Test " + i).
                     withIdentifier(100 + i);

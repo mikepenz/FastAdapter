@@ -1,16 +1,13 @@
-package com.mikepenz.fastadapter.app.items;
+package com.mikepenz.fastadapter.app.items.expandable;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.StringRes;
-import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.IDraggable;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;
@@ -26,10 +23,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by mikepenz on 28.12.15.
- */
-public class ExpandableItem<T extends IItem & IExpandable, S extends IItem & ISubItem> extends AbstractItem<ExpandableItem<T, S>, ExpandableItem.ViewHolder> implements IExpandable<ExpandableItem, S>, ISubItem<ExpandableItem, T> {
+public class SimpleSubItem<S extends IItem & IExpandable> extends AbstractItem<SimpleSubItem<S>, SimpleSubItem.ViewHolder> implements IExpandable<SimpleSubItem, SimpleSubItem>, ISubItem<SimpleSubItem, S>, IDraggable<SimpleSubItem, IItem> {
     //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
     private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
@@ -37,33 +31,32 @@ public class ExpandableItem<T extends IItem & IExpandable, S extends IItem & ISu
     public StringHolder name;
     public StringHolder description;
 
-    private List<S> mSubItems;
-    private T mParent;
+    private List<SimpleSubItem> mSubItems;
+    private S mParent;
     private boolean mExpanded = false;
+    private boolean mIsDraggable = true;
 
-    private FastAdapter.OnClickListener<ExpandableItem> mOnClickListener;
-
-    public ExpandableItem<T, S> withHeader(String header) {
+    public SimpleSubItem<S> withHeader(String header) {
         this.header = header;
         return this;
     }
 
-    public ExpandableItem<T, S> withName(String Name) {
+    public SimpleSubItem<S> withName(String Name) {
         this.name = new StringHolder(Name);
         return this;
     }
 
-    public ExpandableItem<T, S> withName(@StringRes int NameRes) {
+    public SimpleSubItem<S> withName(@StringRes int NameRes) {
         this.name = new StringHolder(NameRes);
         return this;
     }
 
-    public ExpandableItem<T, S> withDescription(String description) {
+    public SimpleSubItem<S> withDescription(String description) {
         this.description = new StringHolder(description);
         return this;
     }
 
-    public ExpandableItem<T, S> withDescription(@StringRes int descriptionRes) {
+    public SimpleSubItem<S> withDescription(@StringRes int descriptionRes) {
         this.description = new StringHolder(descriptionRes);
         return this;
     }
@@ -74,14 +67,9 @@ public class ExpandableItem<T extends IItem & IExpandable, S extends IItem & ISu
     }
 
     @Override
-    public ExpandableItem<T, S> withIsExpanded(boolean expanded) {
-        mExpanded = expanded;
+    public SimpleSubItem<S> withIsExpanded(boolean expaned) {
+        mExpanded = expaned;
         return this;
-    }
-
-    @Override
-    public List<S> getSubItems() {
-        return mSubItems;
     }
 
     @Override
@@ -90,62 +78,38 @@ public class ExpandableItem<T extends IItem & IExpandable, S extends IItem & ISu
     }
 
     @Override
-    public ExpandableItem<T, S> withSubItems(List<S> subItems) {
+    public List<SimpleSubItem> getSubItems() {
+        return mSubItems;
+    }
+
+    @Override
+    public SimpleSubItem<S> withSubItems(List<SimpleSubItem> subItems) {
         this.mSubItems = subItems;
         return this;
     }
 
     @Override
-    public T getParent() {
+    public S getParent() {
         return mParent;
     }
 
     @Override
-    public ExpandableItem<T, S> withParent(T parent) {
+    public SimpleSubItem<S> withParent(S parent) {
         this.mParent = parent;
         return this;
     }
 
-    public FastAdapter.OnClickListener<ExpandableItem> getOnClickListener() {
-        return mOnClickListener;
+    @Override
+    public boolean isDraggable() {
+        return mIsDraggable;
     }
 
-    public ExpandableItem<T, S> withOnClickListener(FastAdapter.OnClickListener<ExpandableItem> mOnClickListener) {
-        this.mOnClickListener = mOnClickListener;
+    @Override
+    public SimpleSubItem withIsDraggable(boolean draggable) {
+        this.mIsDraggable = draggable;
         return this;
     }
 
-    //we define a clickListener in here so we can directly animate
-    final private FastAdapter.OnClickListener<ExpandableItem<T, S>> onClickListener = new FastAdapter.OnClickListener<ExpandableItem<T, S>>() {
-        @Override
-        public boolean onClick(View v, IAdapter adapter, ExpandableItem item, int position) {
-            if (item.getSubItems() != null) {
-                if (!item.isExpanded()) {
-                    ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(180).start();
-                } else {
-                    ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
-                }
-                return mOnClickListener == null || mOnClickListener.onClick(v, adapter, item, position);
-            }
-            return mOnClickListener != null && mOnClickListener.onClick(v, adapter, item, position);
-        }
-    };
-
-    /**
-     * we overwrite the item specific click listener so we can automatically animate within the item
-     *
-     * @return
-     */
-    @Override
-    public FastAdapter.OnClickListener<ExpandableItem<T, S>> getOnItemClickListener() {
-        return onClickListener;
-    }
-
-    @Override
-    public boolean isSelectable() {
-        //this might not be true for your application
-        return getSubItems() == null;
-    }
 
     /**
      * defines the type defining this item. must be unique. preferably an id
@@ -154,7 +118,7 @@ public class ExpandableItem<T extends IItem & IExpandable, S extends IItem & ISu
      */
     @Override
     public int getType() {
-        return R.id.fastadapter_expandable_item_id;
+        return R.id.fastadapter_sample_item_id;
     }
 
     /**
@@ -164,7 +128,7 @@ public class ExpandableItem<T extends IItem & IExpandable, S extends IItem & ISu
      */
     @Override
     public int getLayoutRes() {
-        return R.layout.expandable_item;
+        return R.layout.sample_item;
     }
 
     /**
@@ -185,12 +149,6 @@ public class ExpandableItem<T extends IItem & IExpandable, S extends IItem & ISu
         StringHolder.applyTo(name, viewHolder.name);
         //set the text for the description or hide
         StringHolder.applyToOrHide(description, viewHolder.description);
-
-        if (isExpanded()) {
-            ViewCompat.setRotation(viewHolder.icon, 0);
-        } else {
-            ViewCompat.setRotation(viewHolder.icon, 180);
-        }
     }
 
     @Override
@@ -198,8 +156,6 @@ public class ExpandableItem<T extends IItem & IExpandable, S extends IItem & ISu
         super.unbindView(holder);
         holder.name.setText(null);
         holder.description.setText(null);
-        //make sure all animations are stopped
-        holder.icon.clearAnimation();
     }
 
     /**
@@ -228,13 +184,11 @@ public class ExpandableItem<T extends IItem & IExpandable, S extends IItem & ISu
      * our ViewHolder
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
-        protected final View view;
+        protected View view;
         @Bind(R.id.material_drawer_name)
         TextView name;
         @Bind(R.id.material_drawer_description)
         TextView description;
-        @Bind(R.id.material_drawer_icon)
-        ImageView icon;
 
         public ViewHolder(View view) {
             super(view);

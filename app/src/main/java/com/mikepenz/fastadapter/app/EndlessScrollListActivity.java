@@ -24,7 +24,7 @@ import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.adapters.FooterAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter.ItemFilterListener;
-import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
 import com.mikepenz.fastadapter_extensions.items.ProgressItem;
@@ -40,7 +40,7 @@ import java.util.List;
 public class EndlessScrollListActivity extends AppCompatActivity implements ItemTouchCallback, ItemFilterListener {
 
     //save our FastAdapter
-    private FastItemAdapter<SampleItem> fastItemAdapter;
+    private FastItemAdapter<SimpleItem> fastItemAdapter;
     private FooterAdapter<ProgressItem> footerAdapter;
 
     //drag & drop
@@ -69,18 +69,18 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         footerAdapter = new FooterAdapter<>();
 
         //configure our fastAdapter
-        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
+        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<SimpleItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
+            public boolean onClick(View v, IAdapter<SimpleItem> adapter, SimpleItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
                 return false;
             }
         });
 
         //configure the itemAdapter
-        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SampleItem>() {
+        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SimpleItem>() {
             @Override
-            public boolean filter(SampleItem item, CharSequence constraint) {
+            public boolean filter(SimpleItem item, CharSequence constraint) {
                 //return true if we should filter it out
                 //return false to keep it
                 return !item.name.getText().toLowerCase().contains(constraint.toString().toLowerCase());
@@ -106,7 +106,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
                     public void run() {
                         footerAdapter.clear();
                         for (int i = 1; i < 16; i++) {
-                            fastItemAdapter.add(fastItemAdapter.getAdapterItemCount(), new SampleItem().withName("Item " + i + " Page " + currentPage));
+                            fastItemAdapter.add(fastItemAdapter.getAdapterItemCount(), new SimpleItem().withName("Item " + i + " Page " + currentPage));
                         }
                     }
                 }, 2000);
@@ -114,9 +114,9 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         });
 
         //fill with some sample data (load the first page here)
-        List<SampleItem> items = new ArrayList<>();
+        List<SimpleItem> items = new ArrayList<>();
         for (int i = 1; i < 16; i++) {
-            items.add(new SampleItem().withName("Item " + i + " Page " + 1));
+            items.add(new SimpleItem().withName("Item " + i + " Page " + 1));
         }
         fastItemAdapter.add(items);
 

@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.app.items.ExpandableItem;
+import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
 import com.mikepenz.fastadapter.app.items.IconItem;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
@@ -83,10 +83,10 @@ public class IconGridActivity extends AppCompatActivity {
 
         //add all icons of all registered Fonts to the list
         int count = 0;
-        ArrayList<ExpandableItem> items = new ArrayList<>(Iconics.getRegisteredFonts(this).size());
+        ArrayList<SimpleSubExpandableItem> items = new ArrayList<>(Iconics.getRegisteredFonts(this).size());
         for (ITypeface font : mFonts) {
             //we set the identifier from the count here, as I need a stable ID in the sample to showcase the state restore
-            ExpandableItem expandableItem = new ExpandableItem();
+            SimpleSubExpandableItem expandableItem = new SimpleSubExpandableItem();
             expandableItem
                     .withName(font.getFontName())
                     .withIdentifier(count);
