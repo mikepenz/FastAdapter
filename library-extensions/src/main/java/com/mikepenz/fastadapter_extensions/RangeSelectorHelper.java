@@ -3,9 +3,6 @@ package com.mikepenz.fastadapter_extensions;
 import android.os.Bundle;
 
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.utils.AdapterUtil;
-
-import java.util.ArrayList;
 
 /**
  * Created by Michael on 15.09.2016.
@@ -64,7 +61,7 @@ public class RangeSelectorHelper {
                     mActionModeHelper.checkActionMode(null); // works with null as well, as the ActionMode is active for sure!
                 return true;
             }
-        } else if (mLastLongPressIndex != index){
+        } else if (mLastLongPressIndex != index) {
             // select all items in the range between the two long clicks
             selectRange(mLastLongPressIndex, index, true);
             // reset the index
@@ -125,6 +122,7 @@ public class RangeSelectorHelper {
 
     /**
      * restore the index of the last long pressed index
+     *
      * @param savedInstanceState If the activity is being re-initialized after
      *                           previously being shut down then this Bundle contains the data it most
      *                           recently supplied in Note: Otherwise it is null.

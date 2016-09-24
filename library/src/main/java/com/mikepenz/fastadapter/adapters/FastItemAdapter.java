@@ -129,7 +129,7 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
      * @param subItems    the subItems for this collapsible item
      * @return the item type of the collapsible
      */
-    public <T extends IItem &IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems) {
+    public <T extends IItem & IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems) {
         return mItemAdapter.setSubItems(collapsible, subItems);
     }
 

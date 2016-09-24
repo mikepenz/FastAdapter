@@ -119,7 +119,8 @@ public class SortActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(false);
     }
 
-    @SortingStrategy int toSortingStrategy(int val) {
+    @SortingStrategy
+    int toSortingStrategy(int val) {
         return val;
     }
 

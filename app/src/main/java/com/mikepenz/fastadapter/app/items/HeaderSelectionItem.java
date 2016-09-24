@@ -2,14 +2,11 @@ package com.mikepenz.fastadapter.app.items;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.support.annotation.StringRes;
 
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;
-import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.FastAdapterUIUtils;
-import com.mikepenz.fastadapter_extensions.utilities.SubItemUtils;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialize.util.UIUtils;
 

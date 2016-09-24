@@ -55,7 +55,7 @@ public class HeaderHelper<Item, HeaderItem> {
             if (comparator != null) {
                 Collections.sort(items, comparator);
             }
-    
+
             //we have to get the list size each time, as we will add the headers to it
             for (int i = -1; i < size; i++) {
                 HeaderItem headerItem;
@@ -66,7 +66,7 @@ public class HeaderHelper<Item, HeaderItem> {
                 } else {
                     headerItem = groupingFunction.group((Item) items.get(i), (Item) items.get(i + 1), i);
                 }
-    
+
                 if (headerItem != null) {
                     items.add(i + 1, headerItem);
                     i = i + 1;

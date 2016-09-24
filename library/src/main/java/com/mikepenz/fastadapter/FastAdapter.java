@@ -235,6 +235,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     /**
      * set to true if you want the FastAdapter to forward all calls from onBindViewHolder(final RecyclerView.ViewHolder holder, int position) to onBindViewHolder(final RecyclerView.ViewHolder holder, int position, List payloads)
+     *
      * @param legacyBindViewMode true if you want to activate it (default = false)
      * @return this
      */
@@ -245,6 +246,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     /**
      * set a listener that get's notified whenever an item is selected or deselected
+     *
      * @param selectionListener the listener that will be notified about selection changes
      * @return this
      */
@@ -391,7 +393,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * clears the internal mapper - be sure, to remap everything before going on
      */
     public void clearTypeInstance() {
-       mTypeInstances.clear();
+        mTypeInstances.clear();
     }
 
     /**
@@ -530,7 +532,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
-        if(mLegacyBindViewMode) {
+        if (mLegacyBindViewMode) {
             mOnBindViewHolderListener.onBindViewHolder(holder, position, Collections.EMPTY_LIST);
         }
         //empty implementation we want the users to use the payloads too
@@ -1382,11 +1384,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     /**
      * expands all expandable items
+     *
      * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
      */
     public void expand(boolean notifyItemChanged) {
         int length = getItemCount();
-        for(int i = length - 1; i >= 0 ; i--) {
+        for (int i = length - 1; i >= 0; i--) {
             expand(i);
         }
     }
@@ -1632,7 +1635,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             if (mExpanded.indexOfKey(position) > -1) {
                 int previousCount = mExpanded.get(position);
                 int itemsCount = notifyAdapterSubItemsChanged(position, previousCount);
-                if(itemsCount == 0) {
+                if (itemsCount == 0) {
                     mExpanded.delete(position);
                 } else {
                     mExpanded.put(position, itemsCount);

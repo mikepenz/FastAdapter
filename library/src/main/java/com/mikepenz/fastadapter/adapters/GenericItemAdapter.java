@@ -42,7 +42,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
     public List<Model> getModels() {
         int size = getAdapterItems().size();
         List<Model> models = new ArrayList<>(size);
-        for (int i = 0; i< size; i++) {
+        for (int i = 0; i < size; i++) {
             models.add(getAdapterItems().get(i).getModel());
         }
         return models;

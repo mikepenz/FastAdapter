@@ -27,6 +27,7 @@ public class MopubFastItemAdapter<Item extends IItem> extends FastItemAdapter<It
 
     /**
      * fix the MopubAdapter not correctly overwriting the proper onBindViewHolder methods
+     *
      * @param holder   the viewHolder we bind the data on
      * @param position the global position
      */

@@ -15,7 +15,6 @@ import android.widget.Toast;
 import com.mikepenz.aboutlibraries.util.UIUtils;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISelectionListener;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
@@ -80,7 +79,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                     public boolean onClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
                         // check if the actionMode consumes the click. This returns true, if it does, false if not
                         if (!mActionModeHelper.isActive())
-                            Toast.makeText(ExpandableMultiselectDeleteSampleActivity.this, ((SampleItem)item).name + " clicked!", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ExpandableMultiselectDeleteSampleActivity.this, ((SampleItem) item).name + " clicked!", Toast.LENGTH_SHORT).show();
 //                        else
 //                            mFastAdapter.notifyItemChanged(position); // im Bsp. ist das nicht nötig, k.A. warum ich das machen muss!
                         mRangeSelectorHelper.onClick();
@@ -139,8 +138,8 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                         .withName("Test " + (i + 1))
                         .withDescription("ID: " + (i + 1))
                         .withIdentifier(i + 1)
-                        //.withIsExpanded(true) don't use this in such a setup, use adapter.expand() to expand all items instead
-                        ;
+                //.withIsExpanded(true) don't use this in such a setup, use adapter.expand() to expand all items instead
+                ;
 
                 //add subitems so we can showcase the collapsible functionality
                 List<IItem> subItems = new LinkedList<>();
@@ -173,7 +172,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
             @Override
             public void onSelectionChanged(IItem item, boolean selected) {
                 if (item instanceof SampleItem) {
-                    IItem headerItem = ((SampleItem)item).getParent();
+                    IItem headerItem = ((SampleItem) item).getParent();
                     if (headerItem != null) {
                         int pos = fastItemAdapter.getAdapterPosition(headerItem);
                         // Important: notify the header directly, not via the notifyadapterItemChanged!
@@ -220,8 +219,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
     class ActionBarCallBack implements ActionMode.Callback {
 
         @Override
-        public boolean onCreateActionMode(ActionMode mode, Menu menu)
-        {
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
             return true;
         }
 

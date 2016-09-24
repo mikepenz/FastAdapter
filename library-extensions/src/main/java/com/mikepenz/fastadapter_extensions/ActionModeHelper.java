@@ -86,7 +86,7 @@ public class ActionModeHelper {
      * implements the basic behavior of a CAB and multi select behavior,
      * including logics if the clicked item is collapsible
      *
-     * @param act      the current Activity
+     * @param act  the current Activity
      * @param item the current item
      * @return null if nothing was done, or a boolean to inform if the event was consumed
      */
@@ -136,7 +136,7 @@ public class ActionModeHelper {
      * check if the ActionMode should be shown or not depending on the currently selected items
      * Additionally, it will also update the title in the CAB for you
      *
-     * @param act      the current Activity
+     * @param act the current Activity
      * @return the initialized ActionMode or null if no ActionMode is active after calling this function
      */
     public ActionMode checkActionMode(AppCompatActivity act) {
@@ -150,8 +150,7 @@ public class ActionModeHelper {
                 mActionMode.finish();
                 mActionMode = null;
             }
-        }
-        else if (mActionMode == null) {
+        } else if (mActionMode == null) {
             if (act != null) // without an activity, we cannot start the action mode
                 mActionMode = act.startSupportActionMode(mInternalCallback);
         }
@@ -162,7 +161,7 @@ public class ActionModeHelper {
     /**
      * updates the title to reflect the current selected items or to show a user defined title
      *
-     * @param selected      number of selected items
+     * @param selected number of selected items
      */
     private void updateTitle(int selected) {
         if (mActionMode != null) {
@@ -187,7 +186,7 @@ public class ActionModeHelper {
 
             if (!consumed) {
                 if (mSupportSubItems)
-                    SubItemUtils.deleteSelected((FastItemAdapter)mFastAdapter, true, false); // TODO: unsafe cast!!! for deleting, we need the FastItemAdapter.remove(pos) funtion... adopt this function to work with the FastAdpater instead and the cast can be removed
+                    SubItemUtils.deleteSelected((FastItemAdapter) mFastAdapter, true, false); // TODO: unsafe cast!!! for deleting, we need the FastItemAdapter.remove(pos) funtion... adopt this function to work with the FastAdpater instead and the cast can be removed
                 else
                     mFastAdapter.deleteAllSelectedItems();
                 //finish the actionMode

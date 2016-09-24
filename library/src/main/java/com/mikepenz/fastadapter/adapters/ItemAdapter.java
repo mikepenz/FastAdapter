@@ -224,7 +224,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param subItems    the subItems for this collapsible item
      * @return the item type of the collapsible
      */
-    public <T extends IItem &IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems) {
+    public <T extends IItem & IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(subItems);
         }
