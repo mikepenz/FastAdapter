@@ -446,7 +446,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                         }
 
                         //if there should be only one expanded item we want to collapse all the others but the current one
-                        if (mOnlyOneExpandedItem) {
+                        if (!consumed && mOnlyOneExpandedItem) {
                             int[] expandedItems = getExpandedItems();
                             for (int i = expandedItems.length - 1; i >= 0; i--) {
                                 if (expandedItems[i] != pos) {
@@ -461,7 +461,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                         }
 
                         //before calling the global adapter onClick listener call the item specific onClickListener
-                        if (item instanceof IClickable && ((IClickable) item).getOnItemClickListener() != null) {
+                        if (!consumed && item instanceof IClickable && ((IClickable) item).getOnItemClickListener() != null) {
                             consumed = ((IClickable<Item>) item).getOnItemClickListener().onClick(v, relativeInfo.adapter, item, pos);
                         }
 
@@ -494,7 +494,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                         }
 
                         //call the normal long click listener after selection was handled
-                        if (mOnLongClickListener != null) {
+                        if (!consumed && mOnLongClickListener != null) {
                             consumed = mOnLongClickListener.onLongClick(v, relativeInfo.adapter, relativeInfo.item, pos);
                         }
                     }
