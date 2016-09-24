@@ -573,7 +573,16 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             Log.e("FastAdapter", "You have to define an identifier for your item to retrieve the position via this method");
             return -1;
         }
+        return getPosition(item.getIdentifier());
+    }
 
+    /**
+     * Searches for the given item and calculates it's global position
+     *
+     * @param identifier the identifier of an item which is searched for
+     * @return the global position, or -1 if not found
+     */
+    public int getPosition(long identifier) {
         int position = 0;
         for (int i = 0, size = mAdapters.size(); i < size; i++) {
             IAdapter<Item> adapter = mAdapters.valueAt(i);
@@ -581,7 +590,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 continue;
             }
 
-            int relativePosition = adapter.getAdapterPosition(item);
+            int relativePosition = adapter.getAdapterPosition(identifier);
             if (relativePosition != -1) {
                 return position + relativePosition;
             }

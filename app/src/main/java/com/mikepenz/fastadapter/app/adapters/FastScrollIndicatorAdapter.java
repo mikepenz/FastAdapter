@@ -68,6 +68,11 @@ public class FastScrollIndicatorAdapter<Item extends IItem> extends AbstractAdap
     }
 
     @Override
+    public int getAdapterPosition(long identifier) {
+        return -1;
+    }
+
+    @Override
     public int getGlobalPosition(int position) {
         return -1;
     }

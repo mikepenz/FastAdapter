@@ -189,8 +189,19 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      */
     @Override
     public int getAdapterPosition(Item item) {
+        return getAdapterPosition(item.getIdentifier());
+    }
+
+    /**
+     * Searches for the given identifier and calculates it's relative position
+     *
+     * @param identifier the identifier of an item which is searched for
+     * @return the relative position
+     */
+    @Override
+    public int getAdapterPosition(long identifier) {
         for (int i = 0, size = mItems.size(); i < size; i++) {
-            if (mItems.get(i).getIdentifier() == item.getIdentifier()) {
+            if (mItems.get(i).getIdentifier() == identifier) {
                 return i;
             }
         }

@@ -104,6 +104,11 @@ public class StickyHeaderAdapter extends AbstractAdapter implements StickyRecycl
     }
 
     @Override
+    public int getAdapterPosition(long identifier) {
+        return -1;
+    }
+
+    @Override
     public int getGlobalPosition(int position) {
         return -1;
     }
