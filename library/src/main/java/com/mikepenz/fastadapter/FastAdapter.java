@@ -1805,7 +1805,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List payloads) {
-            getItem(position).bindView(viewHolder, payloads);
+            Item item = getItem(position);
+            if (item != null) {
+                item.bindView(viewHolder, payloads);
+            }
         }
 
         /**
@@ -1816,7 +1819,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-            getItem(position).unbindView(viewHolder);
+            Item item = getItem(position);
+            if (item != null) {
+                item.unbindView(viewHolder);
+            }
         }
     }
 
