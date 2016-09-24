@@ -147,7 +147,6 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                     sampleItem
                             .withName("-- Test " + (i + 1) + "." + ii)
                             .withDescription("ID: " + (i + 1) * 100 + ii)
-                            .withParent(expandableItem)
                             .withIdentifier((i + 1) * 100 + ii);
                     subItems.add(sampleItem);
 

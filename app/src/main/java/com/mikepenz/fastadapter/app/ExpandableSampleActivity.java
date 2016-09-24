@@ -67,7 +67,6 @@ public class ExpandableSampleActivity extends AppCompatActivity {
                     SimpleSubItem sampleItem = new SimpleSubItem();
                     sampleItem
                             .withName("-- Test " + ii)
-                            .withParent(expandableItem)
                             .withIdentifier(1000 + ii);
                     subItems.add(sampleItem);
                 }

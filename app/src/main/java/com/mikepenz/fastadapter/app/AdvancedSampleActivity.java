@@ -161,17 +161,14 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 List<SimpleSubExpandableItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 3; ii++) {
                     SimpleSubExpandableItem subItem = new SimpleSubExpandableItem();
-                    subItem
-                            .withParent(expandableItem)
-                            .withName("-- SubTest " + ii)
+                    subItem.withName("-- SubTest " + ii)
                             .withHeader(headers[i / 5])
                             .withIdentifier(1000 + ii);
 
                     List<SimpleSubItem> subSubItems = new LinkedList<>();
                     for (int iii = 1; iii <= 3; iii++) {
                         SimpleSubItem subSubItem = new SimpleSubItem();
-                        subSubItem.withParent(subItem)
-                                .withName("---- SubSubTest " + iii)
+                        subSubItem.withName("---- SubSubTest " + iii)
                                 .withHeader(headers[i / 5])
                                 .withIdentifier(10000 + iii);
                         subSubItems.add(subSubItem);

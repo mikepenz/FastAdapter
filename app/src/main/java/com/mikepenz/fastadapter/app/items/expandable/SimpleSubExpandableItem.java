@@ -92,6 +92,9 @@ public class SimpleSubExpandableItem<T extends IItem & IExpandable, S extends II
     @Override
     public SimpleSubExpandableItem<T, S> withSubItems(List<S> subItems) {
         this.mSubItems = subItems;
+        for(S subItem : subItems) {
+            subItem.withParent(this);
+        }
         return this;
     }
 
