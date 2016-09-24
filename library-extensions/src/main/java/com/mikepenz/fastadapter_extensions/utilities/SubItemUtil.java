@@ -8,7 +8,6 @@ import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.ISubItem;
-import com.mikepenz.fastadapter.adapters.ItemAdapter;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -32,8 +31,9 @@ public class SubItemUtil {
         Set<IItem> selections = new HashSet<>();
         int length = adapter.getItemCount();
         List<IItem> items = new ArrayList<>();
-        for (int i = 0; i < length; i++)
+        for (int i = 0; i < length; i++) {
             items.add(adapter.getItem(i));
+        }
         updateSelectedItemsWithCollapsed(selections, items);
         return selections;
     }
@@ -44,8 +44,9 @@ public class SubItemUtil {
             if (items.get(i).isSelected()) {
                 selected.add(items.get(i));
             }
-            if (items.get(i) instanceof IExpandable && ((IExpandable) items.get(i)).getSubItems() != null)
+            if (items.get(i) instanceof IExpandable && ((IExpandable) items.get(i)).getSubItems() != null) {
                 updateSelectedItemsWithCollapsed(selected, ((IExpandable) items.get(i)).getSubItems());
+            }
         }
     }
 
@@ -72,8 +73,9 @@ public class SubItemUtil {
     }
 
     private static int countItems(List<IItem> items, boolean countHeaders, boolean subItemsOnly, IPredicate predicate) {
-        if (items == null || items.size() == 0)
+        if (items == null || items.size() == 0) {
             return 0;
+        }
 
         int temp, count = 0;
         int itemCount = items.size();
@@ -86,25 +88,29 @@ public class SubItemUtil {
                 if (predicate == null) {
                     count += subItems != null ? subItems.size() : 0;
                     count += countItems(subItems, countHeaders, true, predicate);
-                    if (countHeaders)
+                    if (countHeaders) {
                         count++;
+                    }
                 } else {
                     temp = subItems != null ? subItems.size() : 0;
                     for (int j = 0; j < temp; j++) {
-                        if (predicate.apply(subItems.get(j)))
+                        if (predicate.apply(subItems.get(j))) {
                             count++;
+                        }
                     }
-                    if (countHeaders && predicate.apply(item))
+                    if (countHeaders && predicate.apply(item)) {
                         count++;
+                    }
                 }
             }
             // in some cases, we must manually check, if the item is a sub item, process is optimised as much as possible via the subItemsOnly parameter already
             // sub items will be counted in above if statement!
             else if (!subItemsOnly && getParent(item) == null) {
-                if (predicate == null)
+                if (predicate == null) {
                     count++;
-                else if (predicate.apply(item))
+                } else if (predicate.apply(item)) {
                     count++;
+                }
             }
 
         }
@@ -128,18 +134,21 @@ public class SubItemUtil {
         List<IItem> subItems = header.getSubItems();
         int items = header.getSubItems() != null ? header.getSubItems().size() : 0;
         for (int i = 0; i < items; i++) {
-            if (selections.contains(subItems.get(i)))
+            if (selections.contains(subItems.get(i))) {
                 count++;
-            if (subItems.get(i) instanceof IExpandable && ((IExpandable) subItems.get(i)).getSubItems() != null)
+            }
+            if (subItems.get(i) instanceof IExpandable && ((IExpandable) subItems.get(i)).getSubItems() != null) {
                 count += countSelectedSubItems(selections, (T) subItems.get(i));
+            }
         }
         return count;
     }
 
     private static <T extends IExpandable & IItem> T getParent(IItem item) {
 
-        if (item instanceof ISubItem)
+        if (item instanceof ISubItem) {
             return (T) ((ISubItem) item).getParent();
+        }
         return null;
     }
 
@@ -178,16 +187,18 @@ public class SubItemUtil {
                 Log.d("DELETE", "success=" + success + " | deletedId=" + item.getIdentifier() + " | parentId=" + parent.getIdentifier() + " (sub items: " + ((IExpandable) parent).getSubItems().size() + ") | parentPos=" + parentPos);
 
                 // check if parent is expanded and notify the adapter about the removed item, if necessary (only if parent is visible)
-                if (parentPos != -1 && ((IExpandable) parent).isExpanded())
+                if (parentPos != -1 && ((IExpandable) parent).isExpanded()) {
                     fastAdapter.notifyAdapterSubItemsChanged(parentPos, ((IExpandable) parent).getSubItems().size() + 1);
+                }
 
                 // if desired, notify the parent about it's changed items (only if parent is visible!)
                 if (parentPos != -1 && notifyParent) {
                     expanded = ((IExpandable) parent).isExpanded();
                     fastAdapter.notifyAdapterItemChanged(parentPos);
                     // expand the item again if it was expanded before calling notifyAdapterItemChanged
-                    if (expanded)
+                    if (expanded) {
                         fastAdapter.expand(parentPos);
+                    }
                 }
 
                 deleted.add(item);
