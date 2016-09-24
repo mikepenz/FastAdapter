@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.mikepenz.fastadapter.IDraggable;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.FastAdapterUIUtils;
@@ -25,7 +26,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> implements IExpandable<SampleItem, IItem>, IDraggable<SampleItem, IItem> {
+public class SampleItem<S extends IItem & IExpandable> extends AbstractItem<SampleItem<S>, SampleItem.ViewHolder> implements IExpandable<SampleItem, SampleItem>, ISubItem<SampleItem, S>, IDraggable<SampleItem, IItem> {
     //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
     private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
@@ -33,31 +34,32 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
     public StringHolder name;
     public StringHolder description;
 
-    private List<IItem> mSubItems;
+    private List<SampleItem> mSubItems;
+    private S mParent;
     private boolean mExpanded = false;
     private boolean mIsDraggable = true;
 
-    public SampleItem withHeader(String header) {
+    public SampleItem<S> withHeader(String header) {
         this.header = header;
         return this;
     }
 
-    public SampleItem withName(String Name) {
+    public SampleItem<S> withName(String Name) {
         this.name = new StringHolder(Name);
         return this;
     }
 
-    public SampleItem withName(@StringRes int NameRes) {
+    public SampleItem<S> withName(@StringRes int NameRes) {
         this.name = new StringHolder(NameRes);
         return this;
     }
 
-    public SampleItem withDescription(String description) {
+    public SampleItem<S> withDescription(String description) {
         this.description = new StringHolder(description);
         return this;
     }
 
-    public SampleItem withDescription(@StringRes int descriptionRes) {
+    public SampleItem<S> withDescription(@StringRes int descriptionRes) {
         this.description = new StringHolder(descriptionRes);
         return this;
     }
@@ -68,7 +70,7 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
     }
 
     @Override
-    public SampleItem withIsExpanded(boolean expaned) {
+    public SampleItem<S> withIsExpanded(boolean expaned) {
         mExpanded = expaned;
         return this;
     }
@@ -79,12 +81,24 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
     }
 
     @Override
-    public List<IItem> getSubItems() {
+    public List<SampleItem> getSubItems() {
         return mSubItems;
     }
 
-    public SampleItem withSubItems(List<IItem> subItems) {
+    @Override
+    public SampleItem<S> withSubItems(List<SampleItem> subItems) {
         this.mSubItems = subItems;
+        return this;
+    }
+
+    @Override
+    public S getParent() {
+        return mParent;
+    }
+
+    @Override
+    public SampleItem<S> withParent(S parent) {
+        this.mParent = parent;
         return this;
     }
 

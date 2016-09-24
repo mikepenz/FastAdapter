@@ -104,7 +104,11 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         for (String s : ALPHABET) {
             int count = new Random().nextInt(20);
             for (int i = 1; i <= count; i++) {
-                items.add(new SampleItem().withName(s + " Test " + x).withIdentifier(100 + x));
+                SampleItem item = new SampleItem();
+                item
+                        .withName(s + " Test " + x)
+                        .withIdentifier(100 + x);
+                items.add(item);
                 x++;
             }
         }

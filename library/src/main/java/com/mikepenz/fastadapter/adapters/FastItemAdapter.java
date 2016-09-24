@@ -6,6 +6,7 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.utils.DiffCallback;
 
 import java.util.List;
@@ -128,7 +129,7 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
      * @param subItems    the subItems for this collapsible item
      * @return the item type of the collapsible
      */
-    public <T> T setSubItems(IExpandable<T, Item> collapsible, List<Item> subItems) {
+    public <T extends IItem &IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems) {
         return mItemAdapter.setSubItems(collapsible, subItems);
     }
 
@@ -280,5 +281,12 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
     public FastItemAdapter<Item> clear() {
         mItemAdapter.clear();
         return this;
+    }
+
+    /**
+     * convenient functions, to force to remap all possible types for the RecyclerView
+     */
+    public void remapMappedTypes() {
+        mItemAdapter.remapMappedTypes();
     }
 }

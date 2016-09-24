@@ -9,6 +9,7 @@ import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.utils.DiffCallback;
 import com.mikepenz.fastadapter.utils.IdDistributor;
 
@@ -223,7 +224,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param subItems    the subItems for this collapsible item
      * @return the item type of the collapsible
      */
-    public <T> T setSubItems(IExpandable<T, Item> collapsible, List<Item> subItems) {
+    public <T extends IItem &IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(subItems);
         }
@@ -396,6 +397,14 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         getFastAdapter().notifyAdapterDataSetChanged();
 
         return this;
+    }
+
+    /**
+     * forces to remap all possible types for the RecyclerView
+     */
+    public void remapMappedTypes() {
+        clearMappedTypes();
+        mapPossibleTypes(mItems);
     }
 
     /**
