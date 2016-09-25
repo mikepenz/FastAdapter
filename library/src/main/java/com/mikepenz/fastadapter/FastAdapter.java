@@ -72,7 +72,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private OnLongClickListener<Item> mOnLongClickListener;
     private OnTouchListener<Item> mOnTouchListener;
 
-    private ISelectionListener mSelectionListener;
+    private ISelectionListener<Item> mSelectionListener;
 
     //the listeners for onCreateViewHolder or onBindViewHolder
     private OnCreateViewHolderListener mOnCreateViewHolderListener = new OnCreateViewHolderListenerImpl();
@@ -250,7 +250,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param selectionListener the listener that will be notified about selection changes
      * @return this
      */
-    public FastAdapter<Item> withSelectionListener(ISelectionListener selectionListener) {
+    public FastAdapter<Item> withSelectionListener(ISelectionListener<Item> selectionListener) {
         this.mSelectionListener = selectionListener;
         return this;
     }
