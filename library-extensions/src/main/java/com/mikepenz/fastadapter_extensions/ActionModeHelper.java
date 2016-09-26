@@ -23,7 +23,7 @@ public class ActionModeHelper {
     private ActionMode.Callback mInternalCallback;
     private ActionMode.Callback mCallback;
     private ActionMode mActionMode;
-    private boolean mSupportSubItems;
+    private boolean mSupportSubItems = false;
 
     private boolean mAutoDeselect = true;
 

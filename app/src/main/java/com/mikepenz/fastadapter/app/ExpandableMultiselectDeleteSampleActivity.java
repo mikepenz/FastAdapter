@@ -89,6 +89,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                 .withOnPreLongClickListener(new FastAdapter.OnLongClickListener<IItem>() {
                     @Override
                     public boolean onLongClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
+                        boolean actionModeWasActive = mActionModeHelper.isActive();
                         ActionMode actionMode = mActionModeHelper.onLongClick((AppCompatActivity) ExpandableMultiselectDeleteSampleActivity.this, position);
                         mRangeSelectorHelper.onLongClick(position);
                         if (actionMode != null) {
@@ -97,7 +98,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                         }
 
                         //if we have no actionMode we do not consume the event
-                        return actionMode != null;
+                        return actionMode != null && !actionModeWasActive;
                     }
                 });
 

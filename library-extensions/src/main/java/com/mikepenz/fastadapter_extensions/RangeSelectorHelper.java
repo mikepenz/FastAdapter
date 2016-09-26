@@ -2,7 +2,10 @@ package com.mikepenz.fastadapter_extensions;
 
 import android.os.Bundle;
 
+import com.mikepenz.fastadapter.IExpandable;
+import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter_extensions.utilities.SubItemUtil;
 
 /**
  * Created by Michael on 15.09.2016.
@@ -13,6 +16,7 @@ public class RangeSelectorHelper {
 
     private FastItemAdapter mFastAdapter;
     private ActionModeHelper mActionModeHelper;
+    private boolean mSupportSubItems = false;
 
     private Integer mLastLongPressIndex;
 
@@ -26,6 +30,11 @@ public class RangeSelectorHelper {
      */
     public RangeSelectorHelper withActionModeHelper(ActionModeHelper actionModeHelper) {
         mActionModeHelper = actionModeHelper;
+        return this;
+    }
+
+    public RangeSelectorHelper withSupportSubItems(boolean supportSubItems) {
+        this.mSupportSubItems = supportSubItems;
         return this;
     }
 
@@ -70,7 +79,7 @@ public class RangeSelectorHelper {
         return false;
     }
 
-    private void selectRange(int from, int to, boolean select) {
+    private <T extends IItem & IExpandable> void selectRange(int from, int to, boolean select) {
         if (from == to)
             return;
 
@@ -82,11 +91,15 @@ public class RangeSelectorHelper {
 
         for (int i = from; i <= to; i++) {
             if (mFastAdapter.getAdapterItem(i).isSelectable()) {
-                if (select)
+                if (select) {
                     mFastAdapter.select(i);
-                else
+                }
+                else {
                     mFastAdapter.deselect(i);
+                }
             }
+            if (mSupportSubItems && mFastAdapter.getAdapterItem(i) instanceof IExpandable)
+                SubItemUtil.selectAllSubItems(mFastAdapter, (T)mFastAdapter.getAdapterItem(i), select, true);
         }
 
         if (mActionModeHelper != null)

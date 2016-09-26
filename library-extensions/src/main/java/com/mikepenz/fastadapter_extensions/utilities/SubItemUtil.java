@@ -144,6 +144,58 @@ public class SubItemUtil {
         return count;
     }
 
+    /**
+     * select or unselect all sub itmes underneath an expandable item
+     *
+     * @param adapter the adapter instance
+     * @param header  the header who's children should be selected or deselected
+     * @param select the new selected state of the sub items
+     */
+    public static <T extends IItem & IExpandable> void selectAllSubItems(final FastAdapter adapter, T header, boolean select) {
+        selectAllSubItems(adapter, header, select, false);
+    }
+
+    /**
+     * select or unselect all sub itmes underneath an expandable item
+     *
+     * @param adapter the adapter instance
+     * @param header  the header who's children should be selected or deselected
+     * @param select the new selected state of the sub items
+     * @param notifyParent true, if the parent should be notified about the changes of it's children selection state
+     */
+    public static <T extends IItem & IExpandable> void selectAllSubItems(final FastAdapter adapter, T header, boolean select, boolean notifyParent) {
+        int subItems = header.getSubItems().size();
+        int position = adapter.getPosition(header);
+        if (header.isExpanded()) {
+            for (int i = 0; i < subItems; i++) {
+                if (((IItem)header.getSubItems().get(i)).isSelectable()) {
+                    if (select) {
+                        adapter.select(position + i + 1);
+                    } else {
+                        adapter.deselect(position + i + 1);
+                    }
+                }
+                if (header.getSubItems().get(i) instanceof IExpandable)
+                    selectAllSubItems(adapter, header, select, notifyParent);
+
+            }
+        } else {
+            for (int i = 0; i < subItems; i++) {
+                if (((IItem)header.getSubItems().get(i)).isSelectable()) {
+                    ((IItem) header.getSubItems().get(i)).withSetSelected(select);
+                }
+                if (header.getSubItems().get(i) instanceof IExpandable)
+                    selectAllSubItems(adapter, header, select, notifyParent);
+            }
+
+        }
+
+        // we must notify the view only!
+        if (notifyParent && position >= 0) {
+            adapter.notifyItemChanged(position);
+        }
+    }
+
     private static <T extends IExpandable & IItem> T getParent(IItem item) {
 
         if (item instanceof ISubItem) {
