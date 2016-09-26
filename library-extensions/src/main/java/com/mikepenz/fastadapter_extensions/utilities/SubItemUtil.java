@@ -168,15 +168,24 @@ public class SubItemUtil {
         int position = adapter.getPosition(header);
         if (header.isExpanded()) {
             for (int i = 0; i < subItems; i++) {
-                if (select) {
-                    adapter.select(position + i + 1);
-                } else {
-                    adapter.deselect(position + i + 1);
+                if (((IItem)header.getSubItems().get(i)).isSelectable()) {
+                    if (select) {
+                        adapter.select(position + i + 1);
+                    } else {
+                        adapter.deselect(position + i + 1);
+                    }
                 }
+                if (header.getSubItems().get(i) instanceof IExpandable)
+                    selectAllSubItems(adapter, header, select, notifyParent);
+
             }
         } else {
             for (int i = 0; i < subItems; i++) {
-                ((IItem) header.getSubItems().get(i)).withSetSelected(select);
+                if (((IItem)header.getSubItems().get(i)).isSelectable()) {
+                    ((IItem) header.getSubItems().get(i)).withSetSelected(select);
+                }
+                if (header.getSubItems().get(i) instanceof IExpandable)
+                    selectAllSubItems(adapter, header, select, notifyParent);
             }
 
         }
