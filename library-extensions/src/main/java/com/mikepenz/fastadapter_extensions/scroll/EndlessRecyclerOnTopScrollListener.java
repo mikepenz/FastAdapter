@@ -19,11 +19,16 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
     private boolean mAlreadyCalledOnNoMore;
     // how many items your adapter must have at the end?
+    // leave it -1 as it's by default to disable onNoMore() feature if you have only local data
     private int mTotalItems = -1;
 
     public EndlessRecyclerOnTopScrollListener(FastItemAdapter adapter, int totalItems) {
         this.mAdapter = adapter;
         mTotalItems = totalItems;
+    }
+
+    public EndlessRecyclerOnTopScrollListener(FastItemAdapter adapter) {
+        this.mAdapter = adapter;
     }
 
     public int getVisibleThreshold() {
@@ -68,7 +73,7 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
 
             mLoading = true;
         } else {
-            if (mAdapter.getAdapterItemCount() == mTotalItems && !mAlreadyCalledOnNoMore) {
+            if (isOnNoMoreFeatureEnabled() && mAdapter.getAdapterItemCount() == mTotalItems && !mAlreadyCalledOnNoMore) {
                 onNoMore(this);
                 mAlreadyCalledOnNoMore = true;
             }
@@ -92,6 +97,10 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
      * @param page     page number, starts from 0
      */
     public abstract void onLoadMore(EndlessRecyclerOnTopScrollListener listener, int page);
+
+    public boolean isOnNoMoreFeatureEnabled() {
+        return mTotalItems != -1;
+    }
 
     /**
      * there's no more data to be loaded, you may want
