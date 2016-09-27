@@ -18,19 +18,12 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
     private boolean mIsOrientationHelperVertical;
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
     private boolean mAlreadyCalledOnNoMore;
-    // total loaded items in adapter will be changed automatically
-    private int mTotalLoadedItems = -1;
-    private RecyclerView.AdapterDataObserver mAdapterDataObserver = new RecyclerView.AdapterDataObserver() {
-        @Override
-        public void onChanged() {
-            super.onChanged();
-            mTotalLoadedItems = mAdapter.getAdapterItemCount();
-        }
-    };
+    // how many items your adapter must have at the end?
+    private int mTotalItems = -1;
 
-    public EndlessRecyclerOnTopScrollListener(FastItemAdapter adapter) {
+    public EndlessRecyclerOnTopScrollListener(FastItemAdapter adapter, int totalItems) {
         this.mAdapter = adapter;
-        adapter.registerAdapterDataObserver(mAdapterDataObserver);
+        mTotalItems = totalItems;
     }
 
     public int getVisibleThreshold() {
@@ -41,19 +34,8 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
         this.mVisibleThreshold = visibleThreshold;
     }
 
-    /**
-     * unregister automatically created adapter data observer
-     */
-    public void unregisterAdapterDataObserver() {
-        mAdapter.unregisterAdapterDataObserver(mAdapterDataObserver);
-    }
-
     public int getTotalLoadedItems() {
-        return mTotalLoadedItems;
-    }
-
-    public void setTotalLoadedItems(int totalLoadedItems) {
-        this.mTotalLoadedItems = totalLoadedItems;
+        return mTotalItems;
     }
 
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
@@ -86,7 +68,7 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
 
             mLoading = true;
         } else {
-            if (mAdapter.getAdapterItemCount() == mTotalLoadedItems && !mAlreadyCalledOnNoMore) {
+            if (mAdapter.getAdapterItemCount() == mTotalItems && !mAlreadyCalledOnNoMore) {
                 onNoMore(this);
                 mAlreadyCalledOnNoMore = true;
             }
