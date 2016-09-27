@@ -69,12 +69,12 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
         if (!mLoading && mLayoutManager.findFirstVisibleItemPosition() - mVisibleThreshold <= 0) {
             mCurrentPage++;
 
-            onLoadMore(this, mCurrentPage);
+            onLoadMore(mCurrentPage);
 
             mLoading = true;
         } else {
-            if (isOnNoMoreFeatureEnabled() && mAdapter.getAdapterItemCount() == mTotalItems && !mAlreadyCalledOnNoMore) {
-                onNoMore(this);
+            if (isOnNoMoreFeatureEnabled() && needNoMore()) {
+                onNoMore();
                 mAlreadyCalledOnNoMore = true;
             }
         }
@@ -93,22 +93,23 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
     /**
      * load more data
      *
-     * @param listener this
-     * @param page     page number, starts from 0
+     * @param page page number, starts from 0
      */
-    public abstract void onLoadMore(EndlessRecyclerOnTopScrollListener listener, int page);
+    public abstract void onLoadMore(int page);
 
     public boolean isOnNoMoreFeatureEnabled() {
         return mTotalItems != -1;
     }
 
+    private boolean needNoMore() {
+        return mAdapter.getAdapterItemCount() == mTotalItems && !mAlreadyCalledOnNoMore;
+    }
+
     /**
      * there's no more data to be loaded, you may want
      * to send a request to server for asking more data
-     *
-     * @param listener this
-     */
-    public abstract void onNoMore(EndlessRecyclerOnTopScrollListener listener);
+     **/
+    public abstract void onNoMore();
 
     private View findOneVisibleChild(int fromIndex, int toIndex, boolean completelyVisible,
                                      boolean acceptPartiallyVisible) {
@@ -161,7 +162,7 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
         this.mPreviousTotal = 0;
         this.mLoading = true;
         this.mCurrentPage = page;
-        this.onLoadMore(this, this.mCurrentPage);
+        this.onLoadMore(this.mCurrentPage);
     }
 
     public RecyclerView.LayoutManager getLayoutManager() {
