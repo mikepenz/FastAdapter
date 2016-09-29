@@ -2,13 +2,16 @@ package com.mikepenz.fastadapter.items;
 
 import android.content.Context;
 import android.support.annotation.CallSuper;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IClickable;
+import com.mikepenz.fastadapter.IExtendedDraggable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 
@@ -182,11 +185,25 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
 
     @Override
     @CallSuper
-    public void bindView(VH holder, List payloads) {
+    public void bindView(final VH holder, List payloads) {
         //set the selected state of this item. force this otherwise it may is missed when implementing an item
         holder.itemView.setSelected(isSelected());
         //set the tag of this item to this object (can be used when retrieving the view)
         holder.itemView.setTag(this);
+        // if necessary, init the drag handle, which will start the drag when touched
+        if (this instanceof IExtendedDraggable && ((IExtendedDraggable)this).getTouchHelper() != null && ((IExtendedDraggable)this).getDragView(holder) != null) {
+            ((IExtendedDraggable)this).getDragView(holder).setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+                        if (((IExtendedDraggable)AbstractItem.this).isDraggable())
+                            ((IExtendedDraggable)AbstractItem.this).getTouchHelper().startDrag(holder);
+                    }
+                    return false;
+                }
+            });
+        }
+
     }
 
     @Override
