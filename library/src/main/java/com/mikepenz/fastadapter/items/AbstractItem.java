@@ -190,20 +190,6 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
         holder.itemView.setSelected(isSelected());
         //set the tag of this item to this object (can be used when retrieving the view)
         holder.itemView.setTag(this);
-        // if necessary, init the drag handle, which will start the drag when touched
-        if (this instanceof IExtendedDraggable && ((IExtendedDraggable)this).getTouchHelper() != null && ((IExtendedDraggable)this).getDragView(holder) != null) {
-            ((IExtendedDraggable)this).getDragView(holder).setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent event) {
-                    if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
-                        if (((IExtendedDraggable)AbstractItem.this).isDraggable())
-                            ((IExtendedDraggable)AbstractItem.this).getTouchHelper().startDrag(holder);
-                    }
-                    return false;
-                }
-            });
-        }
-
     }
 
     @Override
