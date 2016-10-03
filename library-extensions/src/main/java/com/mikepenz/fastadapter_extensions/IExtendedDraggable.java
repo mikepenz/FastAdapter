@@ -1,13 +1,17 @@
-package com.mikepenz.fastadapter;
+package com.mikepenz.fastadapter_extensions;
 
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
+import com.mikepenz.fastadapter.IDraggable;
+import com.mikepenz.fastadapter.IItem;
+
 /**
  * Created by mikepenz on 30.12.15.
  */
-public interface IExtendedDraggable<T, VH extends RecyclerView.ViewHolder, Item extends IItem> extends IDraggable<T, Item> {
+public interface IExtendedDraggable<T, VH extends RecyclerView.ViewHolder, Item extends IItem> extends IDraggable<T, Item>
+{
 
     /**
      * use this method to set the ItemTouchHelper reference in the item

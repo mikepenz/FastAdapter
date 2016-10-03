@@ -2,16 +2,13 @@ package com.mikepenz.fastadapter.items;
 
 import android.content.Context;
 import android.support.annotation.CallSuper;
-import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IClickable;
-import com.mikepenz.fastadapter.IExtendedDraggable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 

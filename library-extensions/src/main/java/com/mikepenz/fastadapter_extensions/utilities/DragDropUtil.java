@@ -5,9 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.mikepenz.fastadapter.IExtendedDraggable;
-import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter_extensions.IExtendedDraggable;
 
 /**
  * Created by flisar on 30.09.2016.
