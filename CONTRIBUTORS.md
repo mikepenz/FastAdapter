@@ -30,6 +30,11 @@ FastAdapter contributors (sorted alphabeticaly)
   
   * Basic Unit-Tests
 
+* **[Alireza](https://github.com/meNESS)**
+ 
+  * EndlessRecyclerOnTopScrollListener
+
 * **[jasonsparc](https://github.com/jasonsparc)**
+
 
   * Added `EndlessScrollHelper`
