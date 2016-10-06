@@ -5,13 +5,13 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.FastAdapter;
 
 public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.OnScrollListener {
     private int mPreviousTotal = 0;
     private boolean mLoading = true;
     private int mCurrentPage = 0;
-    private FastItemAdapter mAdapter;
+    private FastAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
     private int mVisibleThreshold = -1;
     private OrientationHelper mOrientationHelper;
@@ -19,15 +19,15 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
     private boolean mAlreadyCalledOnNoMore;
     // how many items your adapter must have at the end?
-    // leave it -1 as it's by default to disable onNoMore() feature if you have only local data
+    // leave it -1 as it's by default to disable onNothingToLoad() feature if you have only local data
     private int mTotalItems = -1;
 
-    public EndlessRecyclerOnTopScrollListener(FastItemAdapter adapter, int totalItems) {
+    public EndlessRecyclerOnTopScrollListener(FastAdapter adapter, int totalItems) {
         this.mAdapter = adapter;
         mTotalItems = totalItems;
     }
 
-    public EndlessRecyclerOnTopScrollListener(FastItemAdapter adapter) {
+    public EndlessRecyclerOnTopScrollListener(FastAdapter adapter) {
         this.mAdapter = adapter;
     }
 
@@ -73,8 +73,8 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
 
             mLoading = true;
         } else {
-            if (isOnNoMoreFeatureEnabled() && needNoMore()) {
-                onNoMore();
+            if (isNothingToLoadFeatureEnabled() && isNothingToLoadNeeded()) {
+                onNothingToLoad();
                 mAlreadyCalledOnNoMore = true;
             }
         }
@@ -97,19 +97,19 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
      */
     public abstract void onLoadMore(int page);
 
-    public boolean isOnNoMoreFeatureEnabled() {
+    public boolean isNothingToLoadFeatureEnabled() {
         return mTotalItems != -1;
     }
 
-    private boolean needNoMore() {
-        return mAdapter.getAdapterItemCount() == mTotalItems && !mAlreadyCalledOnNoMore;
+    private boolean isNothingToLoadNeeded() {
+        return mAdapter.getItemCount() == mTotalItems && !mAlreadyCalledOnNoMore;
     }
 
     /**
      * there's no more data to be loaded, you may want
      * to send a request to server for asking more data
      **/
-    public abstract void onNoMore();
+    public abstract void onNothingToLoad();
 
     private View findOneVisibleChild(int fromIndex, int toIndex, boolean completelyVisible,
                                      boolean acceptPartiallyVisible) {
