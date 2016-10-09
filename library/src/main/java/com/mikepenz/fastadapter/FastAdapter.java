@@ -438,14 +438,20 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                             consumed = mOnPreClickListener.onClick(v, relativeInfo.adapter, item, pos);
                         }
 
-                        //if this is a expandable item :D
+                        //handle the selection if the event was not yet consumed, and we are allowed to select an item (only occurs when we select with long click only)
+                        //this has to happen before expand or collapse. otherwise the position is wrong which is used to select
+                        if (!consumed && !mSelectOnLongClick && mSelectable) {
+                            handleSelection(v, item, pos);
+                        }
+
+                        //if this is a expandable item :D (this has to happen after we handled the selection as we refer to the position)
                         if (!consumed && item instanceof IExpandable) {
                             if (((IExpandable) item).isAutoExpanding() && ((IExpandable) item).getSubItems() != null) {
                                 toggleExpandable(pos);
                             }
                         }
 
-                        //if there should be only one expanded item we want to collapse all the others but the current one
+                        //if there should be only one expanded item we want to collapse all the others but the current one (this has to happen after we handled the selection as we refer to the position)
                         if (!consumed && mOnlyOneExpandedItem) {
                             int[] expandedItems = getExpandedItems();
                             for (int i = expandedItems.length - 1; i >= 0; i--) {
@@ -453,11 +459,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                                     collapse(expandedItems[i], true);
                                 }
                             }
-                        }
-
-                        //handle the selection if the event was not yet consumed, and we are allowed to select an item (only occurs when we select with long click only)
-                        if (!consumed && !mSelectOnLongClick && mSelectable) {
-                            handleSelection(v, item, pos);
                         }
 
                         //before calling the global adapter onClick listener call the item specific onClickListener
