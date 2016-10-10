@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
+import com.mikepenz.fastadapter.listeners.EventHook;
 import com.mikepenz.fastadapter.utils.AdapterUtil;
 
 import java.util.ArrayList;
@@ -95,7 +96,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param eventHook the event hook to be added for an item
      * @return this
      */
-    public FastAdapter<Item> withItemEvent(ClickListenerHelper.EventHook eventHook) {
+    public FastAdapter<Item> withItemEvent(EventHook eventHook) {
         if(clickListenerHelper == null) {
             clickListenerHelper = new ClickListenerHelper<>(this);
         }

@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter.app.items;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -8,8 +9,8 @@ import android.widget.TextView;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
 import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 
@@ -139,10 +140,10 @@ public class CheckBoxSampleItem extends AbstractItem<CheckBoxSampleItem, CheckBo
         }
     }
 
-    public static class CheckBoxClickEvent extends ClickListenerHelper.ClickEventHook<CheckBoxSampleItem> {
+    public static class CheckBoxClickEvent extends ClickEventHook<CheckBoxSampleItem> {
         @Override
-        public View onBind(RecyclerView.ViewHolder viewHolder) {
-            if(viewHolder instanceof CheckBoxSampleItem.ViewHolder) {
+        public View onBind(@NonNull RecyclerView.ViewHolder viewHolder) {
+            if (viewHolder instanceof CheckBoxSampleItem.ViewHolder) {
                 return ((CheckBoxSampleItem.ViewHolder) viewHolder).checkBox;
             }
             return null;

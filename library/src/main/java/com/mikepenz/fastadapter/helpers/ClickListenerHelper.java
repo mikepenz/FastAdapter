@@ -2,13 +2,17 @@ package com.mikepenz.fastadapter.helpers;
 
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.listeners.ClickEventHook;
+import com.mikepenz.fastadapter.listeners.CustomEventHook;
+import com.mikepenz.fastadapter.listeners.EventHook;
+import com.mikepenz.fastadapter.listeners.LongClickEventHook;
+import com.mikepenz.fastadapter.listeners.TouchEventHook;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,9 +37,8 @@ public class ClickListenerHelper<Item extends IItem> {
     }
 
     /**
-     *
      * @param fastAdapter the fastAdapter which manages these items
-     * @param eventHooks the event hooks we want to use for this item
+     * @param eventHooks  the event hooks we want to use for this item
      */
     public ClickListenerHelper(FastAdapter<Item> fastAdapter, List<EventHook> eventHooks) {
         this.mFastAdapter = fastAdapter;
@@ -43,7 +46,6 @@ public class ClickListenerHelper<Item extends IItem> {
     }
 
     /**
-     *
      * @return the added event hooks
      */
     public List<EventHook> getEventHooks() {
@@ -53,6 +55,7 @@ public class ClickListenerHelper<Item extends IItem> {
     /**
      * adds a new list of eventHook
      * note this will not add new event hooks for existing viewHolders after it was created
+     *
      * @param eventHooks a new list of eventHook
      * @return this
      */
@@ -64,6 +67,7 @@ public class ClickListenerHelper<Item extends IItem> {
     /**
      * adds a new eventHook
      * note this will not add new event hooks for existing viewHolders after it was created
+     *
      * @param eventHook a new eventHook
      * @return this
      */
@@ -75,15 +79,16 @@ public class ClickListenerHelper<Item extends IItem> {
 
     /**
      * binds the hooks to the viewHolder
+     *
      * @param viewHolder the viewHolder of the item
      */
     public void bind(@NonNull final RecyclerView.ViewHolder viewHolder) {
-        for(final EventHook event : eventHooks) {
+        for (final EventHook event : eventHooks) {
             View view = event.onBind(viewHolder);
-            if(view == null) {
+            if (view == null) {
                 continue;
             }
-            if(event instanceof ClickEventHook){
+            if (event instanceof ClickEventHook) {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {//we get the adapterPosition from the viewHolder
@@ -95,7 +100,7 @@ public class ClickListenerHelper<Item extends IItem> {
                         }
                     }
                 });
-            } else if(event instanceof LongClickEventHook) {
+            } else if (event instanceof LongClickEventHook) {
                 view.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
@@ -108,7 +113,7 @@ public class ClickListenerHelper<Item extends IItem> {
                         return false;
                     }
                 });
-            } else if(event instanceof TouchEventHook) {
+            } else if (event instanceof TouchEventHook) {
                 view.setOnTouchListener(new View.OnTouchListener() {
                     @Override
                     public boolean onTouch(View v, MotionEvent e) {
@@ -122,30 +127,10 @@ public class ClickListenerHelper<Item extends IItem> {
                         return false;
                     }
                 });
-            } else if(event instanceof CustomEventHook) {
+            } else if (event instanceof CustomEventHook) {
                 ((CustomEventHook) event).onEvent(mFastAdapter, viewHolder, view);
             }
         }
-    }
-
-    public interface EventHook {
-        public @Nullable View onBind(@NonNull RecyclerView.ViewHolder viewHolder);
-    }
-
-    public static abstract class ClickEventHook<Item extends IItem> implements EventHook {
-        public abstract void onClick(View v, int position, FastAdapter<Item> fastAdapter, Item item);
-    }
-
-    public static abstract class LongClickEventHook<Item extends IItem> implements EventHook {
-        public abstract boolean onLongClick(View v, int position, FastAdapter<Item> fastAdapter, Item item);
-    }
-
-    public static abstract class TouchEventHook<Item extends IItem> implements EventHook {
-        public abstract boolean onTouch(View v, MotionEvent event, int position, FastAdapter<Item> fastAdapter, Item item);
-    }
-
-    public static abstract class CustomEventHook<Item extends IItem> implements EventHook {
-        public abstract void onEvent(FastAdapter<Item> fastAdapter, RecyclerView.ViewHolder viewHolder, View view);
     }
 
 
