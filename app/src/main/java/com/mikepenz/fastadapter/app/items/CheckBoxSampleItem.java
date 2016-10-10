@@ -6,7 +6,9 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.app.R;
+import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.materialdrawer.holder.StringHolder;
@@ -134,6 +136,21 @@ public class CheckBoxSampleItem extends AbstractItem<CheckBoxSampleItem, CheckBo
             super(view);
             ButterKnife.bind(this, view);
             this.view = view;
+        }
+    }
+
+    public static class CheckBoxClickEvent extends ClickListenerHelper.ClickEventHook<CheckBoxSampleItem> {
+        @Override
+        public View onBind(RecyclerView.ViewHolder viewHolder) {
+            if(viewHolder instanceof CheckBoxSampleItem.ViewHolder) {
+                return ((CheckBoxSampleItem.ViewHolder) viewHolder).checkBox;
+            }
+            return null;
+        }
+
+        @Override
+        public void onClick(View v, int position, FastAdapter<CheckBoxSampleItem> fastAdapter, CheckBoxSampleItem item) {
+            fastAdapter.toggleSelection(position);
         }
     }
 }

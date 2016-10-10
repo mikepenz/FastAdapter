@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.helpers;
 
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
@@ -90,7 +91,7 @@ public class ClickListenerHelper<Item extends IItem> {
                         //make sure the click was done on a valid item
                         if (pos != RecyclerView.NO_POSITION) {
                             //we update our item with the changed property
-                            ((ClickEventHook<Item>) event).onClick(v, pos, mFastAdapter.getItem(pos));
+                            ((ClickEventHook<Item>) event).onClick(v, pos, mFastAdapter, mFastAdapter.getItem(pos));
                         }
                     }
                 });
@@ -102,7 +103,7 @@ public class ClickListenerHelper<Item extends IItem> {
                         //make sure the click was done on a valid item
                         if (pos != RecyclerView.NO_POSITION) {
                             //we update our item with the changed property
-                            return ((LongClickEventHook<Item>) event).onLongClick(v, pos, mFastAdapter.getItem(pos));
+                            return ((LongClickEventHook<Item>) event).onLongClick(v, pos, mFastAdapter, mFastAdapter.getItem(pos));
                         }
                         return false;
                     }
@@ -116,7 +117,7 @@ public class ClickListenerHelper<Item extends IItem> {
                         //make sure the click was done on a valid item
                         if (pos != RecyclerView.NO_POSITION) {
                             //we update our item with the changed property
-                            return ((TouchEventHook) event).onTouch(v, e, pos, mFastAdapter.getItem(pos));
+                            return ((TouchEventHook) event).onTouch(v, e, pos, mFastAdapter, mFastAdapter.getItem(pos));
                         }
                         return false;
                     }
@@ -128,19 +129,19 @@ public class ClickListenerHelper<Item extends IItem> {
     }
 
     public interface EventHook {
-        public View onBind(RecyclerView.ViewHolder viewHolder);
+        public @Nullable View onBind(@NonNull RecyclerView.ViewHolder viewHolder);
     }
 
     public static abstract class ClickEventHook<Item extends IItem> implements EventHook {
-        public abstract void onClick(View v, int position, Item item);
+        public abstract void onClick(View v, int position, FastAdapter<Item> fastAdapter, Item item);
     }
 
     public static abstract class LongClickEventHook<Item extends IItem> implements EventHook {
-        public abstract boolean onLongClick(View v, int position, Item item);
+        public abstract boolean onLongClick(View v, int position, FastAdapter<Item> fastAdapter, Item item);
     }
 
     public static abstract class TouchEventHook<Item extends IItem> implements EventHook {
-        public abstract boolean onTouch(View v, MotionEvent event, int position, Item item);
+        public abstract boolean onTouch(View v, MotionEvent event, int position, FastAdapter<Item> fastAdapter, Item item);
     }
 
     public static abstract class CustomEventHook<Item extends IItem> implements EventHook {

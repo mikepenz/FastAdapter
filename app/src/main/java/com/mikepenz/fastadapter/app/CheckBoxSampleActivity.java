@@ -68,20 +68,7 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
                 return true;
             }
         });
-        fastItemAdapter.withItemEvent(new ClickListenerHelper.ClickEventHook<CheckBoxSampleItem>() {
-            @Override
-            public View onBind(RecyclerView.ViewHolder viewHolder) {
-                if(viewHolder instanceof CheckBoxSampleItem.ViewHolder) {
-                    return ((CheckBoxSampleItem.ViewHolder) viewHolder).checkBox;
-                }
-                return null;
-            }
-
-            @Override
-            public void onClick(View v, int position, CheckBoxSampleItem item) {
-                fastItemAdapter.toggleSelection(position);
-            }
-        });
+        fastItemAdapter.withItemEvent(new CheckBoxSampleItem.CheckBoxClickEvent());
 
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
