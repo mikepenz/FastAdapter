@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
 import com.mikepenz.fastadapter.utils.AdapterUtil;
 
 import java.util.ArrayList;
@@ -65,6 +66,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     // we need to remember all expanded items to recreate them after orientation change
     private SparseIntArray mExpanded = new SparseIntArray();
 
+    // event hooks for the items
+    private ClickListenerHelper<Item> clickListenerHelper;
+
     // the listeners which can be hooked on an item
     private OnClickListener<Item> mOnPreClickListener;
     private OnClickListener<Item> mOnClickListener;
@@ -83,6 +87,20 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public FastAdapter() {
         setHasStableIds(true);
+    }
+
+    /**
+     * adds a new event hook for an item
+     * NOTE: this has to be called before adding the first items, as this won't be called anymore after the ViewHolders were created
+     * @param eventHook the event hook to be added for an item
+     * @return this
+     */
+    public FastAdapter<Item> withItemEvent(ClickListenerHelper.EventHook eventHook) {
+        if(clickListenerHelper == null) {
+            clickListenerHelper = new ClickListenerHelper<>(this);
+        }
+        clickListenerHelper.addEventHook(eventHook);
+        return this;
     }
 
     /**
@@ -1773,6 +1791,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public RecyclerView.ViewHolder onPostCreateViewHolder(RecyclerView.ViewHolder viewHolder) {
+            if(clickListenerHelper != null) {
+                clickListenerHelper.bind(viewHolder);
+            }
             return viewHolder;
         }
     }

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.CheckBoxSampleItem;
 import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
@@ -67,22 +68,18 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        fastItemAdapter.withOnCreateViewHolderListener(new FastAdapter.OnCreateViewHolderListener() {
+        fastItemAdapter.withItemEvent(new ClickListenerHelper.ClickEventHook<CheckBoxSampleItem>() {
             @Override
-            public RecyclerView.ViewHolder onPreCreateViewHolder(ViewGroup parent, int viewType) {
-                return fastItemAdapter.getTypeInstance(viewType).getViewHolder(parent);
+            public View onBind(RecyclerView.ViewHolder viewHolder) {
+                if(viewHolder instanceof CheckBoxSampleItem.ViewHolder) {
+                    return ((CheckBoxSampleItem.ViewHolder) viewHolder).checkBox;
+                }
+                return null;
             }
 
             @Override
-            public RecyclerView.ViewHolder onPostCreateViewHolder(final RecyclerView.ViewHolder viewHolder) {
-                mClickListenerHelper.listen(viewHolder, ((CheckBoxSampleItem.ViewHolder) viewHolder).checkBox, new ClickListenerHelper.OnClickListener<CheckBoxSampleItem>() {
-                    @Override
-                    public void onClick(View v, int position, CheckBoxSampleItem item) {
-                        fastItemAdapter.toggleSelection(position);
-                    }
-                });
-                return viewHolder;
+            public void onClick(View v, int position, CheckBoxSampleItem item) {
+                fastItemAdapter.toggleSelection(position);
             }
         });
 
