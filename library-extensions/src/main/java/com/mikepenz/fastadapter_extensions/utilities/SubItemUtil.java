@@ -73,11 +73,38 @@ public class SubItemUtil {
     }
 
     private static int countItems(List<IItem> items, boolean countHeaders, boolean subItemsOnly, IPredicate predicate) {
+        return getAllItems(items, countHeaders, subItemsOnly, predicate).size();
+    }
+
+    /**
+     * retrieves a list of the items in the adapter, respecting subitems regardless of there current visibility
+     *
+     * @param adapter   the adapter instance
+     * @param predicate predicate against which each item will be checked before adding it to the result
+     * @return list of items in the adapter that apply to the predicate
+     */
+    public static List<IItem> getAllItems(final IItemAdapter adapter, IPredicate predicate) {
+        return getAllItems(adapter.getAdapterItems(), true, false, predicate);
+    }
+
+    /**
+     * retrieves a list of the items in the adapter, respecting subitems regardless of there current visibility
+     *
+     * @param adapter      the adapter instance
+     * @param countHeaders if true, headers will be counted as well
+     * @return list of items in the adapter
+     */
+    public static List<IItem> getAllItems(final IItemAdapter adapter, boolean countHeaders) {
+        return getAllItems(adapter.getAdapterItems(), countHeaders, false, null);
+    }
+
+    private static List<IItem> getAllItems(List<IItem> items, boolean countHeaders, boolean subItemsOnly, IPredicate predicate) {
+        List<IItem> res = new ArrayList<>();
         if (items == null || items.size() == 0) {
-            return 0;
+            return res;
         }
 
-        int temp, count = 0;
+        int temp;
         int itemCount = items.size();
         IItem item;
         List<IItem> subItems;
@@ -86,20 +113,21 @@ public class SubItemUtil {
             if (item instanceof IExpandable && ((IExpandable) item).getSubItems() != null) {
                 subItems = ((IExpandable) item).getSubItems();
                 if (predicate == null) {
-                    count += subItems != null ? subItems.size() : 0;
-                    count += countItems(subItems, countHeaders, true, predicate);
+                    if (subItems != null && subItems.size() > 0)
+                        res.addAll(subItems);
+                    res.addAll(getAllItems(subItems, countHeaders, true, predicate));
                     if (countHeaders) {
-                        count++;
+                        res.add(item);
                     }
                 } else {
                     temp = subItems != null ? subItems.size() : 0;
                     for (int j = 0; j < temp; j++) {
                         if (predicate.apply(subItems.get(j))) {
-                            count++;
+                            res.add(subItems.get(j));
                         }
                     }
                     if (countHeaders && predicate.apply(item)) {
-                        count++;
+                        res.add(item);
                     }
                 }
             }
@@ -107,14 +135,14 @@ public class SubItemUtil {
             // sub items will be counted in above if statement!
             else if (!subItemsOnly && getParent(item) == null) {
                 if (predicate == null) {
-                    count++;
+                    res.add(item);
                 } else if (predicate.apply(item)) {
-                    count++;
+                    res.add(item);
                 }
             }
 
         }
-        return count;
+        return res;
     }
 
     /**
