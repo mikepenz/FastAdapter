@@ -1,13 +1,16 @@
 package com.mikepenz.fastadapter.app.items;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 
@@ -134,6 +137,21 @@ public class CheckBoxSampleItem extends AbstractItem<CheckBoxSampleItem, CheckBo
             super(view);
             ButterKnife.bind(this, view);
             this.view = view;
+        }
+    }
+
+    public static class CheckBoxClickEvent extends ClickEventHook<CheckBoxSampleItem> {
+        @Override
+        public View onBind(@NonNull RecyclerView.ViewHolder viewHolder) {
+            if (viewHolder instanceof CheckBoxSampleItem.ViewHolder) {
+                return ((CheckBoxSampleItem.ViewHolder) viewHolder).checkBox;
+            }
+            return null;
+        }
+
+        @Override
+        public void onClick(View v, int position, FastAdapter<CheckBoxSampleItem> fastAdapter, CheckBoxSampleItem item) {
+            fastAdapter.toggleSelection(position);
         }
     }
 }
