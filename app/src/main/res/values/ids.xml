@@ -2,6 +2,7 @@
 
 <resources>
     <item name="fastadapter_sample_item_id" type="id" />
+    <item name="fastadapter_sub_item_id" type="id" />
     <item name="fastadapter_expandable_item_id" type="id" />
     <item name="fastadapter_image_item_id" type="id" />
     <item name="fastadapter_simple_image_item_id" type="id" />

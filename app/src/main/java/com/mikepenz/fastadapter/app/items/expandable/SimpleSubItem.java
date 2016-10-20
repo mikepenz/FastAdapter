@@ -77,7 +77,7 @@ public class SimpleSubItem<Parent extends IItem & IExpandable & ISubItem & IClic
      */
     @Override
     public int getType() {
-        return R.id.fastadapter_sample_item_id;
+        return R.id.fastadapter_sub_item_id;
     }
 
     /**
