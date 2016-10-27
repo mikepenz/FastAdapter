@@ -1,5 +1,29 @@
 ###Upgrade Notes
 
+#### v2.0.0 
+* This release brings new interfaces, and many changes to the expandable behavior. There is now also a `unbindView` method you have to implement for your `IItem`s.
+
+**SHORT OVERVIEW**
+* If you have items implemented by using the interface you have to implement the new methods (**unbindView**)
+* If you have expandable items make sure to adjust the generic type definitions as metioned below. Check out the `AbstractExpandableItem` to simplify this for you
+* If you use the `MaterialDrawer`, the `AboutLibraries` in your project, please make sure to update them so the changed interfaces do not cause conflicts
+
+**DETAILED**
+* New `unbindView` method was added to the `IItem` --> This method is called when the current item is no longer set and before the `ViewHolder` is used for the next item
+ * You should move your view resetting logic here, or for example glide image loading canceling
+* `IExpandable` generic types changes
+ * it is now required to define the type which will be used for the subItems. This can be an implementation or `ISubItem`. We now require this, as we will keep the references between childs, and parents.
+ * this allows more optimizations, and many additional usecases
+* New `ISubItem` interface added 
+ * items serving as subitems, have to implement this. 
+* New `AbstractExpandableItem` added, which combines `IExpandable` and `ISubItem` with an `AbstractItem` to simplify your life
+* A new `SubItemUtil` was introduced which simplifies some use cases when working with expandable / collapsing lists
+
+**Extensions**
+* new `EndlessRecyclerOnTopScrollListener` available
+* new `IExtendedDraggable` and `DragDropUtil` introduced
+* new `RangeSelectorHelper` introduced
+
 #### v1.8.0
 * This release bring a breaking interface change. Your items now have to implement `bindView(ViewHolder holder, List payloads)` instead of `bindView(VH holder)`. 
  * The additional payload can be used to implement a more performant view updating when only parts of the item have changed. Please also refer to the `DiffUtils` which may provide the payload.
