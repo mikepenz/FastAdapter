@@ -46,6 +46,14 @@ public interface IAdapter<Item extends IItem> {
      */
     int getAdapterPosition(Item item);
 
+    /**
+     * Searches for the given item and calculates it's relative position
+     *
+     * @param identifier the identifier of an item which is searched for
+     * @return the relative position
+     */
+    int getAdapterPosition(long identifier);
+
 
     /**
      * Returns the global position based on the relative position given

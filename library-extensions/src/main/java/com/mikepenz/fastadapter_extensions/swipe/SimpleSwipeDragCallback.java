@@ -33,7 +33,7 @@ public class SimpleSwipeDragCallback extends SimpleDragCallback {
     }
 
     public SimpleSwipeDragCallback withLeaveBehindSwipeLeft(Drawable d) {
-        setDefaultSwipeDirs(getSwipeDirs(null, null)|ItemTouchHelper.LEFT);
+        setDefaultSwipeDirs(getSwipeDirs(null, null) | ItemTouchHelper.LEFT);
         simpleSwipeCallback.withLeaveBehindSwipeLeft(d);
         return this;
     }

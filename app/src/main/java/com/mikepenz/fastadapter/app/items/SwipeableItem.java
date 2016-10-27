@@ -112,6 +112,15 @@ public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.Vie
         viewHolder.swipedActionRunnable = this.swipedAction;
     }
 
+    @Override
+    public void unbindView(ViewHolder holder) {
+        super.unbindView(holder);
+        holder.name.setText(null);
+        holder.description.setText(null);
+        holder.swipedAction.setText(null);
+        holder.swipedText.setText(null);
+        holder.swipedActionRunnable = null;
+    }
 
     /**
      * our ItemFactory implementation which creates the ViewHolder for our adapter.

@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter.app.items;
+package com.mikepenz.fastadapter.app.items.expandable;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -7,11 +7,13 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.mikepenz.fastadapter.IClickable;
 import com.mikepenz.fastadapter.IDraggable;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.items.AbstractExpandableItem;
 import com.mikepenz.fastadapter.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.materialdrawer.holder.StringHolder;
@@ -22,10 +24,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * Created by mikepenz on 28.12.15.
- */
-public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> implements IExpandable<SampleItem, IItem>, IDraggable<SampleItem, IItem> {
+public class SimpleSubItem<Parent extends IItem & IExpandable & ISubItem & IClickable> extends AbstractExpandableItem<Parent, SimpleSubItem.ViewHolder, SimpleSubItem<Parent>> implements IDraggable<SimpleSubItem, IItem> {
     //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
     private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
@@ -33,58 +32,30 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
     public StringHolder name;
     public StringHolder description;
 
-    private List<IItem> mSubItems;
-    private boolean mExpanded = false;
     private boolean mIsDraggable = true;
 
-    public SampleItem withHeader(String header) {
+    public SimpleSubItem<Parent> withHeader(String header) {
         this.header = header;
         return this;
     }
 
-    public SampleItem withName(String Name) {
+    public SimpleSubItem<Parent> withName(String Name) {
         this.name = new StringHolder(Name);
         return this;
     }
 
-    public SampleItem withName(@StringRes int NameRes) {
+    public SimpleSubItem<Parent> withName(@StringRes int NameRes) {
         this.name = new StringHolder(NameRes);
         return this;
     }
 
-    public SampleItem withDescription(String description) {
+    public SimpleSubItem<Parent> withDescription(String description) {
         this.description = new StringHolder(description);
         return this;
     }
 
-    public SampleItem withDescription(@StringRes int descriptionRes) {
+    public SimpleSubItem<Parent> withDescription(@StringRes int descriptionRes) {
         this.description = new StringHolder(descriptionRes);
-        return this;
-    }
-
-    @Override
-    public boolean isExpanded() {
-        return mExpanded;
-    }
-
-    @Override
-    public SampleItem withIsExpanded(boolean expaned) {
-        mExpanded = expaned;
-        return this;
-    }
-
-    @Override
-    public boolean isAutoExpanding() {
-        return true;
-    }
-
-    @Override
-    public List<IItem> getSubItems() {
-        return mSubItems;
-    }
-
-    public SampleItem withSubItems(List<IItem> subItems) {
-        this.mSubItems = subItems;
         return this;
     }
 
@@ -94,11 +65,10 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
     }
 
     @Override
-    public SampleItem withIsDraggable(boolean draggable) {
+    public SimpleSubItem withIsDraggable(boolean draggable) {
         this.mIsDraggable = draggable;
         return this;
     }
-
 
     /**
      * defines the type defining this item. must be unique. preferably an id
@@ -107,7 +77,7 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
      */
     @Override
     public int getType() {
-        return R.id.fastadapter_sample_item_id;
+        return R.id.fastadapter_sub_item_id;
     }
 
     /**
@@ -138,6 +108,13 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
         StringHolder.applyTo(name, viewHolder.name);
         //set the text for the description or hide
         StringHolder.applyToOrHide(description, viewHolder.description);
+    }
+
+    @Override
+    public void unbindView(ViewHolder holder) {
+        super.unbindView(holder);
+        holder.name.setText(null);
+        holder.description.setText(null);
     }
 
     /**

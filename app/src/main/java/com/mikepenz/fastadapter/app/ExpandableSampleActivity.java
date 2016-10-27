@@ -11,8 +11,8 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.app.items.ExpandableItem;
-import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
+import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -56,18 +56,25 @@ public class ExpandableSampleActivity extends AppCompatActivity {
         List<IItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
             if (i % 10 == 0) {
-                ExpandableItem expandableItem = new ExpandableItem().withName("Test " + i).withIdentifier(100 + 1);
+                SimpleSubExpandableItem expandableItem = new SimpleSubExpandableItem();
+                expandableItem
+                        .withName("Test " + i)
+                        .withIdentifier(100 + 1);
 
                 //add subitems so we can showcase the collapsible functionality
                 List<IItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 5; ii++) {
-                    subItems.add(new SampleItem().withName("-- Test " + ii).withIdentifier(1000 + ii));
+                    SimpleSubItem sampleItem = new SimpleSubItem();
+                    sampleItem
+                            .withName("-- Test " + ii)
+                            .withIdentifier(1000 + ii);
+                    subItems.add(sampleItem);
                 }
                 expandableItem.withSubItems(subItems);
 
                 items.add(expandableItem);
             } else {
-                items.add(new SampleItem().withName("Test " + i).withIdentifier(100 + i));
+                items.add(new SimpleSubItem().withName("Test " + i).withIdentifier(100 + i));
             }
         }
         fastItemAdapter.add(items);

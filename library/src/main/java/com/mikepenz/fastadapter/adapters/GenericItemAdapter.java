@@ -40,9 +40,10 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      * @return the list with all model objects
      */
     public List<Model> getModels() {
-        List<Model> models = new ArrayList<>();
-        for (Item item : getAdapterItems()) {
-            models.add(item.getModel());
+        int size = getAdapterItems().size();
+        List<Model> models = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            models.add(getAdapterItems().get(i).getModel());
         }
         return models;
     }
@@ -185,9 +186,10 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
             return Collections.emptyList();
         }
 
-        List<Item> items = new ArrayList<>(models.size());
-        for (Model model : models) {
-            items.add(toItem(model));
+        int size = models.size();
+        List<Item> items = new ArrayList<>(size);
+        for (int i = 0; i < size; i++) {
+            items.add(toItem(models.get(i)));
         }
         return items;
     }

@@ -19,7 +19,7 @@ import android.widget.Toast;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -56,7 +56,7 @@ public class SortActivity extends AppCompatActivity {
     RecyclerView recyclerView;
 
     //save our FastAdapter
-    private FastItemAdapter<SampleItem> fastItemAdapter;
+    private FastItemAdapter<SimpleItem> fastItemAdapter;
 
     @SortingStrategy
     private int sortingStrategy;
@@ -81,10 +81,10 @@ public class SortActivity extends AppCompatActivity {
         fastItemAdapter.withSelectable(true);
 
         //configure our fastAdapter
-        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
+        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<SimpleItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<SampleItem> adapter,
-                                   SampleItem item, int position) {
+            public boolean onClick(View v, IAdapter<SimpleItem> adapter,
+                                   SimpleItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()),
                         Toast.LENGTH_LONG).show();
                 return false;
@@ -99,7 +99,7 @@ public class SortActivity extends AppCompatActivity {
 
         if (savedInstanceState != null) {
             //Retrieve the previous sorting strategy from the instance state
-            sortingStrategy = savedInstanceState.getInt("sorting_strategy");
+            sortingStrategy = toSortingStrategy(savedInstanceState.getInt("sorting_strategy"));
         } else {
             //Set the default so
             sortingStrategy = SORT_NONE;
@@ -117,6 +117,11 @@ public class SortActivity extends AppCompatActivity {
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(false);
+    }
+
+    @SortingStrategy
+    int toSortingStrategy(int val) {
+        return val;
     }
 
     @Override
@@ -180,7 +185,7 @@ public class SortActivity extends AppCompatActivity {
      * @return The comparator or null.
      */
     @Nullable
-    private Comparator<SampleItem> getComparator() {
+    private Comparator<SimpleItem> getComparator() {
         switch (sortingStrategy) {
             case SORT_ASCENDING:
                 return new AlphabetComparatorAscending();
@@ -198,8 +203,8 @@ public class SortActivity extends AppCompatActivity {
      *
      * @return The new list.
      */
-    private List<SampleItem> generateUnsortedList() {
-        ArrayList<SampleItem> result = new ArrayList<>(26);
+    private List<SimpleItem> generateUnsortedList() {
+        ArrayList<SimpleItem> result = new ArrayList<>(26);
 
         for (int i = 0; i < 26; i++) {
             result.add(makeItem(i));
@@ -216,8 +221,8 @@ public class SortActivity extends AppCompatActivity {
      * @param position The position of the letter in the alphabet.
      * @return The new item.
      */
-    private SampleItem makeItem(@IntRange(from = 0, to = 25) int position) {
-        SampleItem result = new SampleItem();
+    private SimpleItem makeItem(@IntRange(from = 0, to = 25) int position) {
+        SimpleItem result = new SimpleItem();
 
         result.withName(ALPHABET[position]);
 
@@ -246,9 +251,9 @@ public class SortActivity extends AppCompatActivity {
     /**
      * A simple Comparator to sort the items ascending.
      */
-    private class AlphabetComparatorAscending implements Comparator<SampleItem>, Serializable {
+    private class AlphabetComparatorAscending implements Comparator<SimpleItem>, Serializable {
         @Override
-        public int compare(SampleItem lhs, SampleItem rhs) {
+        public int compare(SimpleItem lhs, SimpleItem rhs) {
             return lhs.name.getText().compareTo(rhs.name.getText());
         }
     }
@@ -256,9 +261,9 @@ public class SortActivity extends AppCompatActivity {
     /**
      * A simple Comparator to sort the items descending.
      */
-    private class AlphabetComparatorDescending implements Comparator<SampleItem>, Serializable {
+    private class AlphabetComparatorDescending implements Comparator<SimpleItem>, Serializable {
         @Override
-        public int compare(SampleItem lhs, SampleItem rhs) {
+        public int compare(SimpleItem lhs, SimpleItem rhs) {
             return rhs.name.getText().compareTo(lhs.name.getText());
         }
     }

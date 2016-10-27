@@ -10,8 +10,9 @@ import android.widget.TextView;
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.app.items.ExpandableItem;
-import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.app.items.SimpleItem;
+import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
+import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.security.SecureRandom;
@@ -28,10 +29,13 @@ public class StickyHeaderAdapter extends AbstractAdapter implements StickyRecycl
         IItem item = getItem(position);
 
         //in our sample we want a separate header per first letter of our items
-        if (item instanceof SampleItem && ((SampleItem) item).header != null) {
-            return ((SampleItem) item).header.charAt(0);
-        } else if (item instanceof ExpandableItem && ((ExpandableItem) item).header != null) {
-            return ((ExpandableItem) item).header.charAt(0);
+        //this if is not necessary for your code, we only use it as this sticky header is reused for different item implementations
+        if (item instanceof SimpleItem && ((SimpleItem) item).header != null) {
+            return ((SimpleItem) item).header.charAt(0);
+        } else if (item instanceof SimpleSubItem && ((SimpleSubItem) item).header != null) {
+            return ((SimpleSubItem) item).header.charAt(0);
+        } else if (item instanceof SimpleSubExpandableItem && ((SimpleSubExpandableItem) item).header != null) {
+            return ((SimpleSubExpandableItem) item).header.charAt(0);
         }
         return -1;
     }
@@ -49,12 +53,15 @@ public class StickyHeaderAdapter extends AbstractAdapter implements StickyRecycl
         TextView textView = (TextView) holder.itemView;
 
         IItem item = getItem(position);
-        if (item instanceof SampleItem && ((SampleItem) item).header != null) {
+        if (item instanceof SimpleItem && ((SimpleItem) item).header != null) {
             //based on the position we set the headers text
-            textView.setText(String.valueOf(((SampleItem) item).header.charAt(0)));
-        } else if (item instanceof ExpandableItem && ((ExpandableItem) item).header != null) {
+            textView.setText(String.valueOf(((SimpleItem) item).header.charAt(0)));
+        } else if (item instanceof SimpleSubItem && ((SimpleSubItem) item).header != null) {
             //based on the position we set the headers text
-            textView.setText(String.valueOf(((ExpandableItem) item).header.charAt(0)));
+            textView.setText(String.valueOf(((SimpleSubItem) item).header.charAt(0)));
+        } else if (item instanceof SimpleSubExpandableItem && ((SimpleSubExpandableItem) item).header != null) {
+            //based on the position we set the headers text
+            textView.setText(String.valueOf(((SimpleSubExpandableItem) item).header.charAt(0)));
         }
         holder.itemView.setBackgroundColor(getRandomColor());
     }
@@ -96,6 +103,11 @@ public class StickyHeaderAdapter extends AbstractAdapter implements StickyRecycl
 
     @Override
     public int getAdapterPosition(IItem item) {
+        return -1;
+    }
+
+    @Override
+    public int getAdapterPosition(long identifier) {
         return -1;
     }
 

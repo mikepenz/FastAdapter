@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
@@ -67,24 +66,7 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-        fastItemAdapter.withOnCreateViewHolderListener(new FastAdapter.OnCreateViewHolderListener() {
-            @Override
-            public RecyclerView.ViewHolder onPreCreateViewHolder(ViewGroup parent, int viewType) {
-                return fastItemAdapter.getTypeInstance(viewType).getViewHolder(parent);
-            }
-
-            @Override
-            public RecyclerView.ViewHolder onPostCreateViewHolder(final RecyclerView.ViewHolder viewHolder) {
-                mClickListenerHelper.listen(viewHolder, ((CheckBoxSampleItem.ViewHolder) viewHolder).checkBox, new ClickListenerHelper.OnClickListener<CheckBoxSampleItem>() {
-                    @Override
-                    public void onClick(View v, int position, CheckBoxSampleItem item) {
-                        fastItemAdapter.toggleSelection(position);
-                    }
-                });
-                return viewHolder;
-            }
-        });
+        fastItemAdapter.withItemEvent(new CheckBoxSampleItem.CheckBoxClickEvent());
 
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);

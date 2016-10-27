@@ -30,6 +30,11 @@ public class ProgressItem extends AbstractItem<ProgressItem, ProgressItem.ViewHo
         super.bindView(holder, payloads);
     }
 
+    @Override
+    public void unbindView(ViewHolder holder) {
+
+    }
+
     protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
         public ViewHolder create(View v) {
             return new ViewHolder(v);

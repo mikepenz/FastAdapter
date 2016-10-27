@@ -14,7 +14,7 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
-import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.materialize.MaterializeBuilder;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
@@ -69,10 +69,10 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
         rv.addItemDecoration(decoration);
 
         //fill with some sample data
-        headerAdapter.add(new SampleItem().withName("Header").withIdentifier(1));
+        headerAdapter.add(new SimpleItem().withName("Header").withIdentifier(1));
         List<IItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
-            items.add(new SampleItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(100 + i));
+            items.add(new SimpleItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(100 + i));
         }
         itemAdapter.add(items);
 

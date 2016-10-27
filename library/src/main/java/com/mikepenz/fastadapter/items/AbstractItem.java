@@ -21,7 +21,7 @@ import java.util.List;
  * Created by mikepenz on 14.07.15.
  * Implements the general methods of the IItem interface to speed up development.
  */
-public abstract class AbstractItem<Item extends AbstractItem<?, ?>, VH extends RecyclerView.ViewHolder> implements IItem<Item, VH>, IClickable<Item> {
+public abstract class AbstractItem<Item extends IItem & IClickable, VH extends RecyclerView.ViewHolder> implements IItem<Item, VH>, IClickable<Item> {
     // the identifier for this item
     protected long mIdentifier = -1;
 
@@ -182,11 +182,16 @@ public abstract class AbstractItem<Item extends AbstractItem<?, ?>, VH extends R
 
     @Override
     @CallSuper
-    public void bindView(VH holder, List payloads) {
+    public void bindView(final VH holder, List payloads) {
         //set the selected state of this item. force this otherwise it may is missed when implementing an item
         holder.itemView.setSelected(isSelected());
         //set the tag of this item to this object (can be used when retrieving the view)
         holder.itemView.setTag(this);
+    }
+
+    @Override
+    public void unbindView(VH holder) {
+
     }
 
     /**

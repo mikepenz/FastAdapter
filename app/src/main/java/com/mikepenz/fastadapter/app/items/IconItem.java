@@ -4,6 +4,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import com.mikepenz.fastadapter.IExpandable;
+import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
@@ -18,11 +21,12 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class IconItem extends AbstractItem<IconItem, IconItem.ViewHolder> {
+public class IconItem<T extends IItem & IExpandable> extends AbstractItem<IconItem<T>, IconItem.ViewHolder> implements ISubItem<IconItem, T> {
     //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
     private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
     public IIcon mIcon;
+    private T mParent;
 
     /**
      * setter method for the Icon
@@ -32,6 +36,17 @@ public class IconItem extends AbstractItem<IconItem, IconItem.ViewHolder> {
      */
     public IconItem withIcon(IIcon icon) {
         this.mIcon = icon;
+        return this;
+    }
+
+    @Override
+    public T getParent() {
+        return mParent;
+    }
+
+    @Override
+    public IconItem withParent(T parent) {
+        mParent = parent;
         return this;
     }
 
@@ -67,6 +82,12 @@ public class IconItem extends AbstractItem<IconItem, IconItem.ViewHolder> {
         //define our data for the view
         viewHolder.image.setIcon(mIcon);
         viewHolder.name.setText(mIcon.getName());
+    }
+
+    @Override
+    public void unbindView(ViewHolder holder) {
+        super.unbindView(holder);
+        holder.image.setImageDrawable(null);
     }
 
     /**

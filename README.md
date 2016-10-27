@@ -45,9 +45,25 @@ compile('com.mikepenz:fastadapter:1.8.2@aar') {
 }
 ```
 
+Pre release of v2.x
+
+```gradle
+compile('com.mikepenz:fastadapter:2.0.0.b4-SNAPSHOT@aar') {
+	transitive = true
+}
+```
+
 All additions are included in the following dependency.
 ```gradle
 compile 'com.mikepenz:fastadapter-extensions:1.8.0@aar'
+//The tiny Materialize library used for its useful helper classes
+compile 'com.mikepenz:materialize:1.0.0@aar'
+```
+
+Pre release of v2.x
+
+```gradle
+compile 'com.mikepenz:fastadapter-extensions:2.0.0.b4-SNAPSHOT@aar'
 //The tiny Materialize library used for its useful helper classes
 compile 'com.mikepenz:materialize:1.0.0@aar'
 ```
@@ -86,6 +102,14 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
         viewHolder.name.setText(name);
         //set the text for the description or hide
         viewHolder.description.setText(description);
+    }
+
+    //reset the view here (this is an optional method, but recommended)
+    @Override
+    public void unbindView(ViewHolder holder) {
+        super.unbindView(holder);
+        holder.name.setText(null);
+        holder.description.setText(null);
     }
 
     //The viewHolder used for this item. This viewHolder is always reused by the RecyclerView so scrolling is blazing fast
@@ -200,7 +224,7 @@ For the complete tutorial and more features such as multi-select and CAB check o
 
 ##Advanced Usage
 ###Proguard
-If you use the `FastAdapter` and enabled **Proguard** you have to implement a `ViewHolderFactory` for you `Item`. ([SampleItem#L143](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/items/SampleItem.java#L143))
+If you use the `FastAdapter` and enabled **Proguard** you have to implement a `ViewHolderFactory` for you `Item`. ([SimpleItem#L145](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/items/SimpleItem.java#L145))
 ```java
 //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
 private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
@@ -229,6 +253,24 @@ public ViewHolderFactory<? extends ViewHolder> getFactory() {
 
 Using the `GenericItemAdapter` with `proguard` requires you to use the non generic implementation by providing a `Function` to the following constructur: [GenericItemAdapter(Function<Model, Item> itemFactory) ](https://github.com/mikepenz/FastAdapter/blob/develop/library/src/main/java/com/mikepenz/fastadapter/adapters/GenericItemAdapter.java#L32)
 
+###ExpandableItems
+The `FastAdapter` comes with native support for expandable items. These items have to implement the `IExpandable` interface, and the sub items the `ISubItem` interface. This allows better support. 
+The sample app provides sample implementations of those. (Those in the sample are kept generic which allows them to be used with different parent / subitems)
+
+As of the way how `SubItems` and their state are handled it is highly recommended to use the `identifier` based `StateManagement`. Just add `withPositionBasedStateManagement(false)` to your `FastAdapter` setup.
+
+A simple item just needs to extend from the `AbstractExpandableItem` and provide the `Parent`, the `ViewHolder` and the `SubItem`s it will contain as type.
+```java
+public class SimpleSubExpandableItem extends AbstractExpandableItem<SimpleSubExpandableItem, SimpleSubExpandableItem.ViewHolder, SubItem> {
+
+    /**
+     * BASIC ITEM IMPLEMENTATION
+     */
+}
+```
+
+
+
 
 ## Libs used in sample app:
 Mike Penz:
@@ -253,6 +295,13 @@ Other Libs:
 #Contributors
 
 This free, open source software was also made possible by a group of volunteers that put many hours of hard work into it. See the [CONTRIBUTORS.md](CONTRIBUTORS.md) file for details.
+
+##Special mentions
+
+I want to give say thanks to some special contributors who provided some huge PRs and many changes to improve this great library. 
+
+* **[Fabian Terhorst](https://github.com/FabianTerhorst)**
+* **[MFlisar](https://github.com/MFlisar)**
 
 #License
 

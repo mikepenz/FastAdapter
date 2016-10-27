@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter.app.items;
+package com.mikepenz.fastadapter.app.items.expandable;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -13,8 +13,9 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.items.AbstractExpandableItem;
 import com.mikepenz.fastadapter.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.materialdrawer.holder.StringHolder;
@@ -28,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.ViewHolder> implements IExpandable<ExpandableItem, IItem> {
+public class SimpleSubExpandableItem<Parent extends IItem & IExpandable, SubItem extends IItem & ISubItem> extends AbstractExpandableItem<SimpleSubExpandableItem<Parent, SubItem>, SimpleSubExpandableItem.ViewHolder, SubItem> {
     //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
     private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
@@ -36,84 +37,55 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
     public StringHolder name;
     public StringHolder description;
 
-    private List<IItem> mSubItems;
-    private boolean mExpanded = false;
+    private FastAdapter.OnClickListener<SimpleSubExpandableItem> mOnClickListener;
 
-    private FastAdapter.OnClickListener<ExpandableItem> mOnClickListener;
-
-    public ExpandableItem withHeader(String header) {
+    public SimpleSubExpandableItem<Parent, SubItem> withHeader(String header) {
         this.header = header;
         return this;
     }
 
-    public ExpandableItem withName(String Name) {
+    public SimpleSubExpandableItem<Parent, SubItem> withName(String Name) {
         this.name = new StringHolder(Name);
         return this;
     }
 
-    public ExpandableItem withName(@StringRes int NameRes) {
+    public SimpleSubExpandableItem<Parent, SubItem> withName(@StringRes int NameRes) {
         this.name = new StringHolder(NameRes);
         return this;
     }
 
-    public ExpandableItem withDescription(String description) {
+    public SimpleSubExpandableItem<Parent, SubItem> withDescription(String description) {
         this.description = new StringHolder(description);
         return this;
     }
 
-    public ExpandableItem withDescription(@StringRes int descriptionRes) {
+    public SimpleSubExpandableItem<Parent, SubItem> withDescription(@StringRes int descriptionRes) {
         this.description = new StringHolder(descriptionRes);
         return this;
     }
 
-    @Override
-    public boolean isExpanded() {
-        return mExpanded;
-    }
-
-    @Override
-    public ExpandableItem withIsExpanded(boolean expanded) {
-        mExpanded = expanded;
-        return this;
-    }
-
-    @Override
-    public List<IItem> getSubItems() {
-        return mSubItems;
-    }
-
-    @Override
-    public boolean isAutoExpanding() {
-        return true;
-    }
-
-    public ExpandableItem withSubItems(List<IItem> subItems) {
-        this.mSubItems = subItems;
-        return this;
-    }
-
-    public FastAdapter.OnClickListener<ExpandableItem> getOnClickListener() {
+    public FastAdapter.OnClickListener<SimpleSubExpandableItem> getOnClickListener() {
         return mOnClickListener;
     }
 
-    public ExpandableItem withOnClickListener(FastAdapter.OnClickListener<ExpandableItem> mOnClickListener) {
+    public SimpleSubExpandableItem<Parent, SubItem> withOnClickListener(FastAdapter.OnClickListener<SimpleSubExpandableItem> mOnClickListener) {
         this.mOnClickListener = mOnClickListener;
         return this;
     }
 
     //we define a clickListener in here so we can directly animate
-    final private FastAdapter.OnClickListener<ExpandableItem> onClickListener = new FastAdapter.OnClickListener<ExpandableItem>() {
+    final private FastAdapter.OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> onClickListener = new FastAdapter.OnClickListener<SimpleSubExpandableItem<Parent, SubItem>>() {
         @Override
-        public boolean onClick(View v, IAdapter adapter, ExpandableItem item, int position) {
+        public boolean onClick(View v, IAdapter adapter, SimpleSubExpandableItem item, int position) {
             if (item.getSubItems() != null) {
                 if (!item.isExpanded()) {
                     ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(180).start();
                 } else {
                     ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(0).start();
                 }
-                return mOnClickListener != null ? mOnClickListener.onClick(v, adapter, item, position) : true;
+                return mOnClickListener == null || mOnClickListener.onClick(v, adapter, item, position);
             }
-            return mOnClickListener != null ? mOnClickListener.onClick(v, adapter, item, position) : false;
+            return mOnClickListener != null && mOnClickListener.onClick(v, adapter, item, position);
         }
     };
 
@@ -123,7 +95,7 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
      * @return
      */
     @Override
-    public FastAdapter.OnClickListener<ExpandableItem> getOnItemClickListener() {
+    public FastAdapter.OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> getOnItemClickListener() {
         return onClickListener;
     }
 
@@ -172,8 +144,6 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
         //set the text for the description or hide
         StringHolder.applyToOrHide(description, viewHolder.description);
 
-        //make sure all animations are stopped
-        viewHolder.icon.clearAnimation();
         if (isExpanded()) {
             ViewCompat.setRotation(viewHolder.icon, 0);
         } else {
@@ -181,6 +151,14 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
         }
     }
 
+    @Override
+    public void unbindView(ViewHolder holder) {
+        super.unbindView(holder);
+        holder.name.setText(null);
+        holder.description.setText(null);
+        //make sure all animations are stopped
+        holder.icon.clearAnimation();
+    }
 
     /**
      * our ItemFactory implementation which creates the ViewHolder for our adapter.
@@ -208,10 +186,12 @@ public class ExpandableItem extends AbstractItem<ExpandableItem, ExpandableItem.
      * our ViewHolder
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
-        protected final View view;
+        public final View view;
         @Bind(R.id.material_drawer_name)
+        public
         TextView name;
         @Bind(R.id.material_drawer_description)
+        public
         TextView description;
         @Bind(R.id.material_drawer_icon)
         ImageView icon;

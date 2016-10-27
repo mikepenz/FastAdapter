@@ -9,6 +9,7 @@ import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.utils.DiffCallback;
 import com.mikepenz.fastadapter.utils.IdDistributor;
 
@@ -188,9 +189,19 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      */
     @Override
     public int getAdapterPosition(Item item) {
-        int length = mItems.size();
-        for (int i = 0; i < length; i++) {
-            if (mItems.get(i).getIdentifier() == item.getIdentifier()) {
+        return getAdapterPosition(item.getIdentifier());
+    }
+
+    /**
+     * Searches for the given identifier and calculates it's relative position
+     *
+     * @param identifier the identifier of an item which is searched for
+     * @return the relative position
+     */
+    @Override
+    public int getAdapterPosition(long identifier) {
+        for (int i = 0, size = mItems.size(); i < size; i++) {
+            if (mItems.get(i).getIdentifier() == identifier) {
                 return i;
             }
         }
@@ -224,7 +235,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param subItems    the subItems for this collapsible item
      * @return the item type of the collapsible
      */
-    public <T> T setSubItems(IExpandable<T, Item> collapsible, List<Item> subItems) {
+    public <T extends IItem & IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(subItems);
         }
@@ -400,6 +411,14 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     /**
+     * forces to remap all possible types for the RecyclerView
+     */
+    public void remapMappedTypes() {
+        clearMappedTypes();
+        mapPossibleTypes(mItems);
+    }
+
+    /**
      * add an array of items to the end of the existing items
      *
      * @param items the items to add
@@ -452,7 +471,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
-        if (items != null) {
+        if (items != null && items.size() > 0) {
             mItems.addAll(position - getFastAdapter().getPreItemCountByOrder(getOrder()), items);
             mapPossibleTypes(items);
 
@@ -594,7 +613,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // Now we have to inform the adapter about the new list filtered
             if (results.values != null) {
-                set((List<Item>) results.values);
+                ItemAdapter.this.set((List<Item>) results.values);
             }
 
             if (mItemFilterListener != null) {
@@ -610,9 +629,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         public Set<Integer> getSelections() {
             if (mOriginalItems != null) {
                 Set<Integer> selections = new HashSet<>();
-                int length = mOriginalItems.size();
                 int adapterOffset = getFastAdapter().getPreItemCountByOrder(getOrder());
-                for (int i = 0; i < length; i++) {
+                for (int i = 0, size = mOriginalItems.size(); i < size; i++) {
                     Item item = mOriginalItems.get(i);
                     if (item.isSelected()) {
                         selections.add(i + adapterOffset);
@@ -632,8 +650,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         public Set<Item> getSelectedItems() {
             if (mOriginalItems != null) {
                 Set<Item> selections = new HashSet<>();
-                int length = mOriginalItems.size();
-                for (int i = 0; i < length; i++) {
+                for (int i = 0, size = mOriginalItems.size(); i < size; i++) {
                     Item item = mOriginalItems.get(i);
                     if (item.isSelected()) {
                         selections.add(item);
@@ -642,6 +659,156 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 return selections;
             } else {
                 return getFastAdapter().getSelectedItems();
+            }
+        }
+
+        /**
+         * add an array of items to the end of the existing items
+         *
+         * @param items the items to add
+         */
+        @SafeVarargs
+        public final ItemAdapter<Item> add(Item... items) {
+            return add(asList(items));
+        }
+
+        /**
+         * add a list of items to the end of the existing items
+         * will prior check if we are currently filtering
+         *
+         * @param items the items to add
+         */
+        public ItemAdapter<Item> add(List<Item> items) {
+            if (mOriginalItems != null && items.size() > 0) {
+                if (mUseIdDistributor) {
+                    IdDistributor.checkIds(items);
+                }
+                mOriginalItems.addAll(items);
+                performFiltering(mConstraint);
+                return ItemAdapter.this;
+            } else {
+                return ItemAdapter.this.add(items);
+            }
+        }
+
+        /**
+         * add an array of items at the given position within the existing items
+         *
+         * @param position the global position
+         * @param items    the items to add
+         */
+        @SafeVarargs
+        public final ItemAdapter<Item> add(int position, Item... items) {
+            return add(position, asList(items));
+        }
+
+        /**
+         * add a list of items at the given position within the existing items
+         *
+         * @param position the global position
+         * @param items    the items to add
+         */
+        public ItemAdapter<Item> add(int position, List<Item> items) {
+            if (mOriginalItems != null && items.size() > 0) {
+                if (mUseIdDistributor) {
+                    IdDistributor.checkIds(items);
+                }
+                mOriginalItems.addAll(position - getFastAdapter().getPreItemCountByOrder(getOrder()), items);
+                performFiltering(mConstraint);
+                return ItemAdapter.this;
+            } else {
+                return ItemAdapter.this.add(position, items);
+            }
+        }
+
+        /**
+         * sets an item at the given position, overwriting the previous item
+         *
+         * @param position the global position
+         * @param item     the item to set
+         */
+        public ItemAdapter<Item> set(int position, Item item) {
+            if (mOriginalItems != null) {
+                if (mUseIdDistributor) {
+                    IdDistributor.checkId(item);
+                }
+                mOriginalItems.set(position - getFastAdapter().getPreItemCount(position), item);
+                performFiltering(mConstraint);
+                return ItemAdapter.this;
+            } else {
+                return ItemAdapter.this.set(position, item);
+            }
+        }
+
+        /**
+         * moves an item within the list from a position to a position
+         *
+         * @param fromPosition the position global from which we want to move
+         * @param toPosition   the global position to which to move
+         * @return this
+         */
+        public ItemAdapter<Item> move(int fromPosition, int toPosition) {
+            if (mOriginalItems != null) {
+                int preItemCount = getFastAdapter().getPreItemCount(fromPosition);
+                Item item = mOriginalItems.get(fromPosition - preItemCount);
+                mOriginalItems.remove(fromPosition - preItemCount);
+                mOriginalItems.add(toPosition - preItemCount, item);
+                performFiltering(mConstraint);
+                return ItemAdapter.this;
+            } else {
+                return ItemAdapter.this.move(fromPosition, toPosition);
+            }
+        }
+
+        /**
+         * removes an item at the given position within the existing icons
+         *
+         * @param position the global position
+         */
+        public ItemAdapter<Item> remove(int position) {
+            if (mOriginalItems != null) {
+                mItems.remove(position - getFastAdapter().getPreItemCount(position));
+                performFiltering(mConstraint);
+                return ItemAdapter.this;
+            } else {
+                return ItemAdapter.this.remove(position);
+            }
+        }
+
+        /**
+         * removes a range of items starting with the given position within the existing icons
+         *
+         * @param position  the global position
+         * @param itemCount the count of items which were removed
+         */
+        public ItemAdapter<Item> removeRange(int position, int itemCount) {
+            if (mOriginalItems != null) {
+                //global position to relative
+                int length = mOriginalItems.size();
+                int preItemCount = getFastAdapter().getPreItemCount(position);
+                //make sure we do not delete to many items
+                int saveItemCount = Math.min(itemCount, length - position + preItemCount);
+                for (int i = 0; i < saveItemCount; i++) {
+                    mOriginalItems.remove(position - preItemCount);
+                }
+                performFiltering(mConstraint);
+                return ItemAdapter.this;
+            } else {
+                return ItemAdapter.this.removeRange(position, itemCount);
+            }
+        }
+
+        /**
+         * removes all items of this adapter
+         */
+        public ItemAdapter<Item> clear() {
+            if (mOriginalItems != null) {
+                int count = mOriginalItems.size();
+                mOriginalItems.clear();
+                performFiltering(mConstraint);
+                return ItemAdapter.this;
+            } else {
+                return ItemAdapter.this.clear();
             }
         }
     }

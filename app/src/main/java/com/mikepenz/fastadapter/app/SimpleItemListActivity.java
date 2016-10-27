@@ -23,7 +23,7 @@ import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter.ItemFilterListener;
 import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter;
-import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -39,7 +39,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
     private static final String[] ALPHABET = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     //save our FastAdapter
-    private FastItemAdapter<SampleItem> fastItemAdapter;
+    private FastItemAdapter<SimpleItem> fastItemAdapter;
 
     //drag & drop
     private SimpleDragCallback touchCallback;
@@ -64,21 +64,21 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         fastItemAdapter.withSelectable(true);
         fastItemAdapter.withPositionBasedStateManagement(false);
 
-        final FastScrollIndicatorAdapter<SampleItem> fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter<>();
+        final FastScrollIndicatorAdapter<SimpleItem> fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter<>();
 
         //configure our fastAdapter
-        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<SampleItem>() {
+        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<SimpleItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<SampleItem> adapter, SampleItem item, int position) {
+            public boolean onClick(View v, IAdapter<SimpleItem> adapter, SimpleItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
                 return false;
             }
         });
 
         //configure the itemAdapter
-        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SampleItem>() {
+        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SimpleItem>() {
             @Override
-            public boolean filter(SampleItem item, CharSequence constraint) {
+            public boolean filter(SimpleItem item, CharSequence constraint) {
                 //return true if we should filter it out
                 //return false to keep it
                 return !item.name.getText().toLowerCase().contains(constraint.toString().toLowerCase());
@@ -100,11 +100,12 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
 
         //fill with some sample data
         int x = 0;
-        List<SampleItem> items = new ArrayList<>();
+        List<SimpleItem> items = new ArrayList<>();
         for (String s : ALPHABET) {
             int count = new Random().nextInt(20);
             for (int i = 1; i <= count; i++) {
-                items.add(new SampleItem().withName(s + " Test " + x).withIdentifier(100 + x));
+                SimpleItem item = new SimpleItem().withName(s + " Test " + x).withIdentifier(100 + x);
+                items.add(item);
                 x++;
             }
         }

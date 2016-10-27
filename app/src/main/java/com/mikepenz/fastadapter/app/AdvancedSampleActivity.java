@@ -19,8 +19,9 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
-import com.mikepenz.fastadapter.app.items.ExpandableItem;
-import com.mikepenz.fastadapter.app.items.SampleItem;
+import com.mikepenz.fastadapter.app.items.SimpleItem;
+import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
+import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -41,7 +42,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
     //save our FastAdapter
     private FastAdapter<IItem> mFastAdapter;
-    private HeaderAdapter<SampleItem> mHeaderAdapter;
+    private HeaderAdapter<SimpleItem> mHeaderAdapter;
     private ItemAdapter<IItem> mItemAdapter;
 
     private ActionModeHelper mActionModeHelper;
@@ -68,6 +69,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         //we init our ActionModeHelper
         mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
+        mActionModeHelper.withSupportSubItems(true);
 
         //create our adapters
         final StickyHeaderAdapter stickyHeaderAdapter = new StickyHeaderAdapter();
@@ -79,6 +81,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         mFastAdapter.withSelectable(true);
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withSelectOnLongClick(true);
+        mFastAdapter.withPositionBasedStateManagement(false);
         mFastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<IItem>() {
             @Override
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
@@ -142,20 +145,33 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     }
 
     private void setItems() {
-        mHeaderAdapter.add(new SampleItem().withName("Header").withSelectable(false).withIdentifier(1));
+        SimpleItem sampleItem = new SimpleItem().withName("Header")
+                .withSelectable(false)
+                .withIdentifier(1);
+        mHeaderAdapter.add(sampleItem);
         //fill with some sample data
         List<IItem> items = new ArrayList<>();
         int size = new Random().nextInt(25) + 10;
         for (int i = 1; i <= size; i++) {
             if (i % 6 == 0) {
-                ExpandableItem expandableItem = new ExpandableItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(100 + i);
-                List<IItem> subItems = new LinkedList<>();
+                SimpleSubExpandableItem<SimpleSubExpandableItem, SimpleSubExpandableItem> expandableItem = new SimpleSubExpandableItem<>();
+                expandableItem.withName("Test " + i)
+                        .withHeader(headers[i / 5])
+                        .withIdentifier(100 + i);
+                List<SimpleSubExpandableItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 3; ii++) {
-                    ExpandableItem subItem = new ExpandableItem().withName("-- SubTest " + ii).withHeader(headers[i / 5]).withIdentifier(1000 + ii);
+                    SimpleSubExpandableItem<SimpleSubExpandableItem, SimpleSubItem> subItem = new SimpleSubExpandableItem<>();
+                    subItem.withName("-- SubTest " + ii)
+                            .withHeader(headers[i / 5])
+                            .withIdentifier(1000 + ii);
 
-                    List<IItem> subSubItems = new LinkedList<>();
+                    List<SimpleSubItem> subSubItems = new LinkedList<>();
                     for (int iii = 1; iii <= 3; iii++) {
-                        subSubItems.add(new SampleItem().withName("---- SubSubTest " + iii).withHeader(headers[i / 5]).withIdentifier(10000 + iii));
+                        SimpleSubItem subSubItem = new SimpleSubItem();
+                        subSubItem.withName("---- SubSubTest " + iii)
+                                .withHeader(headers[i / 5])
+                                .withIdentifier(10000 + iii);
+                        subSubItems.add(subSubItem);
                     }
                     subItem.withSubItems(subSubItems);
 
@@ -164,7 +180,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 expandableItem.withSubItems(subItems);
                 items.add(expandableItem);
             } else {
-                items.add(new SampleItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(i));
+                items.add(new SimpleSubItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(i));
             }
         }
         mItemAdapter.set(items);
