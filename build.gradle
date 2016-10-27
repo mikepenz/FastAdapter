@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.1'
+        classpath 'com.android.tools.build:gradle:2.2.2'
         classpath 'com.novoda:bintray-release:0.3.4'
         classpath "io.realm:realm-gradle-plugin:1.1.0"
     }
@@ -13,9 +13,9 @@ buildscript {
 // To avoid manually setting the same values in all Android modules, set the value on the root
 // project and then reference this from the modules
 ext {
-    compileSdkVersion = 24
-    buildToolsVersion = "24.0.2"
-    supportLibVersion = "24.2.1"
+    compileSdkVersion = 25
+    buildToolsVersion = "25.0.0"
+    supportLibVersion = "25.0.0"
 }
 
 allprojects {

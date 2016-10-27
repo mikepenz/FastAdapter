@@ -16,7 +16,7 @@ android {
 
     defaultConfig {
         minSdkVersion 14
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionCode 1800
         versionName '1.8.0-SNAPSHOT'
     }
