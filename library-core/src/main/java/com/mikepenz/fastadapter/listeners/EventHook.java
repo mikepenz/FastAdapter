@@ -6,5 +6,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 public interface EventHook {
-    @Nullable View onBind(@NonNull RecyclerView.ViewHolder viewHolder);
+    @Nullable
+    View onBind(@NonNull RecyclerView.ViewHolder viewHolder);
 }

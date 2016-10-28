@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter.app.items;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -7,11 +8,14 @@ import android.widget.RadioButton;
 import android.widget.TextView;
 
 import com.mikepenz.fastadapter.app.R;
+import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;
+import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -134,6 +138,29 @@ public class RadioButtonSampleItem extends AbstractItem<RadioButtonSampleItem, R
             super(view);
             ButterKnife.bind(this, view);
             this.view = view;
+        }
+    }
+
+    public static class RadioButtonClickEvent extends ClickEventHook<RadioButtonSampleItem> {
+        @Override
+        public View onBind(@NonNull RecyclerView.ViewHolder viewHolder) {
+            if (viewHolder instanceof RadioButtonSampleItem.ViewHolder) {
+                return ((ViewHolder) viewHolder).radioButton;
+            }
+            return null;
+        }
+
+        @Override
+        public void onClick(View v, int position, FastAdapter<RadioButtonSampleItem> fastAdapter, RadioButtonSampleItem item) {
+            if (!item.isSelected()) {
+                Set<Integer> selections = fastAdapter.getSelections();
+                if (!selections.isEmpty()) {
+                    int selectedPosition = selections.iterator().next();
+                    fastAdapter.deselect();
+                    fastAdapter.notifyItemChanged(selectedPosition);
+                }
+                fastAdapter.select(position);
+            }
         }
     }
 }

@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter_extensions.utilities.SubItemUtil;
 
 /**

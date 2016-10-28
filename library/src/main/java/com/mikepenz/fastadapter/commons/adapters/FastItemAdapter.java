@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter.adapters;
+package com.mikepenz.fastadapter.commons.adapters;
 
 import android.widget.Filter;
 
@@ -7,7 +7,7 @@ import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.ISubItem;
-import com.mikepenz.fastadapter.utils.DiffCallback;
+import com.mikepenz.fastadapter.adapters.ItemAdapter;
 
 import java.util.List;
 
@@ -140,19 +140,6 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
      */
     public FastItemAdapter<Item> set(List<Item> items) {
         mItemAdapter.set(items);
-        return this;
-    }
-
-    /**
-     * this sets a new list of items using the DiffCallback to calculate the difference of the two lists (uses the DiffUtils)
-     *
-     * @param items       the list of the new items
-     * @param callback    the callback to check if items are different or equal
-     * @param detectMoves is a bit slower as it will also check if items were moved
-     * @return this
-     */
-    public FastItemAdapter<Item> set(final List<Item> items, final DiffCallback<Item> callback, boolean detectMoves) {
-        mItemAdapter.set(items, callback, detectMoves);
         return this;
     }
 

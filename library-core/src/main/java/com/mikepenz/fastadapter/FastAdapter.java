@@ -93,11 +93,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * adds a new event hook for an item
      * NOTE: this has to be called before adding the first items, as this won't be called anymore after the ViewHolders were created
+     *
      * @param eventHook the event hook to be added for an item
      * @return this
      */
     public FastAdapter<Item> withItemEvent(EventHook eventHook) {
-        if(clickListenerHelper == null) {
+        if (clickListenerHelper == null) {
             clickListenerHelper = new ClickListenerHelper<>(this);
         }
         clickListenerHelper.addEventHook(eventHook);
@@ -1792,7 +1793,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public RecyclerView.ViewHolder onPostCreateViewHolder(RecyclerView.ViewHolder viewHolder) {
-            if(clickListenerHelper != null) {
+            if (clickListenerHelper != null) {
                 clickListenerHelper.bind(viewHolder);
             }
             return viewHolder;

@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
-import com.mikepenz.fastadapter.utils.FastAdapterUIUtils;
+import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.materialize.util.UIUtils;
 

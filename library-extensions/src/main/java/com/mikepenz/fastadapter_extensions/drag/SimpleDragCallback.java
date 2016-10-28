@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
 import com.mikepenz.fastadapter.IDraggable;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 
 import java.lang.annotation.Retention;

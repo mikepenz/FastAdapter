@@ -17,7 +17,7 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISelectionListener;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.HeaderSelectionItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;

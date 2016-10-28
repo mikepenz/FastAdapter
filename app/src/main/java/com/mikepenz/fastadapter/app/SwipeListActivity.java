@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.SwipeableItem;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;

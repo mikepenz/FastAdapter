@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.adapters;
 
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.adapters.ItemAdapter;
 
 /**
  * Created by mikepenz on 27.12.15.

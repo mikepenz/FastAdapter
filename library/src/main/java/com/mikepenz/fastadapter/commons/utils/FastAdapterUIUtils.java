@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter.utils;
+package com.mikepenz.fastadapter.commons.utils;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;

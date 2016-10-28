@@ -2,17 +2,22 @@ package com.mikepenz.fastadapter.app.items;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewPropertyAnimator;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.mikepenz.fastadapter.app.R;
+import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.iconics.view.IconicsImageView;
 
@@ -203,10 +208,23 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
         }
     }
 
-    /**
-     * our listener which is triggered when the heart is clicked
-     */
-    public interface OnItemClickListener {
-        void onLovedClick(String image, boolean starred);
+    public static class ImageItemHeartClickEvent extends ClickEventHook<ImageItem> {
+        @Override
+        public View onBind(@NonNull RecyclerView.ViewHolder viewHolder) {
+            if (viewHolder instanceof ImageItem.ViewHolder) {
+                return ((ViewHolder) viewHolder).imageLovedContainer;
+            }
+            return null;
+        }
+
+        @Override
+        public void onClick(View v, int position, FastAdapter<ImageItem> fastAdapter, ImageItem item) {
+            item.withStarred(!item.mStarred);
+            //we animate the heart
+            item.animateHeart(((ViewGroup) v).getChildAt(0), ((ViewGroup) v).getChildAt(1), item.mStarred);
+
+            //we display the info about the click
+            Toast.makeText(v.getContext(), item.mImageUrl + " - " + item.mStarred, Toast.LENGTH_SHORT).show();
+        }
     }
 }
