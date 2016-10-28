@@ -1808,7 +1808,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          * @param position   the position of this viewHolder
          * @param payloads   the payloads provided by the adapter
          */
-        void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List payloads);
+        void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List<Object> payloads);
 
         /**
          * is called in onViewRecycled to unbind the data on the ViewHolder
@@ -1828,7 +1828,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          * @param payloads   the payloads provided by the adapter
          */
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List payloads) {
+        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List<Object> payloads) {
             Item item = getItem(position);
             if (item != null) {
                 item.bindView(viewHolder, payloads);
