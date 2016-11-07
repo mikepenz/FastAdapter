@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.util.ArrayMap;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -1829,7 +1830,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List<Object> payloads) {
-            Item item = getItem(position);
+            IItem item = getItem(position);
             if (item != null) {
                 item.bindView(viewHolder, payloads);
             }
@@ -1842,10 +1843,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          * @param position   the position of this viewHolder
          */
         @Override
-        public void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-            Item item = getItem(position);
+        public void unBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
+            IItem item = (IItem) viewHolder.itemView.getTag();
             if (item != null) {
                 item.unbindView(viewHolder);
+            } else {
+                Log.e("FastAdapter", "The bindView method of this item should set the `Tag` on it's itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.java#L189)");
             }
         }
     }
