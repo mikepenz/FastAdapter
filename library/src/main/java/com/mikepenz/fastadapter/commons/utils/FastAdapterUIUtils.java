@@ -1,13 +1,21 @@
 package com.mikepenz.fastadapter.commons.utils;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.RippleDrawable;
+import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.StateListDrawable;
+import android.graphics.drawable.shapes.RoundRectShape;
+import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.util.TypedValue;
 
 import com.mikepenz.fastadapter.R;
+
+import java.util.Arrays;
 
 /**
  * Created by mikepenz on 28.12.15.
@@ -76,5 +84,37 @@ public class FastAdapterUIUtils {
         //it is important here to not use the android.R because this wouldn't add the latest drawable
         ctx.getTheme().resolveAttribute(R.attr.selectableItemBackground, outValue, true);
         return outValue.resourceId;
+    }
+
+    public static Drawable getRippleDrawable(@ColorInt int normalColor, @ColorInt int pressedColor, int radius) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return new RippleDrawable(ColorStateList.valueOf(pressedColor),
+                    new ColorDrawable(normalColor), getRippleMask(normalColor, radius));
+        } else {
+            return getStateListDrawable(normalColor, pressedColor);
+        }
+    }
+
+    private static Drawable getRippleMask(int color, int radius) {
+        float[] outerRadius = new float[8];
+        Arrays.fill(outerRadius, radius);
+        RoundRectShape r = new RoundRectShape(outerRadius, null, null);
+        ShapeDrawable shapeDrawable = new ShapeDrawable(r);
+        shapeDrawable.getPaint().setColor(color);
+        return shapeDrawable;
+    }
+
+    private static StateListDrawable getStateListDrawable(
+            int normalColor, int pressedColor) {
+        StateListDrawable states = new StateListDrawable();
+        states.addState(new int[]{android.R.attr.state_pressed},
+                new ColorDrawable(pressedColor));
+        states.addState(new int[]{android.R.attr.state_focused},
+                new ColorDrawable(pressedColor));
+        states.addState(new int[]{android.R.attr.state_activated},
+                new ColorDrawable(pressedColor));
+        states.addState(new int[]{},
+                new ColorDrawable(normalColor));
+        return states;
     }
 }
