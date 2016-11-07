@@ -55,11 +55,11 @@ compile 'com.mikepenz:materialize:1.0.0@aar'
 Pre release of v2.x
 
 ```gradle
-compile('com.mikepenz:fastadapter-core:2.1.0-SNAPSHOT@aar') {
+compile('com.mikepenz:fastadapter-core:2.1.0.b2-SNAPSHOT@aar') {
     transitive = true
 }
-compile 'com.mikepenz:fastadapter:2.1.0-SNAPSHOT@aar' 
-compile 'com.mikepenz:fastadapter-extensions:2.1.0@aar'
+compile 'com.mikepenz:fastadapter:2.1.0.b2-SNAPSHOT@aar' 
+compile 'com.mikepenz:fastadapter-extensions:2.1.0.b2-SNAPSHOT@aar'
 //The tiny Materialize library used for its useful helper classes
 compile 'com.mikepenz:materialize:1.0.0@aar'
 ```
