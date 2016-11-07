@@ -89,7 +89,7 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
 
     //The logic to bind your data to the view
     @Override
-    public void bindView(ViewHolder viewHolder, List payloads) {
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
     	//call super so the selection is already handled for you
     	super.bindView(viewHolder, payloads);
     	

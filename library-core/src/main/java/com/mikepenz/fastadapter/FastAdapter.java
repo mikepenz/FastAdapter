@@ -568,7 +568,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param payloads the payloads for the bindViewHolder event containing data which allows to improve view animating
      */
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List payloads) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
         super.onBindViewHolder(holder, position, payloads);
         mOnBindViewHolderListener.onBindViewHolder(holder, position, payloads);
     }

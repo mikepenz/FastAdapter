@@ -111,7 +111,7 @@ public class ThreeLineItem extends AbstractItem<ThreeLineItem, ThreeLineItem.Vie
 
 
     @Override
-    public void bindView(ViewHolder holder, List payloads) {
+    public void bindView(ViewHolder holder, List<Object> payloads) {
         super.bindView(holder, payloads);
         mName.applyTo(holder.name);
         mDescription.applyTo(holder.description);

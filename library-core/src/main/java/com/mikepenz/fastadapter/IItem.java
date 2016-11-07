@@ -121,7 +121,7 @@ public interface IItem<T, VH extends RecyclerView.ViewHolder> extends IIdentifya
      * @param holder
      * @param payloads
      */
-    void bindView(VH holder, List payloads);
+    void bindView(VH holder, List<Object> payloads);
 
     /**
      * View needs to release resources when it's recycled

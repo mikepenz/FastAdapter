@@ -237,7 +237,7 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
      * @param holder
      */
     @Override
-    public void bindView(ViewHolder holder, List payloads) {
+    public void bindView(ViewHolder holder, List<Object> payloads) {
         //set the selected state of this item. force this otherwise it may is missed when implementing an item
         holder.itemView.setSelected(isSelected());
         //set the tag of this item to this object (can be used when retrieving the view)

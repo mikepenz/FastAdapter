@@ -115,7 +115,7 @@ public class TwoLineItem extends AbstractItem<TwoLineItem, TwoLineItem.ViewHolde
     }
 
     @Override
-    public void bindView(ViewHolder holder, List payloads) {
+    public void bindView(ViewHolder holder, List<Object> payloads) {
         super.bindView(holder, payloads);
         mName.applyTo(holder.name);
         mDescription.applyTo(holder.description);
