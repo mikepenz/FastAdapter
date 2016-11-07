@@ -86,6 +86,14 @@ public class FastAdapterUIUtils {
         return outValue.resourceId;
     }
 
+    /**
+     * helper to create an ripple drawable with the given normal and pressed color
+     *
+     * @param normalColor  the normal color
+     * @param pressedColor the pressed color
+     * @param radius       the button radius
+     * @return the ripple drawable
+     */
     public static Drawable getRippleDrawable(@ColorInt int normalColor, @ColorInt int pressedColor, int radius) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             return new RippleDrawable(ColorStateList.valueOf(pressedColor),
@@ -95,6 +103,13 @@ public class FastAdapterUIUtils {
         }
     }
 
+    /**
+     * helper to create an ripple mask with the given color and radius
+     *
+     * @param color  the color
+     * @param radius the radius
+     * @return the mask drawable
+     */
     private static Drawable getRippleMask(int color, int radius) {
         float[] outerRadius = new float[8];
         Arrays.fill(outerRadius, radius);
@@ -104,6 +119,13 @@ public class FastAdapterUIUtils {
         return shapeDrawable;
     }
 
+    /**
+     * helper to create an StateListDrawable for the given normal and pressed color
+     *
+     * @param normalColor  the normal color
+     * @param pressedColor the pressed color
+     * @return the StateListDrawable
+     */
     private static StateListDrawable getStateListDrawable(
             int normalColor, int pressedColor) {
         StateListDrawable states = new StateListDrawable();
