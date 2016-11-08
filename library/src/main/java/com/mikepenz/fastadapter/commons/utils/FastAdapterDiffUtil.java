@@ -15,7 +15,7 @@ import java.util.List;
  * Created by mikepenz on 28.10.16.
  */
 
-public class FastAdapterDiffUtil_test {
+public class FastAdapterDiffUtil {
     public static <A extends ItemAdapter<Item>, Item extends IItem> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
         if (adapter.isUseIdDistributor()) {
             IdDistributor.checkIds(items);
