@@ -37,10 +37,14 @@ public class FastAdapterUIUtils {
         states.addState(new int[]{android.R.attr.state_selected}, clrActive);
 
         states.addState(new int[]{}, ContextCompat.getDrawable(ctx, getSelectableBackground(ctx)));
+        
         //if possible we enable animating across states
-        int duration = ctx.getResources().getInteger(android.R.integer.config_shortAnimTime);
-        states.setEnterFadeDuration(duration);
-        states.setExitFadeDuration(duration);
+        if (animate) {
+            int duration = ctx.getResources().getInteger(android.R.integer.config_shortAnimTime);
+            states.setEnterFadeDuration(duration);
+            states.setExitFadeDuration(duration);
+        }
+        
         return states;
     }
 
