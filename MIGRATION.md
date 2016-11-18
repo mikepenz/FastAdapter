@@ -1,5 +1,16 @@
 ###Upgrade Notes
 
+#### v2.1.0 
+* This release brings minor changes to the `IItem` interface. Please update MaterialDrawer and AboutLibraries too if you use them.
+* Starting with this version there is now the `core` and the `commons` dependency. Which make the `FastAdapter` even slimmer if you want to use the basics. 
+
+**QUICK UPGRADE**
+* The ` List payloads` param in the `onBindViewHolder` method was changed to `List<Object> payloads`
+* The FastAdapter is now split into smaller dependencies
+ * `com.mikepenz:fastadapter` : just contains the basics (no `FastItemAdapter` for example)
+ * `com.mikepenz:fastadapter-commons` : this one contains the `FastItemAdapter`  and more useful common helper classes
+ * `com.mikepenz:fastadapter-extensions` : comes with additional utils and helpers which bring allow more complex and advanced implementations
+
 #### v2.0.0 
 * This release brings new interfaces, and many changes to the expandable behavior. There is now also a `unbindView` method you have to implement for your `IItem`s.
 
