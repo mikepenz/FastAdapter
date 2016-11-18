@@ -106,7 +106,7 @@ public class SingleLineItem extends AbstractItem<SingleLineItem, SingleLineItem.
     }
 
     @Override
-    public void bindView(ViewHolder holder, List payloads) {
+    public void bindView(ViewHolder holder, List<Object> payloads) {
         super.bindView(holder, payloads);
         mName.applyTo(holder.name);
         ImageHolder.applyToOrSetInvisible(mAvatar, holder.avatar);

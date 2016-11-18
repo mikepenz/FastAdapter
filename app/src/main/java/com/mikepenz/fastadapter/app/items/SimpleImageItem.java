@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
-import com.mikepenz.fastadapter.utils.FastAdapterUIUtils;
+import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.materialize.util.UIUtils;
 
@@ -71,7 +71,7 @@ public class SimpleImageItem extends AbstractItem<SimpleImageItem, SimpleImageIt
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(SimpleImageItem.ViewHolder viewHolder, List payloads) {
+    public void bindView(SimpleImageItem.ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
 
         //get the context

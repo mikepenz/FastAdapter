@@ -38,37 +38,26 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 #Include in your project
 ##Using Maven
 
-The library is split up into core, and extensions. The core functions are included in the following dependency.
+The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-compile('com.mikepenz:fastadapter:1.8.2@aar') {
+compile('com.mikepenz:fastadapter:2.1.0@aar') {
 	transitive = true
 }
 ```
 
-Pre release of v2.x
-
+The commons package comes with some useful helpers (which are not needed in all cases) This one for example includes the `FastItemAdapter`
 ```gradle
-compile('com.mikepenz:fastadapter:2.0.0.b4-SNAPSHOT@aar') {
-	transitive = true
-}
+compile 'com.mikepenz:fastadapter-commons:2.1.0@aar' 
 ```
 
 All additions are included in the following dependency.
 ```gradle
-compile 'com.mikepenz:fastadapter-extensions:1.8.0@aar'
+compile 'com.mikepenz:fastadapter-extensions:2.1.0@aar'
 //The tiny Materialize library used for its useful helper classes
 compile 'com.mikepenz:materialize:1.0.0@aar'
 ```
 
-Pre release of v2.x
-
-```gradle
-compile 'com.mikepenz:fastadapter-extensions:2.0.0.b4-SNAPSHOT@aar'
-//The tiny Materialize library used for its useful helper classes
-compile 'com.mikepenz:materialize:1.0.0@aar'
-```
-
-> If you upgrade from < 1.4.0 follow the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md)
+> If you upgrade from < 2.1.0 follow the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md)
 
 
 ##How to use
@@ -93,7 +82,7 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
 
     //The logic to bind your data to the view
     @Override
-    public void bindView(ViewHolder viewHolder, List payloads) {
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
     	//call super so the selection is already handled for you
     	super.bindView(viewHolder, payloads);
     	

@@ -76,7 +76,7 @@ public class IconItem<T extends IItem & IExpandable> extends AbstractItem<IconIt
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder, List payloads) {
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
 
         //define our data for the view

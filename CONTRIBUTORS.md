@@ -36,5 +36,4 @@ FastAdapter contributors (sorted alphabeticaly)
 
 * **[jasonsparc](https://github.com/jasonsparc)**
 
-
   * Added `EndlessScrollHelper`

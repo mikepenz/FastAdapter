@@ -4,14 +4,14 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".CustomApplication"
+        android:name="com.mikepenz.fastadapter.app.CustomApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/CustomTheme">
         <!-- android:supportsRtl="true" -->
         <activity
-            android:name=".SampleActivity"
+            android:name="com.mikepenz.fastadapter.app.SampleActivity"
             android:theme="@style/MaterialDrawerTheme.Light.TranslucentStatus">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,55 +19,55 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".SimpleItemListActivity"
+            android:name="com.mikepenz.fastadapter.app.SimpleItemListActivity"
             android:label="@string/sample_simple_item_list" />
         <activity
-            android:name=".SwipeListActivity"
+            android:name="com.mikepenz.fastadapter.app.SwipeListActivity"
             android:label="@string/sample_swipe_list" />
         <activity
-            android:name=".ImageListActivity"
+            android:name="com.mikepenz.fastadapter.app.ImageListActivity"
             android:label="@string/sample_image_list" />
         <activity
-            android:name=".MultiselectSampleActivity"
+            android:name="com.mikepenz.fastadapter.app.MultiselectSampleActivity"
             android:label="@string/sample_multi_select" />
         <activity
-            android:name=".ExpandableSampleActivity"
+            android:name="com.mikepenz.fastadapter.app.ExpandableSampleActivity"
             android:label="@string/sample_collapsible" />
         <activity
-            android:name=".ExpandableMultiselectDeleteSampleActivity"
+            android:name="com.mikepenz.fastadapter.app.ExpandableMultiselectDeleteSampleActivity"
             android:label="@string/sample_collapsible_multi_select_delete" />
         <activity
-            android:name=".StickyHeaderSampleActivity"
+            android:name="com.mikepenz.fastadapter.app.StickyHeaderSampleActivity"
             android:label="@string/sample_sticky_header" />
         <activity
-            android:name=".AdvancedSampleActivity"
+            android:name="com.mikepenz.fastadapter.app.AdvancedSampleActivity"
             android:label="@string/sample_advanced" />
         <activity
-            android:name=".IconGridActivity"
+            android:name="com.mikepenz.fastadapter.app.IconGridActivity"
             android:label="@string/sample_icon_grid" />
         <activity
-            android:name=".GenericItemActivity"
+            android:name="com.mikepenz.fastadapter.app.GenericItemActivity"
             android:label="@string/sample_generic_item" />
         <activity
-            android:name=".MultiTypeGenericItemActivity"
+            android:name="com.mikepenz.fastadapter.app.MultiTypeGenericItemActivity"
             android:label="@string/sample_multi_generic_item" />
         <activity
-            android:name=".CheckBoxSampleActivity"
+            android:name="com.mikepenz.fastadapter.app.CheckBoxSampleActivity"
             android:label="@string/sample_checkbox_item" />
         <activity
-            android:name=".RadioButtonSampleActivity"
+            android:name="com.mikepenz.fastadapter.app.RadioButtonSampleActivity"
             android:label="@string/sample_radiobutton_item" />
         <activity
-            android:name=".EndlessScrollListActivity"
+            android:name="com.mikepenz.fastadapter.app.EndlessScrollListActivity"
             android:label="@string/sample_endless_scroll_item" />
         <activity
-            android:name=".SortActivity"
+            android:name="com.mikepenz.fastadapter.app.SortActivity"
             android:label="@string/sample_sort" />
         <activity
-            android:name=".MopubAdsActivity"
+            android:name="com.mikepenz.fastadapter.app.MopubAdsActivity"
             android:label="@string/sample_mopub" />
         <activity
-            android:name=".RealmActivity"
+            android:name="com.mikepenz.fastadapter.app.RealmActivity"
             android:label="@string/sample_realm_list" />
 
         <!-- USED FOR THE MopubAdsActivity sample-->

@@ -7,7 +7,7 @@ import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
-import com.mikepenz.fastadapter.utils.FastAdapterUIUtils;
+import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialize.util.UIUtils;
 
@@ -27,7 +27,7 @@ public class HeaderSelectionItem<T extends IItem & IExpandable, S extends IItem 
     }
 
     @Override
-    public void bindView(ViewHolder viewHolder, List payloads) {
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
 
         //get the context

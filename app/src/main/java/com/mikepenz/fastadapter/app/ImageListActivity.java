@@ -9,12 +9,11 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData;
 import com.mikepenz.fastadapter.app.items.ImageItem;
 import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
@@ -78,33 +77,7 @@ public class ImageListActivity extends AppCompatActivity {
         //a custom OnCreateViewHolder listener class which is used to create the viewHolders
         //we define the listener for the imageLovedContainer here for better performance
         //you can also define the listener within the items bindView method but performance is better if you do it like this
-        mFastItemAdapter.withOnCreateViewHolderListener(new FastAdapter.OnCreateViewHolderListener() {
-            @Override
-            public RecyclerView.ViewHolder onPreCreateViewHolder(ViewGroup parent, int viewType) {
-                return mFastItemAdapter.getTypeInstance(viewType).getViewHolder(parent);
-            }
-
-            @Override
-            public RecyclerView.ViewHolder onPostCreateViewHolder(final RecyclerView.ViewHolder viewHolder) {
-                //we do this for our ImageItem.ViewHolder
-                if (viewHolder instanceof ImageItem.ViewHolder) {
-                    //if we click on the imageLovedContainer
-                    mClickListenerHelper.listen(viewHolder, ((ImageItem.ViewHolder) viewHolder).imageLovedContainer, new ClickListenerHelper.OnClickListener<ImageItem>() {
-                        @Override
-                        public void onClick(View v, int position, ImageItem item) {
-                            item.withStarred(!item.mStarred);
-                            //we animate the heart
-                            item.animateHeart(((ViewGroup) v).getChildAt(0), ((ViewGroup) v).getChildAt(1), item.mStarred);
-
-                            //we display the info about the click
-                            Toast.makeText(ImageListActivity.this, item.mImageUrl + " - " + item.mStarred, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-
-                return viewHolder;
-            }
-        });
+        mFastItemAdapter.withItemEvent(new ImageItem.ImageItemHeartClickEvent());
 
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

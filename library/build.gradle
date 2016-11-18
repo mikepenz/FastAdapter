@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 200
-        versionName '2.0.0'
+        versionCode 210
+        versionName '2.1.0'
     }
     buildTypes {
         release {
@@ -23,13 +23,15 @@ android {
     }
 }
 
-if (project.hasProperty('pushall') || project.hasProperty('librarycoreonly')) {
+if (project.hasProperty('pushall') || project.hasProperty('librarycommonsonly')) {
     apply from: '../gradle-mvn-push.gradle'
     apply plugin: 'com.novoda.bintray-release'
     apply from: '../gradle-jcenter-push.gradle'
 }
 
 dependencies {
+    compile project(':library-core')
+
     compile "com.android.support:appcompat-v7:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:recyclerview-v7:${rootProject.ext.supportLibVersion}"
     compile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"

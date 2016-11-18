@@ -11,7 +11,7 @@ import com.mikepenz.fastadapter.IDraggable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
-import com.mikepenz.fastadapter.utils.FastAdapterUIUtils;
+import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialize.util.UIUtils;
@@ -96,7 +96,7 @@ public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> 
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder, List payloads) {
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
 
         //get the context
