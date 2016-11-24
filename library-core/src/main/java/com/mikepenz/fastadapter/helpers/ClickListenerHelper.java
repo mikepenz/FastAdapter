@@ -82,7 +82,7 @@ public class ClickListenerHelper<Item extends IItem> {
      * @param viewHolder the viewHolder of the item
      */
     public void bind(@NonNull final RecyclerView.ViewHolder viewHolder) {
-        for (final EventHook event : eventHooks) {
+        for (final EventHook<Item> event : eventHooks) {
             View view = event.onBind(viewHolder);
             if (view == null) {
                 continue;

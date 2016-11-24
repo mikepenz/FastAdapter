@@ -5,7 +5,9 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-public interface EventHook {
+import com.mikepenz.fastadapter.IItem;
+
+public interface EventHook<Item extends IItem> {
     @Nullable
     View onBind(@NonNull RecyclerView.ViewHolder viewHolder);
 }
