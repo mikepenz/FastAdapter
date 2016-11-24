@@ -24,7 +24,7 @@ public class ClickListenerHelper<Item extends IItem> {
     private FastAdapter<Item> mFastAdapter;
 
     //
-    private List<EventHook> eventHooks = new LinkedList<>();
+    private List<EventHook<Item>> eventHooks = new LinkedList<>();
 
     /**
      * ctor
@@ -39,7 +39,7 @@ public class ClickListenerHelper<Item extends IItem> {
      * @param fastAdapter the fastAdapter which manages these items
      * @param eventHooks  the event hooks we want to use for this item
      */
-    public ClickListenerHelper(FastAdapter<Item> fastAdapter, List<EventHook> eventHooks) {
+    public ClickListenerHelper(FastAdapter<Item> fastAdapter, List<EventHook<Item>> eventHooks) {
         this.mFastAdapter = fastAdapter;
         this.eventHooks = eventHooks;
     }
@@ -47,7 +47,7 @@ public class ClickListenerHelper<Item extends IItem> {
     /**
      * @return the added event hooks
      */
-    public List<EventHook> getEventHooks() {
+    public List<EventHook<Item>> getEventHooks() {
         return eventHooks;
     }
 
@@ -58,7 +58,7 @@ public class ClickListenerHelper<Item extends IItem> {
      * @param eventHooks a new list of eventHook
      * @return this
      */
-    public ClickListenerHelper<Item> setEventHooks(List<EventHook> eventHooks) {
+    public ClickListenerHelper<Item> setEventHooks(List<EventHook<Item>> eventHooks) {
         this.eventHooks = eventHooks;
         return this;
     }
@@ -70,7 +70,7 @@ public class ClickListenerHelper<Item extends IItem> {
      * @param eventHook a new eventHook
      * @return this
      */
-    public ClickListenerHelper<Item> addEventHook(EventHook eventHook) {
+    public ClickListenerHelper<Item> addEventHook(EventHook<Item> eventHook) {
         this.eventHooks.add(eventHook);
         return this;
     }
