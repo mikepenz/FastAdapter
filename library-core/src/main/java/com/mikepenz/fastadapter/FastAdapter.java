@@ -98,7 +98,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param eventHook the event hook to be added for an item
      * @return this
      */
-    public FastAdapter<Item> withItemEvent(EventHook eventHook) {
+    public FastAdapter<Item> withItemEvent(EventHook<Item> eventHook) {
         if (clickListenerHelper == null) {
             clickListenerHelper = new ClickListenerHelper<>(this);
         }

@@ -6,6 +6,6 @@ import android.view.View;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 
-public abstract class TouchEventHook<Item extends IItem> implements EventHook {
+public abstract class TouchEventHook<Item extends IItem> implements EventHook<Item> {
     public abstract boolean onTouch(View v, MotionEvent event, int position, FastAdapter<Item> fastAdapter, Item item);
 }

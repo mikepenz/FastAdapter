@@ -24,7 +24,7 @@ public class ClickListenerHelper<Item extends IItem> {
     private FastAdapter<Item> mFastAdapter;
 
     //
-    private List<EventHook> eventHooks = new LinkedList<>();
+    private List<EventHook<Item>> eventHooks = new LinkedList<>();
 
     /**
      * ctor
@@ -39,7 +39,7 @@ public class ClickListenerHelper<Item extends IItem> {
      * @param fastAdapter the fastAdapter which manages these items
      * @param eventHooks  the event hooks we want to use for this item
      */
-    public ClickListenerHelper(FastAdapter<Item> fastAdapter, List<EventHook> eventHooks) {
+    public ClickListenerHelper(FastAdapter<Item> fastAdapter, List<EventHook<Item>> eventHooks) {
         this.mFastAdapter = fastAdapter;
         this.eventHooks = eventHooks;
     }
@@ -47,7 +47,7 @@ public class ClickListenerHelper<Item extends IItem> {
     /**
      * @return the added event hooks
      */
-    public List<EventHook> getEventHooks() {
+    public List<EventHook<Item>> getEventHooks() {
         return eventHooks;
     }
 
@@ -58,7 +58,7 @@ public class ClickListenerHelper<Item extends IItem> {
      * @param eventHooks a new list of eventHook
      * @return this
      */
-    public ClickListenerHelper<Item> setEventHooks(List<EventHook> eventHooks) {
+    public ClickListenerHelper<Item> setEventHooks(List<EventHook<Item>> eventHooks) {
         this.eventHooks = eventHooks;
         return this;
     }
@@ -70,7 +70,7 @@ public class ClickListenerHelper<Item extends IItem> {
      * @param eventHook a new eventHook
      * @return this
      */
-    public ClickListenerHelper<Item> addEventHook(EventHook eventHook) {
+    public ClickListenerHelper<Item> addEventHook(EventHook<Item> eventHook) {
         this.eventHooks.add(eventHook);
         return this;
     }
@@ -82,7 +82,7 @@ public class ClickListenerHelper<Item extends IItem> {
      * @param viewHolder the viewHolder of the item
      */
     public void bind(@NonNull final RecyclerView.ViewHolder viewHolder) {
-        for (final EventHook event : eventHooks) {
+        for (final EventHook<Item> event : eventHooks) {
             View view = event.onBind(viewHolder);
             if (view == null) {
                 continue;
@@ -90,7 +90,8 @@ public class ClickListenerHelper<Item extends IItem> {
             if (event instanceof ClickEventHook) {
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(View v) {//we get the adapterPosition from the viewHolder
+                    public void onClick(View v) {
+                        //we get the adapterPosition from the viewHolder
                         int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
                         //make sure the click was done on a valid item
                         if (pos != RecyclerView.NO_POSITION) {
@@ -103,6 +104,7 @@ public class ClickListenerHelper<Item extends IItem> {
                 view.setOnLongClickListener(new View.OnLongClickListener() {
                     @Override
                     public boolean onLongClick(View v) {
+                        //we get the adapterPosition from the viewHolder
                         int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
                         //make sure the click was done on a valid item
                         if (pos != RecyclerView.NO_POSITION) {
@@ -121,13 +123,19 @@ public class ClickListenerHelper<Item extends IItem> {
                         //make sure the click was done on a valid item
                         if (pos != RecyclerView.NO_POSITION) {
                             //we update our item with the changed property
-                            return ((TouchEventHook) event).onTouch(v, e, pos, mFastAdapter, mFastAdapter.getItem(pos));
+                            return ((TouchEventHook<Item>) event).onTouch(v, e, pos, mFastAdapter, mFastAdapter.getItem(pos));
                         }
                         return false;
                     }
                 });
             } else if (event instanceof CustomEventHook) {
-                ((CustomEventHook) event).onEvent(mFastAdapter, viewHolder, view);
+                //we get the adapterPosition from the viewHolder
+                int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
+                //make sure the click was done on a valid item
+                if (pos != RecyclerView.NO_POSITION) {
+                    //we update our item with the changed property
+                    ((CustomEventHook<Item>) event).onEvent(view, viewHolder, pos, mFastAdapter, mFastAdapter.getItem(pos));
+                }
             }
         }
     }

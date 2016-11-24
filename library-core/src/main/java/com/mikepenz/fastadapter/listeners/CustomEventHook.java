@@ -6,6 +6,6 @@ import android.view.View;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 
-public abstract class CustomEventHook<Item extends IItem> implements EventHook {
-    public abstract void onEvent(FastAdapter<Item> fastAdapter, RecyclerView.ViewHolder viewHolder, View view);
+public abstract class CustomEventHook<Item extends IItem> implements EventHook<Item> {
+    public abstract void onEvent(View view, RecyclerView.ViewHolder viewHolder, int position, FastAdapter<Item> fastAdapter, Item item);
 }
