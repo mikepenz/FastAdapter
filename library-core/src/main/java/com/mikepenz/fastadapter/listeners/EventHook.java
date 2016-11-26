@@ -7,7 +7,12 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.IItem;
 
+import java.util.List;
+
 public interface EventHook<Item extends IItem> {
     @Nullable
     View onBind(@NonNull RecyclerView.ViewHolder viewHolder);
+
+    @Nullable
+    List<? extends View> onBindMany(@NonNull RecyclerView.ViewHolder viewHolder);
 }

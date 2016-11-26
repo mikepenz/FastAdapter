@@ -13,6 +13,7 @@ import com.mikepenz.fastadapter.listeners.EventHook;
 import com.mikepenz.fastadapter.listeners.LongClickEventHook;
 import com.mikepenz.fastadapter.listeners.TouchEventHook;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -84,59 +85,86 @@ public class ClickListenerHelper<Item extends IItem> {
     public void bind(@NonNull final RecyclerView.ViewHolder viewHolder) {
         for (final EventHook<Item> event : eventHooks) {
             View view = event.onBind(viewHolder);
-            if (view == null) {
-                continue;
+            if (view != null) {
+                attachToView(event, viewHolder, view);
             }
-            if (event instanceof ClickEventHook) {
-                view.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //we get the adapterPosition from the viewHolder
-                        int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
-                        //make sure the click was done on a valid item
-                        if (pos != RecyclerView.NO_POSITION) {
-                            //we update our item with the changed property
-                            ((ClickEventHook<Item>) event).onClick(v, pos, mFastAdapter, mFastAdapter.getItem(pos));
-                        }
-                    }
-                });
-            } else if (event instanceof LongClickEventHook) {
-                view.setOnLongClickListener(new View.OnLongClickListener() {
-                    @Override
-                    public boolean onLongClick(View v) {
-                        //we get the adapterPosition from the viewHolder
-                        int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
-                        //make sure the click was done on a valid item
-                        if (pos != RecyclerView.NO_POSITION) {
-                            //we update our item with the changed property
-                            return ((LongClickEventHook<Item>) event).onLongClick(v, pos, mFastAdapter, mFastAdapter.getItem(pos));
-                        }
-                        return false;
-                    }
-                });
-            } else if (event instanceof TouchEventHook) {
-                view.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View v, MotionEvent e) {
-                        //we get the adapterPosition from the viewHolder
-                        int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
-                        //make sure the click was done on a valid item
-                        if (pos != RecyclerView.NO_POSITION) {
-                            //we update our item with the changed property
-                            return ((TouchEventHook<Item>) event).onTouch(v, e, pos, mFastAdapter, mFastAdapter.getItem(pos));
-                        }
-                        return false;
-                    }
-                });
-            } else if (event instanceof CustomEventHook) {
-                //we get the adapterPosition from the viewHolder
-                int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
-                //make sure the click was done on a valid item
-                if (pos != RecyclerView.NO_POSITION) {
-                    //we update our item with the changed property
-                    ((CustomEventHook<Item>) event).onEvent(view, viewHolder, pos, mFastAdapter, mFastAdapter.getItem(pos));
+
+            List<? extends View> views = event.onBindMany(viewHolder);
+            if (views != null) {
+                for (View v : views) {
+                    attachToView(event, viewHolder, v);
                 }
             }
         }
+    }
+
+    /**
+     * attaches the specific event to a view
+     *
+     * @param event      the event to attach
+     * @param viewHolder the viewHolder containing this view
+     * @param view       the view to attach to
+     */
+    public void attachToView(final EventHook<Item> event, final RecyclerView.ViewHolder viewHolder, final View view) {
+        if (event instanceof ClickEventHook) {
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //we get the adapterPosition from the viewHolder
+                    int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
+                    //make sure the click was done on a valid item
+                    if (pos != RecyclerView.NO_POSITION) {
+                        //we update our item with the changed property
+                        ((ClickEventHook<Item>) event).onClick(v, pos, mFastAdapter, mFastAdapter.getItem(pos));
+                    }
+                }
+            });
+        } else if (event instanceof LongClickEventHook) {
+            view.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    //we get the adapterPosition from the viewHolder
+                    int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
+                    //make sure the click was done on a valid item
+                    if (pos != RecyclerView.NO_POSITION) {
+                        //we update our item with the changed property
+                        return ((LongClickEventHook<Item>) event).onLongClick(v, pos, mFastAdapter, mFastAdapter.getItem(pos));
+                    }
+                    return false;
+                }
+            });
+        } else if (event instanceof TouchEventHook) {
+            view.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent e) {
+                    //we get the adapterPosition from the viewHolder
+                    int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
+                    //make sure the click was done on a valid item
+                    if (pos != RecyclerView.NO_POSITION) {
+                        //we update our item with the changed property
+                        return ((TouchEventHook<Item>) event).onTouch(v, e, pos, mFastAdapter, mFastAdapter.getItem(pos));
+                    }
+                    return false;
+                }
+            });
+        } else if (event instanceof CustomEventHook) {
+            //we get the adapterPosition from the viewHolder
+            int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
+            //make sure the click was done on a valid item
+            if (pos != RecyclerView.NO_POSITION) {
+                //we update our item with the changed property
+                ((CustomEventHook<Item>) event).onEvent(view, viewHolder, pos, mFastAdapter, mFastAdapter.getItem(pos));
+            }
+        }
+    }
+
+    /**
+     * a small helper to get a list of views from a dynamic amout of views.
+     *
+     * @param views the views to get as list
+     * @return the list with the views
+     */
+    public static List<View> toList(View... views) {
+        return Arrays.asList(views);
     }
 }
