@@ -40,7 +40,7 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-compile('com.mikepenz:fastadapter:2.1.0@aar') {
+compile('com.mikepenz:fastadapter:2.1.5@aar') {
 	transitive = true
 }
 ```
@@ -140,7 +140,29 @@ fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<Item>() {
         });
 ```
 
-###4. Filter 
+
+###4. Click listeners for views inside your item
+```java
+//just add an `EventHook` to your `FastAdapter` by implementing either a `ClickEventHook`, `LongClickEventHook`, `TouchEventHook`, `CustomEventHook`
+fastItemAdapter.withItemEvent(new ClickEventHook<SampleItem> {
+    
+    @Override
+    public View onBind(@NonNull RecyclerView.ViewHolder viewHolder) {
+        //return the views on which you want to bind this event
+        if (viewHolder instanceof SampleItem.ViewHolder) {
+            return ((ViewHolder) viewHolder).view;
+        }
+        return null;
+    }
+
+    @Override
+    public void onClick(View v, int position, FastAdapter<SampleItem> fastAdapter, SampleItem item) {
+        //react on the click event
+    }
+});
+```
+
+###5. Filter 
 ```java
 // Call this in onQueryTextSubmit() & onQueryTextChange() when using SearchView
 fastAdapter.filter("yourSearchTerm");
@@ -154,7 +176,7 @@ fastAdapter.withFilterPredicate(new IItemAdapter.Predicate<Item>() {
 ```
 `filter()` will return true to indicate which items will be removed. Returning false indicates items that will be retained.
 
-###5. Drag and drop
+###6. Drag and drop
 First, attach `ItemTouchHelper` to RecyclerView.
 ```java
 SimpleDragCallback dragCallback = new SimpleDragCallback(this);
@@ -171,7 +193,7 @@ Implement `ItemTouchCallback` interface in your Activity, and override the `item
    }
 ```
 
-###6. Using different ViewHolders (like HeaderView)
+###7. Using different ViewHolders (like HeaderView)
 Start by initializing your adapters:
 ```java
 FastItemAdapter fastAdapter = new FastItemAdapter<>();
@@ -191,7 +213,7 @@ It is also possible to add in a third ViewHolder type by using the `wrap()` meth
 recyclerView.setAdapter(thirdAdapter.wrap(headerAdapter.wrap(fastAdapter)));
 ```
 
-###7. Infinite (endless) scrolling
+###8. Infinite (endless) scrolling
 Create a FooterAdapter. We need this to display a loading ProgressBar at the end of our list.
 ```java
 FooterAdapter<ProgressItem> footerAdapter = new FooterAdapter<>();

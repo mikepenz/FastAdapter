@@ -13,8 +13,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 210
-        versionName '2.1.0'
+        versionCode 215
+        versionName '2.1.5'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
@@ -66,7 +66,7 @@ dependencies {
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
-    compile('com.mikepenz:materialdrawer:5.8.0-SNAPSHOT@aar') {
+    compile('com.mikepenz:materialdrawer:5.8.0@aar') {
         transitive = true
         exclude module: "fastadapter"
     }
@@ -75,7 +75,7 @@ dependencies {
     compile 'com.mikepenz:itemanimators:0.5.0@aar'
     //used to generate the Open Source section
     //https://github.com/mikepenz/AboutLibraries
-    compile('com.mikepenz:aboutlibraries:5.9.0-SNAPSHOT@aar') {
+    compile('com.mikepenz:aboutlibraries:5.9.0@aar') {
         transitive = true
         exclude module: "fastadapter"
     }

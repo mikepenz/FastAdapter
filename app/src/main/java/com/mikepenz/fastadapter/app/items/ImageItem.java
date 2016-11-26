@@ -3,6 +3,7 @@ package com.mikepenz.fastadapter.app.items;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,8 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.app.R;
+import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
@@ -209,12 +211,13 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
     }
 
     public static class ImageItemHeartClickEvent extends ClickEventHook<ImageItem> {
+        @Nullable
         @Override
-        public View onBind(@NonNull RecyclerView.ViewHolder viewHolder) {
+        public List<View> onBindMany(@NonNull RecyclerView.ViewHolder viewHolder) {
             if (viewHolder instanceof ImageItem.ViewHolder) {
-                return ((ViewHolder) viewHolder).imageLovedContainer;
+                return ClickListenerHelper.toList(((ViewHolder) viewHolder).imageLovedContainer);
             }
-            return null;
+            return super.onBindMany(viewHolder);
         }
 
         @Override
