@@ -305,6 +305,54 @@ public class SubItemUtil {
         return deleted;
     }
 
+    /**
+     * notifies sub items, if they are currently extended
+     *
+     * @param adapter the adapter
+     * @param identifiers set of identifiers that should be notified
+     */
+    public static <T extends IItem & IExpandable> void notifyItemsChanged(final FastAdapter adapter, Set<Long> identifiers) {
+        int i;
+        IItem item;
+        for (i = 0; i < adapter.getItemCount(); i++) {
+            item = adapter.getItem(i);
+            if (item instanceof IExpandable) {
+                notifyItemsChanged(adapter, (T) item, identifiers, true);
+            }
+            else if (identifiers.contains(item.getIdentifier())) {
+                adapter.notifyAdapterItemChanged(i);
+            }
+        }
+    }
+
+    /**
+     * notifies sub items, if they are currently extended
+     *
+     * @param adapter the adapter
+     * @param header the expandable header that should be checked (incl. sub items)
+     * @param identifiers set of identifiers that should be notified
+     * @param checkSubItems true, if sub items of headers items should be checked recursively
+     */
+    public static <T extends IItem & IExpandable> void notifyItemsChanged(final FastAdapter adapter, T header, Set<Long> identifiers, boolean checkSubItems) {
+        int subItems = header.getSubItems().size();
+        int position = adapter.getPosition(header);
+        // 1) check header itself
+        if (identifiers.contains(header.getIdentifier()))
+            adapter.notifyAdapterItemChanged(position);
+        // 2) check sub items, recursively
+        if (header.isExpanded()) {
+            for (int i = 0; i < subItems; i++) {
+                if (identifiers.contains(((IItem)header.getSubItems().get(i)).getIdentifier())) {
+//                    Log.d("NOTIFY", "Position=" + position + ", i=" + i);
+                    adapter.notifyAdapterItemChanged(position + i + 1);
+                }
+                if (checkSubItems && header.getSubItems().get(i) instanceof IExpandable) {
+                    notifyItemsChanged(adapter, header, identifiers, true);
+                }
+            }
+        }
+    }
+
     public interface IPredicate<T> {
         boolean apply(T data);
     }
