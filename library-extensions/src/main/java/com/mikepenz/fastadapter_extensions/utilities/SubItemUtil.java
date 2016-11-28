@@ -311,13 +311,13 @@ public class SubItemUtil {
      * @param adapter the adapter
      * @param identifiers set of identifiers that should be notified
      */
-    public static <T extends IItem & IExpandable> void notifyItemsChanged(final FastAdapter adapter, Set<Long> identifiers) {
+    public static <ITEM extends IItem & IExpandable> void notifyItemsChanged(final FastAdapter adapter, Set<Long> identifiers) {
         int i;
         IItem item;
         for (i = 0; i < adapter.getItemCount(); i++) {
             item = adapter.getItem(i);
             if (item instanceof IExpandable) {
-                notifyItemsChanged(adapter, (T) item, identifiers, true);
+                notifyItemsChanged(adapter, (ITEM) item, identifiers, true);
             }
             else if (identifiers.contains(item.getIdentifier())) {
                 adapter.notifyAdapterItemChanged(i);
