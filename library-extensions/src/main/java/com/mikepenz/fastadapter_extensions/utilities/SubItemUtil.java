@@ -349,7 +349,7 @@ public class SubItemUtil {
                     adapter.notifyAdapterItemChanged(position + i + 1);
                 }
                 if (checkSubItems && item instanceof IExpandable) {
-                    notifyItemsChanged(adapter, header, identifiers, true);
+                    notifyItemsChanged(adapter, (Item)item, identifiers, true);
                 }
             }
         }
