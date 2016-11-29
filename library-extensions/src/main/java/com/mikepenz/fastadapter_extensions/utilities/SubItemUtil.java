@@ -340,15 +340,15 @@ public class SubItemUtil {
         if (identifiers.contains(header.getIdentifier()))
             adapter.notifyAdapterItemChanged(position);
         // 2) check sub items, recursively
-        List<IItem> items;
+        IItem item;
         if (header.isExpanded()) {
             for (int i = 0; i < subItems; i++) {
-                items = header.getSubItems();
-                if (identifiers.contains((items.get(i)).getIdentifier())) {
+                item = (IItem)header.getSubItems().get(i);
+                if (identifiers.contains(item.getIdentifier())) {
 //                    Log.d("NOTIFY", "Position=" + position + ", i=" + i);
                     adapter.notifyAdapterItemChanged(position + i + 1);
                 }
-                if (checkSubItems && items.get(i) instanceof IExpandable) {
+                if (checkSubItems && item instanceof IExpandable) {
                     notifyItemsChanged(adapter, header, identifiers, true);
                 }
             }
