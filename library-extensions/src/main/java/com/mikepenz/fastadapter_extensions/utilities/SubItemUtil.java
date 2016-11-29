@@ -311,13 +311,13 @@ public class SubItemUtil {
      * @param adapter the adapter
      * @param identifiers set of identifiers that should be notified
      */
-    public static <ITEM extends IItem & IExpandable> void notifyItemsChanged(final FastAdapter adapter, Set<Long> identifiers) {
+    public static <Item extends IItem & IExpandable> void notifyItemsChanged(final FastAdapter adapter, Set<Long> identifiers) {
         int i;
         IItem item;
         for (i = 0; i < adapter.getItemCount(); i++) {
             item = adapter.getItem(i);
             if (item instanceof IExpandable) {
-                notifyItemsChanged(adapter, (ITEM) item, identifiers, true);
+                notifyItemsChanged(adapter, (Item) item, identifiers, true);
             }
             else if (identifiers.contains(item.getIdentifier())) {
                 adapter.notifyAdapterItemChanged(i);
@@ -333,7 +333,7 @@ public class SubItemUtil {
      * @param identifiers set of identifiers that should be notified
      * @param checkSubItems true, if sub items of headers items should be checked recursively
      */
-    public static <T extends IItem & IExpandable> void notifyItemsChanged(final FastAdapter adapter, T header, Set<Long> identifiers, boolean checkSubItems) {
+    public static <Item extends IItem & IExpandable> void notifyItemsChanged(final FastAdapter adapter, Item header, Set<Long> identifiers, boolean checkSubItems) {
         int subItems = header.getSubItems().size();
         int position = adapter.getPosition(header);
         // 1) check header itself
