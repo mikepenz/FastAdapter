@@ -306,7 +306,7 @@ public class SubItemUtil {
     }
 
     /**
-     * notifies sub items, if they are currently extended
+     * notifies items (incl. sub items if they are currently extended)
      *
      * @param adapter the adapter
      * @param identifiers set of identifiers that should be notified
@@ -326,7 +326,7 @@ public class SubItemUtil {
     }
 
     /**
-     * notifies sub items, if they are currently extended
+     * notifies items (incl. sub items if they are currently extended)
      *
      * @param adapter the adapter
      * @param header the expandable header that should be checked (incl. sub items)
