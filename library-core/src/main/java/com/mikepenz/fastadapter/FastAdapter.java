@@ -1855,7 +1855,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             if (item != null) {
                 item.unbindView(viewHolder);
             } else {
-                Log.e("FastAdapter", "The bindView method of this item should set the `Tag` on it's itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.java#L189)");
+                Log.e("FastAdapter", "The bindView method of this item should set the `Tag` on its itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.java#L189)");
             }
         }
     }
