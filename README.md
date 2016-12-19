@@ -170,7 +170,7 @@ fastAdapter.filter("yourSearchTerm");
 fastAdapter.withFilterPredicate(new IItemAdapter.Predicate<Item>() {
             @Override
             public boolean filter(Item item, CharSequence constraint) {
-                return item.getName().startsWith(String.valueOf(constraint));
+                return !item.getName().startsWith(String.valueOf(constraint));
             }
 });
 ```

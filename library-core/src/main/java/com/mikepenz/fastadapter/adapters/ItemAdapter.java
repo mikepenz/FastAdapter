@@ -102,7 +102,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     //the listener which will be called after the items were filtered
-    protected ItemFilterListener mItemFilterListener;
+    private ItemFilterListener mItemFilterListener;
 
     /**
      * interface for the ItemFilterListener
@@ -112,7 +112,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     //
-    protected Comparator<Item> mComparator;
+    private Comparator<Item> mComparator;
 
     /**
      * define a comparator which will be used to sort the list "everytime" it is altered
@@ -133,7 +133,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param sortNow    specifies if we use the provided comparator to sort now
      * @return this
      */
-    public ItemAdapter<Item> withComparator(Comparator<Item> comparator, boolean sortNow) {
+    private ItemAdapter<Item> withComparator(Comparator<Item> comparator, boolean sortNow) {
         this.mComparator = comparator;
 
         //we directly sort the list with the defined comparator
@@ -466,7 +466,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * ItemFilter which extends the Filter api provided by Android
      * This calls automatically all required methods, just overwrite the filterItems method
      */
-    public class ItemFilter extends Filter {
+    private class ItemFilter extends Filter {
         private List<Item> mOriginalItems;
         private CharSequence mConstraint;
 
@@ -498,7 +498,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 // We perform filtering operation
                 if (mFilterPredicate != null) {
                     for (Item item : mOriginalItems) {
-                        if (!mFilterPredicate.filter(item, constraint)) {
+                        if (mFilterPredicate.filter(item, constraint)) {
                             filteredItems.add(item);
                         }
                     }
@@ -516,6 +516,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             return mConstraint;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // Now we have to inform the adapter about the new list filtered
