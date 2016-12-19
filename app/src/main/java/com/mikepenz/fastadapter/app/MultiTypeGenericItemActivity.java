@@ -8,12 +8,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
 import com.mikepenz.fastadapter.app.generic.GenericIconItem;
 import com.mikepenz.fastadapter.app.generic.IconModel;
 import com.mikepenz.fastadapter.app.generic.RightGenericIconItem;
 import com.mikepenz.fastadapter.app.generic.RightIconModel;
+import com.mikepenz.fastadapter.commons.adapters.GenericFastItemAdapter;
 import com.mikepenz.fastadapter.utils.Function;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
@@ -27,7 +26,7 @@ import java.util.List;
 
 public class MultiTypeGenericItemActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastAdapter fastAdapter;
+    private GenericFastItemAdapter<IconModel, GenericIconItem> genericFastItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,17 +44,7 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
 
 
         //create our FastAdapter which will manage everything
-        fastAdapter = new FastAdapter();
-        fastAdapter.withSelectable(true);
-
-        //get our recyclerView and do basic setup
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
-
-        //init our gridLayoutManager and configure RV
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
-
-        //if you need multiple items for different models you can also do this be defining a Function which get's the model object and returns the item (extends IItem)
-        GenericItemAdapter<IconModel, GenericIconItem> itemAdapter = new GenericItemAdapter<>(new Function<IconModel, GenericIconItem>() {
+        genericFastItemAdapter = new GenericFastItemAdapter<>(new Function<IconModel, GenericIconItem>() {
             @Override
             public GenericIconItem apply(IconModel o) {
                 if (o instanceof RightIconModel) {
@@ -65,10 +54,17 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
                 }
             }
         });
+        genericFastItemAdapter.withSelectable(true);
+
+        //get our recyclerView and do basic setup
+        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+
+        //init our gridLayoutManager and configure RV
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
 
         rv.setLayoutManager(gridLayoutManager);
         rv.setItemAnimator(new SlideDownAlphaAnimator());
-        rv.setAdapter(itemAdapter.wrap(fastAdapter));
+        rv.setAdapter(genericFastItemAdapter);
 
         //order fonts by their name
         List<ITypeface> mFonts = new ArrayList<>(Iconics.getRegisteredFonts(this));
@@ -94,10 +90,10 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
         }
 
         //fill with some sample data
-        itemAdapter.addModel(models);
+        genericFastItemAdapter.items().addModel(models);
 
         //restore selections (this has to be done after the items were added
-        fastAdapter.withSavedInstanceState(savedInstanceState);
+        genericFastItemAdapter.withSavedInstanceState(savedInstanceState);
 
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -107,7 +103,7 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //add the values which need to be saved from the adapter to the bundel
-        outState = fastAdapter.saveInstanceState(outState);
+        outState = genericFastItemAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
 
