@@ -49,7 +49,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     //filters the items
-    private Filter mItemFilter = new ItemFilter();
+    private Filter mItemFilter;
 
     /**
      * allows you to define your own Filter implementation instead of the default `ItemFilter`
@@ -66,6 +66,9 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @return the filter used to filter items
      */
     public Filter getItemFilter() {
+        if (mItemFilter == null) {
+            mItemFilter = new ItemFilter();
+        }
         return mItemFilter;
     }
 
@@ -89,7 +92,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param constraint the string used to filter the list
      */
     public void filter(CharSequence constraint) {
-        mItemFilter.filter(constraint);
+        getItemFilter().filter(constraint);
     }
 
     /**
