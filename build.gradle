@@ -15,8 +15,8 @@ buildscript {
 // project and then reference this from the modules
 ext {
     compileSdkVersion = 25
-    buildToolsVersion = "25.0.0"
-    supportLibVersion = "25.0.1"
+    buildToolsVersion = "25.0.2"
+    supportLibVersion = "25.1.0"
 }
 
 allprojects {
@@ -27,5 +27,5 @@ allprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '2.14.1'
+    gradleVersion = '3.2'
 }
