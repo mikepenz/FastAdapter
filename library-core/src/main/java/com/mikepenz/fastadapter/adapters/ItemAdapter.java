@@ -133,7 +133,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param sortNow    specifies if we use the provided comparator to sort now
      * @return this
      */
-    private ItemAdapter<Item> withComparator(Comparator<Item> comparator, boolean sortNow) {
+    public ItemAdapter<Item> withComparator(Comparator<Item> comparator, boolean sortNow) {
         this.mComparator = comparator;
 
         //we directly sort the list with the defined comparator
@@ -466,7 +466,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * ItemFilter which extends the Filter api provided by Android
      * This calls automatically all required methods, just overwrite the filterItems method
      */
-    private class ItemFilter extends Filter {
+    public class ItemFilter extends Filter {
         private List<Item> mOriginalItems;
         private CharSequence mConstraint;
 
