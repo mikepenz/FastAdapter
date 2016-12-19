@@ -27,26 +27,24 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
 
     public FastAdapterBottomSheetDialog(Context context) {
         super(context);
-        this.mRecyclerView = createRecyclerView();
+        init();
     }
 
     public FastAdapterBottomSheetDialog(Context context, int theme) {
         super(context, theme);
-        this.mRecyclerView = createRecyclerView();
+        init();
     }
 
     /**
      * Create the RecyclerView and set it as the dialog view.
      *
-     * @return the created RecyclerView
      */
-    private RecyclerView createRecyclerView() {
-        RecyclerView recyclerView = new RecyclerView(getContext());
+    private void init() {
+        mRecyclerView = new RecyclerView(getContext());
         RecyclerView.LayoutParams params = new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
-        recyclerView.setLayoutParams(params);
-        setContentView(recyclerView);
-        return recyclerView;
+        mRecyclerView.setLayoutParams(params);
+        setContentView(mRecyclerView);
     }
 
     /**
@@ -80,16 +78,17 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
             mFastItemAdapter = new FastItemAdapter<>();
             mRecyclerView.setAdapter(mFastItemAdapter);
         }
-        mFastItemAdapter.set(items);
+        mFastItemAdapter.items().set(items);
         return this;
     }
 
-    public FastAdapterBottomSheetDialog<Item> withItems(@NonNull Item... items) {
+    @SafeVarargs
+    public final FastAdapterBottomSheetDialog<Item> withItems(@NonNull Item... items) {
         if (mFastItemAdapter == null) {
             mFastItemAdapter = new FastItemAdapter<>();
             mRecyclerView.setAdapter(mFastItemAdapter);
         }
-        mFastItemAdapter.add(items);
+        mFastItemAdapter.items().add(items);
         return this;
     }
 
@@ -202,7 +201,7 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
      * @param items the new items to set
      */
     public FastAdapterBottomSheetDialog<Item> set(List<Item> items) {
-        mFastItemAdapter.set(items);
+        mFastItemAdapter.items().set(items);
         return this;
     }
 
@@ -212,7 +211,7 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
      * @param items the new items to set
      */
     public FastAdapterBottomSheetDialog<Item> setNewList(List<Item> items) {
-        mFastItemAdapter.setNewList(items);
+        mFastItemAdapter.items().setNewList(items);
         return this;
     }
 
@@ -223,7 +222,7 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
      */
     @SafeVarargs
     public final FastAdapterBottomSheetDialog<Item> add(Item... items) {
-        mFastItemAdapter.add(items);
+        mFastItemAdapter.items().add(items);
         return this;
     }
 
@@ -233,7 +232,7 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
      * @param items the items to add
      */
     public FastAdapterBottomSheetDialog<Item> add(List<Item> items) {
-        mFastItemAdapter.add(items);
+        mFastItemAdapter.items().add(items);
         return this;
     }
 
@@ -245,7 +244,7 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
      */
     @SafeVarargs
     public final FastAdapterBottomSheetDialog<Item> add(int position, Item... items) {
-        mFastItemAdapter.add(position, items);
+        mFastItemAdapter.items().add(position, items);
         return this;
     }
 
@@ -256,7 +255,7 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
      * @param items    the items to add
      */
     public FastAdapterBottomSheetDialog<Item> add(int position, List<Item> items) {
-        mFastItemAdapter.add(position, items);
+        mFastItemAdapter.items().add(position, items);
         return this;
     }
 
@@ -267,7 +266,7 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
      * @param item     the item to set
      */
     public FastAdapterBottomSheetDialog<Item> set(int position, Item item) {
-        mFastItemAdapter.set(position, item);
+        mFastItemAdapter.items().set(position, item);
         return this;
     }
 
@@ -277,7 +276,7 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
      * @param item the item to add
      */
     public FastAdapterBottomSheetDialog<Item> add(Item item) {
-        mFastItemAdapter.add(item);
+        mFastItemAdapter.items().add(item);
         return this;
     }
 
@@ -288,7 +287,7 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
      * @param item     the item to add
      */
     public FastAdapterBottomSheetDialog<Item> add(int position, Item item) {
-        mFastItemAdapter.add(position, item);
+        mFastItemAdapter.items().add(position, item);
         return this;
     }
 
@@ -300,7 +299,7 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
      * @return this
      */
     public FastAdapterBottomSheetDialog<Item> move(int fromPosition, int toPosition) {
-        mFastItemAdapter.move(fromPosition, toPosition);
+        mFastItemAdapter.items().move(fromPosition, toPosition);
         return this;
     }
 
@@ -310,7 +309,7 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
      * @param position the global position
      */
     public FastAdapterBottomSheetDialog<Item> remove(int position) {
-        mFastItemAdapter.remove(position);
+        mFastItemAdapter.items().remove(position);
         return this;
     }
 
@@ -321,7 +320,7 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
      * @param itemCount the count of items removed
      */
     public FastAdapterBottomSheetDialog<Item> removeItemRange(int position, int itemCount) {
-        mFastItemAdapter.removeItemRange(position, itemCount);
+        mFastItemAdapter.items().removeRange(position, itemCount);
         return this;
     }
 
@@ -329,7 +328,7 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
      * removes all items of this adapter
      */
     public FastAdapterBottomSheetDialog<Item> clear() {
-        mFastItemAdapter.clear();
+        mFastItemAdapter.items().clear();
         return this;
     }
 }
