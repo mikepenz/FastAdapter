@@ -76,7 +76,7 @@ public class RealmActivity extends AppCompatActivity {
                 //This will call twice
                 //1.) from findAllAsync()
                 //2.) from createData()
-                mFastItemAdapter.setNewList(userItems);
+                mFastItemAdapter.items().setNewList(userItems);
             }
         });
 

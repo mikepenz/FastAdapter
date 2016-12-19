@@ -104,7 +104,7 @@ public class IconGridActivity extends AppCompatActivity {
         }
 
         //fill with some sample data
-        fastItemAdapter.add(items);
+        fastItemAdapter.items().add(items);
 
         //if first start we want to expand the item with ID 2
         if (savedInstanceState != null) {

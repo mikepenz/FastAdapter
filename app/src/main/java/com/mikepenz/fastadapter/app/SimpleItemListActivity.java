@@ -76,7 +76,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         });
 
         //configure the itemAdapter
-        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SimpleItem>() {
+        fastItemAdapter.items().withFilterPredicate(new IItemAdapter.Predicate<SimpleItem>() {
             @Override
             public boolean filter(SimpleItem item, CharSequence constraint) {
                 //return true if we should filter it out
@@ -85,7 +85,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
             }
         });
 
-        fastItemAdapter.getItemAdapter().withItemFilterListener(this);
+        fastItemAdapter.items().withItemFilterListener(this);
 
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
@@ -109,7 +109,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
                 x++;
             }
         }
-        fastItemAdapter.add(items);
+        fastItemAdapter.items().add(items);
 
         //add drag and drop for item
         touchCallback = new SimpleDragCallback(this);
@@ -160,14 +160,14 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
                 @Override
                 public boolean onQueryTextSubmit(String s) {
                     touchCallback.setIsDragEnabled(false);
-                    fastItemAdapter.filter(s);
+                    fastItemAdapter.items().filter(s);
                     return true;
                 }
 
 
                 @Override
                 public boolean onQueryTextChange(String s) {
-                    fastItemAdapter.filter(s);
+                    fastItemAdapter.items().filter(s);
                     touchCallback.setIsDragEnabled(TextUtils.isEmpty(s));
                     return true;
                 }
@@ -181,7 +181,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
 
     @Override
     public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-        Collections.swap(fastItemAdapter.getAdapterItems(), oldPosition, newPosition); // change position
+        Collections.swap(fastItemAdapter.items().getAdapterItems(), oldPosition, newPosition); // change position
         fastItemAdapter.notifyAdapterItemMoved(oldPosition, newPosition);
         return true;
     }

@@ -106,10 +106,10 @@ public class SortActivity extends AppCompatActivity {
         }
 
         //we sort the list
-        fastItemAdapter.getItemAdapter().withComparator(getComparator());
+        fastItemAdapter.items().withComparator(getComparator());
 
         //initial filling of the list
-        fastItemAdapter.setNewList(generateUnsortedList());
+        fastItemAdapter.items().setNewList(generateUnsortedList());
 
         //restore selections (this has to be done after the items were added
         fastItemAdapter.withSavedInstanceState(savedInstanceState);
@@ -153,20 +153,20 @@ public class SortActivity extends AppCompatActivity {
                 //Set the new sorting strategy
                 sortingStrategy = SORT_NONE;
                 //randomize the items
-                Collections.shuffle(fastItemAdapter.getAdapterItems());
+                Collections.shuffle(fastItemAdapter.items().getAdapterItems());
                 fastItemAdapter.notifyDataSetChanged();
                 return true;
             case R.id.item_sort_asc:
                 //Set the new sorting strategy
                 sortingStrategy = SORT_ASCENDING;
                 //Set the new comparator to the list
-                fastItemAdapter.getItemAdapter().withComparator(getComparator());
+                fastItemAdapter.items().withComparator(getComparator());
                 return true;
             case R.id.item_sort_desc:
                 //Set the new sorting strategy
                 sortingStrategy = SORT_DESCENDING;
                 //Set the new comparator to the list
-                fastItemAdapter.getItemAdapter().withComparator(getComparator());
+                fastItemAdapter.items().withComparator(getComparator());
                 return true;
             case android.R.id.home:
                 Toast.makeText(getApplicationContext(), "selections = " +

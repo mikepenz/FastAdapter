@@ -78,7 +78,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         });
 
         //configure the itemAdapter
-        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SimpleItem>() {
+        fastItemAdapter.items().withFilterPredicate(new IItemAdapter.Predicate<SimpleItem>() {
             @Override
             public boolean filter(SimpleItem item, CharSequence constraint) {
                 //return true if we should filter it out
@@ -87,7 +87,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
             }
         });
 
-        fastItemAdapter.getItemAdapter().withItemFilterListener(this);
+        fastItemAdapter.items().withItemFilterListener(this);
 
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
@@ -106,7 +106,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
                     public void run() {
                         footerAdapter.clear();
                         for (int i = 1; i < 16; i++) {
-                            fastItemAdapter.add(fastItemAdapter.getAdapterItemCount(), new SimpleItem().withName("Item " + i + " Page " + currentPage));
+                            fastItemAdapter.items().add(fastItemAdapter.items().getAdapterItemCount(), new SimpleItem().withName("Item " + i + " Page " + currentPage));
                         }
                     }
                 }, 2000);
@@ -118,7 +118,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         for (int i = 1; i < 16; i++) {
             items.add(new SimpleItem().withName("Item " + i + " Page " + 1));
         }
-        fastItemAdapter.add(items);
+        fastItemAdapter.items().add(items);
 
         //add drag and drop for item
         touchCallback = new SimpleDragCallback(this);
@@ -169,14 +169,14 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
                 @Override
                 public boolean onQueryTextSubmit(String s) {
                     touchCallback.setIsDragEnabled(false);
-                    fastItemAdapter.filter(s);
+                    fastItemAdapter.items().filter(s);
                     return true;
                 }
 
 
                 @Override
                 public boolean onQueryTextChange(String s) {
-                    fastItemAdapter.filter(s);
+                    fastItemAdapter.items().filter(s);
                     touchCallback.setIsDragEnabled(TextUtils.isEmpty(s));
                     return true;
                 }
@@ -190,7 +190,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
 
     @Override
     public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-        Collections.swap(fastItemAdapter.getAdapterItems(), oldPosition, newPosition); // change position
+        Collections.swap(fastItemAdapter.items().getAdapterItems(), oldPosition, newPosition); // change position
         fastItemAdapter.notifyAdapterItemMoved(oldPosition, newPosition);
         return true;
     }

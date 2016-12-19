@@ -74,7 +74,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         });
 
         //configure the itemAdapter
-        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SwipeableItem>() {
+        fastItemAdapter.items().withFilterPredicate(new IItemAdapter.Predicate<SwipeableItem>() {
             @Override
             public boolean filter(SwipeableItem item, CharSequence constraint) {
                 //return true if we should filter it out
@@ -99,7 +99,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
                 x++;
             }
         }
-        fastItemAdapter.add(items);
+        fastItemAdapter.items().add(items);
 
 
         //add drag and drop for item
@@ -170,14 +170,14 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
                 @Override
                 public boolean onQueryTextSubmit(String s) {
                     touchCallback.setIsDragEnabled(false);
-                    fastItemAdapter.filter(s);
+                    fastItemAdapter.items().filter(s);
                     return true;
                 }
 
 
                 @Override
                 public boolean onQueryTextChange(String s) {
-                    fastItemAdapter.filter(s);
+                    fastItemAdapter.items().filter(s);
                     touchCallback.setIsDragEnabled(TextUtils.isEmpty(s));
                     return true;
                 }
@@ -191,7 +191,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
 
     @Override
     public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-        Collections.swap(fastItemAdapter.getAdapterItems(), oldPosition, newPosition); // change position
+        Collections.swap(fastItemAdapter.items().getAdapterItems(), oldPosition, newPosition); // change position
         fastItemAdapter.notifyAdapterItemMoved(oldPosition, newPosition);
         return true;
     }
@@ -214,9 +214,9 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
             @Override
             public void run() {
                 item.setSwipedAction(null);
-                int position = fastItemAdapter.getAdapterPosition(item);
+                int position = fastItemAdapter.items().getAdapterPosition(item);
                 if (position != RecyclerView.NO_POSITION) {
-                    fastItemAdapter.remove(position);
+                    fastItemAdapter.items().remove(position);
                 }
             }
         };
@@ -228,7 +228,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
             public void run() {
                 rv.removeCallbacks(removeRunnable);
                 item.setSwipedDirection(0);
-                int position = fastItemAdapter.getAdapterPosition(item);
+                int position = fastItemAdapter.items().getAdapterPosition(item);
                 if (position != RecyclerView.NO_POSITION) {
                     fastItemAdapter.notifyItemChanged(position);
                 }

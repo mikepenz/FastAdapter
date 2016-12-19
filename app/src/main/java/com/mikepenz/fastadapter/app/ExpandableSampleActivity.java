@@ -77,7 +77,7 @@ public class ExpandableSampleActivity extends AppCompatActivity {
                 items.add(new SimpleSubItem().withName("Test " + i).withIdentifier(100 + i));
             }
         }
-        fastItemAdapter.add(items);
+        fastItemAdapter.items().add(items);
 
         //restore selections (this has to be done after the items were added
         fastItemAdapter.withSavedInstanceState(savedInstanceState);

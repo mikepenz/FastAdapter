@@ -62,7 +62,7 @@ public class RangeSelectorHelper {
     public boolean onLongClick(int index) {
         if (mLastLongPressIndex == null) {
             // we only consider long presses on not selected items
-            if (mFastAdapter.getAdapterItem(index).isSelectable()) {
+            if (mFastAdapter.items().getAdapterItem(index).isSelectable()) {
                 mLastLongPressIndex = index;
                 // we select this item as well
                 mFastAdapter.select(index);
@@ -90,7 +90,7 @@ public class RangeSelectorHelper {
         }
 
         for (int i = from; i <= to; i++) {
-            if (mFastAdapter.getAdapterItem(i).isSelectable()) {
+            if (mFastAdapter.items().getAdapterItem(i).isSelectable()) {
                 if (select) {
                     mFastAdapter.select(i);
                 }
@@ -98,8 +98,8 @@ public class RangeSelectorHelper {
                     mFastAdapter.deselect(i);
                 }
             }
-            if (mSupportSubItems && mFastAdapter.getAdapterItem(i) instanceof IExpandable)
-                SubItemUtil.selectAllSubItems(mFastAdapter, (T)mFastAdapter.getAdapterItem(i), select, true);
+            if (mSupportSubItems && mFastAdapter.items().getAdapterItem(i) instanceof IExpandable)
+                SubItemUtil.selectAllSubItems(mFastAdapter, (T)mFastAdapter.items().getAdapterItem(i), select, true);
         }
 
         if (mActionModeHelper != null)
