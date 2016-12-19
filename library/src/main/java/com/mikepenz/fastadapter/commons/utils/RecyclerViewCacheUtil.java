@@ -1,11 +1,10 @@
 package com.mikepenz.fastadapter.commons.utils;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseArray;
 
 import com.mikepenz.fastadapter.IItem;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Stack;
 
 /**
@@ -35,28 +34,28 @@ public class RecyclerViewCacheUtil<Item extends IItem> {
     public void apply(RecyclerView recyclerView, Iterable<Item> items) {
         if (items != null) {
             //we pre-create the views for our cache
-            HashMap<Integer, Stack<RecyclerView.ViewHolder>> cache = new HashMap<>();
+            SparseArray<Stack<RecyclerView.ViewHolder>> cache = new SparseArray<>();
             for (Item d : items) {
-                if (!cache.containsKey(d.getType())) {
+                Stack<RecyclerView.ViewHolder> holders = cache.get(d.getType());
+                if (holders == null) {
                     cache.put(d.getType(), new Stack<RecyclerView.ViewHolder>());
-                }
-
-                if (mCacheSize == -1 || cache.get(d.getType()).size() <= mCacheSize) {
-                    cache.get(d.getType()).push(d.getViewHolder(recyclerView));
+                } else if (mCacheSize == -1 || holders.size() <= mCacheSize) {
+                    holders.push(d.getViewHolder(recyclerView));
                 }
 
                 RecyclerView.RecycledViewPool recyclerViewPool = new RecyclerView.RecycledViewPool();
 
                 //we fill the pool
-                for (Map.Entry<Integer, Stack<RecyclerView.ViewHolder>> entry : cache.entrySet()) {
-                    recyclerViewPool.setMaxRecycledViews(entry.getKey(), mCacheSize);
-
-                    for (RecyclerView.ViewHolder holder : entry.getValue()) {
+                for (int i = 0, length = cache.size(); i < length; i++) {
+                    int key = cache.keyAt(i);
+                    Stack<RecyclerView.ViewHolder> entry = cache.get(key);
+                    recyclerViewPool.setMaxRecycledViews(key, mCacheSize);
+                    for (RecyclerView.ViewHolder holder : entry) {
                         recyclerViewPool.putRecycledView(holder);
                     }
-
                     //make sure to clear the stack
-                    entry.getValue().clear();
+                    entry.clear();
+
                 }
 
                 //make sure to clear the cache
