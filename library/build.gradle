@@ -9,6 +9,7 @@ android {
         targetSdkVersion 25
         versionCode 210
         versionName '2.1.0'
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
