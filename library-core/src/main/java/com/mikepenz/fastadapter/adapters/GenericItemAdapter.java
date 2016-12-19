@@ -170,7 +170,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      * @param models the models
      * @return the list of items referencing the models
      */
-    protected List<Item> toItems(List<Model> models) {
+    private List<Item> toItems(List<Model> models) {
         if (models == null) {
             return Collections.emptyList();
         }
@@ -189,15 +189,15 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      * @param model the model class we want to wrap into a typedItem
      * @return our typedItem
      */
-    protected Item toItem(Model model) {
+    private Item toItem(Model model) {
         return mItemFactory.apply(model);
     }
 
-    protected static class ReflectionBasedItemFactory<Model, Item> implements Function<Model, Item> {
+    private static class ReflectionBasedItemFactory<Model, Item> implements Function<Model, Item> {
         private final Class<? extends Model> modelClass;
         private final Class<? extends Item> itemClass;
 
-        public ReflectionBasedItemFactory(Class<? extends Model> modelClass, Class<? extends Item> itemClass) {
+        ReflectionBasedItemFactory(Class<? extends Model> modelClass, Class<? extends Item> itemClass) {
             this.modelClass = modelClass;
             this.itemClass = itemClass;
         }
