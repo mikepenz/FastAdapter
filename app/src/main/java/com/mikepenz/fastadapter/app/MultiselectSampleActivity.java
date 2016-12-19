@@ -32,7 +32,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
     //save our FastAdapter
     private FastAdapter<SimpleItem> mFastAdapter;
 
-    private UndoHelper mUndoHelper;
+    private UndoHelper<SimpleItem> mUndoHelper;
 
     private ActionModeHelper mActionModeHelper;
 
@@ -54,7 +54,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         mFastAdapter = new FastAdapter<>();
 
         //
-        mUndoHelper = new UndoHelper(mFastAdapter, new UndoHelper.UndoListener<SimpleItem>() {
+        mUndoHelper = new UndoHelper<>(mFastAdapter, new UndoHelper.UndoListener<SimpleItem>() {
             @Override
             public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<SimpleItem>> removed) {
                 Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size());
@@ -161,7 +161,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
     /**
      * Our ActionBarCallBack to showcase the CAB
      */
-    class ActionBarCallBack implements ActionMode.Callback {
+    private class ActionBarCallBack implements ActionMode.Callback {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {

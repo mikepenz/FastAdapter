@@ -44,7 +44,6 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
 
     //drag & drop
     private SimpleDragCallback touchCallback;
-    private ItemTouchHelper touchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,7 +121,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
                 .withBackgroundSwipeRight(ContextCompat.getColor(this, R.color.md_blue_900))
                 .withLeaveBehindSwipeRight(leaveBehindDrawableRight);
 
-        touchHelper = new ItemTouchHelper(touchCallback); // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
+        ItemTouchHelper touchHelper = new ItemTouchHelper(touchCallback);
         touchHelper.attachToRecyclerView(recyclerView); // Attach ItemTouchHelper to RecyclerView
 
         //restore selections (this has to be done after the items were added
