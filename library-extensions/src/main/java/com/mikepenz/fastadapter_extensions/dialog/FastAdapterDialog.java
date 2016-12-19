@@ -10,8 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.mikepenz.fastadapter.AbstractAdapter;
-import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 
 import java.util.List;
@@ -30,6 +30,14 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
     public FastAdapterDialog(Context context, int theme) {
         super(context, theme);
         init();
+    }
+
+    public FastItemAdapter<Item> getFastItemAdapter() {
+        return mFastItemAdapter;
+    }
+
+    public ItemAdapter<Item> items() {
+        return mFastItemAdapter.items();
     }
 
     /**
@@ -253,197 +261,5 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
     @NonNull
     public RecyclerView getRecyclerView() {
         return mRecyclerView;
-    }
-
-    /**
-     * Define the OnClickListener which will be used for a single item
-     *
-     * @param onClickListener the OnClickListener which will be used for a single item
-     * @return this
-     */
-    public FastAdapterDialog<Item> withOnClickListener(FastAdapter.OnClickListener<Item> onClickListener) {
-        this.mFastItemAdapter.withOnClickListener(onClickListener);
-        return this;
-    }
-
-    /**
-     * Define the OnPreClickListener which will be used for a single item and is called after all internal methods are done
-     *
-     * @param onPreClickListener the OnPreClickListener which will be called after a single item was clicked and all internal methods are done
-     * @return this
-     */
-    public FastAdapterDialog<Item> withOnPreClickListener(FastAdapter.OnClickListener<Item> onPreClickListener) {
-        this.mFastItemAdapter.withOnPreClickListener(onPreClickListener);
-        return this;
-    }
-
-    /**
-     * Define the OnLongClickListener which will be used for a single item
-     *
-     * @param onLongClickListener the OnLongClickListener which will be used for a single item
-     * @return this
-     */
-    public FastAdapterDialog<Item> withOnLongClickListener(FastAdapter.OnLongClickListener<Item> onLongClickListener) {
-        this.mFastItemAdapter.withOnLongClickListener(onLongClickListener);
-        return this;
-    }
-
-    /**
-     * Define the OnLongClickListener which will be used for a single item and is called after all internal methods are done
-     *
-     * @param onPreLongClickListener the OnLongClickListener which will be called after a single item was clicked and all internal methods are done
-     * @return this
-     */
-    public FastAdapterDialog<Item> withOnPreLongClickListener(FastAdapter.OnLongClickListener<Item> onPreLongClickListener) {
-        this.mFastItemAdapter.withOnPreLongClickListener(onPreLongClickListener);
-        return this;
-    }
-
-    /**
-     * Define the TouchListener which will be used for a single item
-     *
-     * @param onTouchListener the TouchListener which will be used for a single item
-     * @return this
-     */
-    public FastAdapterDialog<Item> withOnTouchListener(FastAdapter.OnTouchListener<Item> onTouchListener) {
-        this.mFastItemAdapter.withOnTouchListener(onTouchListener);
-        return this;
-    }
-
-    /**
-     * set a new list of items and apply it to the existing list (clear - add) for this adapter
-     *
-     * @param items the new items to set
-     */
-    public FastAdapterDialog<Item> set(List<Item> items) {
-        mFastItemAdapter.items().set(items);
-        return this;
-    }
-
-    /**
-     * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
-     *
-     * @param items the new items to set
-     */
-    public FastAdapterDialog<Item> setNewList(List<Item> items) {
-        mFastItemAdapter.items().setNewList(items);
-        return this;
-    }
-
-    /**
-     * add an array of items to the end of the existing items
-     *
-     * @param items the items to add
-     */
-    @SafeVarargs
-    public final FastAdapterDialog<Item> add(Item... items) {
-        mFastItemAdapter.items().add(items);
-        return this;
-    }
-
-    /**
-     * add a list of items to the end of the existing items
-     *
-     * @param items the items to add
-     */
-    public FastAdapterDialog<Item> add(List<Item> items) {
-        mFastItemAdapter.items().add(items);
-        return this;
-    }
-
-    /**
-     * add an array of items at the given position within the existing items
-     *
-     * @param position the global position
-     * @param items    the items to add
-     */
-    @SafeVarargs
-    public final FastAdapterDialog<Item> add(int position, Item... items) {
-        mFastItemAdapter.items().add(position, items);
-        return this;
-    }
-
-    /**
-     * add a list of items at the given position within the existing items
-     *
-     * @param position the global position
-     * @param items    the items to add
-     */
-    public FastAdapterDialog<Item> add(int position, List<Item> items) {
-        mFastItemAdapter.items().add(position, items);
-        return this;
-    }
-
-    /**
-     * sets an item at the given position, overwriting the previous item
-     *
-     * @param position the global position
-     * @param item     the item to set
-     */
-    public FastAdapterDialog<Item> set(int position, Item item) {
-        mFastItemAdapter.items().set(position, item);
-        return this;
-    }
-
-    /**
-     * add an item at the end of the existing items
-     *
-     * @param item the item to add
-     */
-    public FastAdapterDialog<Item> add(Item item) {
-        mFastItemAdapter.items().add(item);
-        return this;
-    }
-
-    /**
-     * add an item at the given position within the existing icons
-     *
-     * @param position the global position
-     * @param item     the item to add
-     */
-    public FastAdapterDialog<Item> add(int position, Item item) {
-        mFastItemAdapter.items().add(position, item);
-        return this;
-    }
-
-    /**
-     * moves an item within the list from a position to a position
-     *
-     * @param fromPosition the position global from which we want to move
-     * @param toPosition   the global position to which to move
-     * @return this
-     */
-    public FastAdapterDialog<Item> move(int fromPosition, int toPosition) {
-        mFastItemAdapter.items().move(fromPosition, toPosition);
-        return this;
-    }
-
-    /**
-     * removes an item at the given position within the existing icons
-     *
-     * @param position the global position
-     */
-    public FastAdapterDialog<Item> remove(int position) {
-        mFastItemAdapter.items().remove(position);
-        return this;
-    }
-
-    /**
-     * removes a range of items starting with the given position within the existing icons
-     *
-     * @param position  the global position
-     * @param itemCount the count of items removed
-     */
-    public FastAdapterDialog<Item> removeRange(int position, int itemCount) {
-        mFastItemAdapter.items().removeRange(position, itemCount);
-        return this;
-    }
-
-    /**
-     * removes all items of this adapter
-     */
-    public FastAdapterDialog<Item> clear() {
-        mFastItemAdapter.items().clear();
-        return this;
     }
 }
