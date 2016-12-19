@@ -11,6 +11,10 @@ android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
 
+    dexOptions {
+        javaMaxHeapSize "2g"
+    }
+
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 25
