@@ -49,6 +49,11 @@ dependencies {
         exclude group: "com.android.support", module: "support-annotations"
         exclude group: "com.android.support", module: "support-v4"
     }
+    androidTestCompile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'dk.ilios:spanner:0.6.0'
 }
 
 tasks.withType(Test) {
