@@ -7,7 +7,7 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Shubham Chaudhary on 17/03/16
  */
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class FastAdapterTest {
     private FastAdapter<TestItem> adapter;
     private ItemAdapter<TestItem> itemAdapter;
