@@ -126,11 +126,8 @@ public class ClickListenerHelper<Item extends IItem> {
                     //we get the adapterPosition from the viewHolder
                     int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
                     //make sure the click was done on a valid item
-                    if (pos != RecyclerView.NO_POSITION) {
-                        //we update our item with the changed property
-                        return ((LongClickEventHook<Item>) event).onLongClick(v, pos, mFastAdapter, mFastAdapter.getItem(pos));
-                    }
-                    return false;
+                    //we update our item with the changed property
+                    return pos != RecyclerView.NO_POSITION && ((LongClickEventHook<Item>) event).onLongClick(v, pos, mFastAdapter, mFastAdapter.getItem(pos));
                 }
             });
         } else if (event instanceof TouchEventHook) {
@@ -140,11 +137,8 @@ public class ClickListenerHelper<Item extends IItem> {
                     //we get the adapterPosition from the viewHolder
                     int pos = mFastAdapter.getHolderAdapterPosition(viewHolder);
                     //make sure the click was done on a valid item
-                    if (pos != RecyclerView.NO_POSITION) {
-                        //we update our item with the changed property
-                        return ((TouchEventHook<Item>) event).onTouch(v, e, pos, mFastAdapter, mFastAdapter.getItem(pos));
-                    }
-                    return false;
+                    //we update our item with the changed property
+                    return pos != RecyclerView.NO_POSITION && ((TouchEventHook<Item>) event).onTouch(v, e, pos, mFastAdapter, mFastAdapter.getItem(pos));
                 }
             });
         } else if (event instanceof CustomEventHook) {
