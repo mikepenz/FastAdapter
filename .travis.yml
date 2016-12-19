@@ -20,7 +20,9 @@ android:
 jdk:
   - oraclejdk8
 
-script: ./gradlew clean test
+script: 
+  - ./gradlew clean test
+  - ./gradlew connectedAndroidTest
 
 branches:
   except:
