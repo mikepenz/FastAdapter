@@ -28,6 +28,7 @@ before_script:
 
 script: 
   - ./gradlew clean test
+  - ./gradlew build --stacktrace
   - adb devices
   - ./gradlew connectedAndroidTest
 
