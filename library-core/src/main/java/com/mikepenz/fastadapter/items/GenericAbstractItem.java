@@ -21,11 +21,6 @@ public abstract class GenericAbstractItem<Model, Item extends GenericAbstractIte
         return mModel;
     }
 
-    @Deprecated
-    public GenericAbstractItem<?, ?, ?> setModel(Model model) {
-        return withModel(model);
-    }
-
     public GenericAbstractItem<?, ?, ?> withModel(Model model) {
         this.mModel = model;
         return this;
