@@ -7,6 +7,7 @@ import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.ISubItem;
+import com.mikepenz.fastadapter.utils.IdDistributor;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,6 +26,27 @@ import static java.util.Arrays.asList;
 public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> implements IItemAdapter<Item> {
     //the items handled and managed by this item
     private List<Item> mItems = new ArrayList<>();
+
+    //defines if the IdDistributor is used to set ID's to all added items
+    private boolean mUseIdDistributor = false;
+
+    /**
+     * defines if the IdDistributor is used to provide an ID to all added items which do not yet define an id
+     *
+     * @param useIdDistributor false if the IdDistributor shouldn't be used
+     * @return this
+     */
+    public ItemAdapter withUseIdDistributor(boolean useIdDistributor) {
+        this.mUseIdDistributor = useIdDistributor;
+        return this;
+    }
+
+    /**
+     * @return if we use the idDistributor with this adapter
+     */
+    public boolean isUseIdDistributor() {
+        return mUseIdDistributor;
+    }
 
     //filters the items
     private Filter mItemFilter;
@@ -224,6 +246,10 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items the items to set
      */
     public ItemAdapter<Item> set(List<Item> items) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkIds(items);
+        }
+
         //first collapse all items
         getFastAdapter().collapse(false);
 
@@ -275,6 +301,10 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items the new items to set
      */
     public ItemAdapter<Item> setNewList(List<Item> items) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkIds(items);
+        }
+
         mItems = new ArrayList<>(items);
         mapPossibleTypes(mItems);
 
@@ -311,6 +341,9 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items the items to add
      */
     public ItemAdapter<Item> add(List<Item> items) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkIds(items);
+        }
         int countBefore = mItems.size();
         mItems.addAll(items);
         mapPossibleTypes(items);
@@ -342,6 +375,9 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items    the items to add
      */
     public ItemAdapter<Item> add(int position, List<Item> items) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkIds(items);
+        }
         if (items != null && items.size() > 0) {
             mItems.addAll(position - getFastAdapter().getPreItemCountByOrder(getOrder()), items);
             mapPossibleTypes(items);
@@ -358,6 +394,9 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param item     the item to set
      */
     public ItemAdapter<Item> set(int position, Item item) {
+        if (mUseIdDistributor) {
+            IdDistributor.checkId(item);
+        }
         mItems.set(position - getFastAdapter().getPreItemCount(position), item);
         mapPossibleType(item);
 
@@ -549,6 +588,9 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
          */
         public ItemAdapter<Item> add(List<Item> items) {
             if (mOriginalItems != null && items.size() > 0) {
+                if (mUseIdDistributor) {
+                    IdDistributor.checkIds(items);
+                }
                 mOriginalItems.addAll(items);
                 performFiltering(mConstraint);
                 return ItemAdapter.this;
@@ -576,6 +618,9 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
          */
         public ItemAdapter<Item> add(int position, List<Item> items) {
             if (mOriginalItems != null && items.size() > 0) {
+                if (mUseIdDistributor) {
+                    IdDistributor.checkIds(items);
+                }
                 mOriginalItems.addAll(position - getFastAdapter().getPreItemCountByOrder(getOrder()), items);
                 performFiltering(mConstraint);
                 return ItemAdapter.this;
@@ -592,6 +637,9 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
          */
         public ItemAdapter<Item> set(int position, Item item) {
             if (mOriginalItems != null) {
+                if (mUseIdDistributor) {
+                    IdDistributor.checkId(item);
+                }
                 mOriginalItems.set(position - getFastAdapter().getPreItemCount(position), item);
                 performFiltering(mConstraint);
                 return ItemAdapter.this;

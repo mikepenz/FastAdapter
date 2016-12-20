@@ -6,6 +6,7 @@ import android.support.v7.util.ListUpdateCallback;
 
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.utils.IdDistributor;
 
 import java.util.Collections;
 import java.util.List;
@@ -16,6 +17,10 @@ import java.util.List;
 
 public class FastAdapterDiffUtil {
     public static <A extends ItemAdapter<Item>, Item extends IItem> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
+        if (adapter.isUseIdDistributor()) {
+            IdDistributor.checkIds(items);
+        }
+
         //first collapse all items
         adapter.getFastAdapter().collapse(false);
 
