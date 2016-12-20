@@ -7,6 +7,7 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import org.junit.runner.RunWith;
 
 import java.io.File;
+import java.util.List;
 
 import dk.ilios.spanner.AfterExperiment;
 import dk.ilios.spanner.BeforeExperiment;
@@ -36,12 +37,16 @@ public class FastAdapterBenchmark {
 
     private ItemAdapter<TestItem> itemAdapter;
     private FastAdapter<TestItem> fastAdapter;
+    private List<TestItem> items;
+    private List<TestItem> noIdItems;
 
     @BeforeExperiment
     public void before() {
         itemAdapter = new ItemAdapter<>();
         fastAdapter = new FastAdapter<>();
         itemAdapter.wrap(fastAdapter);
+        items = TestDataGenerator.genTestItemList(1000);
+        noIdItems = TestDataGenerator.genNoIdTestItemList(1000);
     }
 
     @AfterExperiment
@@ -50,7 +55,27 @@ public class FastAdapterBenchmark {
     }
 
     @Benchmark
-    public void addItems() {
-        itemAdapter.setNewList(TestDataGenerator.genTestItemList(1000));
+    public void generateNoIdTestItemList() {
+        TestDataGenerator.genNoIdTestItemList(1000);
+    }
+
+    @Benchmark
+    public void generateItems() {
+        TestDataGenerator.genTestItemList(1000);
+    }
+
+    @Benchmark
+    public void setNewList() {
+        itemAdapter.setNewList(items);
+    }
+
+    @Benchmark
+    public void add() {
+        itemAdapter.add(items);
+    }
+
+    @Benchmark
+    public void set() {
+        itemAdapter.set(items);
     }
 }

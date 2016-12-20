@@ -18,6 +18,15 @@ public class TestDataGenerator {
         return list;
     }
 
+    public static List<TestItem> genNoIdTestItemList(int size) {
+        List<TestItem> list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            TestItem testItem = genTestItem();
+            list.add(testItem);
+        }
+        return list;
+    }
+
     public static List<TestItem> genTestItemWithSubItemsList(int size, int levels) {
         List<TestItem> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
@@ -32,7 +41,13 @@ public class TestDataGenerator {
 
     @NonNull
     public static TestItem genTestItem(int i) {
-        TestItem testItem = new TestItem().withIdentifier(i);
+        TestItem testItem = new TestItem(i);
+        return testItem;
+    }
+
+    @NonNull
+    public static TestItem genTestItem() {
+        TestItem testItem = new TestItem();
         return testItem;
     }
 }

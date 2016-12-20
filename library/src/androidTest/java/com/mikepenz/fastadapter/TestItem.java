@@ -16,6 +16,13 @@ public class TestItem extends AbstractItem<TestItem, TestItem.ViewHolder> implem
     private TestItem mParent;
     private boolean mExpanded = false;
 
+    public TestItem() {
+    }
+
+    public TestItem(long identifier) {
+        super(identifier);
+    }
+
     @Override
     public int getLayoutRes() {
         return -1;
