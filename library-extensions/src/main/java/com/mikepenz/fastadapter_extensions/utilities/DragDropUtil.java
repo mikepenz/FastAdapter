@@ -19,7 +19,7 @@ public class DragDropUtil
      * @param holder the view holder
      * @param holder the item
      */
-    public static void bindDragHandle(final RecyclerView.ViewHolder holder, final IExtendedDraggable item) {
+    public static <VH extends RecyclerView.ViewHolder> void bindDragHandle(final VH holder, final IExtendedDraggable<?, VH, ?> item) {
         // if necessary, init the drag handle, which will start the drag when touched
         if (item.getTouchHelper() != null && item.getDragView(holder) != null) {
             item.getDragView(holder).setOnTouchListener(new View.OnTouchListener() {
