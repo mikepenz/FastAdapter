@@ -24,7 +24,6 @@ import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
-import com.mikepenz.fastadapter.utils.IdDistributor;
 
 import java.util.Iterator;
 import java.util.List;
@@ -63,10 +62,6 @@ public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapt
             public void onChange(Object results) {
                 if (results instanceof List) {
                     List<Item> items = (List<Item>) results;
-
-                    if (isUseIdDistributor()) {
-                        IdDistributor.checkIds(items);
-                    }
                     mapPossibleTypes(items);
 
                     if (hasAutoUpdates || notified < 1) {
