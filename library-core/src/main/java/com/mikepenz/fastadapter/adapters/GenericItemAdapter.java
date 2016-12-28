@@ -1,5 +1,7 @@
 package com.mikepenz.fastadapter.adapters;
 
+import android.support.annotation.Nullable;
+
 import com.mikepenz.fastadapter.IGenericItem;
 import com.mikepenz.fastadapter.utils.Function;
 
@@ -110,7 +112,10 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      * @param model    the set model
      */
     public GenericItemAdapter<Model, Item> setModel(int position, Model model) {
-        super.set(position, toItem(model));
+        Item item = toItem(model);
+        if (item != null) {
+            super.set(position, item);
+        }
         return this;
     }
 
@@ -169,8 +174,12 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
 
         int size = models.size();
         List<Item> items = new ArrayList<>(size);
+        Item item;
         for (int i = 0; i < size; i++) {
-            items.add(toItem(models.get(i)));
+            item = toItem(models.get(i));
+            if (item != null) {
+                items.add(item);
+            }
         }
         return items;
     }
@@ -181,6 +190,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      * @param model the model class we want to wrap into a typedItem
      * @return our typedItem
      */
+    @Nullable
     protected Item toItem(Model model) {
         return mItemFactory.apply(model);
     }
