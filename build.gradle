@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.0-beta1'
+        classpath 'com.android.tools.build:gradle:2.3.0-beta2'
         classpath 'com.novoda:bintray-release:0.3.4'
         classpath "io.realm:realm-gradle-plugin:2.2.1"
         classpath 'com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.6.2'
@@ -27,5 +27,5 @@ allprojects {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '3.2'
+    gradleVersion = '3.3'
 }
