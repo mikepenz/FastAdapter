@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.library_extensions.R;
@@ -108,6 +109,9 @@ public class SingleLineItem extends AbstractItem<SingleLineItem, SingleLineItem.
     @Override
     public void bindView(ViewHolder holder, List<Object> payloads) {
         super.bindView(holder, payloads);
+        if (isEnabled()) {
+            holder.itemView.setBackgroundResource(FastAdapterUIUtils.getSelectableBackground(holder.itemView.getContext()));
+        }
         mName.applyTo(holder.name);
         ImageHolder.applyToOrSetInvisible(mAvatar, holder.avatar);
         ImageHolder.applyToOrSetInvisible(mIcon, holder.icon);
