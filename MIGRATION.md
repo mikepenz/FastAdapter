@@ -8,7 +8,7 @@
 * The ` List payloads` param in the `onBindViewHolder` method was changed to `List<Object> payloads`
 * The FastAdapter is now split into smaller dependencies
  * `com.mikepenz:fastadapter` : just contains the basics (no `FastItemAdapter` for example)
- * `com.mikepenz:fastadapter-commons` : this one contains the `FastItemAdapter`  and more useful common helper classes
+ * `com.mikepenz:fastadapter-commons` : this one contains the `FastItemAdapter`  and more useful common helper classes (please make sure to update the imports as these classes moved to `com.mikepenz.fastadapter.commons.*`)
  * `com.mikepenz:fastadapter-extensions` : comes with additional utils and helpers which bring allow more complex and advanced implementations
 
 #### v2.0.0 

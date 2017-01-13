@@ -11,7 +11,7 @@ import com.mikepenz.fastadapter.IItem;
 import java.util.List;
 
 public abstract class CustomEventHook<Item extends IItem> implements EventHook<Item> {
-    public abstract void onEvent(View view, RecyclerView.ViewHolder viewHolder, int position, FastAdapter<Item> fastAdapter, Item item);
+    public abstract void onEvent(View view, RecyclerView.ViewHolder viewHolder, FastAdapter<Item> fastAdapter);
 
     @Nullable
     @Override

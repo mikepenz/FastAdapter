@@ -11,7 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
+import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.mikepenz.fastadapter.listeners.EventHook;
+import com.mikepenz.fastadapter.listeners.LongClickEventHook;
+import com.mikepenz.fastadapter.listeners.TouchEventHook;
 import com.mikepenz.fastadapter.utils.AdapterUtil;
 
 import java.util.ArrayList;
@@ -88,6 +91,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * default CTOR
      */
     public FastAdapter() {
+        clickListenerHelper = new ClickListenerHelper<>(this);
         setHasStableIds(true);
     }
 
@@ -99,9 +103,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return this
      */
     public FastAdapter<Item> withItemEvent(EventHook<Item> eventHook) {
-        if (clickListenerHelper == null) {
-            clickListenerHelper = new ClickListenerHelper<>(this);
-        }
         clickListenerHelper.addEventHook(eventHook);
         return this;
     }
@@ -429,6 +430,105 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * the ClickEventHook to hook onto the itemView of a viewholder
+     */
+    private ClickEventHook<Item> fastAdapterViewClickListener = new ClickEventHook<Item>() {
+        @Override
+        public void onClick(View v, int pos, FastAdapter<Item> fastAdapter, Item item) {
+            if (item != null && item.isEnabled()) {
+                //get the relativeInfo from the position
+                RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
+
+                boolean consumed = false;
+                //on the very first we call the click listener from the item itself (if defined)
+                if (item instanceof IClickable && ((IClickable) item).getOnPreItemClickListener() != null) {
+                    consumed = ((IClickable<Item>) item).getOnPreItemClickListener().onClick(v, relativeInfo.adapter, item, pos);
+                }
+
+                //first call the onPreClickListener which would allow to prevent executing of any following code, including selection
+                if (!consumed && mOnPreClickListener != null) {
+                    consumed = mOnPreClickListener.onClick(v, relativeInfo.adapter, item, pos);
+                }
+
+                //handle the selection if the event was not yet consumed, and we are allowed to select an item (only occurs when we select with long click only)
+                //this has to happen before expand or collapse. otherwise the position is wrong which is used to select
+                if (!consumed && !mSelectOnLongClick && mSelectable) {
+                    handleSelection(v, item, pos);
+                }
+
+                //if this is a expandable item :D (this has to happen after we handled the selection as we refer to the position)
+                if (!consumed && item instanceof IExpandable) {
+                    if (((IExpandable) item).isAutoExpanding() && ((IExpandable) item).getSubItems() != null) {
+                        toggleExpandable(pos);
+                    }
+                }
+
+                //if there should be only one expanded item we want to collapse all the others but the current one (this has to happen after we handled the selection as we refer to the position)
+                if (!consumed && mOnlyOneExpandedItem) {
+                    int[] expandedItems = getExpandedItems();
+                    for (int i = expandedItems.length - 1; i >= 0; i--) {
+                        if (expandedItems[i] != pos) {
+                            collapse(expandedItems[i], true);
+                        }
+                    }
+                }
+
+                //before calling the global adapter onClick listener call the item specific onClickListener
+                if (!consumed && item instanceof IClickable && ((IClickable) item).getOnItemClickListener() != null) {
+                    consumed = ((IClickable<Item>) item).getOnItemClickListener().onClick(v, relativeInfo.adapter, item, pos);
+                }
+
+                //call the normal click listener after selection was handlded
+                if (!consumed && mOnClickListener != null) {
+                    mOnClickListener.onClick(v, relativeInfo.adapter, item, pos);
+                }
+            }
+        }
+    };
+
+    /**
+     * the LongClickEventHook to hook onto the itemView of a viewholder
+     */
+    private LongClickEventHook<Item> fastAdapterViewLongClickListener = new LongClickEventHook<Item>() {
+        @Override
+        public boolean onLongClick(View v, int pos, FastAdapter<Item> fastAdapter, Item item) {
+            boolean consumed = false;
+            RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
+            if (relativeInfo.item != null && relativeInfo.item.isEnabled()) {
+                //first call the OnPreLongClickListener which would allow to prevent executing of any following code, including selection
+                if (mOnPreLongClickListener != null) {
+                    consumed = mOnPreLongClickListener.onLongClick(v, relativeInfo.adapter, relativeInfo.item, pos);
+                }
+
+                //now handle the selection if we are in multiSelect mode and allow selecting on longClick
+                if (!consumed && mSelectOnLongClick && mSelectable) {
+                    handleSelection(v, relativeInfo.item, pos);
+                }
+
+                //call the normal long click listener after selection was handled
+                if (!consumed && mOnLongClickListener != null) {
+                    consumed = mOnLongClickListener.onLongClick(v, relativeInfo.adapter, relativeInfo.item, pos);
+                }
+            }
+            return consumed;
+        }
+    };
+
+    /**
+     * the TouchEventHook to hook onto the itemView of a viewholder
+     */
+    private TouchEventHook<Item> fastAdapterViewTouchListener = new TouchEventHook<Item>() {
+        @Override
+        public boolean onTouch(View v, MotionEvent event, int position, FastAdapter<Item> fastAdapter, Item item) {
+            if(mOnTouchListener != null) {
+                RelativeInfo<Item> relativeInfo = getRelativeInfo(position);
+                return mOnTouchListener.onTouch(v, event, relativeInfo.adapter, relativeInfo.item, position);
+            }
+            return false;
+        }
+    };
+
+    /**
      * Creates the ViewHolder by the viewType
      *
      * @param parent   the parent view (the RecyclerView)
@@ -440,106 +540,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         final RecyclerView.ViewHolder holder = mOnCreateViewHolderListener.onPreCreateViewHolder(parent, viewType);
 
         //handle click behavior
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                int pos = getHolderAdapterPosition(holder);
-                if (pos != RecyclerView.NO_POSITION) {
-                    boolean consumed = false;
-                    RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
-                    Item item = relativeInfo.item;
-                    if (item != null && item.isEnabled()) {
-                        //on the very first we call the click listener from the item itself (if defined)
-                        if (item instanceof IClickable && ((IClickable) item).getOnPreItemClickListener() != null) {
-                            consumed = ((IClickable<Item>) item).getOnPreItemClickListener().onClick(v, relativeInfo.adapter, item, pos);
-                        }
-
-                        //first call the onPreClickListener which would allow to prevent executing of any following code, including selection
-                        if (!consumed && mOnPreClickListener != null) {
-                            consumed = mOnPreClickListener.onClick(v, relativeInfo.adapter, item, pos);
-                        }
-
-                        //handle the selection if the event was not yet consumed, and we are allowed to select an item (only occurs when we select with long click only)
-                        //this has to happen before expand or collapse. otherwise the position is wrong which is used to select
-                        if (!consumed && !mSelectOnLongClick && mSelectable) {
-                            handleSelection(v, item, pos);
-                        }
-
-                        //if this is a expandable item :D (this has to happen after we handled the selection as we refer to the position)
-                        if (!consumed && item instanceof IExpandable) {
-                            if (((IExpandable) item).isAutoExpanding() && ((IExpandable) item).getSubItems() != null) {
-                                toggleExpandable(pos);
-                            }
-                        }
-
-                        //if there should be only one expanded item we want to collapse all the others but the current one (this has to happen after we handled the selection as we refer to the position)
-                        if (!consumed && mOnlyOneExpandedItem) {
-                            int[] expandedItems = getExpandedItems();
-                            for (int i = expandedItems.length - 1; i >= 0; i--) {
-                                if (expandedItems[i] != pos) {
-                                    collapse(expandedItems[i], true);
-                                }
-                            }
-                        }
-
-                        //before calling the global adapter onClick listener call the item specific onClickListener
-                        if (!consumed && item instanceof IClickable && ((IClickable) item).getOnItemClickListener() != null) {
-                            consumed = ((IClickable<Item>) item).getOnItemClickListener().onClick(v, relativeInfo.adapter, item, pos);
-                        }
-
-                        //call the normal click listener after selection was handlded
-                        if (!consumed && mOnClickListener != null) {
-                            mOnClickListener.onClick(v, relativeInfo.adapter, item, pos);
-                        }
-                    }
-                }
-            }
-        });
+        clickListenerHelper.attachToView(fastAdapterViewClickListener, holder, holder.itemView);
 
         //handle long click behavior
-        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                int pos = getHolderAdapterPosition(holder);
-                if (pos != RecyclerView.NO_POSITION) {
-                    boolean consumed = false;
-                    RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
-                    if (relativeInfo.item != null && relativeInfo.item.isEnabled()) {
-                        //first call the OnPreLongClickListener which would allow to prevent executing of any following code, including selection
-                        if (mOnPreLongClickListener != null) {
-                            consumed = mOnPreLongClickListener.onLongClick(v, relativeInfo.adapter, relativeInfo.item, pos);
-                        }
-
-                        //now handle the selection if we are in multiSelect mode and allow selecting on longClick
-                        if (!consumed && mSelectOnLongClick && mSelectable) {
-                            handleSelection(v, relativeInfo.item, pos);
-                        }
-
-                        //call the normal long click listener after selection was handled
-                        if (!consumed && mOnLongClickListener != null) {
-                            consumed = mOnLongClickListener.onLongClick(v, relativeInfo.adapter, relativeInfo.item, pos);
-                        }
-                    }
-                    return consumed;
-                }
-                return false;
-            }
-        });
+        clickListenerHelper.attachToView(fastAdapterViewLongClickListener, holder, holder.itemView);
 
         //handle touch behavior
-        holder.itemView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if (mOnTouchListener != null) {
-                    int pos = getHolderAdapterPosition(holder);
-                    if (pos != RecyclerView.NO_POSITION) {
-                        RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
-                        return mOnTouchListener.onTouch(v, event, relativeInfo.adapter, relativeInfo.item, pos);
-                    }
-                }
-                return false;
-            }
-        });
+        clickListenerHelper.attachToView(fastAdapterViewTouchListener, holder, holder.itemView);
 
         return mOnCreateViewHolderListener.onPostCreateViewHolder(holder);
     }
@@ -1848,7 +1855,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             if (item != null) {
                 item.unbindView(viewHolder);
             } else {
-                Log.e("FastAdapter", "The bindView method of this item should set the `Tag` on it's itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.java#L189)");
+                Log.e("FastAdapter", "The bindView method of this item should set the `Tag` on its itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.java#L189)");
             }
         }
     }
