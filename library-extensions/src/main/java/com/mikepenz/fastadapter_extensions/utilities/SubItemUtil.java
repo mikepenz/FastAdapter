@@ -319,6 +319,9 @@ public class SubItemUtil {
      */
     public static List<IItem> delete(final FastAdapter fastAdapter, Collection<Long> identifiersToDelete, boolean notifyParent, boolean deleteEmptyHeaders) {
         List<IItem> deleted = new ArrayList<>();
+        if (identifiersToDelete == null || identifiersToDelete.size() == 0) {
+            return deleted;
+        }
 
         // we use a LinkedList, because this has performance advantages when modifying the listIterator during iteration!
         // Modifying list is O(1)
