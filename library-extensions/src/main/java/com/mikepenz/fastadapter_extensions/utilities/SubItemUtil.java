@@ -414,8 +414,9 @@ public class SubItemUtil {
         int subItems = header.getSubItems().size();
         int position = adapter.getPosition(header);
         // 1) check header itself
-        if (identifiers.contains(header.getIdentifier()))
+        if (identifiers.contains(header.getIdentifier())) {
             adapter.notifyAdapterItemChanged(position);
+        }
         // 2) check sub items, recursively
         IItem item;
         if (header.isExpanded()) {
