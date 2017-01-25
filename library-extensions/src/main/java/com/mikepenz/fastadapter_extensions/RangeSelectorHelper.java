@@ -79,7 +79,11 @@ public class RangeSelectorHelper {
         return false;
     }
 
-    private <T extends IItem & IExpandable> void selectRange(int from, int to, boolean select) {
+    public <T extends IItem & IExpandable> void selectRange(int from, int to, boolean select) {
+        selectRange(from, to, select, false);
+    }
+
+    public <T extends IItem & IExpandable> void selectRange(int from, int to, boolean select, boolean ignoreHeaders) {
         if (from == to)
             return;
 
@@ -93,17 +97,18 @@ public class RangeSelectorHelper {
             if (mFastAdapter.getAdapterItem(i).isSelectable()) {
                 if (select) {
                     mFastAdapter.select(i);
-                }
-                else {
+                } else {
                     mFastAdapter.deselect(i);
                 }
             }
-            if (mSupportSubItems && mFastAdapter.getAdapterItem(i) instanceof IExpandable)
-                SubItemUtil.selectAllSubItems(mFastAdapter, (T)mFastAdapter.getAdapterItem(i), select, true);
+            if (mSupportSubItems && !ignoreHeaders && mFastAdapter.getAdapterItem(i) instanceof IExpandable) {
+                SubItemUtil.selectAllSubItems(mFastAdapter, (T) mFastAdapter.getAdapterItem(i), select, true);
+            }
         }
 
-        if (mActionModeHelper != null)
+        if (mActionModeHelper != null) {
             mActionModeHelper.checkActionMode(null); // works with null as well, as the ActionMode is active for sure!
+        }
     }
 
     /**
