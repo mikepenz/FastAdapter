@@ -115,21 +115,22 @@ public class SubItemUtil {
             if (item instanceof IExpandable && ((IExpandable) item).getSubItems() != null) {
                 subItems = ((IExpandable) item).getSubItems();
                 if (predicate == null) {
-                    if (subItems != null && subItems.size() > 0)
-                        res.addAll(subItems);
-                    res.addAll(getAllItems(subItems, countHeaders, true, predicate));
                     if (countHeaders) {
                         res.add(item);
                     }
+                    if (subItems != null && subItems.size() > 0) {
+                        res.addAll(subItems);
+                    }
+                    res.addAll(getAllItems(subItems, countHeaders, true, predicate));
                 } else {
+                    if (countHeaders && predicate.apply(item)) {
+                        res.add(item);
+                    }
                     temp = subItems != null ? subItems.size() : 0;
                     for (int j = 0; j < temp; j++) {
                         if (predicate.apply(subItems.get(j))) {
                             res.add(subItems.get(j));
                         }
-                    }
-                    if (countHeaders && predicate.apply(item)) {
-                        res.add(item);
                     }
                 }
             }
