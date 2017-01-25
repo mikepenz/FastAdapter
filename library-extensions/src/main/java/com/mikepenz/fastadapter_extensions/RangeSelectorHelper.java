@@ -84,10 +84,6 @@ public class RangeSelectorHelper {
     }
 
     public <T extends IItem & IExpandable> void selectRange(int from, int to, boolean select, boolean ignoreHeaders) {
-        if (from == to) {
-            return;
-        }
-
         if (from > to) {
             int temp = from;
             from = to;
