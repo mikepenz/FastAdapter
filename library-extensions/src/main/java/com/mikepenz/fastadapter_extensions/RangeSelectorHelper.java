@@ -83,23 +83,28 @@ public class RangeSelectorHelper {
         selectRange(from, to, select, false);
     }
 
-    public <T extends IItem & IExpandable> void selectRange(int from, int to, boolean select, boolean ignoreHeaders) {
+    public <T extends IItem & IExpandable> void selectRange(int from, int to, boolean select, boolean skipHeaders) {
         if (from > to) {
             int temp = from;
             from = to;
             to = temp;
         }
 
+        IItem item;
         for (int i = from; i <= to; i++) {
-            if (mFastAdapter.getAdapterItem(i).isSelectable()) {
+            item = mFastAdapter.getAdapterItem(i);
+            if (item.isSelectable()) {
                 if (select) {
                     mFastAdapter.select(i);
                 } else {
                     mFastAdapter.deselect(i);
                 }
             }
-            if (mSupportSubItems && !ignoreHeaders && mFastAdapter.getAdapterItem(i) instanceof IExpandable) {
-                SubItemUtil.selectAllSubItems(mFastAdapter, (T) mFastAdapter.getAdapterItem(i), select, true);
+            if (mSupportSubItems && !skipHeaders) {
+                // if a group is collapsed, select all sub items
+                if (item instanceof IExpandable && !((IExpandable)item).isExpanded()) {
+                    SubItemUtil.selectAllSubItems(mFastAdapter, (T) mFastAdapter.getAdapterItem(i), select, true);
+                }
             }
         }
 
