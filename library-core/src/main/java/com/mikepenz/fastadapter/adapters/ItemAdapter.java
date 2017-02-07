@@ -178,7 +178,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     /**
-     * Searches for the given item and calculates it's relative position
+     * Searches for the given item and calculates its relative position
      *
      * @param item the item which is searched for
      * @return the relative position
@@ -189,7 +189,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     /**
-     * Searches for the given identifier and calculates it's relative position
+     * Searches for the given identifier and calculates its relative position
      *
      * @param identifier the identifier of an item which is searched for
      * @return the relative position
