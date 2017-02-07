@@ -6,7 +6,7 @@ package com.mikepenz.fastadapter;
 public interface ISubItem<T, S extends IItem & IExpandable> {
     /**
      * use this method to get the parent of this sub item
-     * the parent should also contain this sub item in it's sub items list
+     * the parent should also contain this sub item in its sub items list
      *
      * @return the parent of this sub item
      */

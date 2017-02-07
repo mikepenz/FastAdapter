@@ -189,7 +189,7 @@ public class SubItemUtil {
      * @param adapter the adapter instance
      * @param header  the header who's children should be selected or deselected
      * @param select the new selected state of the sub items
-     * @param notifyParent true, if the parent should be notified about the changes of it's children selection state
+     * @param notifyParent true, if the parent should be notified about the changes of its children selection state
      */
     public static <T extends IItem & IExpandable> void selectAllSubItems(final FastAdapter adapter, T header, boolean select, boolean notifyParent) {
         int subItems = header.getSubItems().size();
@@ -271,7 +271,7 @@ public class SubItemUtil {
                     fastAdapter.notifyAdapterSubItemsChanged(parentPos, ((IExpandable) parent).getSubItems().size() + 1);
                 }
 
-                // if desired, notify the parent about it's changed items (only if parent is visible!)
+                // if desired, notify the parent about its changed items (only if parent is visible!)
                 if (parentPos != -1 && notifyParent) {
                     expanded = ((IExpandable) parent).isExpanded();
                     fastAdapter.notifyAdapterItemChanged(parentPos);

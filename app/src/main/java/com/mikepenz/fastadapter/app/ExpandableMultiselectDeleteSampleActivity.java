@@ -110,7 +110,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                         return selected + "/" + SubItemUtil.countItems(fastItemAdapter.getItemAdapter(), false);
                     }
                 })
-                // important so that the helper knows, that is should use the SubItemUtil for validating it's state
+                // important so that the helper knows, that is should use the SubItemUtil for validating its state
                 .withSupportSubItems(true);
 
         // this will take care of selecting range of items via long press on the first and afterwards on the last item

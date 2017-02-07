@@ -94,7 +94,7 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
     }
 
     /**
-     * Searches for the given item and calculates it's relative position
+     * Searches for the given item and calculates its relative position
      *
      * @param item the item which is searched for
      * @return the relative position
