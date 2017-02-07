@@ -262,7 +262,7 @@ public ViewHolderFactory<? extends ViewHolder> getFactory() {
 }
 ```
 
-Using the `GenericItemAdapter` with `proguard` requires you to use the non generic implementation by providing a `Function` to the following constructur: [GenericFastItemAdapter(Function<Model, Item> itemFactory) ](https://github.com/mikepenz/FastAdapter/blob/develop/library/src/main/java/com/mikepenz/fastadapter/commons/adapters/GenericFastItemAdapter.java#L29)
+Using the `GenericItemAdapter` with `proguard` requires you to use the non generic implementation by providing a `Function` to the following constructur: [GenericItemAdapter(Function<Model, Item> itemFactory) ](https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/adapters/GenericItemAdapter.java#L32)
 
 ###ExpandableItems
 The `FastAdapter` comes with native support for expandable items. These items have to implement the `IExpandable` interface, and the sub items the `ISubItem` interface. This allows better support. 
