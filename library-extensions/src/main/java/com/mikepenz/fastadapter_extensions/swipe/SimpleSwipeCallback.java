@@ -103,15 +103,8 @@ public class SimpleSwipeCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            viewHolder.itemView.setTranslationX(0);
-            viewHolder.itemView.setTranslationY(0);
-        } else {
-            TranslateAnimation anim = new TranslateAnimation(0, 0, 0, 0);
-            anim.setFillAfter(true);
-            anim.setDuration(0);
-            viewHolder.itemView.startAnimation(anim);
-        }
+        viewHolder.itemView.setTranslationX(0);
+        viewHolder.itemView.setTranslationY(0);
         int position = viewHolder.getAdapterPosition();
         if (position != RecyclerView.NO_POSITION) {
             itemSwipeCallback.itemSwiped(position, direction);
