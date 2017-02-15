@@ -8,6 +8,7 @@ import android.support.annotation.ColorInt;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import com.mikepenz.fastadapter.ISwipeable;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
 
@@ -33,13 +34,13 @@ public class SimpleSwipeDragCallback extends SimpleDragCallback {
     }
 
     public SimpleSwipeDragCallback withLeaveBehindSwipeLeft(Drawable d) {
-        setDefaultSwipeDirs(getSwipeDirs(null, null) | ItemTouchHelper.LEFT);
+        setDefaultSwipeDirs(super.getSwipeDirs(null, null) | ItemTouchHelper.LEFT);
         simpleSwipeCallback.withLeaveBehindSwipeLeft(d);
         return this;
     }
 
     public SimpleSwipeDragCallback withLeaveBehindSwipeRight(Drawable d) {
-        setDefaultSwipeDirs(getSwipeDirs(null, null) | ItemTouchHelper.RIGHT);
+        setDefaultSwipeDirs(super.getSwipeDirs(null, null) | ItemTouchHelper.RIGHT);
         simpleSwipeCallback.withLeaveBehindSwipeRight(d);
         return this;
     }
@@ -68,6 +69,12 @@ public class SimpleSwipeDragCallback extends SimpleDragCallback {
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
         simpleSwipeCallback.onSwiped(viewHolder, direction);
     }
+
+    @Override
+    public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+        return simpleSwipeCallback.getSwipeDirs(recyclerView, viewHolder);
+    }
+
 
     @Override
     public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, float dX, float dY, int actionState, boolean isCurrentlyActive) {

@@ -12,6 +12,9 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.view.animation.TranslateAnimation;
 
+import com.mikepenz.fastadapter.IDraggable;
+import com.mikepenz.fastadapter.ISwipeable;
+
 
 /**
  * Created by Mattias on 2016-02-13.
@@ -57,13 +60,13 @@ public class SimpleSwipeCallback extends ItemTouchHelper.SimpleCallback {
 
     public SimpleSwipeCallback withLeaveBehindSwipeLeft(Drawable d) {
         this.leaveBehindDrawableLeft = d;
-        setDefaultSwipeDirs(getSwipeDirs(null, null) | ItemTouchHelper.LEFT);
+        setDefaultSwipeDirs(super.getSwipeDirs(null, null) | ItemTouchHelper.LEFT);
         return this;
     }
 
     public SimpleSwipeCallback withLeaveBehindSwipeRight(Drawable d) {
         this.leaveBehindDrawableRight = d;
-        setDefaultSwipeDirs(getSwipeDirs(null, null) | ItemTouchHelper.RIGHT);
+        setDefaultSwipeDirs(super.getSwipeDirs(null, null) | ItemTouchHelper.RIGHT);
         return this;
     }
 
@@ -88,8 +91,15 @@ public class SimpleSwipeCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        //TODO should disallow this if in swiped state
-        return super.getSwipeDirs(recyclerView, viewHolder);
+        if (viewHolder != null && viewHolder.itemView.getTag() instanceof ISwipeable) {
+            if (((ISwipeable) viewHolder.itemView.getTag()).isSwipeable()) {
+                return super.getSwipeDirs(recyclerView, viewHolder);
+            } else {
+                return 0;
+            }
+        } else {
+            return super.getSwipeDirs(recyclerView, viewHolder);
+        }
     }
 
     @Override

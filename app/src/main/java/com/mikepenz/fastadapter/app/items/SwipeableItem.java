@@ -7,6 +7,8 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.TextView;
 
+import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.ISwipeable;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.utils.ViewHolderFactory;
@@ -20,7 +22,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Mattias on 2016-02-15.
  */
-public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.ViewHolder> {
+public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.ViewHolder> implements ISwipeable<SwipeableItem, IItem> {
     //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
     private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
@@ -34,6 +36,7 @@ public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.Vie
 
     public int swipedDirection;
     private Runnable swipedAction;
+    public boolean swipeable = true;
 
     public SwipeableItem withName(String Name) {
         this.name = new StringHolder(Name);
@@ -52,6 +55,17 @@ public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.Vie
 
     public SwipeableItem withDescription(@StringRes int descriptionRes) {
         this.description = new StringHolder(descriptionRes);
+        return this;
+    }
+
+    @Override
+    public boolean isSwipeable() {
+        return swipeable;
+    }
+
+    @Override
+    public SwipeableItem withIsSwipeable(boolean swipeable) {
+        this.swipeable = swipeable;
         return this;
     }
 
