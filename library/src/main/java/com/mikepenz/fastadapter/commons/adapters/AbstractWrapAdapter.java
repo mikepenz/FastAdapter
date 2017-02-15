@@ -32,7 +32,7 @@ public abstract class AbstractWrapAdapter<Item extends IItem> extends RecyclerVi
     }
 
     /**
-     * Wrap the FastAdapter with this AbstractAdapter and keep it's reference to forward all events correctly
+     * Wrap the FastAdapter with this AbstractAdapter and keep its reference to forward all events correctly
      *
      * @param adapter the FastAdapter which contains the base logic
      * @return this
