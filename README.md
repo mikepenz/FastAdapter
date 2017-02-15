@@ -40,7 +40,7 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-compile('com.mikepenz:fastadapter:2.1.6@aar') {
+compile('com.mikepenz:fastadapter:2.1.7@aar') {
 	transitive = true
 }
 ```
@@ -52,7 +52,7 @@ compile 'com.mikepenz:fastadapter-commons:2.1.0@aar'
 
 All additions are included in the following dependency.
 ```gradle
-compile 'com.mikepenz:fastadapter-extensions:2.1.0@aar'
+compile 'com.mikepenz:fastadapter-extensions:2.1.7@aar'
 //The tiny Materialize library used for its useful helper classes
 compile 'com.mikepenz:materialize:1.0.0@aar'
 ```
