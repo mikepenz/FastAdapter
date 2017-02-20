@@ -40,7 +40,7 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-compile('com.mikepenz:fastadapter:2.1.6@aar') {
+compile('com.mikepenz:fastadapter:2.1.7@aar') {
 	transitive = true
 }
 ```
@@ -52,7 +52,7 @@ compile 'com.mikepenz:fastadapter-commons:2.1.0@aar'
 
 All additions are included in the following dependency.
 ```gradle
-compile 'com.mikepenz:fastadapter-extensions:2.1.0@aar'
+compile 'com.mikepenz:fastadapter-extensions:2.1.7@aar'
 //The tiny Materialize library used for its useful helper classes
 compile 'com.mikepenz:materialize:1.0.0@aar'
 ```
@@ -235,7 +235,7 @@ For the complete tutorial and more features such as multi-select and CAB check o
 
 ##Advanced Usage
 ###Proguard
-If you use the `FastAdapter` and enabled **Proguard** you have to implement a `ViewHolderFactory` for you `Item`. ([SimpleItem#L145](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/items/SimpleItem.java#L145))
+If you use the `FastAdapter` and enabled **Proguard** you have to implement a `ViewHolderFactory` for your `Item`. ([SimpleItem#L145](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/items/SimpleItem.java#L145))
 ```java
 //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
 private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
@@ -262,7 +262,7 @@ public ViewHolderFactory<? extends ViewHolder> getFactory() {
 }
 ```
 
-Using the `GenericItemAdapter` with `proguard` requires you to use the non generic implementation by providing a `Function` to the following constructur: [GenericItemAdapter(Function<Model, Item> itemFactory) ](https://github.com/mikepenz/FastAdapter/blob/develop/library/src/main/java/com/mikepenz/fastadapter/adapters/GenericItemAdapter.java#L32)
+Using the `GenericItemAdapter` with `proguard` requires you to use the non generic implementation by providing a `Function` to the following constructur: [GenericItemAdapter(Function<Model, Item> itemFactory) ](https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/adapters/GenericItemAdapter.java#L32)
 
 ###ExpandableItems
 The `FastAdapter` comes with native support for expandable items. These items have to implement the `IExpandable` interface, and the sub items the `ISubItem` interface. This allows better support. 

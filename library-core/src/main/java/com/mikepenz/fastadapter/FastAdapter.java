@@ -592,7 +592,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * Searches for the given item and calculates it's global position
+     * Searches for the given item and calculates its global position
      *
      * @param item the item which is searched for
      * @return the global position, or -1 if not found
@@ -606,7 +606,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * Searches for the given item and calculates it's global position
+     * Searches for the given item and calculates its global position
      *
      * @param identifier the identifier of an item which is searched for
      * @return the global position, or -1 if not found
@@ -646,7 +646,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * Internal method to get the Item as ItemHolder which comes with the relative position within it's adapter
+     * Internal method to get the Item as ItemHolder which comes with the relative position within its adapter
      * Finds the responsible adapter for the given position
      *
      * @param position the global position
@@ -1022,7 +1022,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * selects an item and remembers it's position in the selections list
+     * selects an item and remembers its position in the selections list
      *
      * @param position the global position
      */
@@ -1031,7 +1031,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * selects an item and remembers it's position in the selections list
+     * selects an item and remembers its position in the selections list
      *
      * @param position  the global position
      * @param fireEvent true if the onClick listener should be called
@@ -1041,7 +1041,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * selects an item and remembers it's position in the selections list
+     * selects an item and remembers its position in the selections list
      *
      * @param position               the global position
      * @param fireEvent              true if the onClick listener should be called
@@ -1130,7 +1130,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * deselects an item and removes it's position in the selections list
+     * deselects an item and removes its position in the selections list
      *
      * @param position the global position
      */
@@ -1139,7 +1139,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * deselects an item and removes it's position in the selections list
+     * deselects an item and removes its position in the selections list
      * also takes an iterator to remove items from the map
      *
      * @param position the global position
@@ -1861,7 +1861,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * an internal class to return the IItem and relativePosition and it's adapter at once. used to save one iteration inside the getInternalItem method
+     * an internal class to return the IItem and relativePosition and its adapter at once. used to save one iteration inside the getInternalItem method
      */
     public static class RelativeInfo<Item extends IItem> {
         public IAdapter<Item> adapter = null;
