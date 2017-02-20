@@ -163,8 +163,8 @@ public class RangeSelectorHelper {
      * @return this
      */
     public RangeSelectorHelper withSavedInstanceState(Bundle savedInstanceState, String prefix) {
-        if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_LAST_LONG_PRESS))
-            mLastLongPressIndex = savedInstanceState.getInt(BUNDLE_LAST_LONG_PRESS);
+        if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_LAST_LONG_PRESS + prefix))
+            mLastLongPressIndex = savedInstanceState.getInt(BUNDLE_LAST_LONG_PRESS + prefix);
         return this;
     }
 }
