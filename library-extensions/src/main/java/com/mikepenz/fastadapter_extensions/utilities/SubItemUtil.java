@@ -100,7 +100,7 @@ public class SubItemUtil {
         return getAllItems(adapter.getAdapterItems(), countHeaders, false, null);
     }
 
-    private static List<IItem> getAllItems(List<IItem> items, boolean countHeaders, boolean subItemsOnly, IPredicate predicate) {
+    public static List<IItem> getAllItems(List<IItem> items, boolean countHeaders, boolean subItemsOnly, IPredicate predicate) {
         List<IItem> res = new ArrayList<>();
         if (items == null || items.size() == 0) {
             return res;
