@@ -18,7 +18,7 @@ import java.lang.annotation.RetentionPolicy;
 public class SimpleDragCallback extends ItemTouchHelper.SimpleCallback {
 
     //our callback
-    private ItemTouchCallback mCallbackItemTouch; // interfaces
+    private ItemTouchCallback mCallbackItemTouch; // interface
     private boolean mIsDragEnabled = true;
 
     private int mDirections = UP_DOWN;
@@ -77,7 +77,7 @@ public class SimpleDragCallback extends ItemTouchHelper.SimpleCallback {
             }
             throw new RuntimeException("SimpleDragCallback without an callback is only allowed when using the ItemAdapter or the FastItemAdapter");
         }
-        return mCallbackItemTouch.itemTouchOnMove(viewHolder.getAdapterPosition(), target.getAdapterPosition()); // information to the interfaces
+        return mCallbackItemTouch.itemTouchOnMove(viewHolder.getAdapterPosition(), target.getAdapterPosition()); // information to the interface
     }
 
     @Override

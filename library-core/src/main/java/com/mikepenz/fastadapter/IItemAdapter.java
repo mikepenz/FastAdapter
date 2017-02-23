@@ -89,7 +89,7 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
     IItemAdapter<Item> clear();
 
     /**
-     * the interfaces used to filter the list inside the ItemFilter
+     * the interface used to filter the list inside the ItemFilter
      */
     interface Predicate<Item extends IItem> {
         /**

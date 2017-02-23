@@ -19,7 +19,7 @@ import java.util.List;
 
 /**
  * Created by mikepenz on 14.07.15.
- * Implements the general methods of the IItem interfaces to speed up development.
+ * Implements the general methods of the IItem interface to speed up development.
  */
 public abstract class AbstractItem<Item extends IItem & IClickable, VH extends RecyclerView.ViewHolder> implements IItem<Item, VH>, IClickable<Item> {
     // the identifier for this item
