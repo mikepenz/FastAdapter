@@ -4,7 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 /**
- * the interface for the ViewHolderFactory
+ * the interfaces for the ViewHolderFactory
  *
  * @param <T>
  */

@@ -105,7 +105,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     protected ItemFilterListener mItemFilterListener;
 
     /**
-     * interface for the ItemFilterListener
+     * interfaces for the ItemFilterListener
      */
     public interface ItemFilterListener {
         void itemsFiltered();

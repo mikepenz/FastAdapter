@@ -1081,9 +1081,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             deselect(mSelections);
         } else {
             for (Item item : AdapterUtil.getAllItems(this)) {
-                item.withSetSelected(false);
-                if (mSelectionListener != null)
-                    mSelectionListener.onSelectionChanged(item, false);
+                if (item.isSelected()) {
+                    item.withSetSelected(false);
+                    if (mSelectionListener != null) {
+                        mSelectionListener.onSelectionChanged(item, false);
+                    }
+                }
             }
             notifyDataSetChanged();
         }

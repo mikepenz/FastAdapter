@@ -58,7 +58,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
     }
 
     /**
-     * A callback interface provided by the {@link EndlessScrollHelper} where
+     * A callback interfaces provided by the {@link EndlessScrollHelper} where
      * {@link #onLoadMore(ResultReceiver, int) onLoadMore()} results are to be delivered.
      * The underlying implementation is safe to use by any background-thread, as long as only 1
      * thread is using it. Results delivered via {@link #deliverNewItems(List)} are automatically
