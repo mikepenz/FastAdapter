@@ -103,6 +103,9 @@ dependencies {
     //https://github.com/bumptech/glide
     compile 'com.github.bumptech.glide:glide:3.7.0'
 
+    //Used to provide the drag selection like google photos
+    compile 'com.github.MFlisar:DragSelectRecyclerView:0.2'
+
     //mopub sdk to showcase the usage of the mopub adapter
     compile('com.mopub:mopub-sdk:4.7.1@aar') {
         transitive = true
