@@ -1,5 +1,7 @@
 package com.mikepenz.fastadapter_extensions;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.widget.TextView;
@@ -24,8 +26,8 @@ public class UndoHelper<Item extends IItem> {
     private FastAdapter<Item> mAdapter;
     private UndoListener mUndoListener;
     private History mHistory = null;
-	private Snackbar mSnackBar = null;
-	private String mSnackbarActionText = "";
+    private Snackbar mSnackBar = null;
+    private String mSnackbarActionText = "";
 
     /**
      * Constructor to create the UndoHelper
@@ -38,73 +40,71 @@ public class UndoHelper<Item extends IItem> {
         this.mUndoListener = undoListener;
     }
 
-	/**
-	 * an optional method to add a {@link Snackbar} of your own with custom styling.
-	 * note that using this method will override your custom action
-	 * @param snackBar your own Snackbar
-	 * @param actionText the text to show for the Undo Action
-	 */
-	public void withSnackBar(Snackbar snackBar, String actionText)
-	{
-		mSnackBar = snackBar;
-		mSnackbarActionText = actionText;
+    /**
+     * an optional method to add a {@link Snackbar} of your own with custom styling.
+     * note that using this method will override your custom action
+     *
+     * @param snackBar   your own Snackbar
+     * @param actionText the text to show for the Undo Action
+     */
+    public void withSnackBar(@NonNull Snackbar snackBar, String actionText) {
+        mSnackBar = snackBar;
+        mSnackbarActionText = actionText;
 
-		mSnackBar.addCallback(new Snackbar.Callback() {
-			@Override
-			public void onDismissed(Snackbar snackbar, int event) {
-				super.onDismissed(snackbar, event);
+        mSnackBar.addCallback(new Snackbar.Callback() {
+            @Override
+            public void onDismissed(Snackbar snackbar, int event) {
+                super.onDismissed(snackbar, event);
 
-				switch (event) {
-					case Snackbar.Callback.DISMISS_EVENT_ACTION:
-						//we can ignore it
-						break;
-					case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
-						notifyCommit();
-						break;
-				}
-			}
+                switch (event) {
+                    case Snackbar.Callback.DISMISS_EVENT_ACTION:
+                        //we can ignore it
+                        break;
+                    case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+                        notifyCommit();
+                        break;
+                }
+            }
 
-			@Override
-			public void onShown(Snackbar snackbar) {
-				super.onShown(snackbar);
-				doChange();
-			}
-		}).setAction(actionText, new View.OnClickListener() {
-		@Override
-		public void onClick(View v) {
-			undoChange();
-		}
-	});
-	}
+            @Override
+            public void onShown(Snackbar snackbar) {
+                super.onShown(snackbar);
+                doChange();
+            }
+        }).setAction(actionText, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                undoChange();
+            }
+        });
+    }
 
-	public Snackbar getSnackBar()
-	{
-		return mSnackBar;
-	}
+    public @Nullable Snackbar getSnackBar() {
+        return mSnackBar;
+    }
 
-	/**
-	 * convenience method to be used if you have previously set a {@link Snackbar} with {@link #withSnackBar(Snackbar, String)}
-	 * @param positions  the positions where the items were removed
-	 * @return the snackbar or null if {@link #withSnackBar(Snackbar, String)} was not previously called
-	 */
-	public Snackbar remove(Set<Integer> positions)
-	{
-		if(mSnackBar == null)
-		{
-			return null;
-		}
+    /**
+     * convenience method to be used if you have previously set a {@link Snackbar} with {@link #withSnackBar(Snackbar, String)}
+     *
+     * @param positions the positions where the items were removed
+     * @return the snackbar or null if {@link #withSnackBar(Snackbar, String)} was not previously called
+     */
+    public @Nullable Snackbar remove(Set<Integer> positions) {
+        if (mSnackBar == null) {
+            return null;
+        }
 
-		View snackbarView = mSnackBar.getView();
-		TextView snackbarText = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        View snackbarView = mSnackBar.getView();
+        TextView snackbarText = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
 
-		return remove(snackbarView, snackbarText.getText().toString(), mSnackbarActionText, mSnackBar.getDuration(), positions);
-	}
+        return remove(snackbarView, snackbarText.getText().toString(), mSnackbarActionText, mSnackBar.getDuration(), positions);
+    }
 
     /**
      * removes items from the ItemAdapter.
-	 * note that the values of "view", "text", "actionText", and "duration"
-	 * will be ignored if {@link #withSnackBar(Snackbar, String)} was used.
-	 * if it was not used, a default snackbar will be generated
+     * note that the values of "view", "text", "actionText", and "duration"
+     * will be ignored if {@link #withSnackBar(Snackbar, String)} was used.
+     * if it was not used, a default snackbar will be generated
      *
      * @param view       the view which will host the SnackBar
      * @param text       the text to show on the SnackBar
@@ -131,43 +131,36 @@ public class UndoHelper<Item extends IItem> {
 
         mHistory = history;
 
-		if(mSnackBar == null)
-		{
-			mSnackBar = Snackbar.make(view, text, duration)
-								.setCallback(new Snackbar.Callback()
-								{
-									@Override
-									public void onDismissed(Snackbar snackbar, int event)
-									{
-										super.onDismissed(snackbar, event);
+        if (mSnackBar == null) {
+            mSnackBar = Snackbar.make(view, text, duration)
+                    .setCallback(new Snackbar.Callback() {
+                        @Override
+                        public void onDismissed(Snackbar snackbar, int event) {
+                            super.onDismissed(snackbar, event);
 
-										switch (event)
-										{
-											case Snackbar.Callback.DISMISS_EVENT_ACTION:
-												//we can ignore it
-												break;
-											case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
-												notifyCommit();
-												break;
-										}
-									}
+                            switch (event) {
+                                case Snackbar.Callback.DISMISS_EVENT_ACTION:
+                                    //we can ignore it
+                                    break;
+                                case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+                                    notifyCommit();
+                                    break;
+                            }
+                        }
 
-									@Override
-									public void onShown(Snackbar snackbar)
-									{
-										super.onShown(snackbar);
-										doChange();
-									}
-								})
-								.setAction(actionText, new View.OnClickListener()
-								{
-									@Override
-									public void onClick(View v)
-									{
-										undoChange();
-									}
-								});
-		}
+                        @Override
+                        public void onShown(Snackbar snackbar) {
+                            super.onShown(snackbar);
+                            doChange();
+                        }
+                    })
+                    .setAction(actionText, new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            undoChange();
+                        }
+                    });
+        }
 
         mSnackBar.show();
         return mSnackBar;
