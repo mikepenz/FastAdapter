@@ -674,7 +674,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
          */
         public ItemAdapter<Item> remove(int position) {
             if (mOriginalItems != null) {
-                mItems.remove(position - getFastAdapter().getPreItemCount(position));
+                mOriginalItems.remove(position - getFastAdapter().getPreItemCount(position));
                 performFiltering(mConstraint);
                 return ItemAdapter.this;
             } else {
@@ -710,7 +710,6 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
          */
         public ItemAdapter<Item> clear() {
             if (mOriginalItems != null) {
-                int count = mOriginalItems.size();
                 mOriginalItems.clear();
                 performFiltering(mConstraint);
                 return ItemAdapter.this;
