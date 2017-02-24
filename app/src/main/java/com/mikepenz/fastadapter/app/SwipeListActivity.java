@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
+import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SwipeableItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
@@ -218,7 +219,8 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
                 item.setSwipedAction(null);
                 int position = fastItemAdapter.getAdapterPosition(item);
                 if (position != RecyclerView.NO_POSITION) {
-                    fastItemAdapter.remove(position);
+                    //this sample uses a filter. If a filter is used we should use the methods provided by the filter (to make sure filter and normal state is updated)
+                    ((ItemAdapter.ItemFilter) fastItemAdapter.getItemFilter()).remove(position);
                 }
             }
         };
