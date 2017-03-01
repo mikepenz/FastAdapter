@@ -14,8 +14,8 @@ import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.RealmSampleUserItem;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.itemanimators.AlphaInAnimator;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
@@ -24,6 +24,8 @@ import com.mikepenz.materialize.MaterializeBuilder;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -70,13 +72,37 @@ public class RealmActivity extends AppCompatActivity {
         mRealm = Realm.getDefaultInstance();
 
         //Add a realm on change listener (don´t forget to close this realm instance before adding this listener again)
-        mRealm.where(RealmSampleUserItem.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<RealmSampleUserItem>>() {
+        mRealm.where(RealmSampleUserItem.class).findAllAsync().addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<RealmSampleUserItem>>() {
             @Override
-            public void onChange(RealmResults<RealmSampleUserItem> userItems) {
+            public void onChange(RealmResults<RealmSampleUserItem> realmSampleUserItems, OrderedCollectionChangeSet orderedCollectionChangeSet) {
                 //This will call twice
                 //1.) from findAllAsync()
                 //2.) from createData()
-                mFastItemAdapter.items().setNewList(userItems);
+                mFastItemAdapter.items().getAdapterItems().clear();
+                mFastItemAdapter.items().getAdapterItems().addAll(realmSampleUserItems);
+                mFastItemAdapter.items().mapPossibleTypes(realmSampleUserItems);
+                // null Changes means the async query returns the first time.
+                if (orderedCollectionChangeSet == null) {
+                    mFastItemAdapter.notifyAdapterDataSetChanged();
+                    return;
+                }
+                // For deletions, the adapter has to be notified in reverse order.
+                OrderedCollectionChangeSet.Range[] deletions = orderedCollectionChangeSet.getDeletionRanges();
+                for (int i = deletions.length - 1; i >= 0; i--) {
+                    OrderedCollectionChangeSet.Range range = deletions[i];
+                    mFastItemAdapter.notifyAdapterItemRangeRemoved(range.startIndex, range.length);
+
+                }
+
+                OrderedCollectionChangeSet.Range[] insertions = orderedCollectionChangeSet.getInsertionRanges();
+                for (OrderedCollectionChangeSet.Range range : insertions) {
+                    mFastItemAdapter.notifyAdapterItemRangeInserted(range.startIndex, range.length);
+                }
+
+                OrderedCollectionChangeSet.Range[] modifications = orderedCollectionChangeSet.getChangeRanges();
+                for (OrderedCollectionChangeSet.Range range : modifications) {
+                    mFastItemAdapter.notifyAdapterItemRangeChanged(range.startIndex, range.length);
+                }
             }
         });
 
@@ -138,7 +164,7 @@ public class RealmActivity extends AppCompatActivity {
                         //Remove the change listener
                         userItems.removeChangeListener(this);
                         //Store the primary key to get access from a other thread
-                        final long newPrimaryKey = userItems.last().getIdentifier() + 1;
+                        final long newPrimaryKey = userItems.max("mIdentifier").longValue() + 1;
                         mRealm.executeTransactionAsync(new Realm.Transaction() {
                             @Override
                             public void execute(Realm realm) {
