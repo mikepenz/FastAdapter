@@ -45,37 +45,53 @@ import java.util.List;
 public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapter<Item> {
 
     private final boolean hasAutoUpdates;
-    private final RealmChangeListener listener;
+    private final OrderedRealmCollectionChangeListener listener;
     @Nullable
     private OrderedRealmCollection<Item> adapterData;
 
-    private int notified = 0;
-
-    public RealmItemAdapter(@Nullable OrderedRealmCollection<Item> data, boolean autoUpdate) {
-        this.adapterData = data;
-        this.hasAutoUpdates = autoUpdate;
-
-        // Right now don't use generics, since we need maintain two different
-        // types of listeners until RealmList is properly supported.
-        // See https://github.com/realm/realm-java/issues/989
-        this.listener = hasAutoUpdates ? new RealmChangeListener() {
+    private OrderedRealmCollectionChangeListener createListener() {
+        return new OrderedRealmCollectionChangeListener() {
             @Override
-            public void onChange(Object results) {
-                if (results instanceof List) {
-                    List<Item> items = (List<Item>) results;
-
+            public void onChange(Object collection, OrderedCollectionChangeSet changeSet) {
+                if (collection instanceof List) {
+                    List<Item> items = (List<Item>) collection;
                     if (isUseIdDistributor()) {
                         IdDistributor.checkIds(items);
                     }
                     mapPossibleTypes(items);
+                }
+                // null Changes means the async query returns the first time.
+                if (changeSet == null) {
+                    notifyDataSetChanged();
+                    return;
+                }
+                // For deletions, the adapter has to be notified in reverse order.
+                OrderedCollectionChangeSet.Range[] deletions = changeSet.getDeletionRanges();
+                for (int i = deletions.length - 1; i >= 0; i--) {
+                    OrderedCollectionChangeSet.Range range = deletions[i];
+                    notifyItemRangeRemoved(range.startIndex, range.length);
+                }
 
-                    if (hasAutoUpdates || notified < 1) {
-                        getFastAdapter().notifyAdapterDataSetChanged();
-                        notified++;
-                    }
+                OrderedCollectionChangeSet.Range[] insertions = changeSet.getInsertionRanges();
+                for (OrderedCollectionChangeSet.Range range : insertions) {
+                    notifyItemRangeInserted(range.startIndex, range.length);
+                }
+
+                OrderedCollectionChangeSet.Range[] modifications = changeSet.getChangeRanges();
+                for (OrderedCollectionChangeSet.Range range : modifications) {
+                    notifyItemRangeChanged(range.startIndex, range.length);
                 }
             }
-        } : null;
+        };
+    }
+
+    public RealmItemAdapter(@Nullable OrderedRealmCollection<Item> data, boolean autoUpdate) {
+        if (data != null && !data.isManaged())
+            throw new IllegalStateException("Only use this adapter with managed RealmCollection, " +
+                    "for un-managed lists you can just use the BaseRecyclerViewAdapter");
+        this.adapterData = data;
+        this.hasAutoUpdates = autoUpdate;
+        this.listener = hasAutoUpdates ? createListener() : null;
     }
 
     @Override
@@ -118,10 +134,10 @@ public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapt
         }
 
         //noinspection ConstantConditions
-        Iterator<Item> iter = adapterData.iterator();
+        Iterator<Item> iterator = adapterData.iterator();
         int count = 0;
-        while (iter.hasNext()) {
-            if (iter.next().getIdentifier() == item.getIdentifier()) {
+        while (iterator.hasNext()) {
+            if (iterator.next().getIdentifier() == item.getIdentifier()) {
                 return count;
             }
             count++;
@@ -136,8 +152,9 @@ public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapt
      * @param index index of the item.
      * @return the item at the specified position, {@code null} if adapter data is not valid.
      */
+    @SuppressWarnings("WeakerAccess")
     @Nullable
-    public Item getAdapterItem(int index) {
+    public Item getItem(int index) {
         //noinspection ConstantConditions
         return isDataValid() ? adapterData.get(index) : null;
     }
@@ -158,9 +175,11 @@ public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapt
      *
      * @param data the new {@link OrderedRealmCollection} to display.
      */
+    @SuppressWarnings("WeakerAccess")
     public void updateData(@Nullable OrderedRealmCollection<Item> data) {
         if (hasAutoUpdates) {
-            if (adapterData != null) {
+            if (isDataValid()) {
+                //noinspection ConstantConditions
                 removeListener(adapterData);
             }
             if (data != null) {
@@ -174,13 +193,13 @@ public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapt
 
     private void addListener(@NonNull OrderedRealmCollection<Item> data) {
         if (data instanceof RealmResults) {
-            RealmResults realmResults = (RealmResults) data;
+            RealmResults<Item> results = (RealmResults<Item>) data;
             //noinspection unchecked
-            realmResults.addChangeListener(listener);
+            results.addChangeListener(listener);
         } else if (data instanceof RealmList) {
-            RealmList realmList = (RealmList) data;
+            RealmList<Item> list = (RealmList<Item>) data;
             //noinspection unchecked
-            realmList.realm.addListener(listener);
+            list.addChangeListener(listener);
         } else {
             throw new IllegalArgumentException("RealmCollection not supported: " + data.getClass());
         }
@@ -188,12 +207,13 @@ public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapt
 
     private void removeListener(@NonNull OrderedRealmCollection<Item> data) {
         if (data instanceof RealmResults) {
-            RealmResults realmResults = (RealmResults) data;
-            realmResults.removeChangeListener(listener);
-        } else if (data instanceof RealmList) {
-            RealmList realmList = (RealmList) data;
+            RealmResults<Item> results = (RealmResults<Item>) data;
             //noinspection unchecked
-            realmList.realm.removeListener(listener);
+            results.removeChangeListener(listener);
+        } else if (data instanceof RealmList) {
+            RealmList<Item> list = (RealmList<Item>) data;
+            //noinspection unchecked
+            list.removeChangeListener(listener);
         } else {
             throw new IllegalArgumentException("RealmCollection not supported: " + data.getClass());
         }
@@ -250,7 +270,9 @@ public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapt
 
     @Override
     public ItemAdapter<Item> clear() {
-        adapterData.clear();
+        if (adapterData != null) {
+            adapterData.clear();
+        }
         return this;
     }
 }
