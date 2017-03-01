@@ -4,8 +4,6 @@ import android.support.v7.widget.RecyclerView;
 
 import com.mikepenz.fastadapter.IGenericItem;
 
-import java.lang.reflect.ParameterizedType;
-
 /**
  * Created by mikepenz on 14.07.15.
  * Implements the general methods of the IItem interface to speed up development.
@@ -24,10 +22,5 @@ public abstract class GenericAbstractItem<Model, Item extends GenericAbstractIte
     public GenericAbstractItem<?, ?, ?> withModel(Model model) {
         this.mModel = model;
         return this;
-    }
-
-    @Override
-    protected Class<? extends VH> viewHolderType() {
-        return ((Class<? extends VH>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[2]);
     }
 }

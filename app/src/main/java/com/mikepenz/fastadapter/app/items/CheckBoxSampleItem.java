@@ -11,7 +11,6 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
-import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;
@@ -23,8 +22,6 @@ import butterknife.ButterKnife;
  * Created by mikepenz on 28.12.15.
  */
 public class CheckBoxSampleItem extends AbstractItem<CheckBoxSampleItem, CheckBoxSampleItem.ViewHolder> {
-    //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
-    private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
     public String header;
     public StringHolder name;
@@ -99,27 +96,10 @@ public class CheckBoxSampleItem extends AbstractItem<CheckBoxSampleItem, CheckBo
         holder.description.setText(null);
     }
 
-    /**
-     * our ItemFactory implementation which creates the ViewHolder for our adapter.
-     * It is highly recommended to implement a ViewHolderFactory as it is 0-1ms faster for ViewHolder creation,
-     * and it is also many many times more efficient if you define custom listeners on views within your item.
-     */
-    protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
-        public ViewHolder create(View v) {
-            return new ViewHolder(v);
-        }
-    }
-
-    /**
-     * return our ViewHolderFactory implementation here
-     *
-     * @return
-     */
     @Override
-    public ViewHolderFactory<? extends ViewHolder> getFactory() {
-        return FACTORY;
+    public ViewHolder getViewHolder(View v) {
+        return new ViewHolder(v);
     }
-
 
     /**
      * our ViewHolder

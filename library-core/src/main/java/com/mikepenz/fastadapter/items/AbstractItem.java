@@ -10,10 +10,7 @@ import android.view.ViewGroup;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IClickable;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 
-import java.lang.reflect.Constructor;
-import java.lang.reflect.ParameterizedType;
 import java.util.Collections;
 import java.util.List;
 
@@ -249,56 +246,14 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
         return getViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutRes(), parent, false));
     }
 
-    protected ViewHolderFactory<? extends VH> mFactory;
-
-    /**
-     * set the view holder factory of this item
-     *
-     * @param factory to be set
-     * @return
-     */
-    public Item withFactory(ViewHolderFactory<? extends VH> factory) {
-        this.mFactory = factory;
-        return (Item) this;
-    }
-
-    /**
-     * the abstract method to retrieve the ViewHolder factory
-     * The ViewHolder factory implementation should look like (see the commented code above)
-     *
-     * @return
-     */
-    public ViewHolderFactory<? extends VH> getFactory() {
-        if (mFactory == null) {
-            try {
-                this.mFactory = new ReflectionBasedViewHolderFactory<>(viewHolderType());
-            } catch (Exception e) {
-                throw new RuntimeException("please set a ViewHolderFactory");
-            }
-        }
-
-        return mFactory;
-    }
-
-    /**
-     * gets the viewHolder via the generic superclass
-     *
-     * @return the class of the ViewHolder
-     */
-    protected Class<? extends VH> viewHolderType() {
-        return ((Class<? extends VH>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[1]);
-    }
 
     /**
      * This method returns the ViewHolder for our item, using the provided View.
-     * By default it will try to get the ViewHolder from the ViewHolderFactory. If this one is not implemented it will go over the generic way, wasting ~5ms
      *
      * @param v
      * @return the ViewHolder for this Item
      */
-    public VH getViewHolder(View v) {
-        return getFactory().create(v);
-    }
+    public abstract VH getViewHolder(View v);
 
     /**
      * If this item equals to the given identifier
@@ -333,31 +288,5 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
     @Override
     public int hashCode() {
         return Long.valueOf(mIdentifier).hashCode();
-    }
-
-    protected static class ReflectionBasedViewHolderFactory<VH extends RecyclerView.ViewHolder> implements ViewHolderFactory<VH> {
-        private final Class<? extends VH> clazz;
-
-        public ReflectionBasedViewHolderFactory(Class<? extends VH> clazz) {
-            this.clazz = clazz;
-        }
-
-        @Override
-        public VH create(View v) {
-            try {
-                try {
-                    Constructor<? extends VH> constructor = clazz.getDeclaredConstructor(View.class);
-                    //could be that the constructor is not public
-                    constructor.setAccessible(true);
-                    return constructor.newInstance(v);
-                } catch (NoSuchMethodException e) {
-                    //maybe that viewholder has a default view
-                    return clazz.newInstance();
-                }
-            } catch (Exception e) {
-                // I am really out of options, you could have just set
-                throw new RuntimeException("You have to provide a ViewHolder with a constructor which takes a view!");
-            }
-        }
     }
 }
