@@ -14,7 +14,7 @@ public abstract class AbstractAdapter<Item extends IItem> extends RecyclerView.A
     private FastAdapter<Item> mFastAdapter;
 
     /**
-     * Wrap the FastAdapter with this AbstractAdapter and keep it's reference to forward all events correctly
+     * Wrap the FastAdapter with this AbstractAdapter and keep its reference to forward all events correctly
      *
      * @param fastAdapter the FastAdapter which contains the base logic
      * @return this
@@ -27,7 +27,7 @@ public abstract class AbstractAdapter<Item extends IItem> extends RecyclerView.A
     }
 
     /**
-     * Wrap the AbstractAdapter with this AbstractAdapter and keep the reference to it's FastAdapter to which we forward all events correctly
+     * Wrap the AbstractAdapter with this AbstractAdapter and keep the reference to its FastAdapter to which we forward all events correctly
      *
      * @param abstractAdapter an AbstractWrapper which wraps another AbstractAdapter or FastAdapter
      * @return this

@@ -5,7 +5,7 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter;
 
 /**
  * Created by mikepenz on 27.12.15.
- * Based on the ItemAdapter, with a different order to show it's items after the ItemAdapter
+ * Based on the ItemAdapter, with a different order to show its items after the ItemAdapter
  */
 public class FooterAdapter<Item extends IItem> extends ItemAdapter<Item> {
 

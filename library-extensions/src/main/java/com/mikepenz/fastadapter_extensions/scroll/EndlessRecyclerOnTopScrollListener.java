@@ -19,7 +19,7 @@ public abstract class EndlessRecyclerOnTopScrollListener extends RecyclerView.On
     private int mFirstVisibleItem, mVisibleItemCount, mTotalItemCount;
     private boolean mAlreadyCalledOnNoMore;
     // how many items your adapter must have at the end?
-    // leave it -1 as it's by default to disable onNothingToLoad() feature if you have only local data
+    // leave it -1 as its by default to disable onNothingToLoad() feature if you have only local data
     private int mTotalItems = -1;
 
     public EndlessRecyclerOnTopScrollListener(FastAdapter adapter, int totalItems) {

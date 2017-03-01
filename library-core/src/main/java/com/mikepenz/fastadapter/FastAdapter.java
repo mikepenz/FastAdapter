@@ -2,9 +2,10 @@ package com.mikepenz.fastadapter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.util.ArrayMap;
+import android.support.v4.util.ArraySet;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.util.SparseArray;
 import android.util.SparseIntArray;
 import android.view.MotionEvent;
 import android.view.View;
@@ -19,16 +20,9 @@ import com.mikepenz.fastadapter.utils.AdapterUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeMap;
-import java.util.TreeSet;
 
 /**
  * Created by mikepenz on 27.12.15.
@@ -39,11 +33,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     // we remember all adapters
     //priority queue...
-    final private ArrayMap<Integer, IAdapter<Item>> mAdapters = new ArrayMap<>();
+    final private SparseArray<IAdapter<Item>> mAdapters = new SparseArray<>();
     // we remember all possible types so we can create a new view efficiently
-    final private ArrayMap<Integer, Item> mTypeInstances = new ArrayMap<>();
+    final private SparseArray<Item> mTypeInstances = new SparseArray<>();
     // cache the sizes of the different adapters so we can access the items more performant
-    final private NavigableMap<Integer, IAdapter<Item>> mAdapterSizes = new TreeMap<>();
+    final private SparseArray<IAdapter<Item>> mAdapterSizes = new SparseArray<>();
     // the total size
     private int mGlobalSize = 0;
 
@@ -67,7 +61,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private boolean mLegacyBindViewMode = false;
 
     // we need to remember all selections to recreate them after orientation change
-    private SortedSet<Integer> mSelections = new TreeSet<>();
+    private Set<Integer> mSelections = new ArraySet<>();
     // we need to remember all expanded items to recreate them after orientation change
     private SparseIntArray mExpanded = new SparseIntArray();
 
@@ -86,6 +80,14 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     //the listeners for onCreateViewHolder or onBindViewHolder
     private OnCreateViewHolderListener mOnCreateViewHolderListener = new OnCreateViewHolderListenerImpl();
     private OnBindViewHolderListener mOnBindViewHolderListener = new OnBindViewHolderListenerImpl();
+
+    private static int floorIndex(SparseArray<?> sparseArray, int key) {
+        int index = sparseArray.indexOfKey(key);
+        if (index < 0) {
+            index = ~index - 1;
+        }
+        return index;
+    }
 
     /**
      * default CTOR
@@ -384,7 +386,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param adapter an adapter which extends the AbstractAdapter
      */
     public <A extends AbstractAdapter<Item>> void registerAdapter(A adapter) {
-        if (!mAdapters.containsKey(adapter.getOrder())) {
+        if (mAdapters.indexOfKey(adapter.getOrder()) < 0) {
             mAdapters.put(adapter.getOrder(), adapter);
             cacheSizes();
         }
@@ -396,7 +398,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param item an IItem which will be shown in the list
      */
     public void registerTypeInstance(Item item) {
-        if (!mTypeInstances.containsKey(item.getType())) {
+        if (mTypeInstances.indexOfKey(item.getType()) < 0) {
             mTypeInstances.put(item.getType(), item);
         }
     }
@@ -592,7 +594,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * Searches for the given item and calculates it's global position
+     * Searches for the given item and calculates its global position
      *
      * @param item the item which is searched for
      * @return the global position, or -1 if not found
@@ -606,7 +608,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * Searches for the given item and calculates it's global position
+     * Searches for the given item and calculates its global position
      *
      * @param identifier the identifier of an item which is searched for
      * @return the global position, or -1 if not found
@@ -641,12 +643,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             return null;
         }
         //now get the adapter which is responsible for the given position
-        Map.Entry<Integer, IAdapter<Item>> entry = mAdapterSizes.floorEntry(position);
-        return entry.getValue().getAdapterItem(position - entry.getKey());
+        int index = floorIndex(mAdapterSizes, position);
+        return mAdapterSizes.valueAt(index).getAdapterItem(position - mAdapterSizes.keyAt(index));
     }
 
     /**
-     * Internal method to get the Item as ItemHolder which comes with the relative position within it's adapter
+     * Internal method to get the Item as ItemHolder which comes with the relative position within its adapter
      * Finds the responsible adapter for the given position
      *
      * @param position the global position
@@ -658,10 +660,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         }
 
         RelativeInfo<Item> relativeInfo = new RelativeInfo<>();
-        Map.Entry<Integer, IAdapter<Item>> entry = mAdapterSizes.floorEntry(position);
-        if (entry != null) {
-            relativeInfo.item = entry.getValue().getAdapterItem(position - entry.getKey());
-            relativeInfo.adapter = entry.getValue();
+        int index = floorIndex(mAdapterSizes, position);
+        if (index != -1) {
+            relativeInfo.item = mAdapterSizes.valueAt(index).getAdapterItem(position - mAdapterSizes.keyAt(index));
+            relativeInfo.adapter = mAdapterSizes.valueAt(index);
             relativeInfo.position = position;
         }
         return relativeInfo;
@@ -679,7 +681,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             return null;
         }
         //now get the adapter which is responsible for the given position
-        return mAdapterSizes.floorEntry(position).getValue();
+        return mAdapterSizes.valueAt(floorIndex(mAdapterSizes, position));
     }
 
     /**
@@ -728,7 +730,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         int size = 0;
 
         //count the number of items before the adapter with the given order
-        for (IAdapter<Item> adapter : mAdapters.values()) {
+        for (int i = 0, adapterSize = mAdapters.size(); i < adapterSize; i++) {
+            IAdapter<Item> adapter = mAdapters.valueAt(i);
             if (adapter.getOrder() == order) {
                 return size;
             } else {
@@ -754,7 +757,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         }
 
         //get the count of items which are before this order
-        return mAdapterSizes.floorKey(position);
+        return mAdapterSizes.keyAt(floorIndex(mAdapterSizes, position));
     }
 
     /**
@@ -863,17 +866,19 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         mAdapterSizes.clear();
         int size = 0;
 
-        //we also have to add this for the first adapter otherwise the floorKey method will return the wrong value
-        if (mAdapters.size() > 0) {
-            mAdapterSizes.put(0, mAdapters.valueAt(0));
-        }
-
-        for (IAdapter<Item> adapter : mAdapters.values()) {
+        for (int i = 0, adapterSize = mAdapters.size(); i < adapterSize; i++) {
+            IAdapter<Item> adapter = mAdapters.valueAt(i);
             if (adapter.getAdapterItemCount() > 0) {
-                mAdapterSizes.put(size, adapter);
+                mAdapterSizes.append(size, adapter);
                 size = size + adapter.getAdapterItemCount();
             }
         }
+
+        //we also have to add this for the first adapter otherwise the floorIndex method will return the wrong value
+        if (size == 0 && mAdapters.size() > 0) {
+            mAdapterSizes.append(0, mAdapters.valueAt(0));
+        }
+
         mGlobalSize = size;
     }
 
@@ -890,7 +895,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (mPositionBasedStateManagement) {
             return mSelections;
         } else {
-            Set<Integer> selections = new HashSet<>();
+            Set<Integer> selections = new ArraySet<>();
             Item item;
             for (int i = 0, size = getItemCount(); i < size; i++) {
                 item = getItem(i);
@@ -907,8 +912,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return a set with the items which are currently selected
      */
     public Set<Item> getSelectedItems() {
-        Set<Item> items = new HashSet<>();
-        for (Integer position : getSelections()) {
+        Set<Integer> selections = getSelections();
+        Set<Item> items = new ArraySet<>(selections.size());
+        for (Integer position : selections) {
             items.add(getItem(position));
         }
         return items;
@@ -1022,7 +1028,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * selects an item and remembers it's position in the selections list
+     * selects an item and remembers its position in the selections list
      *
      * @param position the global position
      */
@@ -1031,7 +1037,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * selects an item and remembers it's position in the selections list
+     * selects an item and remembers its position in the selections list
      *
      * @param position  the global position
      * @param fireEvent true if the onClick listener should be called
@@ -1041,7 +1047,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * selects an item and remembers it's position in the selections list
+     * selects an item and remembers its position in the selections list
      *
      * @param position               the global position
      * @param fireEvent              true if the onClick listener should be called
@@ -1081,9 +1087,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             deselect(mSelections);
         } else {
             for (Item item : AdapterUtil.getAllItems(this)) {
-                item.withSetSelected(false);
-                if (mSelectionListener != null)
-                    mSelectionListener.onSelectionChanged(item, false);
+                if (item.isSelected()) {
+                    item.withSetSelected(false);
+                    if (mSelectionListener != null) {
+                        mSelectionListener.onSelectionChanged(item, false);
+                    }
+                }
             }
             notifyDataSetChanged();
         }
@@ -1130,7 +1139,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * deselects an item and removes it's position in the selections list
+     * deselects an item and removes its position in the selections list
      *
      * @param position the global position
      */
@@ -1139,7 +1148,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * deselects an item and removes it's position in the selections list
+     * deselects an item and removes its position in the selections list
      * also takes an iterator to remove items from the map
      *
      * @param position the global position
@@ -1152,9 +1161,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         }
         if (entries == null) {
             if (mPositionBasedStateManagement) {
-                if (mSelections.contains(position)) {
-                    mSelections.remove(position);
-                }
+                mSelections.remove(position);
             }
         } else {
             entries.remove();
@@ -1171,7 +1178,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return a list of the IItem elements which were deleted
      */
     public List<Item> deleteAllSelectedItems() {
-        List<Item> deletedItems = new LinkedList<>();
+        List<Item> deletedItems = new ArrayList<>();
         //we have to re-fetch the selections array again and again as the position will change after one item is deleted
 
         if (mPositionBasedStateManagement) {
@@ -1861,7 +1868,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * an internal class to return the IItem and relativePosition and it's adapter at once. used to save one iteration inside the getInternalItem method
+     * an internal class to return the IItem and relativePosition and its adapter at once. used to save one iteration inside the getInternalItem method
      */
     public static class RelativeInfo<Item extends IItem> {
         public IAdapter<Item> adapter = null;

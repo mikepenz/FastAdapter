@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.michaelflisar.dragselectrecyclerview.DragSelectTouchListener;
 import com.mikepenz.aboutlibraries.util.UIUtils;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
@@ -36,6 +37,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
     private FastItemAdapter<IItem> fastItemAdapter;
     private ActionModeHelper mActionModeHelper;
     private RangeSelectorHelper mRangeSelectorHelper;
+    private DragSelectTouchListener mDragSelectTouchListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,9 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
         LayoutInflaterCompat.setFactory(getLayoutInflater(), new IconicsLayoutInflater(getDelegate()));
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sample);
+
+        // get RecyclerView
+        final RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
 
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -95,6 +100,9 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                         if (actionMode != null) {
                             //we want color our CAB
                             ExpandableMultiselectDeleteSampleActivity.this.findViewById(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(ExpandableMultiselectDeleteSampleActivity.this, R.attr.colorPrimary, R.color.material_drawer_primary));
+
+                            // start the drag selection
+                            mDragSelectTouchListener.startDragSelection(position);
                         }
 
                         //if we have no actionMode we do not consume the event
@@ -110,7 +118,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                         return selected + "/" + SubItemUtil.countItems(fastItemAdapter.items(), false);
                     }
                 })
-                // important so that the helper knows, that is should use the SubItemUtil for validating it's state
+                // important so that the helper knows, that is should use the SubItemUtil for validating its state
                 .withSupportSubItems(true);
 
         // this will take care of selecting range of items via long press on the first and afterwards on the last item
@@ -118,8 +126,21 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                 .withSavedInstanceState(savedInstanceState)
                 .withActionModeHelper(mActionModeHelper);
 
-        //get our recyclerView and do basic setup
-        final RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        // setup the drag select listener and add it to the RecyclerView
+        mDragSelectTouchListener = new DragSelectTouchListener()
+                .withSelectListener(new DragSelectTouchListener.OnDragSelectListener()
+                {
+                    @Override
+                    public void onSelectChange(int start, int end, boolean isSelected)
+                    {
+                        mRangeSelectorHelper.selectRange(start, end, isSelected, true);
+                        // we handled the long press, so we reset the range selector
+                        mRangeSelectorHelper.reset();
+                    }
+                });
+        rv.addOnItemTouchListener(mDragSelectTouchListener);
+
+        // do basic RecyclerView setup
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new SlideDownAlphaAnimator());
         rv.setAdapter(fastItemAdapter);

@@ -79,31 +79,38 @@ public class RangeSelectorHelper {
         return false;
     }
 
-    private <T extends IItem & IExpandable> void selectRange(int from, int to, boolean select) {
-        if (from == to)
-            return;
+    public <T extends IItem & IExpandable> void selectRange(int from, int to, boolean select) {
+        selectRange(from, to, select, false);
+    }
 
+    public <T extends IItem & IExpandable> void selectRange(int from, int to, boolean select, boolean skipHeaders) {
         if (from > to) {
             int temp = from;
             from = to;
             to = temp;
         }
 
+        IItem item;
         for (int i = from; i <= to; i++) {
-            if (mFastAdapter.items().getAdapterItem(i).isSelectable()) {
+            item = mFastAdapter.items().getAdapterItem(i);
+            if (item.isSelectable()) {
                 if (select) {
                     mFastAdapter.select(i);
-                }
-                else {
+                } else {
                     mFastAdapter.deselect(i);
                 }
             }
-            if (mSupportSubItems && mFastAdapter.items().getAdapterItem(i) instanceof IExpandable)
-                SubItemUtil.selectAllSubItems(mFastAdapter, (T)mFastAdapter.items().getAdapterItem(i), select, true);
+            if (mSupportSubItems && !skipHeaders) {
+                // if a group is collapsed, select all sub items
+                if (item instanceof IExpandable && !((IExpandable)item).isExpanded()) {
+                    SubItemUtil.selectAllSubItems(mFastAdapter, (T) mFastAdapter.items().getAdapterItem(i), select, true);
+                }
+            }
         }
 
-        if (mActionModeHelper != null)
+        if (mActionModeHelper != null) {
             mActionModeHelper.checkActionMode(null); // works with null as well, as the ActionMode is active for sure!
+        }
     }
 
     /**
@@ -156,8 +163,8 @@ public class RangeSelectorHelper {
      * @return this
      */
     public RangeSelectorHelper withSavedInstanceState(Bundle savedInstanceState, String prefix) {
-        if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_LAST_LONG_PRESS))
-            mLastLongPressIndex = savedInstanceState.getInt(BUNDLE_LAST_LONG_PRESS);
+        if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_LAST_LONG_PRESS + prefix))
+            mLastLongPressIndex = savedInstanceState.getInt(BUNDLE_LAST_LONG_PRESS + prefix);
         return this;
     }
 }
