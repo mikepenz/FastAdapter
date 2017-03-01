@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.util.ArraySet;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -19,6 +20,7 @@ import com.mikepenz.fastadapter.utils.AdapterUtil;
 import com.mikepenz.fastadapter.utils.EventHookUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -137,6 +139,24 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             eventHooks = new LinkedList<>();
         }
         eventHooks.add(eventHook);
+        return this;
+    }
+
+    /**
+     * adds new event hooks for an item
+     * NOTE: this has to be called before adding the first items, as this won't be called anymore after the ViewHolders were created
+     *
+     * @param eventHooks the event hooks to be added for an item
+     * @return this
+     */
+    public FastAdapter<Item> withEventHooks(@Nullable Collection<? extends EventHook<Item>> eventHooks) {
+        if (eventHooks == null) {
+            return this;
+        }
+        if (this.eventHooks == null) {
+            this.eventHooks = new LinkedList<>();
+        }
+        this.eventHooks.addAll(eventHooks);
         return this;
     }
 
@@ -432,6 +452,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public void registerTypeInstance(Item item) {
         if (mTypeInstances.indexOfKey(item.getType()) < 0) {
             mTypeInstances.put(item.getType(), item);
+            //check if the item implements hookable when its added for the first time
+            if (item instanceof IHookable) {
+                withEventHooks(((IHookable<Item>) item).getEventHooks());
+            }
         }
     }
 
