@@ -53,13 +53,10 @@ public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapt
         return new OrderedRealmCollectionChangeListener() {
             @Override
             public void onChange(Object collection, OrderedCollectionChangeSet changeSet) {
-                if (collection instanceof List) {
-                    List<Item> items = (List<Item>) collection;
-                    if (isUseIdDistributor()) {
-                        IdDistributor.checkIds(items);
-                    }
-                    mapPossibleTypes(items);
+                if (isUseIdDistributor() && adapterData != null) {
+                    IdDistributor.checkIds(adapterData);
                 }
+                mapPossibleTypes(adapterData);
                 // null Changes means the async query returns the first time.
                 if (changeSet == null) {
                     notifyDataSetChanged();
