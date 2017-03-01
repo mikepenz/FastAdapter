@@ -14,6 +14,7 @@ import com.mikepenz.fastadapter.listeners.LongClickEventHook;
 import com.mikepenz.fastadapter.listeners.TouchEventHook;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -76,6 +77,17 @@ public class ClickListenerHelper<Item extends IItem> {
         return this;
     }
 
+    /**
+     * adds new eventHooks
+     * note this will not add new event hooks for existing viewHolders after it was created
+     *
+     * @param eventHooks new eventHooks
+     * @return this
+     */
+    public ClickListenerHelper<Item> addEventHooks(Collection<? extends EventHook<Item>> eventHooks) {
+        this.eventHooks.addAll(eventHooks);
+        return this;
+    }
 
     /**
      * binds the hooks to the viewHolder
