@@ -66,7 +66,7 @@ public class AdapterUtil {
                 //if we removed items and we are within the bounds we have to check if the item was removed
                 //adjustBy is negative in this case
                 if (position > startPosition + adjustBy && position <= startPosition) {
-                    ;//we are within the removed items range we don't add this item anymore
+                    //we are within the removed items range we don't add this item anymore
                 } else {
                     //otherwise we adjust our position
                     newPositions.add(position + adjustBy);
@@ -102,7 +102,7 @@ public class AdapterUtil {
                 //if we removed items and we are within the bounds we have to check if the item was removed
                 //adjustBy is negative in this case
                 if (position > startPosition + adjustBy && position <= startPosition) {
-                    ;//we are within the removed items range we don't add this item anymore
+                    //we are within the removed items range we don't add this item anymore
                 } else {
                     //otherwise we adjust our position
                     newPositions.put(position + adjustBy, positions.valueAt(i));
