@@ -180,7 +180,7 @@ public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapt
         } else if (data instanceof RealmList) {
             RealmList realmList = (RealmList) data;
             //noinspection unchecked
-            realmList.realm.handlerController.addChangeListenerAsWeakReference(listener);
+            realmList.realm.addListener(listener);
         } else {
             throw new IllegalArgumentException("RealmCollection not supported: " + data.getClass());
         }
@@ -193,7 +193,7 @@ public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapt
         } else if (data instanceof RealmList) {
             RealmList realmList = (RealmList) data;
             //noinspection unchecked
-            realmList.realm.handlerController.removeWeakChangeListener(listener);
+            realmList.realm.removeListener(listener);
         } else {
             throw new IllegalArgumentException("RealmCollection not supported: " + data.getClass());
         }
