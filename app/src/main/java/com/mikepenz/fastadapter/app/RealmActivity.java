@@ -27,7 +27,6 @@ import java.util.List;
 import io.realm.OrderedCollectionChangeSet;
 import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class RealmActivity extends AppCompatActivity {
@@ -158,20 +157,12 @@ public class RealmActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.item_add:
-                mRealm.where(RealmSampleUserItem.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<RealmSampleUserItem>>() {
+                mRealm.executeTransactionAsync(new Realm.Transaction() {
                     @Override
-                    public void onChange(RealmResults<RealmSampleUserItem> userItems) {
-                        //Remove the change listener
-                        userItems.removeChangeListener(this);
-                        //Store the primary key to get access from a other thread
-                        final long newPrimaryKey = userItems.max("mIdentifier").longValue() + 1;
-                        mRealm.executeTransactionAsync(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                RealmSampleUserItem newUser = realm.createObject(RealmSampleUserItem.class, newPrimaryKey);
-                                newUser.withName("Sample Realm Element " + newPrimaryKey);
-                            }
-                        });
+                    public void execute(Realm realm) {
+                        final long newPrimaryKey = realm.where(RealmSampleUserItem.class).max("mIdentifier").longValue() + 1;
+                        RealmSampleUserItem newUser = realm.createObject(RealmSampleUserItem.class, newPrimaryKey);
+                        newUser.withName("Sample Realm Element " + newPrimaryKey);
                     }
                 });
                 return true;
