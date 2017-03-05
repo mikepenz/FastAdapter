@@ -17,6 +17,7 @@ public class RangeSelectorHelper {
     private FastItemAdapter mFastAdapter;
     private ActionModeHelper mActionModeHelper;
     private boolean mSupportSubItems = false;
+    private Object mPayload = null;
 
     private Integer mLastLongPressIndex;
 
@@ -35,6 +36,11 @@ public class RangeSelectorHelper {
 
     public RangeSelectorHelper withSupportSubItems(boolean supportSubItems) {
         this.mSupportSubItems = supportSubItems;
+        return this;
+    }
+
+    public RangeSelectorHelper withPayload(Object payload) {
+        mPayload = payload;
         return this;
     }
 
@@ -60,12 +66,25 @@ public class RangeSelectorHelper {
      * @return true, if the long press was handled
      */
     public boolean onLongClick(int index) {
+        return onLongClick(index, true);
+    }
+
+    /**
+     * will take care to save the long pressed index
+     * or to select all items in the range between the current long pressed item and the last long pressed item
+     *
+     * @param index the index of the long pressed item
+     * @param selectItem true, if the item at the index should be selected, false if this was already done outside of this helper or is not desired
+     * @return true, if the long press was handled
+     */
+    public boolean onLongClick(int index, boolean selectItem) {
         if (mLastLongPressIndex == null) {
             // we only consider long presses on not selected items
             if (mFastAdapter.getAdapterItem(index).isSelectable()) {
                 mLastLongPressIndex = index;
                 // we select this item as well
-                mFastAdapter.select(index);
+                if (selectItem)
+                    mFastAdapter.select(index);
                 if (mActionModeHelper != null)
                     mActionModeHelper.checkActionMode(null); // works with null as well, as the ActionMode is active for sure!
                 return true;
@@ -103,7 +122,7 @@ public class RangeSelectorHelper {
             if (mSupportSubItems && !skipHeaders) {
                 // if a group is collapsed, select all sub items
                 if (item instanceof IExpandable && !((IExpandable)item).isExpanded()) {
-                    SubItemUtil.selectAllSubItems(mFastAdapter, (T) mFastAdapter.getAdapterItem(i), select, true);
+                    SubItemUtil.selectAllSubItems(mFastAdapter, (T) mFastAdapter.getAdapterItem(i), select, true, mPayload);
                 }
             }
         }

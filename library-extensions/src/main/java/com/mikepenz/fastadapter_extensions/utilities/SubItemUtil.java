@@ -183,7 +183,7 @@ public class SubItemUtil {
      * @param select the new selected state of the sub items
      */
     public static <T extends IItem & IExpandable> void selectAllSubItems(final FastAdapter adapter, T header, boolean select) {
-        selectAllSubItems(adapter, header, select, false);
+        selectAllSubItems(adapter, header, select, false, null);
     }
 
     /**
@@ -193,8 +193,9 @@ public class SubItemUtil {
      * @param header  the header who's children should be selected or deselected
      * @param select the new selected state of the sub items
      * @param notifyParent true, if the parent should be notified about the changes of its children selection state
+     * @param payload payload for the notifying function
      */
-    public static <T extends IItem & IExpandable> void selectAllSubItems(final FastAdapter adapter, T header, boolean select, boolean notifyParent) {
+    public static <T extends IItem & IExpandable> void selectAllSubItems(final FastAdapter adapter, T header, boolean select, boolean notifyParent, Object payload) {
         int subItems = header.getSubItems().size();
         int position = adapter.getPosition(header);
         if (header.isExpanded()) {
@@ -207,7 +208,7 @@ public class SubItemUtil {
                     }
                 }
                 if (header.getSubItems().get(i) instanceof IExpandable)
-                    selectAllSubItems(adapter, header, select, notifyParent);
+                    selectAllSubItems(adapter, header, select, notifyParent, payload);
 
             }
         } else {
@@ -216,14 +217,14 @@ public class SubItemUtil {
                     ((IItem) header.getSubItems().get(i)).withSetSelected(select);
                 }
                 if (header.getSubItems().get(i) instanceof IExpandable)
-                    selectAllSubItems(adapter, header, select, notifyParent);
+                    selectAllSubItems(adapter, header, select, notifyParent, payload);
             }
 
         }
 
         // we must notify the view only!
         if (notifyParent && position >= 0) {
-            adapter.notifyItemChanged(position);
+            adapter.notifyItemChanged(position, payload);
         }
     }
 
@@ -375,6 +376,9 @@ public class SubItemUtil {
                 boolean success = false;
                 if (adapter instanceof IItemAdapter) {
                     success = ((IItemAdapter) adapter).remove(pos) != null;
+                    if (success) {
+                        fastAdapter.notifyAdapterItemRemoved(pos);
+                    }
                 }
                 boolean isHeader = item instanceof IExpandable && ((IExpandable) item).getSubItems() != null;
 //                Log.d("DELETE", "success=" + success + " | deletedId=" + item.getIdentifier() + "(" + (isHeader ? "EMPTY HEADER" : "ITEM WITHOUT HEADER") + ")");

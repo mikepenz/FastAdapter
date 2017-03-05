@@ -143,6 +143,16 @@ public class ActionModeHelper {
         return checkActionMode(act, selected);
     }
 
+    /**
+     * reset any active action mode if it is active, useful, to avoid leaking the activity if this helper class is retained
+     */
+    public void reset() {
+        if (mActionMode != null) {
+            mActionMode.finish();
+            mActionMode = null;
+        }
+    }
+
     private ActionMode checkActionMode(AppCompatActivity act, int selected) {
         if (selected == 0) {
             if (mActionMode != null) {
