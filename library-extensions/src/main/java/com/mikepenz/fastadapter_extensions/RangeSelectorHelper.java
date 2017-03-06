@@ -26,19 +26,34 @@ public class RangeSelectorHelper {
     }
 
     /**
-     * set the ActionModeHelper, if want to notify it after a range was selected
+     * set the ActionModeHelper, if you want to notify it after a range was selected
      * so that it can update the ActionMode title
+     *
+     * @param actionModeHelper the action mode helper that should be used
+     * @return this, for supporting function call chaining
      */
     public RangeSelectorHelper withActionModeHelper(ActionModeHelper actionModeHelper) {
         mActionModeHelper = actionModeHelper;
         return this;
     }
 
+    /**
+     * enable this, if you want the range selector to correclty handle sub items as well
+     *
+     * @param supportSubItems true, if sub items are supported, false otherwise
+     * @return this, for supporting function call chaining
+     */
     public RangeSelectorHelper withSupportSubItems(boolean supportSubItems) {
         this.mSupportSubItems = supportSubItems;
         return this;
     }
 
+    /**
+     * the provided payload will be passed to the adapters notify function, if one is provided
+     *
+     * @param payload the paylaod that should be passed to the adapter on selection state change
+     * @return this, for supporting function call chaining
+     */
     public RangeSelectorHelper withPayload(Object payload) {
         mPayload = payload;
         return this;
@@ -98,10 +113,25 @@ public class RangeSelectorHelper {
         return false;
     }
 
+    /**
+     * selects all items in a range, from and to indizes are inclusive
+     *
+     * @param from the from index
+     * @param to the to index
+     * @param select true, if the provided range should be selected, false otherwise
+     */
     public <T extends IItem & IExpandable> void selectRange(int from, int to, boolean select) {
         selectRange(from, to, select, false);
     }
 
+    /**
+     * selects all items in a range, from and to indizes are inclusive
+     *
+     * @param from the from index
+     * @param to the to index
+     * @param select true, if the provided range should be selected, false otherwise
+     * @param skipHeaders true, if you do not want to process headers, false otherwise
+     */
     public <T extends IItem & IExpandable> void selectRange(int from, int to, boolean select, boolean skipHeaders) {
         if (from > to) {
             int temp = from;

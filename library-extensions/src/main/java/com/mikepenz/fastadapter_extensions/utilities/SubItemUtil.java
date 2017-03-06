@@ -219,7 +219,6 @@ public class SubItemUtil {
                 if (header.getSubItems().get(i) instanceof IExpandable)
                     selectAllSubItems(adapter, header, select, notifyParent, payload);
             }
-
         }
 
         // we must notify the view only!
