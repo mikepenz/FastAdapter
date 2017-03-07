@@ -194,10 +194,12 @@ public class ActionModeHelper {
             }
 
             if (!consumed) {
-                if (mSupportSubItems)
-                    SubItemUtil.deleteSelected(mFastAdapter, true, false); // TODO: unsafe cast!!! for deleting, we need the FastItemAdapter.remove(pos) funtion... adopt this function to work with the FastAdpater instead and the cast can be removed
-                else
+                if (mSupportSubItems) {
+                    SubItemUtil.deleteSelected(mFastAdapter, true, false);
+                }
+                else {
                     mFastAdapter.deleteAllSelectedItems();
+                }
                 //finish the actionMode
                 mode.finish();
             }
