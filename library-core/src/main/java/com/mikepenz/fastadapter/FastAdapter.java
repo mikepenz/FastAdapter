@@ -367,6 +367,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                     id = String.valueOf(item.getIdentifier());
                     if (expandedItems != null && expandedItems.contains(id)) {
                         expand(i);
+                        size = getItemCount();
                     }
                     if (selectedItems != null && selectedItems.contains(id)) {
                         select(i);
