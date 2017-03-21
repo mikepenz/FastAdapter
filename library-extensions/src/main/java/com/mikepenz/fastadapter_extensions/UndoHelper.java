@@ -24,7 +24,7 @@ public class UndoHelper<Item extends IItem> {
     private static final int ACTION_REMOVE = 2;
 
     private FastAdapter<Item> mAdapter;
-    private UndoListener mUndoListener;
+    private UndoListener<Item> mUndoListener;
     private History mHistory = null;
     private Snackbar mSnackBar = null;
     private String mSnackbarActionText = "";
@@ -35,7 +35,7 @@ public class UndoHelper<Item extends IItem> {
      * @param adapter      the root FastAdapter
      * @param undoListener the listener which gets called when an item was really removed
      */
-    public UndoHelper(FastAdapter<Item> adapter, UndoListener undoListener) {
+    public UndoHelper(FastAdapter<Item> adapter, UndoListener<Item> undoListener) {
         this.mAdapter = adapter;
         this.mUndoListener = undoListener;
     }
