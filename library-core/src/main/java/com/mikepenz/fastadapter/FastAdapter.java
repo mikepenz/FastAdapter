@@ -1122,6 +1122,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                     continue;
                 }
                 item.withSetSelected(true);
+
+                if (mSelectionListener != null) {
+                    mSelectionListener.onSelectionChanged(item, true);
+                }
             }
             notifyDataSetChanged();
         }
@@ -1169,8 +1173,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         }
         notifyItemChanged(position);
 
-        if (mSelectionListener != null)
+        if (mSelectionListener != null) {
             mSelectionListener.onSelectionChanged(item, false);
+        }
     }
 
     /**
