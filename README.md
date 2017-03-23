@@ -1,4 +1,4 @@
-#FastAdapter  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.mikepenz/fastadapter/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.mikepenz/fastadapter) [![Join the chat at https://gitter.im/mikepenz/fastadapter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mikepenz/fastadapter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# FastAdapter  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.mikepenz/fastadapter/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.mikepenz/fastadapter) [![Join the chat at https://gitter.im/mikepenz/fastadapter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mikepenz/fastadapter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 > The RecyclerView is one of the most used widgets in the Android world, and with it you have to implement an Adapter which provides the items for the view. Most use cases require the same base logic, but require you to write everything again and again.
 
@@ -6,7 +6,7 @@ The FastAdapter is here to simplify this process. You don't have to worry about 
 This library has a fast and highly optimized core which provides core functionality, most apps require. It also prevents common mistakes by taking away those steps from the devs. 
 Beside being blazing fast, minimizing the code you need to write, it is also really easy to extend. Just provide another adapter implementation, hook into the adapter chain, custom select / deselection behaviors. Everything is possible.
 
-##A quick overview:
+## A quick overview:
 - Click / Long-Click listeners
 - Selection / Multi-Selection ([MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java), [CheckBoxSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/CheckBoxSampleActivity.java), [RadioButtonSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/RadioButtonSampleActivity.java))
 - Expandable items ([ExpandableSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/ExpandableSampleActivity.java), [IconGridSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/IconGridActivity.java) ,[AdvancedSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/AdvancedSampleActivity.java))
@@ -28,15 +28,15 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
  - More to come...
 - FastScroller (external lib) ([SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java))
 
-#Preview
-##Demo
+# Preview
+## Demo
 You can try it out here [Google Play](https://play.google.com/store/apps/details?id=com.mikepenz.fastadapter.app) (or download the latest release from GitHub)
 
-##Screenshots
+## Screenshots
 ![Image](https://raw.githubusercontent.com/mikepenz/FastAdapter/develop/DEV/github/screenshots1.jpg)
 
-#Include in your project
-##Using Maven
+# Include in your project
+## Using Maven
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
@@ -60,8 +60,8 @@ compile 'com.mikepenz:materialize:1.0.0@aar'
 > If you upgrade from < 2.1.0 follow the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md)
 
 
-##How to use
-###1. Implement your item (the easy way)
+## How to use
+### 1. Implement your item (the easy way)
 Just create a class which extends the `AbstractItem` as shown below. Implement the methods, and your item is ready.
 ```java
 public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> {
@@ -115,7 +115,7 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
 }
 ```
 
-###2. Set the Adapter to the RecyclerView
+### 2. Set the Adapter to the RecyclerView
 ```java
 //create our FastAdapter which will manage everything
 FastItemAdapter fastAdapter = new FastItemAdapter();
@@ -128,7 +128,7 @@ recyclerView.setAdapter(fastAdapter);
 fastAdapter.add(ITEMS);
 ```
 
-###3. Click listener
+### 3. Click listener
 ```java
 fastAdapter.withSelectable(true);
 fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<Item>() {
@@ -141,7 +141,7 @@ fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<Item>() {
 ```
 
 
-###4. Click listeners for views inside your item
+### 4. Click listeners for views inside your item
 ```java
 //just add an `EventHook` to your `FastAdapter` by implementing either a `ClickEventHook`, `LongClickEventHook`, `TouchEventHook`, `CustomEventHook`
 fastItemAdapter.withItemEvent(new ClickEventHook<SampleItem> {
@@ -162,7 +162,7 @@ fastItemAdapter.withItemEvent(new ClickEventHook<SampleItem> {
 });
 ```
 
-###5. Filter 
+### 5. Filter 
 ```java
 // Call this in onQueryTextSubmit() & onQueryTextChange() when using SearchView
 fastAdapter.filter("yourSearchTerm");
@@ -176,7 +176,7 @@ fastAdapter.withFilterPredicate(new IItemAdapter.Predicate<Item>() {
 ```
 `filter()` will return true to indicate which items will be removed. Returning false indicates items that will be retained.
 
-###6. Drag and drop
+### 6. Drag and drop
 First, attach `ItemTouchHelper` to RecyclerView.
 ```java
 SimpleDragCallback dragCallback = new SimpleDragCallback(this);
@@ -193,7 +193,7 @@ Implement `ItemTouchCallback` interface in your Activity, and override the `item
    }
 ```
 
-###7. Using different ViewHolders (like HeaderView)
+### 7. Using different ViewHolders (like HeaderView)
 Start by initializing your adapters:
 ```java
 FastItemAdapter fastAdapter = new FastItemAdapter<>();
@@ -213,7 +213,7 @@ It is also possible to add in a third ViewHolder type by using the `wrap()` meth
 recyclerView.setAdapter(thirdAdapter.wrap(headerAdapter.wrap(fastAdapter)));
 ```
 
-###8. Infinite (endless) scrolling
+### 8. Infinite (endless) scrolling
 Create a FooterAdapter. We need this to display a loading ProgressBar at the end of our list.
 ```java
 FooterAdapter<ProgressItem> footerAdapter = new FooterAdapter<>();
@@ -233,8 +233,8 @@ recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(footerAdapt
 
 For the complete tutorial and more features such as multi-select and CAB check out the [sample app](https://github.com/mikepenz/FastAdapter/tree/develop/app) or, read [blog post](http://blog.grafixartist.com/recyclerview-adapter-android-made-fast-easy/).
 
-##Advanced Usage
-###Proguard
+## Advanced Usage
+### Proguard
 If you use the `FastAdapter` and enabled **Proguard** you have to implement a `ViewHolderFactory` for your `Item`. ([SimpleItem#L145](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/items/SimpleItem.java#L145))
 ```java
 //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
@@ -264,7 +264,7 @@ public ViewHolderFactory<? extends ViewHolder> getFactory() {
 
 Using the `GenericItemAdapter` with `proguard` requires you to use the non generic implementation by providing a `Function` to the following constructur: [GenericItemAdapter(Function<Model, Item> itemFactory) ](https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/adapters/GenericItemAdapter.java#L32)
 
-###ExpandableItems
+### ExpandableItems
 The `FastAdapter` comes with native support for expandable items. These items have to implement the `IExpandable` interface, and the sub items the `ISubItem` interface. This allows better support. 
 The sample app provides sample implementations of those. (Those in the sample are kept generic which allows them to be used with different parent / subitems)
 
@@ -297,24 +297,24 @@ Other Libs:
 - StickyRecyclerHeadersAdapter https://github.com/timehop/sticky-headers-recyclerview
 
 
-#Developed By
+# Developed By
 
 * Mike Penz 
  * [mikepenz.com](http://mikepenz.com) - <mikepenz@gmail.com>
  * [paypal.me/mikepenz](http://paypal.me/mikepenz)
  
-#Contributors
+# Contributors
 
 This free, open source software was also made possible by a group of volunteers that put many hours of hard work into it. See the [CONTRIBUTORS.md](CONTRIBUTORS.md) file for details.
 
-##Special mentions
+## Special mentions
 
 I want to give say thanks to some special contributors who provided some huge PRs and many changes to improve this great library. 
 
 * **[Fabian Terhorst](https://github.com/FabianTerhorst)**
 * **[MFlisar](https://github.com/MFlisar)**
 
-#License
+# License
 
     Copyright 2016 Mike Penz
 
