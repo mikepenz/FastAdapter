@@ -70,6 +70,11 @@ public class TestItem extends AbstractItem<TestItem, TestItem.ViewHolder> implem
         return this;
     }
 
+    @Override
+    public ViewHolder getViewHolder(View v) {
+        return new ViewHolder(v);
+    }
+
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ViewHolder(View view) {
             super(view);
