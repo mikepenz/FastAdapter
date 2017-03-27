@@ -54,7 +54,7 @@ All additions are included in the following dependency.
 ```gradle
 compile 'com.mikepenz:fastadapter-extensions:2.1.7@aar'
 //The tiny Materialize library used for its useful helper classes
-compile 'com.mikepenz:materialize:1.0.0@aar'
+compile 'com.mikepenz:materialize:1.0.1@aar'
 ```
 
 > If you upgrade from < 2.1.0 follow the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md)
