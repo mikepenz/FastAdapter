@@ -24,7 +24,7 @@ import com.mikepenz.iconics.view.IconicsImageView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -159,17 +159,17 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         protected View view;
-        @Bind(R.id.item_image_img)
+        @BindView(R.id.item_image_img)
         protected ImageView imageView;
-        @Bind(R.id.item_image_name)
+        @BindView(R.id.item_image_name)
         protected TextView imageName;
-        @Bind(R.id.item_image_description)
+        @BindView(R.id.item_image_description)
         protected TextView imageDescription;
-        @Bind(R.id.item_image_loved_container)
+        @BindView(R.id.item_image_loved_container)
         public RelativeLayout imageLovedContainer;
-        @Bind(R.id.item_image_loved_yes)
+        @BindView(R.id.item_image_loved_yes)
         protected IconicsImageView imageLovedOn;
-        @Bind(R.id.item_image_loved_no)
+        @BindView(R.id.item_image_loved_no)
         protected IconicsImageView imageLovedOff;
 
         public ViewHolder(View view) {

@@ -10,7 +10,7 @@ import com.mikepenz.iconics.view.IconicsImageView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -73,9 +73,9 @@ public class GenericIconItem extends GenericAbstractItem<IconModel, GenericIconI
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         protected View view;
-        @Bind(R.id.name)
+        @BindView(R.id.name)
         public TextView name;
-        @Bind(R.id.icon)
+        @BindView(R.id.icon)
         public IconicsImageView image;
 
         public ViewHolder(View view) {

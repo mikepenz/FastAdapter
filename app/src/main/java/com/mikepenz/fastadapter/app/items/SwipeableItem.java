@@ -15,7 +15,7 @@ import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -142,17 +142,17 @@ public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.Vie
      * our ViewHolder
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.material_drawer_name)
+        @BindView(R.id.material_drawer_name)
         TextView name;
-        @Bind(R.id.material_drawer_description)
+        @BindView(R.id.material_drawer_description)
         TextView description;
-        @Bind(R.id.swipe_result_content)
+        @BindView(R.id.swipe_result_content)
         View swipeResultContent;
-        @Bind(R.id.item_content)
+        @BindView(R.id.item_content)
         View itemContent;
-        @Bind(R.id.swiped_text)
+        @BindView(R.id.swiped_text)
         TextView swipedText;
-        @Bind(R.id.swiped_action)
+        @BindView(R.id.swiped_action)
         TextView swipedAction;
 
         public Runnable swipedActionRunnable;

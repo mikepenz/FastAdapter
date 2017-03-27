@@ -63,7 +63,7 @@ public class GenericItemActivity extends AppCompatActivity {
         DragScrollBar materialScrollBar = new DragScrollBar(this, rv, true);
         materialScrollBar.setHandleColour(ContextCompat.getColor(this, R.color.colorAccent));
         materialScrollBar.setHandleOffColour(ContextCompat.getColor(this, R.color.colorAccent));
-        materialScrollBar.addIndicator(new CustomIndicator(this), true);
+        materialScrollBar.setIndicator(new CustomIndicator(this), true);
 
         rv.setLayoutManager(gridLayoutManager);
         rv.setItemAnimator(new SlideDownAlphaAnimator());

@@ -16,7 +16,7 @@ import com.mikepenz.materialdrawer.holder.StringHolder;
 import java.util.List;
 import java.util.Set;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -107,11 +107,11 @@ public class RadioButtonSampleItem extends AbstractItem<RadioButtonSampleItem, R
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         protected View view;
-        @Bind(R.id.radiobutton)
+        @BindView(R.id.radiobutton)
         public RadioButton radioButton;
-        @Bind(R.id.material_drawer_name)
+        @BindView(R.id.material_drawer_name)
         TextView name;
-        @Bind(R.id.material_drawer_description)
+        @BindView(R.id.material_drawer_description)
         TextView description;
 
         public ViewHolder(View view) {

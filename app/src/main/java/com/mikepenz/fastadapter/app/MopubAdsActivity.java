@@ -18,7 +18,7 @@ import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
 import com.mopub.nativeads.ViewBinder;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MopubAdsActivity extends AppCompatActivity implements FastAdapter.OnClickListener<LetterItem> {
@@ -26,9 +26,9 @@ public class MopubAdsActivity extends AppCompatActivity implements FastAdapter.O
     private MopubFastItemAdapter<LetterItem> mAdapter;
 
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
-    @Bind(R.id.rv)
+    @BindView(R.id.rv)
     RecyclerView mRecyclerView;
 
     @Override
