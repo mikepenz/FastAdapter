@@ -33,6 +33,11 @@ public class LetterItem extends AbstractItem<LetterItem, LetterItem.ViewHolder> 
     }
 
     @Override
+    public ViewHolder getViewHolder(View v) {
+        return new ViewHolder(v);
+    }
+
+    @Override
     public int getType() {
         return R.id.fastadapter_letter_item_id;
     }

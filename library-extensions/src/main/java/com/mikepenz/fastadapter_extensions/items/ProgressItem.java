@@ -6,15 +6,12 @@ import android.widget.ProgressBar;
 
 import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.items.AbstractItem;
-import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.library_extensions.R;
 
 import java.util.List;
 
 
 public class ProgressItem extends AbstractItem<ProgressItem, ProgressItem.ViewHolder> {
-
-    private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
     @Override
     public int getType() {
@@ -39,15 +36,9 @@ public class ProgressItem extends AbstractItem<ProgressItem, ProgressItem.ViewHo
 
     }
 
-    protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
-        public ViewHolder create(View v) {
-            return new ViewHolder(v);
-        }
-    }
-
     @Override
-    public ViewHolderFactory<? extends ViewHolder> getFactory() {
-        return FACTORY;
+    public ViewHolder getViewHolder(View v) {
+        return new ViewHolder(v);
     }
 
     protected static class ViewHolder extends RecyclerView.ViewHolder {
