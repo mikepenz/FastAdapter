@@ -578,6 +578,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         final RecyclerView.ViewHolder holder = mOnCreateViewHolderListener.onPreCreateViewHolder(parent, viewType);
 
+        //we only want to create a ClickListenerHelper if really necessary
+        if (clickListenerHelper == null && (mOnPreClickListener != null || mOnClickListener != null || mOnPreLongClickListener != null || mOnLongClickListener != null || mOnTouchListener != null)) {
+            clickListenerHelper = new ClickListenerHelper<>(this);
+        }
         if (clickListenerHelper != null) {
             //handle click behavior
             clickListenerHelper.attachToView(fastAdapterViewClickListener, holder, holder.itemView);
