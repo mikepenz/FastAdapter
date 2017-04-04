@@ -250,6 +250,11 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             IdDistributor.checkIds(items);
         }
 
+        //reset the filter
+        if (getItemFilter() instanceof ItemAdapter.ItemFilter && ((ItemFilter) getItemFilter()).getConstraint() == null) {
+            getItemFilter().filter(null);
+        }
+
         //first collapse all items
         getFastAdapter().collapse(false);
 
@@ -303,6 +308,11 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     public ItemAdapter<Item> setNewList(List<Item> items) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
+        }
+        
+        //reset the filter
+        if (getItemFilter() instanceof ItemAdapter.ItemFilter && ((ItemFilter) getItemFilter()).getConstraint() == null) {
+            getItemFilter().filter(null);
         }
 
         mItems = new ArrayList<>(items);
