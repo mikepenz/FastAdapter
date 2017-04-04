@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter.utils;
 
+import android.support.v4.util.ArraySet;
 import android.util.SparseIntArray;
 
 import com.mikepenz.fastadapter.FastAdapter;
@@ -9,8 +10,6 @@ import com.mikepenz.fastadapter.IItem;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 /**
  * Created by mikepenz on 31.12.15.
@@ -51,8 +50,8 @@ public class AdapterUtil {
      * @param adjustBy      the value by which the data was shifted
      * @return the adjusted set
      */
-    public static SortedSet<Integer> adjustPosition(Set<Integer> positions, int startPosition, int endPosition, int adjustBy) {
-        SortedSet<Integer> newPositions = new TreeSet<>();
+    public static Set<Integer> adjustPosition(Set<Integer> positions, int startPosition, int endPosition, int adjustBy) {
+        Set<Integer> newPositions = new ArraySet<>();
 
         for (Integer entry : positions) {
             int position = entry;

@@ -13,8 +13,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 217
-        versionName '2.1.7'
+        versionCode 220
+        versionName '2.2.0'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
@@ -102,6 +102,9 @@ dependencies {
     //used to load the images in the ImageListSample
     //https://github.com/bumptech/glide
     compile 'com.github.bumptech.glide:glide:3.7.0'
+
+    //Used to provide the drag selection like google photos
+    compile 'com.github.MFlisar:DragSelectRecyclerView:0.2'
 
     //mopub sdk to showcase the usage of the mopub adapter
     compile('com.mopub:mopub-sdk:4.7.1@aar') {
