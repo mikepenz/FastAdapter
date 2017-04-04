@@ -251,8 +251,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         }
 
         //reset the filter
-        if (getItemFilter() instanceof ItemAdapter.ItemFilter && ((ItemFilter) getItemFilter()).getConstraint() == null) {
-            getItemFilter().filter(null);
+        if (getItemFilter() instanceof ItemAdapter.ItemFilter && ((ItemFilter) getItemFilter()).getConstraint() != null) {
+            ((ItemFilter) getItemFilter()).performFiltering(null);
         }
 
         //first collapse all items
@@ -311,8 +311,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         }
         
         //reset the filter
-        if (getItemFilter() instanceof ItemAdapter.ItemFilter && ((ItemFilter) getItemFilter()).getConstraint() == null) {
-            getItemFilter().filter(null);
+        if (getItemFilter() instanceof ItemAdapter.ItemFilter && ((ItemFilter) getItemFilter()).getConstraint() != null) {
+            ((ItemFilter) getItemFilter()).performFiltering(null);
         }
 
         mItems = new ArrayList<>(items);
