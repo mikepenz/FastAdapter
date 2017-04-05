@@ -180,6 +180,12 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
         return mOnItemClickListener;
     }
 
+    /**
+     * Binds the data of this item to the given holder
+     *
+     * @param holder
+     * @param payloads
+     */
     @Override
     @CallSuper
     public void bindView(final VH holder, List<Object> payloads) {
@@ -189,8 +195,33 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
         holder.itemView.setTag(this);
     }
 
+    /**
+     * View needs to release resources when its recycled
+     *
+     * @param holder
+     */
     @Override
     public void unbindView(VH holder) {
+
+    }
+
+    /**
+     * View got attached to the window
+     *
+     * @param holder
+     */
+    @Override
+    public void attachToWindow(VH holder) {
+
+    }
+
+    /**
+     * View got detached from the window
+     *
+     * @param holder
+     */
+    @Override
+    public void detachFromWindow(VH holder) {
 
     }
 

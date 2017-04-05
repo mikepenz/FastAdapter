@@ -252,6 +252,12 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
         holder.name.setText(null);
     }
 
+    @Override
+    public void attachToWindow(ViewHolder holder) {}
+
+    @Override
+    public void detachFromWindow(ViewHolder holder) {}
+
     /**
      * If this item equals to the given identifier
      *

@@ -595,6 +595,28 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * is called in onViewDetachedFromWindow when the view is detached from the window
+     *
+     * @param holder the viewHolder for the view which got detached
+     */
+    @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        mOnBindViewHolderListener.onViewDetachedFromWindow(holder, holder.getAdapterPosition());
+    }
+
+    /**
+     * is called in onViewAttachedToWindow when the view is detached from the window
+     *
+     * @param holder the viewHolder for the view which got detached
+     */
+    @Override
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        mOnBindViewHolderListener.onViewAttachedToWindow(holder, holder.getAdapterPosition());
+    }
+
+    /**
      * Searches for the given item and calculates its global position
      *
      * @param item the item which is searched for
@@ -1838,6 +1860,22 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          * @param position   the position of this viewHolder
          */
         void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position);
+
+        /**
+         * is called in onViewAttachedToWindow when the view is detached from the window
+         *
+         * @param viewHolder the viewHolder for the type at this position
+         * @param position   the position of this viewHolder
+         */
+        void onViewAttachedToWindow(RecyclerView.ViewHolder viewHolder, int position);
+
+        /**
+         * is called in onViewDetachedFromWindow when the view is detached from the window
+         *
+         * @param viewHolder the viewHolder for the type at this position
+         * @param position   the position of this viewHolder
+         */
+        void onViewDetachedFromWindow(RecyclerView.ViewHolder viewHolder, int position);
     }
 
     public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
@@ -1869,6 +1907,38 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 item.unbindView(viewHolder);
             } else {
                 Log.e("FastAdapter", "The bindView method of this item should set the `Tag` on its itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.java#L189)");
+            }
+        }
+
+        /**
+         * is called in onViewAttachedToWindow when the view is detached from the window
+         *
+         * @param viewHolder the viewHolder for the type at this position
+         * @param position   the position of this viewHolder
+         */
+        @Override
+        public void onViewAttachedToWindow(RecyclerView.ViewHolder viewHolder, int position) {
+            IItem item = (IItem) viewHolder.itemView.getTag();
+            if (item != null) {
+                try {
+                    item.attachToWindow(viewHolder);
+                } catch (AbstractMethodError e) {
+                    Log.e("WTF", e.toString());
+                }
+            }
+        }
+
+        /**
+         * is called in onViewDetachedFromWindow when the view is detached from the window
+         *
+         * @param viewHolder the viewHolder for the type at this position
+         * @param position   the position of this viewHolder
+         */
+        @Override
+        public void onViewDetachedFromWindow(RecyclerView.ViewHolder viewHolder, int position) {
+            IItem item = (IItem) viewHolder.itemView.getTag();
+            if (item != null) {
+                item.detachFromWindow(viewHolder);
             }
         }
     }
