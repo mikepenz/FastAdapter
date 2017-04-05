@@ -279,12 +279,12 @@ Other Libs:
 # Developed By
 
 * Mike Penz 
- * [mikepenz.com](http://mikepenz.com) - <mikepenz@gmail.com>
- * [paypal.me/mikepenz](http://paypal.me/mikepenz)
+  * [mikepenz.com](http://mikepenz.com) - <mikepenz@gmail.com>
+  * [paypal.me/mikepenz](http://paypal.me/mikepenz)
 
 * Fabian Terhorst
- * [github.com/FabianTerhorst](https://github.com/FabianTerhorst) - <fabian.terhorst@gmail.com>
- * [paypal.me/fabianterhorst](http://paypal.me/fabianterhorst)
+  * [github.com/FabianTerhorst](https://github.com/FabianTerhorst) - <fabian.terhorst@gmail.com>
+  * [paypal.me/fabianterhorst](http://paypal.me/fabianterhorst)
 
 
 # Contributors
