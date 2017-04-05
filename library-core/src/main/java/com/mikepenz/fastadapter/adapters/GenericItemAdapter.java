@@ -19,14 +19,6 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
     private final Function<Model, Item> mItemFactory;
 
     /**
-     * @param itemClass  the class of your item (Item extends GenericAbstractItem)
-     * @param modelClass the class which is your model class
-     */
-    public GenericItemAdapter(Class<? extends Item> itemClass, Class<? extends Model> modelClass) {
-        this(new ReflectionBasedItemFactory<>(modelClass, itemClass));
-    }
-
-    /**
      * @param itemFactory a factory that takes a model as an argument and returns an item as a result
      */
     public GenericItemAdapter(Function<Model, Item> itemFactory) {
@@ -191,26 +183,5 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      */
     protected Item toItem(Model model) {
         return mItemFactory.apply(model);
-    }
-
-    protected static class ReflectionBasedItemFactory<Model, Item> implements Function<Model, Item> {
-        private final Class<? extends Model> modelClass;
-        private final Class<? extends Item> itemClass;
-
-        public ReflectionBasedItemFactory(Class<? extends Model> modelClass, Class<? extends Item> itemClass) {
-            this.modelClass = modelClass;
-            this.itemClass = itemClass;
-        }
-
-        @Override
-        public Item apply(Model model) {
-            try {
-                Constructor<? extends Item> constructor = itemClass.getDeclaredConstructor(modelClass);
-                constructor.setAccessible(true);
-                return constructor.newInstance(model);
-            } catch (Exception e) {
-                throw new RuntimeException("Please provide a constructor that takes a model as an argument");
-            }
-        }
     }
 }

@@ -11,6 +11,7 @@ public ViewHolder getViewHolder(View v) {
 * If you implemented your own `Item` using the `IItem` interface instead the `AbstractItem` you will now also have to implement
   * `attachToWindow` and
   * `detachFromWindow`
+* The reflection based `GenericItemAdapter` CTOR (with the 2 classes as overload) was removed. Please use the CTOR using a `Function`
 
 #### v2.1.0 
 * This release brings minor changes to the `IItem` interface. Please update MaterialDrawer and AboutLibraries too if you use them.
