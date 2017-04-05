@@ -40,24 +40,24 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-compile('com.mikepenz:fastadapter:2.2.0@aar') {
+compile('com.mikepenz:fastadapter:2.5.0.alpha-SNAPSHOT@aar') {
 	transitive = true
 }
 ```
 
 The commons package comes with some useful helpers (which are not needed in all cases) This one for example includes the `FastItemAdapter`
 ```gradle
-compile 'com.mikepenz:fastadapter-commons:2.2.0@aar'
+compile 'com.mikepenz:fastadapter-commons:2.5.0.alpha-SNAPSHOT@aar'
 ```
 
 All additions are included in the following dependency.
 ```gradle
-compile 'com.mikepenz:fastadapter-extensions:2.2.0@aar'
+compile 'com.mikepenz:fastadapter-extensions:2.5.0.alpha-SNAPSHOT@aar'
 //The tiny Materialize library used for its useful helper classes
 compile 'com.mikepenz:materialize:1.0.1@aar'
 ```
 
-> If you upgrade from < 2.1.0 follow the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md)
+> If you upgrade from < 2.5.0 follow the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md)
 
 
 ## How to use
@@ -99,6 +99,12 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
         super.unbindView(holder);
         holder.name.setText(null);
         holder.description.setText(null);
+    }
+
+    //Init the viewHolder for this Item
+    @Override
+    public ViewHolder getViewHolder(View v) {
+        return new ViewHolder(v);
     }
 
     //The viewHolder used for this item. This viewHolder is always reused by the RecyclerView so scrolling is blazing fast
@@ -235,34 +241,7 @@ For the complete tutorial and more features such as multi-select and CAB check o
 
 ## Advanced Usage
 ### Proguard
-If you use the `FastAdapter` and enabled **Proguard** you have to implement a `ViewHolderFactory` for your `Item`. ([SimpleItem#L145](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/items/SimpleItem.java#L145))
-```java
-//the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
-private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
-
-/**
-* our ItemFactory implementation which creates the ViewHolder for our adapter.
-* It is highly recommended to implement a ViewHolderFactory as it is 0-1ms faster for ViewHolder creation,
-* and it is also many many times more efficient if you define custom listeners on views within your item.
-*/
-protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
-   public ViewHolder create(View v) {
-       return new ViewHolder(v);
-   }
-}
-
-/**
-* return our ViewHolderFactory implementation here
-*
-* @return
-*/
-@Override
-public ViewHolderFactory<? extends ViewHolder> getFactory() {
-   return FACTORY;
-}
-```
-
-Using the `GenericItemAdapter` with `proguard` requires you to use the non generic implementation by providing a `Function` to the following constructur: [GenericItemAdapter(Function<Model, Item> itemFactory) ](https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/adapters/GenericItemAdapter.java#L32)
+* As of v2.5.0 there are no more known requirements to use the `FastAdapter` with Proguard
 
 ### ExpandableItems
 The `FastAdapter` comes with native support for expandable items. These items have to implement the `IExpandable` interface, and the sub items the `ISubItem` interface. This allows better support. 
@@ -302,7 +281,12 @@ Other Libs:
 * Mike Penz 
  * [mikepenz.com](http://mikepenz.com) - <mikepenz@gmail.com>
  * [paypal.me/mikepenz](http://paypal.me/mikepenz)
- 
+
+* Fabian Terhorst
+ * [github.com/FabianTerhorst](https://github.com/FabianTerhorst) - <fabian.terhorst@gmail.com>
+ * [paypal.me/fabianterhorst](http://paypal.me/fabianterhorst)
+
+
 # Contributors
 
 This free, open source software was also made possible by a group of volunteers that put many hours of hard work into it. See the [CONTRIBUTORS.md](CONTRIBUTORS.md) file for details.
@@ -311,12 +295,11 @@ This free, open source software was also made possible by a group of volunteers 
 
 I want to give say thanks to some special contributors who provided some huge PRs and many changes to improve this great library. 
 
-* **[Fabian Terhorst](https://github.com/FabianTerhorst)**
 * **[MFlisar](https://github.com/MFlisar)**
 
 # License
 
-    Copyright 2016 Mike Penz
+    Copyright 2017 Mike Penz
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
