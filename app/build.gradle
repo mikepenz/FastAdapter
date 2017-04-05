@@ -98,6 +98,7 @@ dependencies {
 
     //https://github.com/JakeWharton/butterknife
     compile 'com.jakewharton:butterknife:8.5.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
 
     //used to load the images in the ImageListSample
     //https://github.com/bumptech/glide
