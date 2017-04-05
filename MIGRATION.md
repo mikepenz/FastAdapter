@@ -1,5 +1,17 @@
 ###Upgrade Notes
 
+#### v2.5.0
+* The FACTORY within the items is no longer required and replaced by a much simpler approach. Remove the old FACTORY and it's methods, and implement the `getViewHolder` method
+```
+@Override
+public ViewHolder getViewHolder(View v) {
+    return new ViewHolder(v);
+}
+```
+* If you implemented your own `Item` using the `IItem` interface instead the `AbstractItem` you will now also have to implement
+  * `attachToWindow` and
+  * `detachFromWindow`
+
 #### v2.1.0 
 * This release brings minor changes to the `IItem` interface. Please update MaterialDrawer and AboutLibraries too if you use them.
 * Starting with this version there is now the `core` and the `commons` dependency. Which make the `FastAdapter` even slimmer if you want to use the basics. 
