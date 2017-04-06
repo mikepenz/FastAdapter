@@ -142,9 +142,8 @@ public class RealmActivity extends AppCompatActivity {
                         mRealm.executeTransactionAsync(new Realm.Transaction() {
                             @Override
                             public void execute(Realm realm) {
-                                RealmSampleUserItem newUser = realm.createObject(RealmSampleUserItem.class);
-                                newUser.withName("Sample Realm Element " + newPrimaryKey)
-                                        .withIdentifier(newPrimaryKey);
+                                RealmSampleUserItem newUser = realm.createObject(RealmSampleUserItem.class, newPrimaryKey);
+                                newUser.withName("Sample Realm Element " + newPrimaryKey);
                             }
                         });
                     }
