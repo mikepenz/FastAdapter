@@ -14,7 +14,7 @@ android {
         minSdkVersion 14
         targetSdkVersion 25
         versionCode 250
-        versionName '2.5.0.alpha-SNAPSHOT'
+        versionName '2.5.0'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->

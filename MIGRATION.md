@@ -1,6 +1,8 @@
 ###Upgrade Notes
 
 #### v2.5.0
+**WARNING**
+* If you use the MaterialDrawer or the AboutLibraries you will need a compatible release of those for it to work
 * The FACTORY within the items is no longer required and replaced by a much simpler approach. Remove the old FACTORY and it's methods, and implement the `getViewHolder` method
 ```
 @Override
