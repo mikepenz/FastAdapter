@@ -10,23 +10,20 @@ import android.widget.TextView;
 import com.mikepenz.fastadapter.IDraggable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
-import com.mikepenz.fastadapter.utils.ViewHolderFactory;
+import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialize.util.UIUtils;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by mikepenz on 28.12.15.
  */
 public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> implements IDraggable<SimpleItem, IItem> {
-    //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
-    private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
     public String header;
     public StringHolder name;
@@ -117,36 +114,19 @@ public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> 
         holder.description.setText(null);
     }
 
-    /**
-     * our ItemFactory implementation which creates the ViewHolder for our adapter.
-     * It is highly recommended to implement a ViewHolderFactory as it is 0-1ms faster for ViewHolder creation,
-     * and it is also many many times more efficient if you define custom listeners on views within your item.
-     */
-    protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
-        public ViewHolder create(View v) {
-            return new ViewHolder(v);
-        }
-    }
-
-    /**
-     * return our ViewHolderFactory implementation here
-     *
-     * @return
-     */
     @Override
-    public ViewHolderFactory<? extends ViewHolder> getFactory() {
-        return FACTORY;
+    public ViewHolder getViewHolder(View v) {
+        return new ViewHolder(v);
     }
-
 
     /**
      * our ViewHolder
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         protected View view;
-        @Bind(R.id.material_drawer_name)
+        @BindView(R.id.material_drawer_name)
         TextView name;
-        @Bind(R.id.material_drawer_description)
+        @BindView(R.id.material_drawer_description)
         TextView description;
 
         public ViewHolder(View view) {

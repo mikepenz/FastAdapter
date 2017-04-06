@@ -131,6 +131,20 @@ public interface IItem<T, VH extends RecyclerView.ViewHolder> extends IIdentifya
     void unbindView(VH holder);
 
     /**
+     * View got attached to the window
+     *
+     * @param holder
+     */
+    void attachToWindow(VH holder);
+
+    /**
+     * View got detached from the window
+     *
+     * @param holder
+     */
+    void detachFromWindow(VH holder);
+
+    /**
      * If this item equals to the given identifier
      *
      * @param id

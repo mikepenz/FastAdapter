@@ -20,20 +20,17 @@ import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
-import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.iconics.view.IconicsImageView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by mikepenz on 28.12.15.
  */
 public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
-    //the static ViewHolderFactory which will be used to generate the ViewHolder for this Item
-    private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
     public String mImageUrl;
     public String mName;
@@ -112,15 +109,9 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
         holder.imageView.setImageDrawable(null);
     }
 
-    /**
-     * our ItemFactory implementation which creates the ViewHolder for our adapter.
-     * It is highly recommended to implement a ViewHolderFactory as it is 0-1ms faster for ViewHolder creation,
-     * and it is also many many times more efficient if you define custom listeners on views within your item.
-     */
-    protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
-        public ViewHolder create(View v) {
-            return new ViewHolder(v);
-        }
+    @Override
+    public ViewHolder getViewHolder(View v) {
+        return new ViewHolder(v);
     }
 
     /**
@@ -164,31 +155,21 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
     }
 
     /**
-     * return our ViewHolderFactory implementation here
-     *
-     * @return
-     */
-    @Override
-    public ViewHolderFactory<? extends ViewHolder> getFactory() {
-        return FACTORY;
-    }
-
-    /**
      * our ViewHolder
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         protected View view;
-        @Bind(R.id.item_image_img)
+        @BindView(R.id.item_image_img)
         protected ImageView imageView;
-        @Bind(R.id.item_image_name)
+        @BindView(R.id.item_image_name)
         protected TextView imageName;
-        @Bind(R.id.item_image_description)
+        @BindView(R.id.item_image_description)
         protected TextView imageDescription;
-        @Bind(R.id.item_image_loved_container)
+        @BindView(R.id.item_image_loved_container)
         public RelativeLayout imageLovedContainer;
-        @Bind(R.id.item_image_loved_yes)
+        @BindView(R.id.item_image_loved_yes)
         protected IconicsImageView imageLovedOn;
-        @Bind(R.id.item_image_loved_no)
+        @BindView(R.id.item_image_loved_no)
         protected IconicsImageView imageLovedOff;
 
         public ViewHolder(View view) {

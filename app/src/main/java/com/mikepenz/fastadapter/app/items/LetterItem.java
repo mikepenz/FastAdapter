@@ -9,7 +9,7 @@ import com.mikepenz.fastadapter.items.AbstractItem;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class LetterItem extends AbstractItem<LetterItem, LetterItem.ViewHolder> {
@@ -33,6 +33,11 @@ public class LetterItem extends AbstractItem<LetterItem, LetterItem.ViewHolder> 
     }
 
     @Override
+    public ViewHolder getViewHolder(View v) {
+        return new ViewHolder(v);
+    }
+
+    @Override
     public int getType() {
         return R.id.fastadapter_letter_item_id;
     }
@@ -43,7 +48,7 @@ public class LetterItem extends AbstractItem<LetterItem, LetterItem.ViewHolder> 
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.text)
+        @BindView(R.id.text)
         public TextView text;
 
         public ViewHolder(View itemView) {

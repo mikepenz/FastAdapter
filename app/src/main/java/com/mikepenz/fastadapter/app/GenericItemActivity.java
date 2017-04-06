@@ -14,6 +14,7 @@ import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.generic.GenericIconItem;
 import com.mikepenz.fastadapter.app.generic.IconModel;
+import com.mikepenz.fastadapter.utils.Function;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
@@ -55,7 +56,12 @@ public class GenericItemActivity extends AppCompatActivity {
         //init our gridLayoutManager and configure RV
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
 
-        GenericItemAdapter<IconModel, GenericIconItem> itemAdapter = new GenericItemAdapter<>(GenericIconItem.class, IconModel.class);
+        GenericItemAdapter<IconModel, GenericIconItem> itemAdapter = new GenericItemAdapter<>(new Function<IconModel, GenericIconItem>() {
+            @Override
+            public GenericIconItem apply(IconModel iconModel) {
+                return new GenericIconItem(iconModel);
+            }
+        });
 
         final FastScrollIndicatorAdapter<GenericIconItem> fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter<>();
         rv.setAdapter(fastScrollIndicatorAdapter.wrap(itemAdapter.wrap(fastAdapter)));
@@ -63,7 +69,7 @@ public class GenericItemActivity extends AppCompatActivity {
         DragScrollBar materialScrollBar = new DragScrollBar(this, rv, true);
         materialScrollBar.setHandleColour(ContextCompat.getColor(this, R.color.colorAccent));
         materialScrollBar.setHandleOffColour(ContextCompat.getColor(this, R.color.colorAccent));
-        materialScrollBar.addIndicator(new CustomIndicator(this), true);
+        materialScrollBar.setIndicator(new CustomIndicator(this), true);
 
         rv.setLayoutManager(gridLayoutManager);
         rv.setItemAnimator(new SlideDownAlphaAnimator());
