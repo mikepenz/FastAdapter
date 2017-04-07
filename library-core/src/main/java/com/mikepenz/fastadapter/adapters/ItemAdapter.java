@@ -246,12 +246,16 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items the items to set
      */
     public ItemAdapter<Item> set(List<Item> items) {
+        return set(items, true);
+    }
+
+    private ItemAdapter<Item> set(List<Item> items, boolean resetFilter) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
 
         //reset the filter
-        if (getItemFilter() instanceof ItemAdapter.ItemFilter && ((ItemFilter) getItemFilter()).getConstraint() != null) {
+        if (resetFilter && getItemFilter() instanceof ItemAdapter.ItemFilter && ((ItemFilter) getItemFilter()).getConstraint() != null) {
             ((ItemFilter) getItemFilter()).performFiltering(null);
         }
 
@@ -309,7 +313,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
-        
+
         //reset the filter
         if (getItemFilter() instanceof ItemAdapter.ItemFilter && ((ItemFilter) getItemFilter()).getConstraint() != null) {
             ((ItemFilter) getItemFilter()).performFiltering(null);
@@ -482,6 +486,13 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+
+            //return nothing
+            if(mOriginalItems == null && (constraint == null || constraint.length() == 0)) {
+                return results;
+            }
+
             //we can not filter on expanded or selected items, because the remembered positions will change
             if (getFastAdapter().isPositionBasedStateManagement()) {
                 getFastAdapter().deselect();
@@ -494,7 +505,6 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 mOriginalItems = new ArrayList<>(mItems);
             }
 
-            FilterResults results = new FilterResults();
             // We implement here the filter logic
             if (constraint == null || constraint.length() == 0) {
                 // No filter implemented we return all the list
@@ -530,7 +540,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // Now we have to inform the adapter about the new list filtered
             if (results.values != null) {
-                ItemAdapter.this.set((List<Item>) results.values);
+                ItemAdapter.this.set((List<Item>) results.values, false);
             }
 
             if (mItemFilterListener != null) {
