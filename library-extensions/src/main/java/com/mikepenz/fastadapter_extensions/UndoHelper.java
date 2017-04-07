@@ -133,7 +133,7 @@ public class UndoHelper<Item extends IItem> {
 
         if (mSnackBar == null) {
             mSnackBar = Snackbar.make(view, text, duration)
-                    .setCallback(new Snackbar.Callback() {
+                    .addCallback(new Snackbar.Callback() {
                         @Override
                         public void onDismissed(Snackbar snackbar, int event) {
                             super.onDismissed(snackbar, event);
@@ -153,14 +153,15 @@ public class UndoHelper<Item extends IItem> {
                             super.onShown(snackbar);
                             doChange();
                         }
-                    })
-                    .setAction(actionText, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            undoChange();
-                        }
                     });
+
         }
+        mSnackBar.setAction(actionText, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                undoChange();
+            }
+        });
 
         mSnackBar.show();
         return mSnackBar;
