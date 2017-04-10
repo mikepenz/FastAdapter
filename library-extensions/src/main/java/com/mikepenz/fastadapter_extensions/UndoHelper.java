@@ -63,6 +63,12 @@ public class UndoHelper<Item extends IItem> {
                     case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
                         notifyCommit();
                         break;
+                    case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
+                        notifyCommit();
+                        break;
+                    case Snackbar.Callback.DISMISS_EVENT_SWIPE:
+                        notifyCommit();
+                        break;
                 }
             }
 
@@ -131,31 +137,34 @@ public class UndoHelper<Item extends IItem> {
 
         mHistory = history;
 
-        if (mSnackBar == null) {
-            mSnackBar = Snackbar.make(view, text, duration)
-                    .addCallback(new Snackbar.Callback() {
-                        @Override
-                        public void onDismissed(Snackbar snackbar, int event) {
-                            super.onDismissed(snackbar, event);
+        mSnackBar = Snackbar.make(view, text, duration)
+                .addCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        super.onDismissed(snackbar, event);
 
-                            switch (event) {
-                                case Snackbar.Callback.DISMISS_EVENT_ACTION:
-                                    //we can ignore it
-                                    break;
-                                case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
-                                    notifyCommit();
-                                    break;
-                            }
+                        switch (event) {
+                            case Snackbar.Callback.DISMISS_EVENT_ACTION:
+                                //we can ignore it
+                                break;
+                            case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+                                notifyCommit();
+                                break;
+                            case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
+                                notifyCommit();
+                                break;
+                            case Snackbar.Callback.DISMISS_EVENT_SWIPE:
+                                notifyCommit();
+                                break;
                         }
+                    }
 
-                        @Override
-                        public void onShown(Snackbar snackbar) {
-                            super.onShown(snackbar);
-                            doChange();
-                        }
-                    });
-
-        }
+                    @Override
+                    public void onShown(Snackbar snackbar) {
+                        super.onShown(snackbar);
+                        doChange();
+                    }
+                });
         mSnackBar.setAction(actionText, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
