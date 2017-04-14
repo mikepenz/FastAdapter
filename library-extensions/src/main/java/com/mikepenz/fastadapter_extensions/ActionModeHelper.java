@@ -93,7 +93,8 @@ public class ActionModeHelper {
         //if we are current in CAB mode, and we remove the last selection, we want to finish the actionMode
         if (mActionMode != null && (mSupportSubItems ? SubItemUtil.getSelectedItems(mFastAdapter).size() == 1 : mFastAdapter.getSelections().size() == 1) && item.isSelected()) {
             mActionMode.finish();
-            return false;
+            mFastAdapter.deselect();
+            return true;
         }
 
         if (mActionMode != null) {
