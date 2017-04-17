@@ -98,6 +98,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
             for (int i = 1; i <= count; i++) {
                 SwipeableItem swipeableItem = new SwipeableItem().withName(s + " Test " + x).withIdentifier(100 + x);
                 swipeableItem.withIsSwipeable(i % 5 != 0);
+                swipeableItem.withIsDraggable(i % 5 != 0);
                 items.add(swipeableItem);
                 x++;
             }

@@ -467,11 +467,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 }
 
                 //if there should be only one expanded item we want to collapse all the others but the current one (this has to happen after we handled the selection as we refer to the position)
-                if (!consumed && mOnlyOneExpandedItem) {
-                    int[] expandedItems = getExpandedItems();
-                    for (int i = expandedItems.length - 1; i >= 0; i--) {
-                        if (expandedItems[i] != pos) {
-                            collapse(expandedItems[i], true);
+                if (!consumed && mOnlyOneExpandedItem && item instanceof IExpandable) {
+                    if(((IExpandable) item).getSubItems() != null && ((IExpandable) item).getSubItems().size() > 0) {
+                        int[] expandedItems = getExpandedItems();
+                        for (int i = expandedItems.length - 1; i >= 0; i--) {
+                            if (expandedItems[i] != pos) {
+                                collapse(expandedItems[i], true);
+                            }
                         }
                     }
                 }
