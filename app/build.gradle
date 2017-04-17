@@ -94,7 +94,7 @@ dependencies {
 
     //Used to provide the FastScrollBar
     //https://github.com/krimin-killr21/MaterialScrollBar
-    compile 'com.github.turing-tech:MaterialScrollBar:12.3.5'
+    compile 'com.turingtechnologies.materialscrollbar:lib:10.0.1'
 
     //https://github.com/JakeWharton/butterknife
     compile 'com.jakewharton:butterknife:8.5.1'
