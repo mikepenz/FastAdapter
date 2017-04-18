@@ -1025,9 +1025,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             item.withSetSelected(!selected);
             view.setSelected(!selected);
 
-            if (mSelectionListener != null)
-                mSelectionListener.onSelectionChanged(item, !selected);
-
             //now we make sure we remember the selection!
             if (mPositionBasedStateManagement) {
                 if (selected) {
@@ -1038,6 +1035,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                     mSelections.add(position);
                 }
             }
+
+            //notify that the selection changed
+            if (mSelectionListener != null)
+                mSelectionListener.onSelectionChanged(item, !selected);
         }
     }
 
