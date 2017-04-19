@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.ISelectionListener;
 import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
@@ -74,6 +75,12 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         mFastAdapter.withSelectable(true);
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withSelectOnLongClick(true);
+        mFastAdapter.withSelectionListener(new ISelectionListener<SimpleItem>() {
+            @Override
+            public void onSelectionChanged(SimpleItem item, boolean selected) {
+                Log.i("FastAdapter", "SelectedCount: " + mFastAdapter.getSelections().size() + " ItemsCount: " + mFastAdapter.getSelectedItems().size());
+            }
+        });
         mFastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<SimpleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<SimpleItem> adapter, SimpleItem item, int position) {

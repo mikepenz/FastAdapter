@@ -59,7 +59,7 @@ public class ExpandableSampleActivity extends AppCompatActivity {
                 SimpleSubExpandableItem expandableItem = new SimpleSubExpandableItem();
                 expandableItem
                         .withName("Test " + i)
-                        .withIdentifier(100 + 1);
+                        .withIdentifier(100 + i);
 
                 //add subitems so we can showcase the collapsible functionality
                 List<IItem> subItems = new LinkedList<>();

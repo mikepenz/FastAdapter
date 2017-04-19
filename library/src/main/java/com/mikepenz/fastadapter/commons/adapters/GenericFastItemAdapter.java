@@ -13,15 +13,6 @@ public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item
     private final GenericItemAdapter<Model, Item> mItemAdapter;
 
     /**
-     * @param itemClass  the class of your item (Item extends GenericAbstractItem)
-     * @param modelClass the class which is your model class
-     */
-    public GenericFastItemAdapter(Class<? extends Item> itemClass, Class<? extends Model> modelClass) {
-        mItemAdapter = new GenericItemAdapter<>(itemClass, modelClass);
-        mItemAdapter.wrap(this);
-    }
-
-    /**
      * @param itemFactory a factory that takes a model as an argument and returns an item as a result
      */
     public GenericFastItemAdapter(Function<Model, Item> itemFactory) {

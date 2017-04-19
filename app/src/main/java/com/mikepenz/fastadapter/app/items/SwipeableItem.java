@@ -7,6 +7,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.TextView;
 
+import com.mikepenz.fastadapter.IDraggable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISwipeable;
 import com.mikepenz.fastadapter.app.R;
@@ -15,13 +16,13 @@ import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by Mattias on 2016-02-15.
  */
-public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.ViewHolder> implements ISwipeable<SwipeableItem, IItem> {
+public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.ViewHolder> implements ISwipeable<SwipeableItem, IItem>, IDraggable<SwipeableItem, IItem> {
 
     public StringHolder name;
     public StringHolder description;
@@ -34,6 +35,7 @@ public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.Vie
     public int swipedDirection;
     private Runnable swipedAction;
     public boolean swipeable = true;
+    public boolean draggable = true;
 
     public SwipeableItem withName(String Name) {
         this.name = new StringHolder(Name);
@@ -63,6 +65,17 @@ public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.Vie
     @Override
     public SwipeableItem withIsSwipeable(boolean swipeable) {
         this.swipeable = swipeable;
+        return this;
+    }
+
+    @Override
+    public boolean isDraggable() {
+        return draggable;
+    }
+
+    @Override
+    public SwipeableItem withIsDraggable(boolean draggable) {
+        this.draggable = draggable;
         return this;
     }
 
@@ -142,17 +155,17 @@ public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.Vie
      * our ViewHolder
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
-        @Bind(R.id.material_drawer_name)
+        @BindView(R.id.material_drawer_name)
         TextView name;
-        @Bind(R.id.material_drawer_description)
+        @BindView(R.id.material_drawer_description)
         TextView description;
-        @Bind(R.id.swipe_result_content)
+        @BindView(R.id.swipe_result_content)
         View swipeResultContent;
-        @Bind(R.id.item_content)
+        @BindView(R.id.item_content)
         View itemContent;
-        @Bind(R.id.swiped_text)
+        @BindView(R.id.swiped_text)
         TextView swipedText;
-        @Bind(R.id.swiped_action)
+        @BindView(R.id.swiped_action)
         TextView swipedAction;
 
         public Runnable swipedActionRunnable;

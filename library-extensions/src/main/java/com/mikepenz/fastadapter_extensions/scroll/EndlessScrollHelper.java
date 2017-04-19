@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
+import com.mikepenz.fastadapter.adapters.FooterAdapter;
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
 import com.mikepenz.fastadapter.utils.Function;
 
@@ -50,6 +51,10 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
 
     public EndlessScrollHelper(LayoutManager layoutManager, int visibleThreshold) {
         super(layoutManager, visibleThreshold);
+    }
+
+    public EndlessScrollHelper(LayoutManager layoutManager, int visibleThreshold, FooterAdapter footerAdapter) {
+        super(layoutManager, visibleThreshold, footerAdapter);
     }
 
     public EndlessScrollHelper<Model> addTo(RecyclerView recyclerView) {

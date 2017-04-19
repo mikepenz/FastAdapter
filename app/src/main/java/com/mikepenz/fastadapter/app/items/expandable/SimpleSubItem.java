@@ -20,7 +20,7 @@ import com.mikepenz.materialize.util.UIUtils;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SimpleSubItem<Parent extends IItem & IExpandable & ISubItem & IClickable> extends AbstractExpandableItem<Parent, SimpleSubItem.ViewHolder, SimpleSubItem<Parent>> implements IDraggable<SimpleSubItem, IItem> {
@@ -124,9 +124,9 @@ public class SimpleSubItem<Parent extends IItem & IExpandable & ISubItem & IClic
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         protected View view;
-        @Bind(R.id.material_drawer_name)
+        @BindView(R.id.material_drawer_name)
         TextView name;
-        @Bind(R.id.material_drawer_description)
+        @BindView(R.id.material_drawer_description)
         TextView description;
 
         public ViewHolder(View view) {

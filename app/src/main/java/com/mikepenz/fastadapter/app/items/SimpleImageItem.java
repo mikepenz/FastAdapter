@@ -15,7 +15,7 @@ import com.mikepenz.materialize.util.UIUtils;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -106,11 +106,11 @@ public class SimpleImageItem extends AbstractItem<SimpleImageItem, SimpleImageIt
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         protected FrameLayout view;
-        @Bind(R.id.item_image_img)
+        @BindView(R.id.item_image_img)
         protected ImageView imageView;
-        @Bind(R.id.item_image_name)
+        @BindView(R.id.item_image_name)
         protected TextView imageName;
-        @Bind(R.id.item_image_description)
+        @BindView(R.id.item_image_description)
         protected TextView imageDescription;
 
         public ViewHolder(View view) {

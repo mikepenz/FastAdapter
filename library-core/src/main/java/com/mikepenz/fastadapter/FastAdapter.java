@@ -400,6 +400,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                     id = String.valueOf(item.getIdentifier());
                     if (expandedItems != null && expandedItems.contains(id)) {
                         expand(i);
+                        size = getItemCount();
                     }
                     if (selectedItems != null && selectedItems.contains(id)) {
                         select(i);
@@ -503,11 +504,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 }
 
                 //if there should be only one expanded item we want to collapse all the others but the current one (this has to happen after we handled the selection as we refer to the position)
-                if (!consumed && mOnlyOneExpandedItem) {
-                    int[] expandedItems = getExpandedItems();
-                    for (int i = expandedItems.length - 1; i >= 0; i--) {
-                        if (expandedItems[i] != pos) {
-                            collapse(expandedItems[i], true);
+                if (!consumed && mOnlyOneExpandedItem && item instanceof IExpandable) {
+                    if(((IExpandable) item).getSubItems() != null && ((IExpandable) item).getSubItems().size() > 0) {
+                        int[] expandedItems = getExpandedItems();
+                        for (int i = expandedItems.length - 1; i >= 0; i--) {
+                            if (expandedItems[i] != pos) {
+                                collapse(expandedItems[i], true);
+                            }
                         }
                     }
                 }
@@ -634,6 +637,28 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public void onViewRecycled(RecyclerView.ViewHolder holder) {
         super.onViewRecycled(holder);
         mOnBindViewHolderListener.unBindViewHolder(holder, holder.getAdapterPosition());
+    }
+
+    /**
+     * is called in onViewDetachedFromWindow when the view is detached from the window
+     *
+     * @param holder the viewHolder for the view which got detached
+     */
+    @Override
+    public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        super.onViewDetachedFromWindow(holder);
+        mOnBindViewHolderListener.onViewDetachedFromWindow(holder, holder.getAdapterPosition());
+    }
+
+    /**
+     * is called in onViewAttachedToWindow when the view is detached from the window
+     *
+     * @param holder the viewHolder for the view which got detached
+     */
+    @Override
+    public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        super.onViewAttachedToWindow(holder);
+        mOnBindViewHolderListener.onViewAttachedToWindow(holder, holder.getAdapterPosition());
     }
 
     /**
@@ -1043,9 +1068,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             item.withSetSelected(!selected);
             view.setSelected(!selected);
 
-            if (mSelectionListener != null)
-                mSelectionListener.onSelectionChanged(item, !selected);
-
             //now we make sure we remember the selection!
             if (mPositionBasedStateManagement) {
                 if (selected) {
@@ -1056,6 +1078,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                     mSelections.add(position);
                 }
             }
+
+            //notify that the selection changed
+            if (mSelectionListener != null)
+                mSelectionListener.onSelectionChanged(item, !selected);
         }
     }
 
@@ -1164,6 +1190,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                     continue;
                 }
                 item.withSetSelected(true);
+
+                if (mSelectionListener != null) {
+                    mSelectionListener.onSelectionChanged(item, true);
+                }
             }
             notifyDataSetChanged();
         }
@@ -1211,8 +1241,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         }
         notifyItemChanged(position);
 
-        if (mSelectionListener != null)
+        if (mSelectionListener != null) {
             mSelectionListener.onSelectionChanged(item, false);
+        }
     }
 
     /**
@@ -1875,6 +1906,22 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          * @param position   the position of this viewHolder
          */
         void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position);
+
+        /**
+         * is called in onViewAttachedToWindow when the view is detached from the window
+         *
+         * @param viewHolder the viewHolder for the type at this position
+         * @param position   the position of this viewHolder
+         */
+        void onViewAttachedToWindow(RecyclerView.ViewHolder viewHolder, int position);
+
+        /**
+         * is called in onViewDetachedFromWindow when the view is detached from the window
+         *
+         * @param viewHolder the viewHolder for the type at this position
+         * @param position   the position of this viewHolder
+         */
+        void onViewDetachedFromWindow(RecyclerView.ViewHolder viewHolder, int position);
     }
 
     public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
@@ -1906,6 +1953,38 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 item.unbindView(viewHolder);
             } else {
                 Log.e("FastAdapter", "The bindView method of this item should set the `Tag` on its itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.java#L189)");
+            }
+        }
+
+        /**
+         * is called in onViewAttachedToWindow when the view is detached from the window
+         *
+         * @param viewHolder the viewHolder for the type at this position
+         * @param position   the position of this viewHolder
+         */
+        @Override
+        public void onViewAttachedToWindow(RecyclerView.ViewHolder viewHolder, int position) {
+            IItem item = (IItem) viewHolder.itemView.getTag();
+            if (item != null) {
+                try {
+                    item.attachToWindow(viewHolder);
+                } catch (AbstractMethodError e) {
+                    Log.e("WTF", e.toString());
+                }
+            }
+        }
+
+        /**
+         * is called in onViewDetachedFromWindow when the view is detached from the window
+         *
+         * @param viewHolder the viewHolder for the type at this position
+         * @param position   the position of this viewHolder
+         */
+        @Override
+        public void onViewDetachedFromWindow(RecyclerView.ViewHolder viewHolder, int position) {
+            IItem item = (IItem) viewHolder.itemView.getTag();
+            if (item != null) {
+                item.detachFromWindow(viewHolder);
             }
         }
     }

@@ -17,7 +17,7 @@ import com.mikepenz.materialize.util.UIUtils;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -124,9 +124,9 @@ public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> 
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         protected View view;
-        @Bind(R.id.material_drawer_name)
+        @BindView(R.id.material_drawer_name)
         TextView name;
-        @Bind(R.id.material_drawer_description)
+        @BindView(R.id.material_drawer_description)
         TextView description;
 
         public ViewHolder(View view) {

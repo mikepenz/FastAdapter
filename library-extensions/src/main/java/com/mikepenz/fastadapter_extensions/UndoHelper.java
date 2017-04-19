@@ -24,7 +24,7 @@ public class UndoHelper<Item extends IItem> {
     private static final int ACTION_REMOVE = 2;
 
     private FastAdapter<Item> mAdapter;
-    private UndoListener mUndoListener;
+    private UndoListener<Item> mUndoListener;
     private History mHistory = null;
     private Snackbar mSnackBar = null;
     private String mSnackbarActionText = "";
@@ -35,7 +35,7 @@ public class UndoHelper<Item extends IItem> {
      * @param adapter      the root FastAdapter
      * @param undoListener the listener which gets called when an item was really removed
      */
-    public UndoHelper(FastAdapter<Item> adapter, UndoListener undoListener) {
+    public UndoHelper(FastAdapter<Item> adapter, UndoListener<Item> undoListener) {
         this.mAdapter = adapter;
         this.mUndoListener = undoListener;
     }
@@ -61,6 +61,12 @@ public class UndoHelper<Item extends IItem> {
                         //we can ignore it
                         break;
                     case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+                        notifyCommit();
+                        break;
+                    case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
+                        notifyCommit();
+                        break;
+                    case Snackbar.Callback.DISMISS_EVENT_SWIPE:
                         notifyCommit();
                         break;
                 }
@@ -131,36 +137,40 @@ public class UndoHelper<Item extends IItem> {
 
         mHistory = history;
 
-        if (mSnackBar == null) {
-            mSnackBar = Snackbar.make(view, text, duration)
-                    .setCallback(new Snackbar.Callback() {
-                        @Override
-                        public void onDismissed(Snackbar snackbar, int event) {
-                            super.onDismissed(snackbar, event);
+        mSnackBar = Snackbar.make(view, text, duration)
+                .addCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        super.onDismissed(snackbar, event);
 
-                            switch (event) {
-                                case Snackbar.Callback.DISMISS_EVENT_ACTION:
-                                    //we can ignore it
-                                    break;
-                                case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
-                                    notifyCommit();
-                                    break;
-                            }
+                        switch (event) {
+                            case Snackbar.Callback.DISMISS_EVENT_ACTION:
+                                //we can ignore it
+                                break;
+                            case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
+                                notifyCommit();
+                                break;
+                            case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
+                                notifyCommit();
+                                break;
+                            case Snackbar.Callback.DISMISS_EVENT_SWIPE:
+                                notifyCommit();
+                                break;
                         }
+                    }
 
-                        @Override
-                        public void onShown(Snackbar snackbar) {
-                            super.onShown(snackbar);
-                            doChange();
-                        }
-                    })
-                    .setAction(actionText, new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            undoChange();
-                        }
-                    });
-        }
+                    @Override
+                    public void onShown(Snackbar snackbar) {
+                        super.onShown(snackbar);
+                        doChange();
+                    }
+                });
+        mSnackBar.setAction(actionText, new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                undoChange();
+            }
+        });
 
         mSnackBar.show();
         return mSnackBar;

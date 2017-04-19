@@ -14,7 +14,7 @@ import com.mikepenz.iconics.view.IconicsImageView;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -97,9 +97,9 @@ public class IconItem<T extends IItem & IExpandable> extends AbstractItem<IconIt
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         protected View view;
-        @Bind(R.id.name)
+        @BindView(R.id.name)
         public TextView name;
-        @Bind(R.id.icon)
+        @BindView(R.id.icon)
         public IconicsImageView image;
 
         public ViewHolder(View view) {

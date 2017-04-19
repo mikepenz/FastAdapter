@@ -15,7 +15,7 @@ import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -106,11 +106,11 @@ public class CheckBoxSampleItem extends AbstractItem<CheckBoxSampleItem, CheckBo
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         protected View view;
-        @Bind(R.id.checkbox)
+        @BindView(R.id.checkbox)
         public CheckBox checkBox;
-        @Bind(R.id.material_drawer_name)
+        @BindView(R.id.material_drawer_name)
         TextView name;
-        @Bind(R.id.material_drawer_description)
+        @BindView(R.id.material_drawer_description)
         TextView description;
 
         public ViewHolder(View view) {

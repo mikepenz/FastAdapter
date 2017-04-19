@@ -22,7 +22,7 @@ import com.mikepenz.materialize.util.UIUtils;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -167,13 +167,13 @@ public class SimpleSubExpandableItem<Parent extends IItem & IExpandable, SubItem
      */
     protected static class ViewHolder extends RecyclerView.ViewHolder {
         public final View view;
-        @Bind(R.id.material_drawer_name)
+        @BindView(R.id.material_drawer_name)
         public
         TextView name;
-        @Bind(R.id.material_drawer_description)
+        @BindView(R.id.material_drawer_description)
         public
         TextView description;
-        @Bind(R.id.material_drawer_icon)
+        @BindView(R.id.material_drawer_icon)
         ImageView icon;
 
         public ViewHolder(View view) {
