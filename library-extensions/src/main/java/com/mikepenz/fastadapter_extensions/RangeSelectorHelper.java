@@ -95,7 +95,7 @@ public class RangeSelectorHelper {
     public boolean onLongClick(int index, boolean selectItem) {
         if (mLastLongPressIndex == null) {
             // we only consider long presses on not selected items
-            if (mFastAdapter.getAdapterItem(index).isSelectable()) {
+            if (mFastAdapter.items().getAdapterItem(index).isSelectable()) {
                 mLastLongPressIndex = index;
                 // we select this item as well
                 if (selectItem)
@@ -141,7 +141,7 @@ public class RangeSelectorHelper {
 
         IItem item;
         for (int i = from; i <= to; i++) {
-            item = mFastAdapter.getAdapterItem(i);
+            item = mFastAdapter.items().getAdapterItem(i);
             if (item.isSelectable()) {
                 if (select) {
                     mFastAdapter.select(i);
@@ -152,7 +152,7 @@ public class RangeSelectorHelper {
             if (mSupportSubItems && !skipHeaders) {
                 // if a group is collapsed, select all sub items
                 if (item instanceof IExpandable && !((IExpandable)item).isExpanded()) {
-                    SubItemUtil.selectAllSubItems(mFastAdapter, (T) mFastAdapter.getAdapterItem(i), select, true, mPayload);
+                    SubItemUtil.selectAllSubItems(mFastAdapter, (T) mFastAdapter.items().getAdapterItem(i), select, true, mPayload);
                 }
             }
         }

@@ -20,7 +20,17 @@ import java.util.List;
  */
 public abstract class AbstractItem<Item extends IItem & IClickable, VH extends RecyclerView.ViewHolder> implements IItem<Item, VH>, IClickable<Item> {
     // the identifier for this item
-    protected long mIdentifier = -1;
+    private long mIdentifier = -1;
+
+    private static long currentIdentifier = 0;
+
+    public AbstractItem() {
+        this(--currentIdentifier);
+    }
+
+    public AbstractItem(long identifier) {
+        this.mIdentifier = identifier;
+    }
 
     /**
      * set the identifier of this item

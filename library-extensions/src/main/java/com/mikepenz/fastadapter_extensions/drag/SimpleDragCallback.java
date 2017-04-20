@@ -67,7 +67,7 @@ public class SimpleDragCallback extends ItemTouchHelper.SimpleCallback {
             RecyclerView.Adapter adapter = recyclerView.getAdapter();
             ItemAdapter itemAdapter = null;
             if (adapter instanceof FastItemAdapter) {
-                itemAdapter = ((FastItemAdapter) adapter).getItemAdapter();
+                itemAdapter = ((FastItemAdapter) adapter).items();
             } else if (adapter instanceof ItemAdapter) {
                 itemAdapter = (ItemAdapter) adapter;
             }

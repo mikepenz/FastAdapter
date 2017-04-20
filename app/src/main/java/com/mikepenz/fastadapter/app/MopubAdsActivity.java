@@ -48,7 +48,7 @@ public class MopubAdsActivity extends AppCompatActivity implements FastAdapter.O
         mAdapter.withOnClickListener(this);
 
         for (int i = 65; i <= 90; i++) {
-            mAdapter.add(new LetterItem(String.valueOf((char) i)));
+            mAdapter.items().add(new LetterItem(String.valueOf((char) i)));
         }
 
         ViewBinder viewBinder = new ViewBinder.Builder(R.layout.native_ad_item)

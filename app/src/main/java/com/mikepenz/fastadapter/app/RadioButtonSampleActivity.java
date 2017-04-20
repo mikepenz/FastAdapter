@@ -85,7 +85,7 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
                 x++;
             }
         }
-        fastItemAdapter.add(items);
+        fastItemAdapter.items().add(items);
 
         //restore selections (this has to be done after the items were added
         fastItemAdapter.withSavedInstanceState(savedInstanceState);

@@ -2,7 +2,6 @@ package com.mikepenz.fastadapter.app;
 
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -46,7 +45,6 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
 
     //drag & drop
     private SimpleDragCallback touchCallback;
-    private ItemTouchHelper touchHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +73,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         });
 
         //configure the itemAdapter
-        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SwipeableItem>() {
+        fastItemAdapter.items().withFilterPredicate(new IItemAdapter.Predicate<SwipeableItem>() {
             @Override
             public boolean filter(SwipeableItem item, CharSequence constraint) {
                 //return true if we should filter it out
@@ -103,7 +101,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
                 x++;
             }
         }
-        fastItemAdapter.add(items);
+        fastItemAdapter.items().add(items);
 
 
         //add drag and drop for item
@@ -127,7 +125,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
                 .withBackgroundSwipeRight(ContextCompat.getColor(this, R.color.md_blue_900))
                 .withLeaveBehindSwipeRight(leaveBehindDrawableRight);
 
-        touchHelper = new ItemTouchHelper(touchCallback); // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
+        ItemTouchHelper touchHelper = new ItemTouchHelper(touchCallback);
         touchHelper.attachToRecyclerView(recyclerView); // Attach ItemTouchHelper to RecyclerView
 
         //restore selections (this has to be done after the items were added
@@ -168,34 +166,30 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         //search icon
         menu.findItem(R.id.search).setIcon(new IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_search).color(Color.BLACK).actionBar());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String s) {
-                    touchCallback.setIsDragEnabled(false);
-                    fastItemAdapter.filter(s);
-                    return true;
-                }
+        final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                touchCallback.setIsDragEnabled(false);
+                fastItemAdapter.items().filter(s);
+                return true;
+            }
 
 
-                @Override
-                public boolean onQueryTextChange(String s) {
-                    fastItemAdapter.filter(s);
-                    touchCallback.setIsDragEnabled(TextUtils.isEmpty(s));
-                    return true;
-                }
-            });
-        } else {
-            menu.findItem(R.id.search).setVisible(false);
-        }
+            @Override
+            public boolean onQueryTextChange(String s) {
+                fastItemAdapter.items().filter(s);
+                touchCallback.setIsDragEnabled(TextUtils.isEmpty(s));
+                return true;
+            }
+        });
 
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-        Collections.swap(fastItemAdapter.getAdapterItems(), oldPosition, newPosition); // change position
+        Collections.swap(fastItemAdapter.items().getAdapterItems(), oldPosition, newPosition); // change position
         fastItemAdapter.notifyAdapterItemMoved(oldPosition, newPosition);
         return true;
     }
@@ -218,10 +212,10 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
             @Override
             public void run() {
                 item.setSwipedAction(null);
-                int position = fastItemAdapter.getAdapterPosition(item);
+                int position = fastItemAdapter.items().getAdapterPosition(item);
                 if (position != RecyclerView.NO_POSITION) {
                     //this sample uses a filter. If a filter is used we should use the methods provided by the filter (to make sure filter and normal state is updated)
-                    ((ItemAdapter.ItemFilter) fastItemAdapter.getItemFilter()).remove(position);
+                    ((ItemAdapter.ItemFilter) fastItemAdapter.items().getItemFilter()).remove(position);
                 }
             }
         };
@@ -233,7 +227,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
             public void run() {
                 rv.removeCallbacks(removeRunnable);
                 item.setSwipedDirection(0);
-                int position = fastItemAdapter.getAdapterPosition(item);
+                int position = fastItemAdapter.items().getAdapterPosition(item);
                 if (position != RecyclerView.NO_POSITION) {
                     fastItemAdapter.notifyItemChanged(position);
                 }

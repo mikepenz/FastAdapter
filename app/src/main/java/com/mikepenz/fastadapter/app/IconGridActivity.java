@@ -9,10 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
-import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.IconItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.iconics.typeface.ITypeface;
@@ -26,7 +25,7 @@ import java.util.List;
 
 public class IconGridActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastItemAdapter fastItemAdapter;
+    private FastItemAdapter<SimpleSubExpandableItem> fastItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +46,7 @@ public class IconGridActivity extends AppCompatActivity {
         new MaterializeBuilder().withActivity(this).build();
 
         //create our FastAdapter which will manage everything
-        fastItemAdapter = new FastItemAdapter();
+        fastItemAdapter = new FastItemAdapter<>();
 
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
@@ -91,7 +90,7 @@ public class IconGridActivity extends AppCompatActivity {
                     .withName(font.getFontName())
                     .withIdentifier(count);
 
-            ArrayList<IItem> icons = new ArrayList<>();
+            ArrayList<IconItem> icons = new ArrayList<>();
             for (String icon : font.getIcons()) {
                 IconItem iconItem = new IconItem();
                 iconItem.withIcon(font.getIcon(icon));
@@ -104,7 +103,7 @@ public class IconGridActivity extends AppCompatActivity {
         }
 
         //fill with some sample data
-        fastItemAdapter.add(items);
+        fastItemAdapter.items().add(items);
 
         //if first start we want to expand the item with ID 2
         if (savedInstanceState != null) {

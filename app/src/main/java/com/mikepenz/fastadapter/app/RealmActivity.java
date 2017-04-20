@@ -24,8 +24,9 @@ import com.mikepenz.materialize.MaterializeBuilder;
 import java.util.LinkedList;
 import java.util.List;
 
+import io.realm.OrderedCollectionChangeSet;
+import io.realm.OrderedRealmCollectionChangeListener;
 import io.realm.Realm;
-import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
 
 public class RealmActivity extends AppCompatActivity {
@@ -70,13 +71,37 @@ public class RealmActivity extends AppCompatActivity {
         mRealm = Realm.getDefaultInstance();
 
         //Add a realm on change listener (don´t forget to close this realm instance before adding this listener again)
-        mRealm.where(RealmSampleUserItem.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<RealmSampleUserItem>>() {
+        mRealm.where(RealmSampleUserItem.class).findAllAsync().addChangeListener(new OrderedRealmCollectionChangeListener<RealmResults<RealmSampleUserItem>>() {
             @Override
-            public void onChange(RealmResults<RealmSampleUserItem> userItems) {
+            public void onChange(RealmResults<RealmSampleUserItem> realmSampleUserItems, OrderedCollectionChangeSet orderedCollectionChangeSet) {
                 //This will call twice
                 //1.) from findAllAsync()
                 //2.) from createData()
-                mFastItemAdapter.setNewList(userItems);
+                mFastItemAdapter.items().getAdapterItems().clear();
+                mFastItemAdapter.items().getAdapterItems().addAll(realmSampleUserItems);
+                mFastItemAdapter.items().mapPossibleTypes(realmSampleUserItems);
+                // null Changes means the async query returns the first time.
+                if (orderedCollectionChangeSet == null) {
+                    mFastItemAdapter.notifyAdapterDataSetChanged();
+                    return;
+                }
+                // For deletions, the adapter has to be notified in reverse order.
+                OrderedCollectionChangeSet.Range[] deletions = orderedCollectionChangeSet.getDeletionRanges();
+                for (int i = deletions.length - 1; i >= 0; i--) {
+                    OrderedCollectionChangeSet.Range range = deletions[i];
+                    mFastItemAdapter.notifyAdapterItemRangeRemoved(range.startIndex, range.length);
+
+                }
+
+                OrderedCollectionChangeSet.Range[] insertions = orderedCollectionChangeSet.getInsertionRanges();
+                for (OrderedCollectionChangeSet.Range range : insertions) {
+                    mFastItemAdapter.notifyAdapterItemRangeInserted(range.startIndex, range.length);
+                }
+
+                OrderedCollectionChangeSet.Range[] modifications = orderedCollectionChangeSet.getChangeRanges();
+                for (OrderedCollectionChangeSet.Range range : modifications) {
+                    mFastItemAdapter.notifyAdapterItemRangeChanged(range.startIndex, range.length);
+                }
             }
         });
 
@@ -132,20 +157,12 @@ public class RealmActivity extends AppCompatActivity {
                 onBackPressed();
                 return true;
             case R.id.item_add:
-                mRealm.where(RealmSampleUserItem.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<RealmSampleUserItem>>() {
+                mRealm.executeTransactionAsync(new Realm.Transaction() {
                     @Override
-                    public void onChange(RealmResults<RealmSampleUserItem> userItems) {
-                        //Remove the change listener
-                        userItems.removeChangeListener(this);
-                        //Store the primary key to get access from a other thread
-                        final long newPrimaryKey = userItems.last().getIdentifier() + 1;
-                        mRealm.executeTransactionAsync(new Realm.Transaction() {
-                            @Override
-                            public void execute(Realm realm) {
-                                RealmSampleUserItem newUser = realm.createObject(RealmSampleUserItem.class, newPrimaryKey);
-                                newUser.withName("Sample Realm Element " + newPrimaryKey);
-                            }
-                        });
+                    public void execute(Realm realm) {
+                        final long newPrimaryKey = realm.where(RealmSampleUserItem.class).max("mIdentifier").longValue() + 1;
+                        RealmSampleUserItem newUser = realm.createObject(RealmSampleUserItem.class, newPrimaryKey);
+                        newUser.withName("Sample Realm Element " + newPrimaryKey);
                     }
                 });
                 return true;

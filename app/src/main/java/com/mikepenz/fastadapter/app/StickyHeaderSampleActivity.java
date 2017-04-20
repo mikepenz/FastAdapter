@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
@@ -51,8 +50,8 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
 
         //create our adapters
         final StickyHeaderAdapter stickyHeaderAdapter = new StickyHeaderAdapter();
-        final HeaderAdapter headerAdapter = new HeaderAdapter();
-        final ItemAdapter itemAdapter = new ItemAdapter();
+        final HeaderAdapter<SimpleItem> headerAdapter = new HeaderAdapter<>();
+        final ItemAdapter<SimpleItem> itemAdapter = new ItemAdapter<>();
 
         //configure our fastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
@@ -70,7 +69,7 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
 
         //fill with some sample data
         headerAdapter.add(new SimpleItem().withName("Header").withIdentifier(1));
-        List<IItem> items = new ArrayList<>();
+        List<SimpleItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
             items.add(new SimpleItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(100 + i));
         }

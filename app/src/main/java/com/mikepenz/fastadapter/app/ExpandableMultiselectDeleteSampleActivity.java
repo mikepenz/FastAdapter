@@ -115,7 +115,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                 .withTitleProvider(new ActionModeHelper.ActionModeTitleProvider() {
                     @Override
                     public String getTitle(int selected) {
-                        return selected + "/" + SubItemUtil.countItems(fastItemAdapter.getItemAdapter(), false);
+                        return selected + "/" + SubItemUtil.countItems(fastItemAdapter.items(), false);
                     }
                 })
                 // important so that the helper knows, that is should use the SubItemUtil for validating its state
@@ -185,7 +185,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                 items.add(sampleItem);
             }
         }
-        fastItemAdapter.add(items);
+        fastItemAdapter.items().add(items);
         fastItemAdapter.expand();
 
         fastItemAdapter.withSelectionListener(new ISelectionListener() {
@@ -194,7 +194,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                 if (item instanceof SimpleSubItem) {
                     IItem headerItem = ((SimpleSubItem) item).getParent();
                     if (headerItem != null) {
-                        int pos = fastItemAdapter.getAdapterPosition(headerItem);
+                        int pos = fastItemAdapter.items().getAdapterPosition(headerItem);
                         // Important: notify the header directly, not via the notifyadapterItemChanged!
                         // we just want to update the view and we are sure, nothing else has to be done
                         fastItemAdapter.notifyItemChanged(pos);

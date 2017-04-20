@@ -7,8 +7,9 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 252
-        versionName '2.5.2'
+        versionCode 3000
+        versionName '3.0.0.alpha'
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
@@ -38,10 +39,10 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:1.10.19'
-    testCompile 'org.robolectric:robolectric:3.1.1'
-    testCompile 'org.robolectric:robolectric-utils:3.1.1'
-    testCompile 'org.robolectric:shadows-core:3.1.1'
-    testCompile 'org.robolectric:shadows-support-v4:3.1.1'
+    testCompile 'org.robolectric:robolectric:3.1.4'
+    testCompile 'org.robolectric:robolectric-utils:3.1.4'
+    testCompile 'org.robolectric:shadows-core:3.1.4'
+    testCompile 'org.robolectric:shadows-support-v4:3.1.4'
     testCompile 'com.squareup.assertj:assertj-android:1.1.1'
     testCompile 'com.squareup.assertj:assertj-android-design:1.1.1@aar'
     testCompile 'com.squareup.assertj:assertj-android-appcompat-v7:1.1.1@aar'
@@ -49,6 +50,11 @@ dependencies {
         exclude group: "com.android.support", module: "support-annotations"
         exclude group: "com.android.support", module: "support-v4"
     }
+    androidTestCompile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
+    androidTestCompile 'com.android.support.test:runner:0.5'
+    androidTestCompile 'com.android.support.test:rules:0.5'
+    androidTestCompile 'junit:junit:4.12'
+    androidTestCompile 'dk.ilios:spanner:0.6.0'
 }
 
 tasks.withType(Test) {

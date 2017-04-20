@@ -28,7 +28,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     private List<Item> mItems = new ArrayList<>();
 
     //defines if the IdDistributor is used to set ID's to all added items
-    private boolean mUseIdDistributor = true;
+    private boolean mUseIdDistributor = false;
 
     /**
      * defines if the IdDistributor is used to provide an ID to all added items which do not yet define an id
@@ -49,7 +49,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     //filters the items
-    private Filter mItemFilter = new ItemFilter();
+    private Filter mItemFilter;
 
     /**
      * allows you to define your own Filter implementation instead of the default `ItemFilter`
@@ -66,6 +66,9 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @return the filter used to filter items
      */
     public Filter getItemFilter() {
+        if (mItemFilter == null) {
+            mItemFilter = new ItemFilter();
+        }
         return mItemFilter;
     }
 
@@ -89,7 +92,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param constraint the string used to filter the list
      */
     public void filter(CharSequence constraint) {
-        mItemFilter.filter(constraint);
+        getItemFilter().filter(constraint);
     }
 
     /**
@@ -102,7 +105,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     //the listener which will be called after the items were filtered
-    protected ItemFilterListener mItemFilterListener;
+    private ItemFilterListener mItemFilterListener;
 
     /**
      * interface for the ItemFilterListener
@@ -112,7 +115,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     //
-    protected Comparator<Item> mComparator;
+    private Comparator<Item> mComparator;
 
     /**
      * define a comparator which will be used to sort the list "everytime" it is altered
@@ -232,9 +235,6 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @return the item type of the collapsible
      */
     public <T extends IItem & IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems) {
-        if (mUseIdDistributor) {
-            IdDistributor.checkIds(subItems);
-        }
         return collapsible.withSubItems(subItems);
     }
 
@@ -518,7 +518,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 // We perform filtering operation
                 if (mFilterPredicate != null) {
                     for (Item item : mOriginalItems) {
-                        if (!mFilterPredicate.filter(item, constraint)) {
+                        if (mFilterPredicate.filter(item, constraint)) {
                             filteredItems.add(item);
                         }
                     }
@@ -536,6 +536,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             return mConstraint;
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // Now we have to inform the adapter about the new list filtered

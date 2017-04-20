@@ -2,12 +2,15 @@ package com.mikepenz.fastadapter;
 
 import android.support.v7.widget.RecyclerView;
 
+import com.mikepenz.fastadapter.adapters.FooterAdapter;
+import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +24,7 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Shubham Chaudhary on 17/03/16
  */
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class FastAdapterTest {
     private FastAdapter<TestItem> adapter;
     private ItemAdapter<TestItem> itemAdapter;
@@ -191,5 +194,19 @@ public class FastAdapterTest {
         adapter.onBindViewHolder(holder, 10, new ArrayList());
 
         verify(listener, only()).onBindViewHolder(holder, 10, new ArrayList());
+    }
+
+    @Test
+    public void wrapSize() {
+        HeaderAdapter<TestItem> headerAdapter = new HeaderAdapter<>();
+        FastItemAdapter<TestItem> fastItemAdapter = new FastItemAdapter<>();
+        FooterAdapter<TestItem> footerAdapter = new FooterAdapter<>();
+        headerAdapter.wrap(footerAdapter.wrap(fastItemAdapter.items()));
+        headerAdapter.add(new TestItem());
+        fastItemAdapter.items().add(new TestItem());
+        fastItemAdapter.items().add(new TestItem());
+        fastItemAdapter.items().add(new TestItem());
+        footerAdapter.add(new TestItem());
+        assertThat(fastItemAdapter.getItemCount()).isEqualTo(5);
     }
 }

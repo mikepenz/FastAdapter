@@ -69,7 +69,7 @@ public class ImageListActivity extends AppCompatActivity {
         rv.setAdapter(mFastItemAdapter);
 
         //fill with some sample data
-        mFastItemAdapter.add(ImageDummyData.getImageItems());
+        mFastItemAdapter.items().add(ImageDummyData.getImageItems());
 
         //restore selections (this has to be done after the items were added
         mFastItemAdapter.withSavedInstanceState(savedInstanceState);
