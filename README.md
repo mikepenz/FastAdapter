@@ -47,7 +47,7 @@ compile('com.mikepenz:fastadapter:2.5.2@aar') {
 
 The commons package comes with some useful helpers (which are not needed in all cases) This one for example includes the `FastItemAdapter`
 ```gradle
-compile 'com.mikepenz:fastadapter-commons:2.5.@2aar'
+compile 'com.mikepenz:fastadapter-commons:2.5.2@aar'
 ```
 
 All additions are included in the following dependency.
