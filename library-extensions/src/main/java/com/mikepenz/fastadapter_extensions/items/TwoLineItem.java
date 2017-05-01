@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.items.AbstractItem;
-import com.mikepenz.fastadapter.utils.ViewHolderFactory;
 import com.mikepenz.library_extensions.R;
 import com.mikepenz.materialize.holder.ImageHolder;
 import com.mikepenz.materialize.holder.StringHolder;
@@ -22,8 +21,6 @@ import java.util.List;
  * Created by fabianterhorst on 30.03.16.
  */
 public class TwoLineItem extends AbstractItem<TwoLineItem, TwoLineItem.ViewHolder> {
-
-    private static final ViewHolderFactory<? extends ViewHolder> FACTORY = new ItemFactory();
 
     private StringHolder mName, mDescription;
 
@@ -137,15 +134,9 @@ public class TwoLineItem extends AbstractItem<TwoLineItem, TwoLineItem.ViewHolde
         holder.icon.setVisibility(View.VISIBLE);
     }
 
-    protected static class ItemFactory implements ViewHolderFactory<ViewHolder> {
-        public ViewHolder create(View v) {
-            return new ViewHolder(v);
-        }
-    }
-
     @Override
-    public ViewHolderFactory<? extends ViewHolder> getFactory() {
-        return FACTORY;
+    public ViewHolder getViewHolder(View v) {
+        return new ViewHolder(v);
     }
 
     protected static class ViewHolder extends RecyclerView.ViewHolder {

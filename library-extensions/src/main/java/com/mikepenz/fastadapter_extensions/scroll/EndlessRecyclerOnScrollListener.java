@@ -42,6 +42,12 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         this.mVisibleThreshold = visibleThreshold;
     }
 
+    public EndlessRecyclerOnScrollListener(RecyclerView.LayoutManager layoutManager, int visibleThreshold, FooterAdapter footerAdapter) {
+        this.mLayoutManager = layoutManager;
+        this.mVisibleThreshold = visibleThreshold;
+        this.mFooterAdapter = footerAdapter;
+    }
+
     private int findFirstVisibleItemPosition(RecyclerView recyclerView) {
         final View child = findOneVisibleChild(0, mLayoutManager.getChildCount(), false, true);
         return child == null ? RecyclerView.NO_POSITION : recyclerView.getChildAdapterPosition(child);

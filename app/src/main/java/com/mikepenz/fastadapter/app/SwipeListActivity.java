@@ -22,8 +22,9 @@ import android.widget.Toast;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SwipeableItem;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
 import com.mikepenz.fastadapter_extensions.swipe.SimpleSwipeCallback;
@@ -95,7 +96,10 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         for (String s : ALPHABET) {
             int count = new Random().nextInt(20);
             for (int i = 1; i <= count; i++) {
-                items.add(new SwipeableItem().withName(s + " Test " + x).withIdentifier(100 + x));
+                SwipeableItem swipeableItem = new SwipeableItem().withName(s + " Test " + x).withIdentifier(100 + x);
+                swipeableItem.withIsSwipeable(i % 5 != 0);
+                swipeableItem.withIsDraggable(i % 5 != 0);
+                items.add(swipeableItem);
                 x++;
             }
         }
@@ -216,7 +220,8 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
                 item.setSwipedAction(null);
                 int position = fastItemAdapter.getAdapterPosition(item);
                 if (position != RecyclerView.NO_POSITION) {
-                    fastItemAdapter.remove(position);
+                    //this sample uses a filter. If a filter is used we should use the methods provided by the filter (to make sure filter and normal state is updated)
+                    ((ItemAdapter.ItemFilter) fastItemAdapter.getItemFilter()).remove(position);
                 }
             }
         };

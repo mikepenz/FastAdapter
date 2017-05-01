@@ -246,8 +246,17 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items the items to set
      */
     public ItemAdapter<Item> set(List<Item> items) {
+        return set(items, true);
+    }
+
+    private ItemAdapter<Item> set(List<Item> items, boolean resetFilter) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
+        }
+
+        //reset the filter
+        if (resetFilter && getItemFilter() instanceof ItemAdapter.ItemFilter && ((ItemFilter) getItemFilter()).getConstraint() != null) {
+            ((ItemFilter) getItemFilter()).performFiltering(null);
         }
 
         //first collapse all items
@@ -303,6 +312,11 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     public ItemAdapter<Item> setNewList(List<Item> items) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
+        }
+
+        //reset the filter
+        if (getItemFilter() instanceof ItemAdapter.ItemFilter && ((ItemFilter) getItemFilter()).getConstraint() != null) {
+            ((ItemFilter) getItemFilter()).performFiltering(null);
         }
 
         mItems = new ArrayList<>(items);
@@ -472,6 +486,13 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
 
         @Override
         protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+
+            //return nothing
+            if(mOriginalItems == null && (constraint == null || constraint.length() == 0)) {
+                return results;
+            }
+
             //we can not filter on expanded or selected items, because the remembered positions will change
             if (getFastAdapter().isPositionBasedStateManagement()) {
                 getFastAdapter().deselect();
@@ -484,7 +505,6 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 mOriginalItems = new ArrayList<>(mItems);
             }
 
-            FilterResults results = new FilterResults();
             // We implement here the filter logic
             if (constraint == null || constraint.length() == 0) {
                 // No filter implemented we return all the list
@@ -520,7 +540,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         protected void publishResults(CharSequence constraint, FilterResults results) {
             // Now we have to inform the adapter about the new list filtered
             if (results.values != null) {
-                ItemAdapter.this.set((List<Item>) results.values);
+                ItemAdapter.this.set((List<Item>) results.values, false);
             }
 
             if (mItemFilterListener != null) {
@@ -570,6 +590,31 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         }
 
         /**
+         * Searches for the given item and calculates its relative position
+         *
+         * @param item the item which is searched for
+         * @return the relative position
+         */
+        public int getAdapterPosition(Item item) {
+            return getAdapterPosition(item.getIdentifier());
+        }
+
+        /**
+         * Searches for the given identifier and calculates its relative position
+         *
+         * @param identifier the identifier of an item which is searched for
+         * @return the relative position
+         */
+        public int getAdapterPosition(long identifier) {
+            for (int i = 0, size = mOriginalItems.size(); i < size; i++) {
+                if (mOriginalItems.get(i).getIdentifier() == identifier) {
+                    return i;
+                }
+            }
+            return -1;
+        }
+
+        /**
          * add an array of items to the end of the existing items
          *
          * @param items the items to add
@@ -591,7 +636,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                     IdDistributor.checkIds(items);
                 }
                 mOriginalItems.addAll(items);
-                performFiltering(mConstraint);
+                publishResults(mConstraint, performFiltering(mConstraint));
                 return ItemAdapter.this;
             } else {
                 return ItemAdapter.this.add(items);
@@ -620,8 +665,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 if (mUseIdDistributor) {
                     IdDistributor.checkIds(items);
                 }
-                mOriginalItems.addAll(position - getFastAdapter().getPreItemCountByOrder(getOrder()), items);
-                performFiltering(mConstraint);
+                mOriginalItems.addAll(getAdapterPosition(mItems.get(position)) - getFastAdapter().getPreItemCount(position), items);
+                publishResults(mConstraint, performFiltering(mConstraint));
                 return ItemAdapter.this;
             } else {
                 return ItemAdapter.this.add(position, items);
@@ -639,8 +684,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 if (mUseIdDistributor) {
                     IdDistributor.checkId(item);
                 }
-                mOriginalItems.set(position - getFastAdapter().getPreItemCount(position), item);
-                performFiltering(mConstraint);
+                mOriginalItems.set(getAdapterPosition(mItems.get(position)) - getFastAdapter().getPreItemCount(position), item);
+                publishResults(mConstraint, performFiltering(mConstraint));
                 return ItemAdapter.this;
             } else {
                 return ItemAdapter.this.set(position, item);
@@ -657,9 +702,11 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         public ItemAdapter<Item> move(int fromPosition, int toPosition) {
             if (mOriginalItems != null) {
                 int preItemCount = getFastAdapter().getPreItemCount(fromPosition);
-                Item item = mOriginalItems.get(fromPosition - preItemCount);
-                mOriginalItems.remove(fromPosition - preItemCount);
-                mOriginalItems.add(toPosition - preItemCount, item);
+                int adjustedFrom = getAdapterPosition(mItems.get(fromPosition));
+                int adjustedTo = getAdapterPosition(mItems.get(toPosition));
+                Item item = mOriginalItems.get(adjustedFrom - preItemCount);
+                mOriginalItems.remove(adjustedFrom - preItemCount);
+                mOriginalItems.add(adjustedTo - preItemCount, item);
                 performFiltering(mConstraint);
                 return ItemAdapter.this;
             } else {
@@ -674,8 +721,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
          */
         public ItemAdapter<Item> remove(int position) {
             if (mOriginalItems != null) {
-                mItems.remove(position - getFastAdapter().getPreItemCount(position));
-                performFiltering(mConstraint);
+                mOriginalItems.remove(getAdapterPosition(mItems.get(position))- getFastAdapter().getPreItemCount(position));
+                publishResults(mConstraint, performFiltering(mConstraint));
                 return ItemAdapter.this;
             } else {
                 return ItemAdapter.this.remove(position);
@@ -698,7 +745,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 for (int i = 0; i < saveItemCount; i++) {
                     mOriginalItems.remove(position - preItemCount);
                 }
-                performFiltering(mConstraint);
+                publishResults(mConstraint, performFiltering(mConstraint));
                 return ItemAdapter.this;
             } else {
                 return ItemAdapter.this.removeRange(position, itemCount);
@@ -710,9 +757,8 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
          */
         public ItemAdapter<Item> clear() {
             if (mOriginalItems != null) {
-                int count = mOriginalItems.size();
                 mOriginalItems.clear();
-                performFiltering(mConstraint);
+                publishResults(mConstraint, performFiltering(mConstraint));
                 return ItemAdapter.this;
             } else {
                 return ItemAdapter.this.clear();
