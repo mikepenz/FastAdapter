@@ -41,7 +41,7 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
 compile('com.mikepenz:fastadapter:2.5.2@aar') {
-	transitive = true
+    transitive = true
 }
 ```
 
@@ -138,12 +138,12 @@ fastAdapter.add(ITEMS);
 ```java
 fastAdapter.withSelectable(true);
 fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<Item>() {
-            @Override
-            public boolean onClick(View v, IAdapter<Item> adapter, Item item, int position) {
-               // Handle click here
-                return true;
-            }
-        });
+    @Override
+    public boolean onClick(View v, IAdapter<Item> adapter, Item item, int position) {
+       // Handle click here
+	return true;
+    }
+});
 ```
 
 
@@ -174,10 +174,10 @@ fastItemAdapter.withItemEvent(new ClickEventHook<SampleItem> {
 fastAdapter.filter("yourSearchTerm");
 
 fastAdapter.withFilterPredicate(new IItemAdapter.Predicate<Item>() {
-            @Override
-            public boolean filter(Item item, CharSequence constraint) {
-                return item.getName().startsWith(String.valueOf(constraint));
-            }
+    @Override
+    public boolean filter(Item item, CharSequence constraint) {
+	return item.getName().startsWith(String.valueOf(constraint));
+    }
 });
 ```
 `filter()` will return true to indicate which items will be removed. Returning false indicates items that will be retained.
@@ -227,13 +227,13 @@ FooterAdapter<ProgressItem> footerAdapter = new FooterAdapter<>();
 Keep in mind that ProgressItem is provided by FastAdapter’s extensions.
 ```java
 recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(footerAdapter) {
-            @Override
-            public void onLoadMore(int currentPage) {
-                footerAdapter.clear();
-                footerAdapter.add(new ProgressItem().withEnabled(false));
-                // Load your items here and add it to FastAdapter
-                fastAdapter.add(NEWITEMS);
-            }
+    @Override
+    public void onLoadMore(int currentPage) {
+	footerAdapter.clear();
+	footerAdapter.add(new ProgressItem().withEnabled(false));
+	// Load your items here and add it to FastAdapter
+	fastAdapter.add(NEWITEMS);
+    }
 });
 ```
 
