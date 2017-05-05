@@ -4,7 +4,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:installLocation="auto"
         android:name="com.mikepenz.fastadapter.app.CustomApplication"
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
