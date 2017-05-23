@@ -49,12 +49,12 @@ public class DragDropUtil
     public static void onMove(FastItemAdapter fastItemAdapter, int oldPosition, int newPosition) {
         // necessary, because the positions passed to this function may be jumping in case of that the recycler view is scrolled while holding an item outside of the recycler view
         if (oldPosition < newPosition) {
-            for (int i = oldPosition; i < newPosition; i++) {
+            for (int i = newPosition - 1; i >= oldPosition; i--) {
                 Collections.swap(fastItemAdapter.getAdapterItems(), i, i + 1);
                 fastItemAdapter.notifyAdapterItemMoved(i, i + 1);
             }
         } else {
-            for (int i = newPosition; i < oldPosition; i++) {
+            for (int i = oldPosition - 1; i >= newPosition; i--) {
                 Collections.swap(fastItemAdapter.getAdapterItems(), i, i + 1);
                 fastItemAdapter.notifyAdapterItemMoved(i, i + 1);
             }
