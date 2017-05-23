@@ -196,6 +196,11 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
     }
 
     @Override
+    public void itemTouchDropped(int oldPosition, int newPosition) {
+        // save the new item order, i.e. in your database
+    }
+
+    @Override
     public void itemsFiltered() {
         Toast.makeText(EndlessScrollListActivity.this, "filtered items count: " + fastItemAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
     }

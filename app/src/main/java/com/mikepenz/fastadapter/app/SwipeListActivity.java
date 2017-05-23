@@ -201,6 +201,11 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
     }
 
     @Override
+    public void itemTouchDropped(int oldPosition, int newPosition) {
+        // save the new item order, i.e. in your database
+    }
+
+    @Override
     public void itemSwiped(int position, int direction) {
         // -- Option 1: Direct action --
         //do something when swiped such as: select, remove, update, ...:

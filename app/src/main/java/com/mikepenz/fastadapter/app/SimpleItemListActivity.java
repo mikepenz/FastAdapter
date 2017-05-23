@@ -181,9 +181,27 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
 
     @Override
     public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-        Collections.swap(fastItemAdapter.getAdapterItems(), oldPosition, newPosition); // change position
-        fastItemAdapter.notifyAdapterItemMoved(oldPosition, newPosition);
+        // necessary, because the positions passed to this function may be a range
+        // in case of that the recycler view is scrolled while holding an item outside of the recycler view
+        if (oldPosition < newPosition) {
+            for (int i = oldPosition; i < newPosition; i++) {
+                Collections.swap(fastItemAdapter.getAdapterItems(), i, i + 1);
+                fastItemAdapter.notifyAdapterItemMoved(i, i + 1);
+            }
+        } else {
+            for (int i = newPosition; i < oldPosition; i++) {
+                Collections.swap(fastItemAdapter.getAdapterItems(), i, i + 1);
+                fastItemAdapter.notifyAdapterItemMoved(i, i + 1);
+            }
+        }
+//        Collections.swap(fastItemAdapter.getAdapterItems(), oldPosition, newPosition); // change position
+//        fastItemAdapter.notifyAdapterItemMoved(oldPosition, newPosition);
         return true;
+    }
+
+    @Override
+    public void itemTouchDropped(int oldPosition, int newPosition) {
+        // save the new item order, i.e. in your database
     }
 
     @Override
