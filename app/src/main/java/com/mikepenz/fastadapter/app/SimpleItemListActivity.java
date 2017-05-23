@@ -26,6 +26,7 @@ import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
+import com.mikepenz.fastadapter_extensions.utilities.DragDropUtil;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -181,21 +182,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
 
     @Override
     public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-        // necessary, because the positions passed to this function may be a range
-        // in case of that the recycler view is scrolled while holding an item outside of the recycler view
-        if (oldPosition < newPosition) {
-            for (int i = oldPosition; i < newPosition; i++) {
-                Collections.swap(fastItemAdapter.getAdapterItems(), i, i + 1);
-                fastItemAdapter.notifyAdapterItemMoved(i, i + 1);
-            }
-        } else {
-            for (int i = newPosition; i < oldPosition; i++) {
-                Collections.swap(fastItemAdapter.getAdapterItems(), i, i + 1);
-                fastItemAdapter.notifyAdapterItemMoved(i, i + 1);
-            }
-        }
-//        Collections.swap(fastItemAdapter.getAdapterItems(), oldPosition, newPosition); // change position
-//        fastItemAdapter.notifyAdapterItemMoved(oldPosition, newPosition);
+        DragDropUtil.onMove(fastItemAdapter, oldPosition, newPosition);  // change position
         return true;
     }
 
