@@ -21,8 +21,8 @@ public class SimpleDragCallback extends ItemTouchHelper.SimpleCallback {
     private ItemTouchCallback mCallbackItemTouch; // interface
     private boolean mIsDragEnabled = true;
 
-    private Integer mFrom = null;
-    private Integer mTo = null;
+    private int mFrom = RecyclerView.NO_POSITION;
+    private int mTo = RecyclerView.NO_POSITION;
 
     private int mDirections = UP_DOWN;
 
@@ -66,17 +66,15 @@ public class SimpleDragCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-
         // remember the from/to positions
         if (target.itemView.getTag() instanceof IDraggable) {
             if (((IDraggable) target.itemView.getTag()).isDraggable()) {
-                if (mFrom == null) {
+                if (mFrom == RecyclerView.NO_POSITION) {
                     mFrom = viewHolder.getAdapterPosition();
                 }
                 mTo = target.getAdapterPosition();
             }
         }
-
         if (mCallbackItemTouch == null) {
             RecyclerView.Adapter adapter = recyclerView.getAdapter();
             ItemAdapter itemAdapter = null;
@@ -115,14 +113,12 @@ public class SimpleDragCallback extends ItemTouchHelper.SimpleCallback {
     @Override
     public void clearView(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
         super.clearView(recyclerView, viewHolder);
-
-        if (mFrom != null && mTo != null) {
+        if (mFrom != RecyclerView.NO_POSITION && mTo != RecyclerView.NO_POSITION) {
             if (mCallbackItemTouch != null) {
                 mCallbackItemTouch.itemTouchDropped(mFrom, mTo);
             }
         }
-
         // reset the from/to positions
-        mFrom = mTo = null;
+        mFrom = mTo = RecyclerView.NO_POSITION;
     }
 }
