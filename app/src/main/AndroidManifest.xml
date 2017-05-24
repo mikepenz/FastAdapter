@@ -69,6 +69,9 @@
         <activity
             android:name="com.mikepenz.fastadapter.app.RealmActivity"
             android:label="@string/sample_realm_list" />
+        <activity
+            android:name="com.mikepenz.fastadapter.app.StickyHeaderMopubAdsActivity"
+            android:label="@string/sample_sticky_header_mopub" />
 
         <!-- USED FOR THE MopubAdsActivity sample-->
         <activity
