@@ -4,7 +4,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.4.0-alpha6'
+        classpath 'com.android.tools.build:gradle:2.4.0-alpha7'
         classpath 'com.novoda:bintray-release:0.4.0'
         classpath "io.realm:realm-gradle-plugin:2.2.0"
     }
