@@ -1,5 +1,8 @@
 ###Upgrade Notes
 
+#### v2.5.3
+* the `ItemTouchCallback` has a new method `itemTouchDropped` just implement it and keep it empty, if you do not need it.
+
 #### v2.5.0
 **WARNING**
 * If you use the MaterialDrawer or the AboutLibraries you will need a compatible release of those for it to work
