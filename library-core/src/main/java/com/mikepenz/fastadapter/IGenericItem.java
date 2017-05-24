@@ -2,8 +2,6 @@ package com.mikepenz.fastadapter;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.mikepenz.fastadapter.items.GenericAbstractItem;
-
 /**
  * Created by mikepenz on 03.02.15.
  */
@@ -15,7 +13,7 @@ public interface IGenericItem<Model, Item extends IGenericItem<?, ?, ?>, VH exte
      * @param model
      * @return
      */
-    GenericAbstractItem<?, ?, ?> withModel(Model model);
+    IGenericItem<?, ?, ?> withModel(Model model);
 
     /**
      * get's the model of the item
