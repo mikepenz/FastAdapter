@@ -145,6 +145,14 @@ public interface IItem<T, VH extends RecyclerView.ViewHolder> extends IIdentifya
     void detachFromWindow(VH holder);
 
     /**
+     * View is in a transient state and could not be recycled
+     *
+     * @param holder
+     * @return return true if you want to recycle anyways (after clearing animations or so)
+     */
+    boolean failedToRecycle(VH holder);
+
+    /**
      * If this item equals to the given identifier
      *
      * @param id

@@ -224,6 +224,18 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
     }
 
     /**
+     * RecyclerView was not able to recycle that viewHolder because it's in a transient state
+     * Implement this and clear any animations, to allow recycling. Return true in that case
+     *
+     * @param holder
+     * @return true if you want it to get recycled
+     */
+    @Override
+    public boolean failedToRecycle(VH holder) {
+        return false;
+    }
+
+    /**
      * this method is called by generateView(Context ctx), generateView(Context ctx, ViewGroup parent) and getViewHolder(ViewGroup parent)
      * it will generate the View from the layout, overwrite this if you want to implement your view creation programatically
      *

@@ -640,6 +640,19 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         mOnBindViewHolderListener.onViewAttachedToWindow(holder, holder.getAdapterPosition());
     }
 
+    /**
+     * is called when the ViewHolder is in a transient state. return true if you want to reuse
+     * that view anyways
+     *
+     * @param holder the viewHolder for the view which failed to recycle
+     * @return true if we want to recycle anyways (false - it get's destroyed)
+     */
+    @Override
+    public boolean onFailedToRecycleView(RecyclerView.ViewHolder holder) {
+        if(mVerbose) Log.v(TAG, "onFailedToRecycleView: " + holder.getItemViewType());
+        return mOnBindViewHolderListener.onFailedToRecycleView(holder, holder.getAdapterPosition()) || super.onFailedToRecycleView(holder);
+    }
+
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         if(mVerbose) Log.v(TAG, "onAttachedToRecyclerView");
@@ -650,12 +663,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
         if(mVerbose) Log.v(TAG, "onDetachedFromRecyclerView");
         super.onDetachedFromRecyclerView(recyclerView);
-    }
-
-    @Override
-    public boolean onFailedToRecycleView(RecyclerView.ViewHolder holder) {
-        if(mVerbose) Log.v(TAG, "onFailedToRecycleView: " + holder.getItemViewType());
-        return super.onFailedToRecycleView(holder);
     }
 
     /**
@@ -1920,6 +1927,15 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          * @param position   the position of this viewHolder
          */
         void onViewDetachedFromWindow(RecyclerView.ViewHolder viewHolder, int position);
+
+        /**
+         * is called when the ViewHolder is in a transient state. return true if you want to reuse
+         * that view anyways
+         *
+         * @param viewHolder the viewHolder for the view which failed to recycle
+         * @return true if we want to recycle anyways (false - it get's destroyed)
+         */
+        boolean onFailedToRecycleView(RecyclerView.ViewHolder viewHolder, int position);
     }
 
     public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
@@ -1984,6 +2000,20 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             if (item != null) {
                 item.detachFromWindow(viewHolder);
             }
+        }
+
+        /**
+         * is called when the ViewHolder is in a transient state. return true if you want to reuse
+         * that view anyways
+         *
+         * @param viewHolder the viewHolder for the view which failed to recycle
+         * @param position   the position of this viewHolder
+         * @return true if we want to recycle anyways (false - it get's destroyed)
+         */
+        @Override
+        public boolean onFailedToRecycleView(RecyclerView.ViewHolder viewHolder, int position) {
+            IItem item = (IItem) viewHolder.itemView.getTag();
+            return item != null && item.failedToRecycle(viewHolder);
         }
     }
 

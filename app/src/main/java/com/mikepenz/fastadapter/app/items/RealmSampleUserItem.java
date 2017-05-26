@@ -258,6 +258,11 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
     @Override
     public void detachFromWindow(ViewHolder holder) {}
 
+    @Override
+    public boolean failedToRecycle(ViewHolder holder) {
+        return false;
+    }
+
     /**
      * If this item equals to the given identifier
      *
