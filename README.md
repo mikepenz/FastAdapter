@@ -40,14 +40,14 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-compile('com.mikepenz:fastadapter:2.5.2@aar') {
+compile('com.mikepenz:fastadapter:2.5.3@aar') {
     transitive = true
 }
 ```
 
 The commons package comes with some useful helpers (which are not needed in all cases) This one for example includes the `FastItemAdapter`
 ```gradle
-compile 'com.mikepenz:fastadapter-commons:2.5.2@aar'
+compile 'com.mikepenz:fastadapter-commons:2.5.3@aar'
 ```
 
 All additions are included in the following dependency.
