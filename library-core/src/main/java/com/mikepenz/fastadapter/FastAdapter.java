@@ -654,7 +654,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     @Override
     public boolean onFailedToRecycleView(RecyclerView.ViewHolder holder) {
-        if(mVerbose) Log.v(TAG, "onViewDetachedFromWindow: " + holder.getItemViewType());
+        if(mVerbose) Log.v(TAG, "onFailedToRecycleView: " + holder.getItemViewType());
         return super.onFailedToRecycleView(holder);
     }
 
@@ -688,7 +688,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
             int relativePosition = adapter.getAdapterPosition(identifier);
             if (relativePosition != -1) {
-                if(mVerbose) Log.v(TAG, "getPosition");
                 return position + relativePosition;
             }
             position = adapter.getAdapterItemCount();
@@ -708,8 +707,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (position < 0 || position >= mGlobalSize) {
             return null;
         }
-
-        if(mVerbose) Log.v(TAG, "getItem");
         //now get the adapter which is responsible for the given position
         int index = floorIndex(mAdapterSizes, position);
         return mAdapterSizes.valueAt(index).getAdapterItem(position - mAdapterSizes.keyAt(index));
