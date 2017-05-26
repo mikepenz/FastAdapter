@@ -28,6 +28,8 @@ import java.util.Set;
  * Created by mikepenz on 27.12.15.
  */
 public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private static final String TAG = "FastAdapter";
+
     protected static final String BUNDLE_SELECTIONS = "bundle_selections";
     protected static final String BUNDLE_EXPANDED = "bundle_expanded";
 
@@ -65,6 +67,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     // we need to remember all expanded items to recreate them after orientation change
     private SparseIntArray mExpanded = new SparseIntArray();
 
+    // verbose
+    private boolean mVerbose = false;
+
     // event hooks for the items
     private ClickListenerHelper<Item> clickListenerHelper;
 
@@ -95,6 +100,16 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public FastAdapter() {
         clickListenerHelper = new ClickListenerHelper<>(this);
         setHasStableIds(true);
+    }
+
+    /**
+     * enables the verbose log for the adapter
+     *
+     * @return this
+     */
+    public FastAdapter<Item> enableVerboseLog() {
+        this.mVerbose = true;
+        return this;
     }
 
     /**
@@ -542,6 +557,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if(mVerbose) Log.v(TAG, "onCreateViewHolder: " + viewType);
+
         final RecyclerView.ViewHolder holder = mOnCreateViewHolderListener.onPreCreateViewHolder(parent, viewType);
 
         //handle click behavior
@@ -567,6 +584,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (mLegacyBindViewMode) {
+            if(mVerbose) Log.v(TAG, "onBindViewHolderLegacy: " + position + "/" + holder.getItemViewType());
             mOnBindViewHolderListener.onBindViewHolder(holder, position, Collections.EMPTY_LIST);
         }
         //empty implementation we want the users to use the payloads too
@@ -581,6 +599,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
+        if(mVerbose) Log.v(TAG, "onBindViewHolder: " + position + "/" + holder.getItemViewType());
         super.onBindViewHolder(holder, position, payloads);
         mOnBindViewHolderListener.onBindViewHolder(holder, position, payloads);
     }
@@ -592,6 +611,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onViewRecycled(RecyclerView.ViewHolder holder) {
+        if(mVerbose) Log.v(TAG, "onViewRecycled: " + holder.getItemViewType());
         super.onViewRecycled(holder);
         mOnBindViewHolderListener.unBindViewHolder(holder, holder.getAdapterPosition());
     }
@@ -603,6 +623,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
+        if(mVerbose) Log.v(TAG, "onViewDetachedFromWindow: " + holder.getItemViewType());
         super.onViewDetachedFromWindow(holder);
         mOnBindViewHolderListener.onViewDetachedFromWindow(holder, holder.getAdapterPosition());
     }
@@ -614,8 +635,34 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
+        if(mVerbose) Log.v(TAG, "onViewAttachedToWindow: " + holder.getItemViewType());
         super.onViewAttachedToWindow(holder);
         mOnBindViewHolderListener.onViewAttachedToWindow(holder, holder.getAdapterPosition());
+    }
+
+    /**
+     * is called when the ViewHolder is in a transient state. return true if you want to reuse
+     * that view anyways
+     *
+     * @param holder the viewHolder for the view which failed to recycle
+     * @return true if we want to recycle anyways (false - it get's destroyed)
+     */
+    @Override
+    public boolean onFailedToRecycleView(RecyclerView.ViewHolder holder) {
+        if(mVerbose) Log.v(TAG, "onFailedToRecycleView: " + holder.getItemViewType());
+        return mOnBindViewHolderListener.onFailedToRecycleView(holder, holder.getAdapterPosition()) || super.onFailedToRecycleView(holder);
+    }
+
+    @Override
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
+        if(mVerbose) Log.v(TAG, "onAttachedToRecyclerView");
+        super.onAttachedToRecyclerView(recyclerView);
+    }
+
+    @Override
+    public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
+        if(mVerbose) Log.v(TAG, "onDetachedFromRecyclerView");
+        super.onDetachedFromRecyclerView(recyclerView);
     }
 
     /**
@@ -705,6 +752,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (position < 0 || position >= mGlobalSize) {
             return null;
         }
+        if(mVerbose) Log.v(TAG, "getAdapter");
         //now get the adapter which is responsible for the given position
         return mAdapterSizes.valueAt(floorIndex(mAdapterSizes, position));
     }
@@ -1025,9 +1073,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             item.withSetSelected(!selected);
             view.setSelected(!selected);
 
-            if (mSelectionListener != null)
-                mSelectionListener.onSelectionChanged(item, !selected);
-
             //now we make sure we remember the selection!
             if (mPositionBasedStateManagement) {
                 if (selected) {
@@ -1038,6 +1083,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                     mSelections.add(position);
                 }
             }
+
+            //notify that the selection changed
+            if (mSelectionListener != null)
+                mSelectionListener.onSelectionChanged(item, !selected);
         }
     }
 
@@ -1878,6 +1927,15 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          * @param position   the position of this viewHolder
          */
         void onViewDetachedFromWindow(RecyclerView.ViewHolder viewHolder, int position);
+
+        /**
+         * is called when the ViewHolder is in a transient state. return true if you want to reuse
+         * that view anyways
+         *
+         * @param viewHolder the viewHolder for the view which failed to recycle
+         * @return true if we want to recycle anyways (false - it get's destroyed)
+         */
+        boolean onFailedToRecycleView(RecyclerView.ViewHolder viewHolder, int position);
     }
 
     public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
@@ -1942,6 +2000,20 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             if (item != null) {
                 item.detachFromWindow(viewHolder);
             }
+        }
+
+        /**
+         * is called when the ViewHolder is in a transient state. return true if you want to reuse
+         * that view anyways
+         *
+         * @param viewHolder the viewHolder for the view which failed to recycle
+         * @param position   the position of this viewHolder
+         * @return true if we want to recycle anyways (false - it get's destroyed)
+         */
+        @Override
+        public boolean onFailedToRecycleView(RecyclerView.ViewHolder viewHolder, int position) {
+            IItem item = (IItem) viewHolder.itemView.getTag();
+            return item != null && item.failedToRecycle(viewHolder);
         }
     }
 

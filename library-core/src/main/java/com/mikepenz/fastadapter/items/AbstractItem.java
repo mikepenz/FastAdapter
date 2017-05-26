@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.items;
 
 import android.content.Context;
 import android.support.annotation.CallSuper;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -223,6 +224,30 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
     }
 
     /**
+     * RecyclerView was not able to recycle that viewHolder because it's in a transient state
+     * Implement this and clear any animations, to allow recycling. Return true in that case
+     *
+     * @param holder
+     * @return true if you want it to get recycled
+     */
+    @Override
+    public boolean failedToRecycle(VH holder) {
+        return false;
+    }
+
+    /**
+     * this method is called by generateView(Context ctx), generateView(Context ctx, ViewGroup parent) and getViewHolder(ViewGroup parent)
+     * it will generate the View from the layout, overwrite this if you want to implement your view creation programatically
+     *
+     * @param ctx
+     * @param parent
+     * @return
+     */
+    public View createView(Context ctx, @Nullable ViewGroup parent) {
+        return LayoutInflater.from(ctx).inflate(getLayoutRes(), parent, false);
+    }
+
+    /**
      * generates a view by the defined LayoutRes
      *
      * @param ctx
@@ -230,7 +255,7 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
      */
     @Override
     public View generateView(Context ctx) {
-        VH viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), null, false));
+        VH viewHolder = getViewHolder(createView(ctx, null));
 
         //as we already know the type of our ViewHolder cast it to our type
         bindView(viewHolder, Collections.EMPTY_LIST);
@@ -248,7 +273,7 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
      */
     @Override
     public View generateView(Context ctx, ViewGroup parent) {
-        VH viewHolder = getViewHolder(LayoutInflater.from(ctx).inflate(getLayoutRes(), parent, false));
+        VH viewHolder = getViewHolder(createView(ctx, parent));
 
         //as we already know the type of our ViewHolder cast it to our type
         bindView(viewHolder, Collections.EMPTY_LIST);
@@ -264,7 +289,7 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
      */
     @Override
     public VH getViewHolder(ViewGroup parent) {
-        return getViewHolder(LayoutInflater.from(parent.getContext()).inflate(getLayoutRes(), parent, false));
+        return getViewHolder(createView(parent.getContext(), parent));
     }
 
 

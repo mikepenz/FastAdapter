@@ -1,5 +1,11 @@
 ###Upgrade Notes
 
+#### v2.5.3
+* the `ItemTouchCallback` has a new method `itemTouchDropped` just implement it and keep it empty, if you do not need it.
+* If you implemented your own `Item` using the `IItem` interface instead the `AbstractItem` you will now also have to implement
+  * `failedToRecycle`
+* removed the `RecyclerViewCacheUtil` as it would no longer work with the latest RecyclerView
+
 #### v2.5.0
 **WARNING**
 * If you use the MaterialDrawer or the AboutLibraries you will need a compatible release of those for it to work

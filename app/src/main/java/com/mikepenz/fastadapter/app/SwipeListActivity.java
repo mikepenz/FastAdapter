@@ -29,6 +29,7 @@ import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
 import com.mikepenz.fastadapter_extensions.swipe.SimpleSwipeCallback;
 import com.mikepenz.fastadapter_extensions.swipe.SimpleSwipeDragCallback;
+import com.mikepenz.fastadapter_extensions.utilities.DragDropUtil;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -195,9 +196,13 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
 
     @Override
     public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-        Collections.swap(fastItemAdapter.getAdapterItems(), oldPosition, newPosition); // change position
-        fastItemAdapter.notifyAdapterItemMoved(oldPosition, newPosition);
+        DragDropUtil.onMove(fastItemAdapter, oldPosition, newPosition);  // change position
         return true;
+    }
+
+    @Override
+    public void itemTouchDropped(int oldPosition, int newPosition) {
+        // save the new item order, i.e. in your database
     }
 
     @Override
