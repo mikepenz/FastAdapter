@@ -1,4 +1,4 @@
-###Upgrade Notes
+### Upgrade Notes
 
 #### v2.5.3
 * the `ItemTouchCallback` has a new method `itemTouchDropped` just implement it and keep it empty, if you do not need it.
