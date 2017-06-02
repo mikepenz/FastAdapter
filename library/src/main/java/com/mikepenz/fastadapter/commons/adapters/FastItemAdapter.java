@@ -134,9 +134,23 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
      * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
      *
      * @param items the new items to set
+     * @return this
      */
     public FastItemAdapter<Item> setNewList(List<Item> items) {
         mItemAdapter.setNewList(items);
+        return this;
+    }
+
+
+    /**
+     * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
+     *
+     * @param items        the new items to set
+     * @param retainFilter set to true if you want to keep the filter applied
+     * @return this
+     */
+    public FastItemAdapter<Item> setNewList(List<Item> items, boolean retainFilter) {
+        mItemAdapter.setNewList(items, retainFilter);
         return this;
     }
 

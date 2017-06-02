@@ -277,12 +277,25 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param items the new items to set
      */
     public ItemAdapter<Item> setNewList(List<Item> items) {
+        return setNewList(items, false);
+    }
+
+    /**
+     * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
+     *
+     * @param items        the new items to set
+     * @param retainFilter set to true if you want to keep the filter applied
+     * @return this
+     */
+    public ItemAdapter<Item> setNewList(List<Item> items, boolean retainFilter) {
         if (mUseIdDistributor) {
             IdDistributor.checkIds(items);
         }
 
         //reset the filter
+        CharSequence filter = null;
         if (getItemFilter() != null && getItemFilter().getConstraint() != null) {
+            filter = getItemFilter().getConstraint();
             getItemFilter().performFiltering(null);
         }
 
@@ -293,7 +306,11 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             Collections.sort(mItems, mComparator);
         }
 
-        getFastAdapter().notifyAdapterDataSetChanged();
+        if (filter != null && retainFilter) {
+            getItemFilter().filter(filter);
+        } else {
+            getFastAdapter().notifyAdapterDataSetChanged();
+        }
 
         return this;
     }
