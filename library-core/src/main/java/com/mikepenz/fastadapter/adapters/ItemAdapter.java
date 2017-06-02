@@ -1,5 +1,8 @@
 package com.mikepenz.fastadapter.adapters;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
@@ -53,7 +56,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * @param itemFilter the filter to use
      * @return this
      */
-    public ItemAdapter<Item> withItemFilter(ItemFilter<Item> itemFilter) {
+    public ItemAdapter<Item> withItemFilter(@NonNull ItemFilter<Item> itemFilter) {
         this.mItemFilter = itemFilter;
         return this;
     }
@@ -61,6 +64,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     /**
      * @return the filter used to filter items
      */
+    @NonNull
     public ItemFilter<Item> getItemFilter() {
         return mItemFilter;
     }
@@ -70,7 +74,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      *
      * @param constraint the string used to filter the list
      */
-    public void filter(CharSequence constraint) {
+    public void filter(@Nullable CharSequence constraint) {
         mItemFilter.filter(constraint);
     }
 
