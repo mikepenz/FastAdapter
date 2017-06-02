@@ -22,7 +22,6 @@ import android.widget.Toast;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SwipeableItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
@@ -35,7 +34,6 @@ import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
@@ -76,7 +74,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         });
 
         //configure the itemAdapter
-        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SwipeableItem>() {
+        fastItemAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<SwipeableItem>() {
             @Override
             public boolean filter(SwipeableItem item, CharSequence constraint) {
                 //return true if we should filter it out
@@ -226,7 +224,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
                 int position = fastItemAdapter.getAdapterPosition(item);
                 if (position != RecyclerView.NO_POSITION) {
                     //this sample uses a filter. If a filter is used we should use the methods provided by the filter (to make sure filter and normal state is updated)
-                    ((ItemAdapter.ItemFilter) fastItemAdapter.getItemFilter()).remove(position);
+                    fastItemAdapter.getItemFilter().remove(position);
                 }
             }
         };

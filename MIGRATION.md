@@ -1,5 +1,19 @@
 ### Upgrade Notes
 
+#### v2.6.0
+* the `ItemFilter` was moved to it's own class
+* the `ItemFilterListener` was moved to it's own class
+  * in addition the interface was adjusted to provide more flexibility
+```java
+public interface ItemFilterListener<Item> {
+    void itemsFiltered(@Nullable CharSequence constraint, @Nullable List<Item> results);
+    void onReset();
+}
+```
+* the `withFilterPredicate` and `withItemFilterListener` are no longer available on the `ItemAdapter`. Use `getItemFilter()` on the adapter to get the `ItemFilter` and call the methods on this one
+* we no longer allow any filter extending `Filter`, you have to extend `ItemFilter` now to provide your custom implementation
+* `ItemFilter`, and `ItemFilterListener` and all related methods are now typed.
+
 #### v2.5.3
 * the `ItemTouchCallback` has a new method `itemTouchDropped` just implement it and keep it empty, if you do not need it.
 * If you implemented your own `Item` using the `IItem` interface instead the `AbstractItem` you will now also have to implement

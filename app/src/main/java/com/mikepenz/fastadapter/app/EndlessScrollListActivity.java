@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,10 +22,10 @@ import android.widget.Toast;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.adapters.FooterAdapter;
-import com.mikepenz.fastadapter.adapters.ItemAdapter.ItemFilterListener;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.listeners.ItemFilterListener;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
 import com.mikepenz.fastadapter_extensions.items.ProgressItem;
@@ -35,10 +36,9 @@ import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-public class EndlessScrollListActivity extends AppCompatActivity implements ItemTouchCallback, ItemFilterListener {
+public class EndlessScrollListActivity extends AppCompatActivity implements ItemTouchCallback, ItemFilterListener<SimpleItem> {
 
     //save our FastAdapter
     private FastItemAdapter<SimpleItem> fastItemAdapter;
@@ -79,7 +79,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         });
 
         //configure the itemAdapter
-        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SimpleItem>() {
+        fastItemAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<SimpleItem>() {
             @Override
             public boolean filter(SimpleItem item, CharSequence constraint) {
                 //return true if we should filter it out
@@ -88,7 +88,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
             }
         });
 
-        fastItemAdapter.getItemAdapter().withItemFilterListener(this);
+        fastItemAdapter.getItemFilter().withItemFilterListener(this);
 
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
@@ -201,7 +201,12 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
     }
 
     @Override
-    public void itemsFiltered() {
+    public void itemsFiltered(@Nullable CharSequence constraint, @Nullable List<SimpleItem> results) {
         Toast.makeText(EndlessScrollListActivity.this, "filtered items count: " + fastItemAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onReset() {
+
     }
 }
