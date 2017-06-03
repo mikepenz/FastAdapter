@@ -32,10 +32,8 @@ import java.util.List;
 /**
  * The RealmBaseRecyclerAdapter class is an abstract utility class for binding RecyclerView UI elements to Realm data.
  * <p>
- * This adapter will automatically handle any updates to its data and call notifyDataSetChanged() as appropriate.
- * Currently there is no support for RecyclerView's data callback methods like notifyItemInserted(int), notifyItemRemoved(int),
- * notifyItemChanged(int) etc.
- * It means that, there is no possibility to use default data animations.
+ * This adapter will automatically handle any updates to its data and call {@code notifyDataSetChanged()},
+ * {@code notifyItemInserted()}, {@code notifyItemRemoved()} or {@code notifyItemRangeChanged(} as appropriate.
  * <p>
  * The RealmAdapter will stop receiving updates if the Realm instance providing the {@link OrderedRealmCollection} is
  * closed.
@@ -45,6 +43,7 @@ import java.util.List;
 public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapter<Item> {
 
     private final boolean hasAutoUpdates;
+    private final boolean updateOnModification;
     private final OrderedRealmCollectionChangeListener listener;
     @Nullable
     private OrderedRealmCollection<Item> adapterData;
@@ -74,6 +73,10 @@ public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapt
                     notifyItemRangeInserted(range.startIndex, range.length);
                 }
 
+                if (!updateOnModification) {
+                    return;
+                }
+
                 OrderedCollectionChangeSet.Range[] modifications = changeSet.getChangeRanges();
                 for (OrderedCollectionChangeSet.Range range : modifications) {
                     notifyItemRangeChanged(range.startIndex, range.length);
@@ -82,13 +85,33 @@ public class RealmItemAdapter<Item extends RealmModel & IItem> extends ItemAdapt
         };
     }
 
+    /**
+     * This is equivalent to {@code RealmRecyclerViewAdapter(data, autoUpdate, true)}.
+     *
+     * @see #RealmItemAdapter(OrderedRealmCollection, boolean, boolean)
+     */
     public RealmItemAdapter(@Nullable OrderedRealmCollection<Item> data, boolean autoUpdate) {
+        this(data, autoUpdate, true);
+    }
+
+    /**
+     * @param data                 collection data to be used by this adapter.
+     * @param autoUpdate           when it is {@code false}, the adapter won't be automatically updated when collection data
+     *                             changes.
+     * @param updateOnModification when it is {@code true}, this adapter will be updated when deletions, insertions or
+     *                             modifications happen to the collection data. When it is {@code false}, only
+     *                             deletions and insertions will trigger the updates. This param will be ignored if
+     *                             {@code autoUpdate} is {@code false}.
+     */
+    public RealmItemAdapter(@Nullable OrderedRealmCollection<Item> data, boolean autoUpdate,
+                            boolean updateOnModification) {
         if (data != null && !data.isManaged())
             throw new IllegalStateException("Only use this adapter with managed RealmCollection, " +
                     "for un-managed lists you can just use the BaseRecyclerViewAdapter");
         this.adapterData = data;
         this.hasAutoUpdates = autoUpdate;
         this.listener = hasAutoUpdates ? createListener() : null;
+        this.updateOnModification = updateOnModification;
     }
 
     @Override
