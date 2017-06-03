@@ -57,16 +57,16 @@ dependencies {
     // contains util classes to support various android versions, and clean up code
     // comes with the awesome "Holder"-Pattern
     // https://github.com/mikepenz/Materialize
-    compile 'com.mikepenz:materialize:1.0.1@aar'
+    compile 'com.mikepenz:materialize:1.0.2@aar'
 
     // used to provide out of the box icon font support. simplifies development,
     // and provides scalable icons. the core is very very light
     // https://github.com/mikepenz/Android-Iconics
-    compile 'com.mikepenz:iconics-core:2.8.2@aar'
+    compile 'com.mikepenz:iconics-core:2.8.5@aar'
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
-    compile('com.mikepenz:materialdrawer:5.9.0@aar') {
+    compile('com.mikepenz:materialdrawer:5.9.2@aar') {
         transitive = true
         exclude module: "fastadapter"
     }
@@ -97,8 +97,8 @@ dependencies {
     compile 'com.turingtechnologies.materialscrollbar:lib:10.0.1'
 
     //https://github.com/JakeWharton/butterknife
-    compile 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
+    compile 'com.jakewharton:butterknife:8.6.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
 
     //used to load the images in the ImageListSample
     //https://github.com/bumptech/glide

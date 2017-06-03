@@ -79,7 +79,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
             public boolean filter(SwipeableItem item, CharSequence constraint) {
                 //return true if we should filter it out
                 //return false to keep it
-                return !item.name.getText().toLowerCase().contains(constraint.toString().toLowerCase());
+                return !item.name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
             }
         });
 
