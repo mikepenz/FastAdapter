@@ -19,6 +19,8 @@ public interface ItemFilterListener<Item> {
 ```
 * in addition the `itemView` now gets a tag set which has the reference to the current `FastAdapter`, this is necessary for the `ClickListenerHelper` to correctly retrieve the item, even if we have a shared `RecyclerViewPool`
 * the `FastAdapter` now directly handles setting the `Tag` with the `Item` and with the `FastAdapter` references. This is no longer necessary inside the `AbstractItem`, or any custom implementation
+* the method `onEvent` inside the `CustomEventHook` was renamed to `attachEvent` as it seems a bit more meaningful
+* the `attachEvent` no longer passes the `FastAdapter` in, please use the provided method `getFastAdapter()` && `getItem()` to get the proper element in your event from the `ViewHolder`
 
 
 #### v2.5.3

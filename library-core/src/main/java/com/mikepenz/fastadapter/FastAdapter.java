@@ -561,6 +561,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
         final RecyclerView.ViewHolder holder = mOnCreateViewHolderListener.onPreCreateViewHolder(parent, viewType);
 
+        //set the adapter
+        holder.itemView.setTag(R.id.fastadapter_item_adapter, FastAdapter.this);
+
         //handle click behavior
         clickListenerHelper.attachToView(fastAdapterViewClickListener, holder, holder.itemView);
 

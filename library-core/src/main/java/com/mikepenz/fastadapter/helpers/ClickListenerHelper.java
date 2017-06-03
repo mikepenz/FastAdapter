@@ -156,12 +156,8 @@ public class ClickListenerHelper<Item extends IItem> {
                 }
             });
         } else if (event instanceof CustomEventHook) {
-            //get the adapter for this view
-            Object tag = viewHolder.itemView.getTag(R.id.fastadapter_item_adapter);
-            if (tag instanceof FastAdapter) {
-                //we update our item with the changed property
-                ((CustomEventHook<Item>) event).onEvent(view, viewHolder, (FastAdapter<Item>) tag);
-            }
+            //we trigger the event binding
+            ((CustomEventHook<Item>) event).attachEvent(view, viewHolder);
         }
     }
 
