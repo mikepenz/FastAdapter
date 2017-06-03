@@ -11,12 +11,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mikepenz.fastadapter.utils.EventHookUtil;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.mikepenz.fastadapter.listeners.EventHook;
 import com.mikepenz.fastadapter.listeners.LongClickEventHook;
 import com.mikepenz.fastadapter.listeners.TouchEventHook;
 import com.mikepenz.fastadapter.utils.AdapterUtil;
+import com.mikepenz.fastadapter.utils.EventHookUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -72,7 +72,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private boolean mVerbose = false;
 
     // event hooks for the items
-    private List<EventHook<Item>> eventHooks = new LinkedList<>();
+    private List<EventHook<Item>> eventHooks;
 
     // the listeners which can be hooked on an item
     private OnClickListener<Item> mOnPreClickListener;
@@ -116,10 +116,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * adds a new event hook for an item
      * NOTE: this has to be called before adding the first items, as this won't be called anymore after the ViewHolders were created
      *
-     * @deprecated please use `withEventHook`
-     *
      * @param eventHook the event hook to be added for an item
      * @return this
+     * @deprecated please use `withEventHook`
      */
     @Deprecated
     public FastAdapter<Item> withItemEvent(EventHook<Item> eventHook) {
@@ -134,6 +133,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return this
      */
     public FastAdapter<Item> withEventHook(EventHook<Item> eventHook) {
+        if (eventHooks == null) {
+            eventHooks = new LinkedList<>();
+        }
         eventHooks.add(eventHook);
         return this;
     }
