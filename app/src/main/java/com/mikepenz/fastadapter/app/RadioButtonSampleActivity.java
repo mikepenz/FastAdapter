@@ -12,9 +12,8 @@ import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.RadioButtonSampleItem;
-import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
@@ -26,8 +25,6 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
 
     //save our FastAdapter
     private FastItemAdapter<RadioButtonSampleItem> fastItemAdapter;
-
-    private ClickListenerHelper<RadioButtonSampleItem> mClickListenerHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +53,6 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
             }
         });
 
-        //init the ClickListenerHelper which simplifies custom click listeners on views of the Adapter
-        mClickListenerHelper = new ClickListenerHelper<>(fastItemAdapter);
-
         fastItemAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<RadioButtonSampleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<RadioButtonSampleItem> adapter, RadioButtonSampleItem item, int position) {
@@ -67,7 +61,7 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
             }
         });
 
-        fastItemAdapter.withItemEvent(new RadioButtonSampleItem.RadioButtonClickEvent());
+        fastItemAdapter.withEventHook(new RadioButtonSampleItem.RadioButtonClickEvent());
 
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);

@@ -14,7 +14,6 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.app.items.CheckBoxSampleItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
@@ -26,8 +25,6 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
 
     //save our FastAdapter
     private FastItemAdapter<CheckBoxSampleItem> fastItemAdapter;
-
-    private ClickListenerHelper<CheckBoxSampleItem> mClickListenerHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +53,6 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
             }
         });
 
-        //init the ClickListenerHelper which simplifies custom click listeners on views of the Adapter
-        mClickListenerHelper = new ClickListenerHelper<>(fastItemAdapter);
-
         fastItemAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<CheckBoxSampleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<CheckBoxSampleItem> adapter, CheckBoxSampleItem item, int position) {
@@ -66,7 +60,7 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
                 return true;
             }
         });
-        fastItemAdapter.withItemEvent(new CheckBoxSampleItem.CheckBoxClickEvent());
+        fastItemAdapter.withEventHook(new CheckBoxSampleItem.CheckBoxClickEvent());
 
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);

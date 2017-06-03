@@ -17,7 +17,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
+import com.mikepenz.fastadapter.utils.EventHookUtil;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.mikepenz.iconics.view.IconicsImageView;
@@ -196,7 +196,7 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
         @Override
         public List<View> onBindMany(@NonNull RecyclerView.ViewHolder viewHolder) {
             if (viewHolder instanceof ImageItem.ViewHolder) {
-                return ClickListenerHelper.toList(((ViewHolder) viewHolder).imageLovedContainer);
+                return EventHookUtil.toList(((ViewHolder) viewHolder).imageLovedContainer);
             }
             return super.onBindMany(viewHolder);
         }

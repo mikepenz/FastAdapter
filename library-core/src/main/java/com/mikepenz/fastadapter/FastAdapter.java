@@ -11,16 +11,17 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.mikepenz.fastadapter.listeners.EventHook;
 import com.mikepenz.fastadapter.listeners.LongClickEventHook;
 import com.mikepenz.fastadapter.listeners.TouchEventHook;
 import com.mikepenz.fastadapter.utils.AdapterUtil;
+import com.mikepenz.fastadapter.utils.EventHookUtil;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -71,7 +72,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private boolean mVerbose = false;
 
     // event hooks for the items
-    private ClickListenerHelper<Item> clickListenerHelper;
+    private List<EventHook<Item>> eventHooks;
 
     // the listeners which can be hooked on an item
     private OnClickListener<Item> mOnPreClickListener;
@@ -98,7 +99,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * default CTOR
      */
     public FastAdapter() {
-        clickListenerHelper = new ClickListenerHelper<>(this);
         setHasStableIds(true);
     }
 
@@ -118,9 +118,25 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      *
      * @param eventHook the event hook to be added for an item
      * @return this
+     * @deprecated please use `withEventHook`
      */
+    @Deprecated
     public FastAdapter<Item> withItemEvent(EventHook<Item> eventHook) {
-        clickListenerHelper.addEventHook(eventHook);
+        return withEventHook(eventHook);
+    }
+
+    /**
+     * adds a new event hook for an item
+     * NOTE: this has to be called before adding the first items, as this won't be called anymore after the ViewHolders were created
+     *
+     * @param eventHook the event hook to be added for an item
+     * @return this
+     */
+    public FastAdapter<Item> withEventHook(EventHook<Item> eventHook) {
+        if (eventHooks == null) {
+            eventHooks = new LinkedList<>();
+        }
+        eventHooks.add(eventHook);
         return this;
     }
 
@@ -483,7 +499,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
                 //if there should be only one expanded item we want to collapse all the others but the current one (this has to happen after we handled the selection as we refer to the position)
                 if (!consumed && mOnlyOneExpandedItem && item instanceof IExpandable) {
-                    if(((IExpandable) item).getSubItems() != null && ((IExpandable) item).getSubItems().size() > 0) {
+                    if (((IExpandable) item).getSubItems() != null && ((IExpandable) item).getSubItems().size() > 0) {
                         int[] expandedItems = getExpandedItems();
                         for (int i = expandedItems.length - 1; i >= 0; i--) {
                             if (expandedItems[i] != pos) {
@@ -540,7 +556,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private TouchEventHook<Item> fastAdapterViewTouchListener = new TouchEventHook<Item>() {
         @Override
         public boolean onTouch(View v, MotionEvent event, int position, FastAdapter<Item> fastAdapter, Item item) {
-            if(mOnTouchListener != null) {
+            if (mOnTouchListener != null) {
                 RelativeInfo<Item> relativeInfo = getRelativeInfo(position);
                 return mOnTouchListener.onTouch(v, event, relativeInfo.adapter, relativeInfo.item, position);
             }
@@ -557,18 +573,21 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if(mVerbose) Log.v(TAG, "onCreateViewHolder: " + viewType);
+        if (mVerbose) Log.v(TAG, "onCreateViewHolder: " + viewType);
 
         final RecyclerView.ViewHolder holder = mOnCreateViewHolderListener.onPreCreateViewHolder(parent, viewType);
 
+        //set the adapter
+        holder.itemView.setTag(R.id.fastadapter_item_adapter, FastAdapter.this);
+
         //handle click behavior
-        clickListenerHelper.attachToView(fastAdapterViewClickListener, holder, holder.itemView);
+        EventHookUtil.attachToView(fastAdapterViewClickListener, holder, holder.itemView);
 
         //handle long click behavior
-        clickListenerHelper.attachToView(fastAdapterViewLongClickListener, holder, holder.itemView);
+        EventHookUtil.attachToView(fastAdapterViewLongClickListener, holder, holder.itemView);
 
         //handle touch behavior
-        clickListenerHelper.attachToView(fastAdapterViewTouchListener, holder, holder.itemView);
+        EventHookUtil.attachToView(fastAdapterViewTouchListener, holder, holder.itemView);
 
         return mOnCreateViewHolderListener.onPostCreateViewHolder(holder);
     }
@@ -584,7 +603,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (mLegacyBindViewMode) {
-            if(mVerbose) Log.v(TAG, "onBindViewHolderLegacy: " + position + "/" + holder.getItemViewType());
+            if (mVerbose)
+                Log.v(TAG, "onBindViewHolderLegacy: " + position + "/" + holder.getItemViewType());
             mOnBindViewHolderListener.onBindViewHolder(holder, position, Collections.EMPTY_LIST);
         }
         //empty implementation we want the users to use the payloads too
@@ -599,7 +619,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
-        if(mVerbose) Log.v(TAG, "onBindViewHolder: " + position + "/" + holder.getItemViewType());
+        if (mVerbose) Log.v(TAG, "onBindViewHolder: " + position + "/" + holder.getItemViewType());
         super.onBindViewHolder(holder, position, payloads);
         mOnBindViewHolderListener.onBindViewHolder(holder, position, payloads);
     }
@@ -611,7 +631,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onViewRecycled(RecyclerView.ViewHolder holder) {
-        if(mVerbose) Log.v(TAG, "onViewRecycled: " + holder.getItemViewType());
+        if (mVerbose) Log.v(TAG, "onViewRecycled: " + holder.getItemViewType());
         super.onViewRecycled(holder);
         mOnBindViewHolderListener.unBindViewHolder(holder, holder.getAdapterPosition());
     }
@@ -623,7 +643,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onViewDetachedFromWindow(RecyclerView.ViewHolder holder) {
-        if(mVerbose) Log.v(TAG, "onViewDetachedFromWindow: " + holder.getItemViewType());
+        if (mVerbose) Log.v(TAG, "onViewDetachedFromWindow: " + holder.getItemViewType());
         super.onViewDetachedFromWindow(holder);
         mOnBindViewHolderListener.onViewDetachedFromWindow(holder, holder.getAdapterPosition());
     }
@@ -635,7 +655,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onViewAttachedToWindow(RecyclerView.ViewHolder holder) {
-        if(mVerbose) Log.v(TAG, "onViewAttachedToWindow: " + holder.getItemViewType());
+        if (mVerbose) Log.v(TAG, "onViewAttachedToWindow: " + holder.getItemViewType());
         super.onViewAttachedToWindow(holder);
         mOnBindViewHolderListener.onViewAttachedToWindow(holder, holder.getAdapterPosition());
     }
@@ -649,19 +669,19 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public boolean onFailedToRecycleView(RecyclerView.ViewHolder holder) {
-        if(mVerbose) Log.v(TAG, "onFailedToRecycleView: " + holder.getItemViewType());
+        if (mVerbose) Log.v(TAG, "onFailedToRecycleView: " + holder.getItemViewType());
         return mOnBindViewHolderListener.onFailedToRecycleView(holder, holder.getAdapterPosition()) || super.onFailedToRecycleView(holder);
     }
 
     @Override
     public void onAttachedToRecyclerView(RecyclerView recyclerView) {
-        if(mVerbose) Log.v(TAG, "onAttachedToRecyclerView");
+        if (mVerbose) Log.v(TAG, "onAttachedToRecyclerView");
         super.onAttachedToRecyclerView(recyclerView);
     }
 
     @Override
     public void onDetachedFromRecyclerView(RecyclerView recyclerView) {
-        if(mVerbose) Log.v(TAG, "onDetachedFromRecyclerView");
+        if (mVerbose) Log.v(TAG, "onDetachedFromRecyclerView");
         super.onDetachedFromRecyclerView(recyclerView);
     }
 
@@ -752,7 +772,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (position < 0 || position >= mGlobalSize) {
             return null;
         }
-        if(mVerbose) Log.v(TAG, "getAdapter");
+        if (mVerbose) Log.v(TAG, "getAdapter");
         //now get the adapter which is responsible for the given position
         return mAdapterSizes.valueAt(floorIndex(mAdapterSizes, position));
     }
@@ -1887,9 +1907,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public RecyclerView.ViewHolder onPostCreateViewHolder(RecyclerView.ViewHolder viewHolder) {
-            if (clickListenerHelper != null) {
-                clickListenerHelper.bind(viewHolder);
-            }
+            EventHookUtil.bind(viewHolder, eventHooks);
             return viewHolder;
         }
     }
@@ -1951,6 +1969,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             IItem item = getItem(position);
             if (item != null) {
                 item.bindView(viewHolder, payloads);
+                //set the R.id.fastadapter_item tag of this item to the item object (can be used when retrieving the view)
+                viewHolder.itemView.setTag(R.id.fastadapter_item, item);
+                //set the R.id.fastadapter_item_adapter tag to the adapter so we always have the proper bound adapter available
+                viewHolder.itemView.setTag(R.id.fastadapter_item_adapter, FastAdapter.this);
             }
         }
 
@@ -1962,9 +1984,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public void unBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-            IItem item = (IItem) viewHolder.itemView.getTag();
+            IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
             if (item != null) {
                 item.unbindView(viewHolder);
+                //remove set tag's
+                viewHolder.itemView.setTag(R.id.fastadapter_item, null);
+                viewHolder.itemView.setTag(R.id.fastadapter_item_adapter, null);
             } else {
                 Log.e("FastAdapter", "The bindView method of this item should set the `Tag` on its itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.java#L189)");
             }
@@ -1978,7 +2003,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public void onViewAttachedToWindow(RecyclerView.ViewHolder viewHolder, int position) {
-            IItem item = (IItem) viewHolder.itemView.getTag();
+            IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
             if (item != null) {
                 try {
                     item.attachToWindow(viewHolder);
@@ -1996,7 +2021,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public void onViewDetachedFromWindow(RecyclerView.ViewHolder viewHolder, int position) {
-            IItem item = (IItem) viewHolder.itemView.getTag();
+            IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
             if (item != null) {
                 item.detachFromWindow(viewHolder);
             }
@@ -2012,7 +2037,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public boolean onFailedToRecycleView(RecyclerView.ViewHolder viewHolder, int position) {
-            IItem item = (IItem) viewHolder.itemView.getTag();
+            IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
             return item != null && item.failedToRecycle(viewHolder);
         }
     }
