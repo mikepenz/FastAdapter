@@ -40,21 +40,21 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-compile('com.mikepenz:fastadapter:2.5.3@aar') {
+compile('com.mikepenz:fastadapter:2.6.0@aar') {
     transitive = true
 }
 ```
 
 The commons package comes with some useful helpers (which are not needed in all cases) This one for example includes the `FastItemAdapter`
 ```gradle
-compile 'com.mikepenz:fastadapter-commons:2.5.3@aar'
+compile 'com.mikepenz:fastadapter-commons:2.6.0@aar'
 ```
 
 All additions are included in the following dependency.
 ```gradle
-compile 'com.mikepenz:fastadapter-extensions:2.5.2@aar'
+compile 'com.mikepenz:fastadapter-extensions:2.6.0@aar'
 //The tiny Materialize library used for its useful helper classes
-compile 'com.mikepenz:materialize:1.0.1@aar'
+compile 'com.mikepenz:materialize:1.0.2@aar'
 ```
 
 > If you upgrade from < 2.5.0 follow the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md)
