@@ -11,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mikepenz.fastadapter.helpers.ClickListenerHelper;
+import com.mikepenz.fastadapter.utils.EventHookUtil;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.mikepenz.fastadapter.listeners.EventHook;
 import com.mikepenz.fastadapter.listeners.LongClickEventHook;
@@ -21,6 +21,7 @@ import com.mikepenz.fastadapter.utils.AdapterUtil;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -71,7 +72,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private boolean mVerbose = false;
 
     // event hooks for the items
-    private ClickListenerHelper<Item> clickListenerHelper;
+    private List<EventHook<Item>> eventHooks = new LinkedList<>();
 
     // the listeners which can be hooked on an item
     private OnClickListener<Item> mOnPreClickListener;
@@ -112,14 +113,17 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * Define a custom ClickListenerHelper
+     * adds a new event hook for an item
+     * NOTE: this has to be called before adding the first items, as this won't be called anymore after the ViewHolders were created
      *
-     * @param clickListenerHelper the ClickListenerHelper
+     * @deprecated please use `withEventHook`
+     *
+     * @param eventHook the event hook to be added for an item
      * @return this
      */
-    public FastAdapter<Item> withClickListenerHelper(ClickListenerHelper<Item> clickListenerHelper) {
-        this.clickListenerHelper = clickListenerHelper;
-        return this;
+    @Deprecated
+    public FastAdapter<Item> withItemEvent(EventHook<Item> eventHook) {
+        return withEventHook(eventHook);
     }
 
     /**
@@ -129,11 +133,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param eventHook the event hook to be added for an item
      * @return this
      */
-    public FastAdapter<Item> withItemEvent(EventHook<Item> eventHook) {
-        if (clickListenerHelper == null) {
-            clickListenerHelper = new ClickListenerHelper<>();
-        }
-        clickListenerHelper.addEventHook(eventHook);
+    public FastAdapter<Item> withEventHook(EventHook<Item> eventHook) {
+        eventHooks.add(eventHook);
         return this;
     }
 
@@ -577,18 +578,14 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         //set the adapter
         holder.itemView.setTag(R.id.fastadapter_item_adapter, FastAdapter.this);
 
-        if (clickListenerHelper == null) {
-            clickListenerHelper = new ClickListenerHelper<>();
-        }
-
         //handle click behavior
-        clickListenerHelper.attachToView(fastAdapterViewClickListener, holder, holder.itemView);
+        EventHookUtil.attachToView(fastAdapterViewClickListener, holder, holder.itemView);
 
         //handle long click behavior
-        clickListenerHelper.attachToView(fastAdapterViewLongClickListener, holder, holder.itemView);
+        EventHookUtil.attachToView(fastAdapterViewLongClickListener, holder, holder.itemView);
 
         //handle touch behavior
-        clickListenerHelper.attachToView(fastAdapterViewTouchListener, holder, holder.itemView);
+        EventHookUtil.attachToView(fastAdapterViewTouchListener, holder, holder.itemView);
 
         return mOnCreateViewHolderListener.onPostCreateViewHolder(holder);
     }
@@ -1908,9 +1905,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public RecyclerView.ViewHolder onPostCreateViewHolder(RecyclerView.ViewHolder viewHolder) {
-            if (clickListenerHelper != null) {
-                clickListenerHelper.bind(viewHolder);
-            }
+            EventHookUtil.bind(viewHolder, eventHooks);
             return viewHolder;
         }
     }

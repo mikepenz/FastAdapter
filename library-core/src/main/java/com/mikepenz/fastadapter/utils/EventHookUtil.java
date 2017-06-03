@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter.helpers;
+package com.mikepenz.fastadapter.utils;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -15,67 +15,18 @@ import com.mikepenz.fastadapter.listeners.LongClickEventHook;
 import com.mikepenz.fastadapter.listeners.TouchEventHook;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 /**
  * Created by mikepenz on 25.01.16.
  */
-public class ClickListenerHelper<Item extends IItem> {
-    //
-    private List<EventHook<Item>> eventHooks = new LinkedList<>();
-
-    /**
-     * ctor
-     */
-    public ClickListenerHelper() {
-    }
-
-    /**
-     * @param eventHooks  the event hooks we want to use for this item
-     */
-    public ClickListenerHelper(List<EventHook<Item>> eventHooks) {
-        this.eventHooks = eventHooks;
-    }
-
-    /**
-     * @return the added event hooks
-     */
-    public List<EventHook<Item>> getEventHooks() {
-        return eventHooks;
-    }
-
-    /**
-     * adds a new list of eventHook
-     * note this will not add new event hooks for existing viewHolders after it was created
-     *
-     * @param eventHooks a new list of eventHook
-     * @return this
-     */
-    public ClickListenerHelper<Item> setEventHooks(List<EventHook<Item>> eventHooks) {
-        this.eventHooks = eventHooks;
-        return this;
-    }
-
-    /**
-     * adds a new eventHook
-     * note this will not add new event hooks for existing viewHolders after it was created
-     *
-     * @param eventHook a new eventHook
-     * @return this
-     */
-    public ClickListenerHelper<Item> addEventHook(EventHook<Item> eventHook) {
-        this.eventHooks.add(eventHook);
-        return this;
-    }
-
-
+public class EventHookUtil {
     /**
      * binds the hooks to the viewHolder
      *
      * @param viewHolder the viewHolder of the item
      */
-    public void bind(@NonNull final RecyclerView.ViewHolder viewHolder) {
+    public static <Item extends IItem> void bind(@NonNull final RecyclerView.ViewHolder viewHolder, @NonNull final List<EventHook<Item>> eventHooks) {
         for (final EventHook<Item> event : eventHooks) {
             View view = event.onBind(viewHolder);
             if (view != null) {
@@ -98,7 +49,7 @@ public class ClickListenerHelper<Item extends IItem> {
      * @param viewHolder the viewHolder containing this view
      * @param view       the view to attach to
      */
-    public void attachToView(final EventHook<Item> event, final RecyclerView.ViewHolder viewHolder, final View view) {
+    public static <Item extends IItem> void attachToView(final EventHook<Item> event, final RecyclerView.ViewHolder viewHolder, final View view) {
         if (event instanceof ClickEventHook) {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -21,6 +21,8 @@ public interface ItemFilterListener<Item> {
 * the `FastAdapter` now directly handles setting the `Tag` with the `Item` and with the `FastAdapter` references. This is no longer necessary inside the `AbstractItem`, or any custom implementation
 * the method `onEvent` inside the `CustomEventHook` was renamed to `attachEvent` as it seems a bit more meaningful
 * the `attachEvent` no longer passes the `FastAdapter` in, please use the provided method `getFastAdapter()` && `getItem()` to get the proper element in your event from the `ViewHolder`
+* the `ClickListenerHelper` was renamed to `EventHookUtil` and moved to the utils package. It is now a util as it no longer needs an instance and has just 3 public static methods.
+* `withItemEvent` is now deprecated in favor of the new naming `withEventHook`
 
 
 #### v2.5.3
