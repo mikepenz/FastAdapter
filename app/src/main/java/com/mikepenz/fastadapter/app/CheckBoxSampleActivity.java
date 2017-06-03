@@ -57,7 +57,7 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
         });
 
         //init the ClickListenerHelper which simplifies custom click listeners on views of the Adapter
-        mClickListenerHelper = new ClickListenerHelper<>(fastItemAdapter);
+        mClickListenerHelper = new ClickListenerHelper<>();
 
         fastItemAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<CheckBoxSampleItem>() {
             @Override

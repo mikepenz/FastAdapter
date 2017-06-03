@@ -43,7 +43,7 @@ public class ImageListActivity extends AppCompatActivity {
         mFastItemAdapter = new FastItemAdapter<>();
 
         //init the ClickListenerHelper which simplifies custom click listeners on views of the Adapter
-        mClickListenerHelper = new ClickListenerHelper<>(mFastItemAdapter);
+        mClickListenerHelper = new ClickListenerHelper<>();
 
         //configure our fastAdapter
         mFastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<ImageItem>() {

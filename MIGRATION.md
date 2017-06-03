@@ -13,6 +13,13 @@ public interface ItemFilterListener<Item> {
 * the `withFilterPredicate` and `withItemFilterListener` are no longer available on the `ItemAdapter`. Use `getItemFilter()` on the adapter to get the `ItemFilter` and call the methods on this one
 * we no longer allow any filter extending `Filter`, you have to extend `ItemFilter` now to provide your custom implementation
 * `ItemFilter`, and `ItemFilterListener` and all related methods are now typed.
+* the `Item` itself is no longer set via the general `Tag` on the `viewHolder.itemView`, but instead you can now retrieve it via:
+```java
+(IItem) viewHolder.itemView.getTag(R.id.fastadapter_item)
+```
+* in addition the `itemView` now gets a tag set which has the reference to the current `FastAdapter`, this is necessary for the `ClickListenerHelper` to correctly retrieve the item, even if we have a shared `RecyclerViewPool`
+* the `FastAdapter` now directly handles setting the `Tag` with the `Item` and with the `FastAdapter` references. This is no longer necessary inside the `AbstractItem`, or any custom implementation
+
 
 #### v2.5.3
 * the `ItemTouchCallback` has a new method `itemTouchDropped` just implement it and keep it empty, if you do not need it.

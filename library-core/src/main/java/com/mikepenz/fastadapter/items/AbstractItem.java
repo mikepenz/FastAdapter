@@ -189,8 +189,6 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
     public void bindView(final VH holder, List<Object> payloads) {
         //set the selected state of this item. force this otherwise it may is missed when implementing an item
         holder.itemView.setSelected(isSelected());
-        //set the tag of this item to this object (can be used when retrieving the view)
-        holder.itemView.setTag(this);
     }
 
     /**

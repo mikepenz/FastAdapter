@@ -98,7 +98,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * default CTOR
      */
     public FastAdapter() {
-        clickListenerHelper = new ClickListenerHelper<>(this);
+        clickListenerHelper = new ClickListenerHelper<>();
         setHasStableIds(true);
     }
 
@@ -1951,6 +1951,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             IItem item = getItem(position);
             if (item != null) {
                 item.bindView(viewHolder, payloads);
+                //set the R.id.fastadapter_item tag of this item to the item object (can be used when retrieving the view)
+                viewHolder.itemView.setTag(R.id.fastadapter_item, item);
+                //set the R.id.fastadapter_item_adapter tag to the adapter so we always have the proper bound adapter available
+                viewHolder.itemView.setTag(R.id.fastadapter_item_adapter, FastAdapter.this);
             }
         }
 
@@ -1962,9 +1966,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public void unBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-            IItem item = (IItem) viewHolder.itemView.getTag();
+            IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
             if (item != null) {
                 item.unbindView(viewHolder);
+                //remove set tag's
+                viewHolder.itemView.setTag(R.id.fastadapter_item, null);
+                viewHolder.itemView.setTag(R.id.fastadapter_item_adapter, null);
             } else {
                 Log.e("FastAdapter", "The bindView method of this item should set the `Tag` on its itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.java#L189)");
             }
@@ -1978,7 +1985,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public void onViewAttachedToWindow(RecyclerView.ViewHolder viewHolder, int position) {
-            IItem item = (IItem) viewHolder.itemView.getTag();
+            IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
             if (item != null) {
                 try {
                     item.attachToWindow(viewHolder);
@@ -1996,7 +2003,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public void onViewDetachedFromWindow(RecyclerView.ViewHolder viewHolder, int position) {
-            IItem item = (IItem) viewHolder.itemView.getTag();
+            IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
             if (item != null) {
                 item.detachFromWindow(viewHolder);
             }
@@ -2012,7 +2019,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
          */
         @Override
         public boolean onFailedToRecycleView(RecyclerView.ViewHolder viewHolder, int position) {
-            IItem item = (IItem) viewHolder.itemView.getTag();
+            IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
             return item != null && item.failedToRecycle(viewHolder);
         }
     }
