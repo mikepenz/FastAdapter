@@ -254,7 +254,7 @@ public class SortActivity extends AppCompatActivity {
     private class AlphabetComparatorAscending implements Comparator<SimpleItem>, Serializable {
         @Override
         public int compare(SimpleItem lhs, SimpleItem rhs) {
-            return lhs.name.getText().compareTo(rhs.name.getText());
+            return lhs.name.getText().toString().compareTo(rhs.name.getText().toString());
         }
     }
 
@@ -264,7 +264,7 @@ public class SortActivity extends AppCompatActivity {
     private class AlphabetComparatorDescending implements Comparator<SimpleItem>, Serializable {
         @Override
         public int compare(SimpleItem lhs, SimpleItem rhs) {
-            return rhs.name.getText().compareTo(lhs.name.getText());
+            return rhs.name.getText().toString().compareTo(lhs.name.getText().toString());
         }
     }
 }

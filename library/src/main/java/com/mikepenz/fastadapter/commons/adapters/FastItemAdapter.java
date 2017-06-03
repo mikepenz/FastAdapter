@@ -1,13 +1,11 @@
 package com.mikepenz.fastadapter.commons.adapters;
 
-import android.widget.Filter;
-
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.adapters.ItemFilter;
 
 import java.util.List;
 
@@ -47,19 +45,8 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
     /**
      * @return the filter used to filter items
      */
-    public Filter getItemFilter() {
+    public ItemFilter<Item> getItemFilter() {
         return mItemAdapter.getItemFilter();
-    }
-
-    /**
-     * define the predicate used to filter the list inside the ItemFilter
-     *
-     * @param filterPredicate the predicate used to filter the list inside the ItemFilter
-     * @return this
-     */
-    public FastItemAdapter<Item> withFilterPredicate(IItemAdapter.Predicate<Item> filterPredicate) {
-        this.mItemAdapter.withFilterPredicate(filterPredicate);
-        return this;
     }
 
     /**
@@ -147,9 +134,23 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
      * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
      *
      * @param items the new items to set
+     * @return this
      */
     public FastItemAdapter<Item> setNewList(List<Item> items) {
         mItemAdapter.setNewList(items);
+        return this;
+    }
+
+
+    /**
+     * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
+     *
+     * @param items        the new items to set
+     * @param retainFilter set to true if you want to keep the filter applied
+     * @return this
+     */
+    public FastItemAdapter<Item> setNewList(List<Item> items, boolean retainFilter) {
+        mItemAdapter.setNewList(items, retainFilter);
         return this;
     }
 

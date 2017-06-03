@@ -3,6 +3,7 @@ package com.mikepenz.fastadapter.app;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,10 +21,10 @@ import android.widget.Toast;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.adapters.ItemAdapter.ItemFilterListener;
 import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.listeners.ItemFilterListener;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
 import com.mikepenz.fastadapter_extensions.utilities.DragDropUtil;
@@ -32,11 +33,10 @@ import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class SimpleItemListActivity extends AppCompatActivity implements ItemTouchCallback, ItemFilterListener {
+public class SimpleItemListActivity extends AppCompatActivity implements ItemTouchCallback, ItemFilterListener<SimpleItem> {
     private static final String[] ALPHABET = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     //save our FastAdapter
@@ -77,16 +77,16 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         });
 
         //configure the itemAdapter
-        fastItemAdapter.withFilterPredicate(new IItemAdapter.Predicate<SimpleItem>() {
+        fastItemAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<SimpleItem>() {
             @Override
             public boolean filter(SimpleItem item, CharSequence constraint) {
                 //return true if we should filter it out
                 //return false to keep it
-                return !item.name.getText().toLowerCase().contains(constraint.toString().toLowerCase());
+                return !item.name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
             }
         });
 
-        fastItemAdapter.getItemAdapter().withItemFilterListener(this);
+        fastItemAdapter.getItemFilter().withItemFilterListener(this);
 
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
@@ -192,7 +192,12 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
     }
 
     @Override
-    public void itemsFiltered() {
+    public void itemsFiltered(@Nullable CharSequence constraint, @Nullable List<SimpleItem> results) {
         Toast.makeText(SimpleItemListActivity.this, "filtered items count: " + fastItemAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onReset() {
+
     }
 }

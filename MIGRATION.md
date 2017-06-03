@@ -1,4 +1,29 @@
-###Upgrade Notes
+### Upgrade Notes
+
+#### v2.6.0
+* the `ItemFilter` was moved to it's own class
+* the `ItemFilterListener` was moved to it's own class
+  * in addition the interface was adjusted to provide more flexibility
+```java
+public interface ItemFilterListener<Item> {
+    void itemsFiltered(@Nullable CharSequence constraint, @Nullable List<Item> results);
+    void onReset();
+}
+```
+* the `withFilterPredicate` and `withItemFilterListener` are no longer available on the `ItemAdapter`. Use `getItemFilter()` on the adapter to get the `ItemFilter` and call the methods on this one
+* we no longer allow any filter extending `Filter`, you have to extend `ItemFilter` now to provide your custom implementation
+* `ItemFilter`, and `ItemFilterListener` and all related methods are now typed.
+* the `Item` itself is no longer set via the general `Tag` on the `viewHolder.itemView`, but instead you can now retrieve it via:
+```java
+(IItem) viewHolder.itemView.getTag(R.id.fastadapter_item)
+```
+* in addition the `itemView` now gets a tag set which has the reference to the current `FastAdapter`, this is necessary for the `ClickListenerHelper` to correctly retrieve the item, even if we have a shared `RecyclerViewPool`
+* the `FastAdapter` now directly handles setting the `Tag` with the `Item` and with the `FastAdapter` references. This is no longer necessary inside the `AbstractItem`, or any custom implementation
+* the method `onEvent` inside the `CustomEventHook` was renamed to `attachEvent` as it seems a bit more meaningful
+* the `attachEvent` no longer passes the `FastAdapter` in, please use the provided method `getFastAdapter()` && `getItem()` to get the proper element in your event from the `ViewHolder`
+* the `ClickListenerHelper` was renamed to `EventHookUtil` and moved to the utils package. It is now a util as it no longer needs an instance and has just 3 public static methods.
+* `withItemEvent` is now deprecated in favor of the new naming `withEventHook`
+
 
 #### v2.5.3
 * the `ItemTouchCallback` has a new method `itemTouchDropped` just implement it and keep it empty, if you do not need it.

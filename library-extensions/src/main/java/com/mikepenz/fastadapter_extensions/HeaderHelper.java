@@ -61,7 +61,7 @@ public class HeaderHelper<Item, HeaderItem> {
                 HeaderItem headerItem;
                 if (i == -1) {
                     headerItem = groupingFunction.group(null, (Item) items.get(i + 1), i);
-                } else if (i == items.size() - 1) {
+                } else if (i == size - 1) {
                     headerItem = groupingFunction.group((Item) items.get(i), null, i);
                 } else {
                     headerItem = groupingFunction.group((Item) items.get(i), (Item) items.get(i + 1), i);
@@ -70,6 +70,7 @@ public class HeaderHelper<Item, HeaderItem> {
                 if (headerItem != null) {
                     items.add(i + 1, headerItem);
                     i = i + 1;
+                    size = size + 1;
                 }
             }
         }

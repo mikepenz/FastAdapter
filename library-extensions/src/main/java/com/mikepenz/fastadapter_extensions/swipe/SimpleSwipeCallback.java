@@ -5,14 +5,13 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.support.annotation.ColorInt;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
-import android.view.animation.TranslateAnimation;
 
 import com.mikepenz.fastadapter.ISwipeable;
+import com.mikepenz.library_extensions.R;
 
 
 /**
@@ -90,8 +89,8 @@ public class SimpleSwipeCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        if (viewHolder != null && viewHolder.itemView.getTag() instanceof ISwipeable) {
-            if (((ISwipeable) viewHolder.itemView.getTag()).isSwipeable()) {
+        if (viewHolder != null && viewHolder.itemView.getTag(R.id.fastadapter_item) instanceof ISwipeable) {
+            if (((ISwipeable) viewHolder.itemView.getTag(R.id.fastadapter_item)).isSwipeable()) {
                 return super.getSwipeDirs(recyclerView, viewHolder);
             } else {
                 return 0;
