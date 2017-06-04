@@ -548,7 +548,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
                 // handle our extensions
                 for (IAdapterExtension<Item> ext : mExtensions) {
-                    consumed = !consumed && ext.onClick(v, pos, fastAdapter, item);
+                    if (!consumed) {
+                        consumed = ext.onClick(v, pos, fastAdapter, item);
+                    } else {
+                        break;
+                    }
                 }
 
                 //before calling the global adapter onClick listener call the item specific onClickListener
@@ -580,7 +584,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
                 // handle our extensions
                 for (IAdapterExtension<Item> ext : mExtensions) {
-                    consumed = !consumed && ext.onLongClick(v, pos, fastAdapter, item);
+                    if (!consumed) {
+                        consumed = ext.onLongClick(v, pos, fastAdapter, item);
+                    } else {
+                        break;
+                    }
                 }
 
                 //call the normal long click listener after selection was handled
@@ -601,7 +609,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             boolean consumed = false;
             // handle our extensions
             for (IAdapterExtension<Item> ext : mExtensions) {
-                consumed = !consumed && ext.onTouch(v, event, position, fastAdapter, item);
+                if (!consumed) {
+                    consumed = ext.onTouch(v, event, position, fastAdapter, item);
+                } else {
+                    break;
+                }
             }
             if (mOnTouchListener != null) {
                 IAdapter<Item> adapter = getAdapter(position);
