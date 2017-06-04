@@ -2,7 +2,6 @@ package com.mikepenz.fastadapter;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.util.ArraySet;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
@@ -21,12 +20,14 @@ import com.mikepenz.fastadapter.listeners.OnCreateViewHolderListenerImpl;
 import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 import com.mikepenz.fastadapter.listeners.OnTouchListener;
 import com.mikepenz.fastadapter.listeners.TouchEventHook;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter.utils.AdapterUtil;
 import com.mikepenz.fastadapter.utils.EventHookUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -40,11 +41,7 @@ import static com.mikepenz.fastadapter.adapters.ItemAdapter.items;
 public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "FastAdapter";
 
-    protected static final String BUNDLE_SELECTIONS = "bundle_selections";
-
     // we remember all adapters
-    //
-    final private ArrayList<IAdapterExtension<Item>> mExtensions = new ArrayList<>();
     //priority queue...
     final private ArrayList<IAdapter<Item>> mAdapters = new ArrayList<>();
     // we remember all possible types so we can create a new view efficiently
@@ -54,31 +51,20 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     // the total size
     private int mGlobalSize = 0;
 
-    // if enabled we will select the item via a notifyItemChanged -> will animate with the Animator
-    // you can also use this if you have any custom logic for selections, and do not depend on the "selected" state of the view
-    // note if enabled it will feel a bit slower because it will animate the selection
-    private boolean mSelectWithItemUpdate = false;
-    // if we want multiSelect enabled
-    private boolean mMultiSelect = false;
-    // if we want the multiSelect only on longClick
-    private boolean mSelectOnLongClick = false;
-    // if a user can deselect a selection via click. required if there is always one selected item!
-    private boolean mAllowDeselection = true;
-    // if items are selectable in general
-    private boolean mSelectable = false;
+    // event hooks for the items
+    private List<EventHook<Item>> eventHooks;
+    // the extensions we support
+    final private Set<IAdapterExtension<Item>> mExtensions = new HashSet<>();
+
+    //
+    private SelectExtension<Item> mSelectExtension = new SelectExtension<>();
     // if we use the positionBasedStateManagement or the "stateless" management
     private boolean mPositionBasedStateManagement = true;
     // legacy bindView mode. if activated we will forward onBindView without paylodas to the method with payloads
     private boolean mLegacyBindViewMode = false;
 
-    // we need to remember all selections to recreate them after orientation change
-    public Set<Integer> mSelections = new ArraySet<>();
-
     // verbose
     private boolean mVerbose = false;
-
-    // event hooks for the items
-    private List<EventHook<Item>> eventHooks;
 
     // the listeners which can be hooked on an item
     private OnClickListener<Item> mOnPreClickListener;
@@ -86,8 +72,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private OnLongClickListener<Item> mOnPreLongClickListener;
     private OnLongClickListener<Item> mOnLongClickListener;
     private OnTouchListener<Item> mOnTouchListener;
-
-    private ISelectionListener<Item> mSelectionListener;
 
     //the listeners for onCreateViewHolder or onBindViewHolder
     private OnCreateViewHolderListener mOnCreateViewHolderListener = new OnCreateViewHolderListenerImpl();
@@ -106,6 +90,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public FastAdapter() {
         setHasStableIds(true);
+        addExtension(mSelectExtension);
     }
 
     /**
@@ -215,7 +200,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * @return the AdapterExtensions we provided
      */
-    public ArrayList<IAdapterExtension<Item>> getExtensions() {
+    public Set<IAdapterExtension<Item>> getExtensions() {
         return mExtensions;
     }
 
@@ -281,6 +266,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public FastAdapter<Item> withOnClickListener(OnClickListener<Item> onClickListener) {
         this.mOnClickListener = onClickListener;
         return this;
+    }
+
+    /**
+     * @return the set OnClickListener
+     */
+    public OnClickListener<Item> getOnClickListener() {
+        return mOnClickListener;
     }
 
     /**
@@ -359,7 +351,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return this
      */
     public FastAdapter<Item> withSelectWithItemUpdate(boolean selectWithItemUpdate) {
-        this.mSelectWithItemUpdate = selectWithItemUpdate;
+        mSelectExtension.withSelectWithItemUpdate(selectWithItemUpdate);
         return this;
     }
 
@@ -370,7 +362,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return this
      */
     public FastAdapter<Item> withMultiSelect(boolean multiSelect) {
-        mMultiSelect = multiSelect;
+        mSelectExtension.withMultiSelect(multiSelect);
         return this;
     }
 
@@ -381,7 +373,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return this
      */
     public FastAdapter<Item> withSelectOnLongClick(boolean selectOnLongClick) {
-        mSelectOnLongClick = selectOnLongClick;
+        mSelectExtension.withSelectOnLongClick(selectOnLongClick);
         return this;
     }
 
@@ -392,7 +384,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return this
      */
     public FastAdapter<Item> withAllowDeselection(boolean allowDeselection) {
-        this.mAllowDeselection = allowDeselection;
+        mSelectExtension.withAllowDeselection(allowDeselection);
         return this;
     }
 
@@ -403,7 +395,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return this
      */
     public FastAdapter<Item> withSelectable(boolean selectable) {
-        this.mSelectable = selectable;
+        if (selectable) {
+            mExtensions.add(mSelectExtension);
+        } else {
+            mExtensions.remove(mSelectExtension);
+        }
+        //TODO revisit this --> false means anyways that it is not in the extension list!
+        mSelectExtension.withSelectable(selectable);
         return this;
     }
 
@@ -438,7 +436,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return this
      */
     public FastAdapter<Item> withSelectionListener(ISelectionListener<Item> selectionListener) {
-        this.mSelectionListener = selectionListener;
+        mSelectExtension.withSelectionListener(selectionListener);
         return this;
     }
 
@@ -446,7 +444,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return if items are selectable
      */
     public boolean isSelectable() {
-        return mSelectable;
+        return mSelectExtension.isSelectable();
     }
 
     /**
@@ -482,36 +480,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public FastAdapter<Item> withSavedInstanceState(@Nullable Bundle savedInstanceState, String prefix) {
         for (IAdapterExtension<Item> ext : mExtensions) {
             ext.withSavedInstanceState(savedInstanceState, prefix);
-        }
-
-        if (savedInstanceState != null) {
-            //make sure already done selections are removed
-            deselect();
-
-            if (mPositionBasedStateManagement) {
-                //restore the selections
-                int[] selections = savedInstanceState.getIntArray(BUNDLE_SELECTIONS + prefix);
-                if (selections != null) {
-                    for (Integer selection : selections) {
-                        select(selection);
-                    }
-                }
-            } else {
-                ArrayList<String> selectedItems = savedInstanceState.getStringArrayList(BUNDLE_SELECTIONS + prefix);
-
-                Item item;
-                String id;
-                for (int i = 0, size = getItemCount(); i < size; i++) {
-                    item = getItem(i);
-                    id = String.valueOf(item.getIdentifier());
-                    if (selectedItems != null && selectedItems.contains(id)) {
-                        select(i);
-                    }
-
-                    //we also have to restore the selections for subItems
-                    AdapterUtil.restoreSubItemSelectionStatesForAlternativeStateManagement(item, selectedItems);
-                }
-            }
         }
         return this;
     }
@@ -578,12 +546,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                     consumed = mOnPreClickListener.onClick(v, adapter, item, pos);
                 }
 
-                //handle the selection if the event was not yet consumed, and we are allowed to select an item (only occurs when we select with long click only)
-                //this has to happen before expand or collapse. otherwise the position is wrong which is used to select
-                if (!consumed && !mSelectOnLongClick && mSelectable) {
-                    handleSelection(v, item, pos);
-                }
-
                 // handle our extensions
                 for (IAdapterExtension<Item> ext : mExtensions) {
                     consumed = !consumed && ext.onClick(v, pos, fastAdapter, item);
@@ -619,11 +581,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 // handle our extensions
                 for (IAdapterExtension<Item> ext : mExtensions) {
                     consumed = !consumed && ext.onLongClick(v, pos, fastAdapter, item);
-                }
-
-                //now handle the selection if we are in multiSelect mode and allow selecting on longClick
-                if (!consumed && mSelectOnLongClick && mSelectable) {
-                    handleSelection(v, item, pos);
                 }
 
                 //call the normal long click listener after selection was handled
@@ -977,33 +934,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         for (IAdapterExtension<Item> ext : mExtensions) {
             ext.saveInstanceState(savedInstanceState, prefix);
         }
-        if (savedInstanceState != null) {
-            if (mPositionBasedStateManagement) {
-                //remember the selections
-                int[] selections = new int[mSelections.size()];
-                int index = 0;
-                for (Integer selection : mSelections) {
-                    selections[index] = selection;
-                    index++;
-                }
-                savedInstanceState.putIntArray(BUNDLE_SELECTIONS + prefix, selections);
-            } else {
-                ArrayList<String> selections = new ArrayList<>();
-
-                Item item;
-                for (int i = 0, size = getItemCount(); i < size; i++) {
-                    item = getItem(i);
-                    if (item.isSelected()) {
-                        selections.add(String.valueOf(item.getIdentifier()));
-                    }
-                    //we also have to find all selections in the sub hirachies
-                    AdapterUtil.findSubItemSelections(item, selections);
-                }
-
-                //remember the selections
-                savedInstanceState.putStringArrayList(BUNDLE_SELECTIONS + prefix, selections);
-            }
-        }
         return savedInstanceState;
     }
 
@@ -1039,19 +969,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return a set with the global positions of all selected items
      */
     public Set<Integer> getSelections() {
-        if (mPositionBasedStateManagement) {
-            return mSelections;
-        } else {
-            Set<Integer> selections = new ArraySet<>();
-            Item item;
-            for (int i = 0, size = getItemCount(); i < size; i++) {
-                item = getItem(i);
-                if (item.isSelected()) {
-                    selections.add(i);
-                }
-            }
-            return selections;
-        }
+        return mSelectExtension.getSelections();
     }
 
 
@@ -1059,12 +977,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return a set with the items which are currently selected
      */
     public Set<Item> getSelectedItems() {
-        Set<Integer> selections = getSelections();
-        Set<Item> items = new ArraySet<>(selections.size());
-        for (Integer position : selections) {
-            items.add(getItem(position));
-        }
-        return items;
+        return mSelectExtension.getSelectedItems();
     }
 
     /**
@@ -1073,95 +986,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      */
     public void toggleSelection(int position) {
-        if (mPositionBasedStateManagement) {
-            if (mSelections.contains(position)) {
-                deselect(position);
-            } else {
-                select(position);
-            }
-        } else {
-            if (getItem(position).isSelected()) {
-                deselect(position);
-            } else {
-                select(position);
-            }
-        }
-    }
-
-    /**
-     * handles the selection and deselects item if multiSelect is disabled
-     *
-     * @param position the global position
-     */
-    private void handleSelection(View view, Item item, int position) {
-        //if this item is not selectable don't continue
-        if (!item.isSelectable()) {
-            return;
-        }
-
-        //if we have disabled deselection via click don't continue
-        if (item.isSelected() && !mAllowDeselection) {
-            return;
-        }
-
-        boolean selected = false;
-        if (mPositionBasedStateManagement) {
-            selected = mSelections.contains(position);
-        } else {
-            selected = item.isSelected();
-        }
-
-        if (mSelectWithItemUpdate || view == null) {
-            if (!mMultiSelect) {
-                deselect();
-            }
-            if (selected) {
-                deselect(position);
-            } else {
-                select(position);
-            }
-        } else {
-            if (!mMultiSelect) {
-                //we have to separately handle deselection here because if we toggle the current item we do not want to deselect this first!
-
-                if (mPositionBasedStateManagement) {
-                    Iterator<Integer> entries = mSelections.iterator();
-                    while (entries.hasNext()) {
-                        //deselect all but the current one! this is important!
-                        Integer pos = entries.next();
-                        if (pos != position) {
-                            deselect(pos, entries);
-                        }
-                    }
-                } else {
-                    Set<Integer> selections = getSelections();
-                    for (int pos : selections) {
-                        if (pos != position) {
-                            deselect(pos);
-                        }
-                    }
-                }
-            }
-
-            //we toggle the state of the view
-            item.withSetSelected(!selected);
-            view.setSelected(!selected);
-
-            //now we make sure we remember the selection!
-            if (mPositionBasedStateManagement) {
-                if (selected) {
-                    if (mSelections.contains(position)) {
-                        mSelections.remove(position);
-                    }
-                } else {
-                    mSelections.add(position);
-                }
-            }
-
-            //notify that the selection changed
-            if (mSelectionListener != null)
-                mSelectionListener.onSelectionChanged(item, !selected);
-        }
+        mSelectExtension.toggleSelection(position);
     }
 
     /**
@@ -1170,9 +995,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param positions the global positions to select
      */
     public void select(Iterable<Integer> positions) {
-        for (Integer position : positions) {
-            select(position);
-        }
+        mSelectExtension.select(positions);
     }
 
     /**
@@ -1181,7 +1004,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      */
     public void select(int position) {
-        select(position, false);
+        mSelectExtension.select(position, false, false);
     }
 
     /**
@@ -1191,7 +1014,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param fireEvent true if the onClick listener should be called
      */
     public void select(int position, boolean fireEvent) {
-        select(position, fireEvent, false);
+        mSelectExtension.select(position, fireEvent, false);
     }
 
     /**
@@ -1202,55 +1025,21 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
     public void select(int position, boolean fireEvent, boolean considerSelectableFlag) {
-        Item item = getItem(position);
-
-        if (item == null) {
-            return;
-        }
-        if (considerSelectableFlag && !item.isSelectable()) {
-            return;
-        }
-
-        item.withSetSelected(true);
-
-        if (mPositionBasedStateManagement) {
-            mSelections.add(position);
-        }
-
-        notifyItemChanged(position);
-
-        if (mSelectionListener != null)
-            mSelectionListener.onSelectionChanged(item, true);
-
-        if (mOnClickListener != null && fireEvent) {
-            mOnClickListener.onClick(null, getAdapter(position), item, position);
-        }
+        mSelectExtension.select(position, fireEvent, considerSelectableFlag);
     }
 
     /**
      * deselects all selections
      */
     public void deselect() {
-        if (mPositionBasedStateManagement) {
-            deselect(mSelections);
-        } else {
-            for (Item item : AdapterUtil.getAllItems(this)) {
-                if (item.isSelected()) {
-                    item.withSetSelected(false);
-                    if (mSelectionListener != null) {
-                        mSelectionListener.onSelectionChanged(item, false);
-                    }
-                }
-            }
-            notifyDataSetChanged();
-        }
+        mSelectExtension.deselect();
     }
 
     /**
      * select all items
      */
     public void select() {
-        select(false);
+        mSelectExtension.select(false);
     }
 
     /**
@@ -1259,23 +1048,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
     public void select(boolean considerSelectableFlag) {
-        if (mPositionBasedStateManagement) {
-            for (int i = 0, size = getItemCount(); i < size; i++) {
-                select(i, false, considerSelectableFlag);
-            }
-        } else {
-            for (Item item : AdapterUtil.getAllItems(this)) {
-                if (considerSelectableFlag && !item.isSelectable()) {
-                    continue;
-                }
-                item.withSetSelected(true);
-
-                if (mSelectionListener != null) {
-                    mSelectionListener.onSelectionChanged(item, true);
-                }
-            }
-            notifyDataSetChanged();
-        }
+        mSelectExtension.select(considerSelectableFlag);
     }
 
     /**
@@ -1284,10 +1057,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param positions the global positions to deselect
      */
     public void deselect(Iterable<Integer> positions) {
-        Iterator<Integer> entries = positions.iterator();
-        while (entries.hasNext()) {
-            deselect(entries.next(), entries);
-        }
+        mSelectExtension.deselect(positions);
     }
 
     /**
@@ -1296,7 +1066,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      */
     public void deselect(int position) {
-        deselect(position, null);
+        mSelectExtension.deselect(position, null);
     }
 
     /**
@@ -1307,22 +1077,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param entries  the iterator which is used to deselect all
      */
     public void deselect(int position, Iterator<Integer> entries) {
-        Item item = getItem(position);
-        if (item != null) {
-            item.withSetSelected(false);
-        }
-        if (entries == null) {
-            if (mPositionBasedStateManagement) {
-                mSelections.remove(position);
-            }
-        } else {
-            entries.remove();
-        }
-        notifyItemChanged(position);
-
-        if (mSelectionListener != null) {
-            mSelectionListener.onSelectionChanged(item, false);
-        }
+        mSelectExtension.deselect(position, entries);
     }
 
     /**
@@ -1331,34 +1086,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return a list of the IItem elements which were deleted
      */
     public List<Item> deleteAllSelectedItems() {
-        List<Item> deletedItems = new ArrayList<>();
-        //we have to re-fetch the selections array again and again as the position will change after one item is deleted
-
-        if (mPositionBasedStateManagement) {
-            Set<Integer> selections = getSelections();
-            while (selections.size() > 0) {
-                Iterator<Integer> iterator = selections.iterator();
-                int position = iterator.next();
-                IAdapter adapter = getAdapter(position);
-                if (adapter != null && adapter instanceof IItemAdapter) {
-                    deletedItems.add(getItem(position));
-                    ((IItemAdapter) adapter).remove(position);
-                } else {
-                    iterator.remove();
-                }
-                selections = getSelections();
-            }
-        } else {
-            for (int i = getItemCount() - 1; i >= 0; i--) {
-                RelativeInfo<Item> ri = getRelativeInfo(i);
-                if (ri.item.isSelected()) {
-                    if (ri.adapter != null && ri.adapter instanceof IItemAdapter) {
-                        ((IItemAdapter) ri.adapter).remove(i);
-                    }
-                }
-            }
-        }
-        return deletedItems;
+        return mSelectExtension.deleteAllSelectedItems();
     }
 
     //-------------------------
@@ -1374,9 +1102,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         // handle our extensions
         for (IAdapterExtension<Item> ext : mExtensions) {
             ext.notifyAdapterDataSetChanged();
-        }
-        if (mPositionBasedStateManagement) {
-            mSelections.clear();
         }
         cacheSizes();
         notifyDataSetChanged();
@@ -1407,18 +1132,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         for (IAdapterExtension<Item> ext : mExtensions) {
             ext.notifyAdapterItemRangeInserted(position, itemCount);
         }
-        //we have to update all current stored selection and expandable states in our map
-        if (mPositionBasedStateManagement) {
-            mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount);
-        }
         cacheSizes();
-
         notifyItemRangeInserted(position, itemCount);
-
-        if (mPositionBasedStateManagement) {
-            //we make sure the new items are displayed properly
-            AdapterUtil.handleStates(this, position, position + itemCount - 1);
-        }
     }
 
     /**
@@ -1441,10 +1156,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         for (IAdapterExtension<Item> ext : mExtensions) {
             ext.notifyAdapterItemRangeRemoved(position, itemCount);
         }
-        //we have to update all current stored selection and expandable states in our map
-        if (mPositionBasedStateManagement) {
-            mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount * (-1));
-        }
 
         cacheSizes();
         notifyItemRangeRemoved(position, itemCount);
@@ -1461,16 +1172,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         for (IAdapterExtension<Item> ext : mExtensions) {
             ext.notifyAdapterItemMoved(fromPosition, toPosition);
         }
-        if (mPositionBasedStateManagement) {
-            if (!mSelections.contains(fromPosition) && mSelections.contains(toPosition)) {
-                mSelections.remove(toPosition);
-                mSelections.add(fromPosition);
-            } else if (mSelections.contains(fromPosition) && !mSelections.contains(toPosition)) {
-                mSelections.remove(fromPosition);
-                mSelections.add(toPosition);
-            }
-        }
-
         notifyItemMoved(fromPosition, toPosition);
     }
 
@@ -1519,11 +1220,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             notifyItemRangeChanged(position, itemCount);
         } else {
             notifyItemRangeChanged(position, itemCount, payload);
-        }
-
-        if (mPositionBasedStateManagement) {
-            //we make sure the new items are displayed properly
-            AdapterUtil.handleStates(this, position, position + itemCount - 1);
         }
     }
 

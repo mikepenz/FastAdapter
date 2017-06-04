@@ -411,9 +411,8 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
                         }
                     }
 
-                    //TODO make extensions accessible
                     //we will deselect starting with the lowest one
-                    Iterator<Integer> selectionsIterator = mFastAdapter.mSelections.iterator();
+                    Iterator<Integer> selectionsIterator = mFastAdapter.getSelections().iterator();
                     while (selectionsIterator.hasNext()) {
                         Integer value = selectionsIterator.next();
                         if (value > position && value <= position + totalAddedItems) {
