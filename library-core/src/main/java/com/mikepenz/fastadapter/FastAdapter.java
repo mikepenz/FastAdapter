@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.ArraySet;
 import android.support.v7.widget.RecyclerView;
@@ -15,6 +14,13 @@ import android.view.ViewGroup;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.mikepenz.fastadapter.listeners.EventHook;
 import com.mikepenz.fastadapter.listeners.LongClickEventHook;
+import com.mikepenz.fastadapter.listeners.OnBindViewHolderListener;
+import com.mikepenz.fastadapter.listeners.OnBindViewHolderListenerImpl;
+import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.listeners.OnCreateViewHolderListener;
+import com.mikepenz.fastadapter.listeners.OnCreateViewHolderListenerImpl;
+import com.mikepenz.fastadapter.listeners.OnLongClickListener;
+import com.mikepenz.fastadapter.listeners.OnTouchListener;
 import com.mikepenz.fastadapter.listeners.TouchEventHook;
 import com.mikepenz.fastadapter.utils.AdapterUtil;
 import com.mikepenz.fastadapter.utils.EventHookUtil;
@@ -193,6 +199,14 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     @Deprecated
     public FastAdapter<Item> withItemEvent(EventHook<Item> eventHook) {
         return withEventHook(eventHook);
+    }
+
+    /**
+     *
+     * @return the eventHooks handled by this FastAdapter
+     */
+    public List<EventHook<Item>> getEventHooks() {
+        return eventHooks;
     }
 
     /**
@@ -655,7 +669,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         if (mVerbose) Log.v(TAG, "onCreateViewHolder: " + viewType);
 
-        final RecyclerView.ViewHolder holder = mOnCreateViewHolderListener.onPreCreateViewHolder(parent, viewType);
+        final RecyclerView.ViewHolder holder = mOnCreateViewHolderListener.onPreCreateViewHolder(this, parent, viewType);
 
         //set the adapter
         holder.itemView.setTag(R.id.fastadapter_item_adapter, FastAdapter.this);
@@ -669,7 +683,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         //handle touch behavior
         EventHookUtil.attachToView(fastAdapterViewTouchListener, holder, holder.itemView);
 
-        return mOnCreateViewHolderListener.onPostCreateViewHolder(holder);
+        return mOnCreateViewHolderListener.onPostCreateViewHolder(this, holder);
     }
 
     /**
@@ -684,14 +698,13 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (mLegacyBindViewMode) {
             if (mVerbose) {
-                Log.v(TAG, "onBindViewHolderLegacy: " + position + "/" + holder.getItemViewType());
+            if (mVerbose) Log.v(TAG, "onBindViewHolderLegacy: " + position + "/" + holder.getItemViewType() + " isLegacy: true");
             }
             //set the R.id.fastadapter_item_adapter tag to the adapter so we always have the proper bound adapter available
             holder.itemView.setTag(R.id.fastadapter_item_adapter, this);
-            //now use our bindViewHolderListener to bind the viewHolder
+            //now we bind the item to this viewHolder
             mOnBindViewHolderListener.onBindViewHolder(holder, position, Collections.EMPTY_LIST);
         }
-        //empty implementation we want the users to use the payloads too
     }
 
     /**
@@ -703,12 +716,15 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
-        if (mVerbose) Log.v(TAG, "onBindViewHolder: " + position + "/" + holder.getItemViewType());
+        //we do not want the binding to happen twice (the legacyBindViewMode
+        if(!mLegacyBindViewMode) {
+            if (mVerbose) Log.v(TAG, "onBindViewHolder: " + position + "/" + holder.getItemViewType() + " isLegacy: false");
+            //set the R.id.fastadapter_item_adapter tag to the adapter so we always have the proper bound adapter available
+            holder.itemView.setTag(R.id.fastadapter_item_adapter, this);
+            //now we bind the item to this viewHolder
+            mOnBindViewHolderListener.onBindViewHolder(holder, position, payloads);
+        }
         super.onBindViewHolder(holder, position, payloads);
-        //set the R.id.fastadapter_item_adapter tag to the adapter so we always have the proper bound adapter available
-        holder.itemView.setTag(R.id.fastadapter_item_adapter, this);
-        //now use our bindViewHolderListener to bind the viewHolder
-        mOnBindViewHolderListener.onBindViewHolder(holder, position, payloads);
     }
 
     /**
@@ -1626,7 +1642,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public void expand(boolean notifyItemChanged) {
         int length = getItemCount();
         for (int i = length - 1; i >= 0; i--) {
-            expand(i);
+            expand(i, notifyItemChanged);
         }
     }
 
@@ -1902,224 +1918,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             return expandable.getSubItems().size();
         }
         return 0;
-    }
-
-    //listeners
-    public interface OnTouchListener<Item extends IItem> {
-        /**
-         * the onTouch event of a specific item inside the RecyclerView
-         *
-         * @param v        the view we clicked
-         * @param event    the touch event
-         * @param adapter  the adapter which is responsible for the given item
-         * @param item     the IItem which was clicked
-         * @param position the global position
-         * @return return true if the event was consumed, otherwise false
-         */
-        boolean onTouch(View v, MotionEvent event, IAdapter<Item> adapter, Item item, int position);
-    }
-
-    public interface OnClickListener<Item extends IItem> {
-        /**
-         * the onClick event of a specific item inside the RecyclerView
-         *
-         * @param v        the view we clicked
-         * @param adapter  the adapter which is responsible for the given item
-         * @param item     the IItem which was clicked
-         * @param position the global position
-         * @return return true if the event was consumed, otherwise false
-         */
-        boolean onClick(View v, IAdapter<Item> adapter, Item item, int position);
-    }
-
-    public interface OnLongClickListener<Item extends IItem> {
-        /**
-         * the onLongClick event of a specific item inside the RecyclerView
-         *
-         * @param v        the view we clicked
-         * @param adapter  the adapter which is responsible for the given item
-         * @param item     the IItem which was clicked
-         * @param position the global position
-         * @return return true if the event was consumed, otherwise false
-         */
-        boolean onLongClick(View v, IAdapter<Item> adapter, Item item, int position);
-    }
-
-    public interface OnCreateViewHolderListener {
-        /**
-         * is called inside the onCreateViewHolder method and creates the viewHolder based on the provided viewTyp
-         *
-         * @param parent   the parent which will host the View
-         * @param viewType the type of the ViewHolder we want to create
-         * @return the generated ViewHolder based on the given viewType
-         */
-        RecyclerView.ViewHolder onPreCreateViewHolder(ViewGroup parent, int viewType);
-
-        /**
-         * is called after the viewHolder was created and the default listeners were added
-         *
-         * @param viewHolder the created viewHolder after all listeners were set
-         * @return the viewHolder given as param
-         */
-        RecyclerView.ViewHolder onPostCreateViewHolder(RecyclerView.ViewHolder viewHolder);
-    }
-
-    /**
-     * default implementation of the OnCreateViewHolderListener
-     */
-    public class OnCreateViewHolderListenerImpl implements OnCreateViewHolderListener {
-        /**
-         * is called inside the onCreateViewHolder method and creates the viewHolder based on the provided viewTyp
-         *
-         * @param parent   the parent which will host the View
-         * @param viewType the type of the ViewHolder we want to create
-         * @return the generated ViewHolder based on the given viewType
-         */
-        @Override
-        public RecyclerView.ViewHolder onPreCreateViewHolder(ViewGroup parent, int viewType) {
-            return getTypeInstance(viewType).getViewHolder(parent);
-        }
-
-        /**
-         * is called after the viewHolder was created and the default listeners were added
-         *
-         * @param viewHolder the created viewHolder after all listeners were set
-         * @return the viewHolder given as param
-         */
-        @Override
-        public RecyclerView.ViewHolder onPostCreateViewHolder(RecyclerView.ViewHolder viewHolder) {
-            EventHookUtil.bind(viewHolder, eventHooks);
-            return viewHolder;
-        }
-    }
-
-    public interface OnBindViewHolderListener {
-        /**
-         * is called in onBindViewHolder to bind the data on the ViewHolder
-         *
-         * @param viewHolder the viewHolder for the type at this position
-         * @param position   the position of this viewHolder
-         * @param payloads   the payloads provided by the adapter
-         */
-        void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List<Object> payloads);
-
-        /**
-         * is called in onViewRecycled to unbind the data on the ViewHolder
-         *
-         * @param viewHolder the viewHolder for the type at this position
-         * @param position   the position of this viewHolder
-         */
-        void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position);
-
-        /**
-         * is called in onViewAttachedToWindow when the view is detached from the window
-         *
-         * @param viewHolder the viewHolder for the type at this position
-         * @param position   the position of this viewHolder
-         */
-        void onViewAttachedToWindow(RecyclerView.ViewHolder viewHolder, int position);
-
-        /**
-         * is called in onViewDetachedFromWindow when the view is detached from the window
-         *
-         * @param viewHolder the viewHolder for the type at this position
-         * @param position   the position of this viewHolder
-         */
-        void onViewDetachedFromWindow(RecyclerView.ViewHolder viewHolder, int position);
-
-        /**
-         * is called when the ViewHolder is in a transient state. return true if you want to reuse
-         * that view anyways
-         *
-         * @param viewHolder the viewHolder for the view which failed to recycle
-         * @return true if we want to recycle anyways (false - it get's destroyed)
-         */
-        boolean onFailedToRecycleView(RecyclerView.ViewHolder viewHolder, int position);
-    }
-
-    public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
-        /**
-         * is called in onBindViewHolder to bind the data on the ViewHolder
-         *
-         * @param viewHolder the viewHolder for the type at this position
-         * @param position   the position of this viewHolder
-         * @param payloads   the payloads provided by the adapter
-         */
-        @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List<Object> payloads) {
-            IItem item = getItem(position);
-            if (item != null) {
-                //set the R.id.fastadapter_item tag of this item to the item object (can be used when retrieving the view)
-                viewHolder.itemView.setTag(R.id.fastadapter_item, item);
-                //bind the viewholder itself
-                item.bindView(viewHolder, payloads);
-            }
-        }
-
-        /**
-         * is called in onViewRecycled to unbind the data on the ViewHolder
-         *
-         * @param viewHolder the viewHolder for the type at this position
-         * @param position   the position of this viewHolder
-         */
-        @Override
-        public void unBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int position) {
-            IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
-            if (item != null) {
-                item.unbindView(viewHolder);
-                //remove set tag's
-                viewHolder.itemView.setTag(R.id.fastadapter_item, null);
-                viewHolder.itemView.setTag(R.id.fastadapter_item_adapter, null);
-            } else {
-                Log.e("FastAdapter", "The bindView method of this item should set the `Tag` on its itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.java#L189)");
-            }
-        }
-
-        /**
-         * is called in onViewAttachedToWindow when the view is detached from the window
-         *
-         * @param viewHolder the viewHolder for the type at this position
-         * @param position   the position of this viewHolder
-         */
-        @Override
-        public void onViewAttachedToWindow(RecyclerView.ViewHolder viewHolder, int position) {
-            IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
-            if (item != null) {
-                try {
-                    item.attachToWindow(viewHolder);
-                } catch (AbstractMethodError e) {
-                    Log.e("WTF", e.toString());
-                }
-            }
-        }
-
-        /**
-         * is called in onViewDetachedFromWindow when the view is detached from the window
-         *
-         * @param viewHolder the viewHolder for the type at this position
-         * @param position   the position of this viewHolder
-         */
-        @Override
-        public void onViewDetachedFromWindow(RecyclerView.ViewHolder viewHolder, int position) {
-            IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
-            if (item != null) {
-                item.detachFromWindow(viewHolder);
-            }
-        }
-
-        /**
-         * is called when the ViewHolder is in a transient state. return true if you want to reuse
-         * that view anyways
-         *
-         * @param viewHolder the viewHolder for the view which failed to recycle
-         * @param position   the position of this viewHolder
-         * @return true if we want to recycle anyways (false - it get's destroyed)
-         */
-        @Override
-        public boolean onFailedToRecycleView(RecyclerView.ViewHolder viewHolder, int position) {
-            IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
-            return item != null && item.failedToRecycle(viewHolder);
-        }
     }
 
     /**
