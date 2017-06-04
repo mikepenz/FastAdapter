@@ -90,7 +90,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public FastAdapter() {
         setHasStableIds(true);
-        addExtension(mSelectExtension);
     }
 
     /**
