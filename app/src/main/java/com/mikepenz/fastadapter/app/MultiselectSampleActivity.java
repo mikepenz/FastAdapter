@@ -18,6 +18,8 @@ import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.ISelectionListener;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
+import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.fastadapter_extensions.UndoHelper;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
@@ -81,7 +83,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
                 Log.i("FastAdapter", "SelectedCount: " + mFastAdapter.getSelections().size() + " ItemsCount: " + mFastAdapter.getSelectedItems().size());
             }
         });
-        mFastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<SimpleItem>() {
+        mFastAdapter.withOnPreClickListener(new OnClickListener<SimpleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<SimpleItem> adapter, SimpleItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
@@ -89,14 +91,14 @@ public class MultiselectSampleActivity extends AppCompatActivity {
                 return res != null ? res : false;
             }
         });
-        mFastAdapter.withOnClickListener(new FastAdapter.OnClickListener<SimpleItem>() {
+        mFastAdapter.withOnClickListener(new OnClickListener<SimpleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<SimpleItem> adapter, SimpleItem item, int position) {
                 Toast.makeText(v.getContext(), "SelectedCount: " + mFastAdapter.getSelections().size() + " ItemsCount: " + mFastAdapter.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
-        mFastAdapter.withOnPreLongClickListener(new FastAdapter.OnLongClickListener<SimpleItem>() {
+        mFastAdapter.withOnPreLongClickListener(new OnLongClickListener<SimpleItem>() {
             @Override
             public boolean onLongClick(View v, IAdapter<SimpleItem> adapter, SimpleItem item, int position) {
                 ActionMode actionMode = mActionModeHelper.onLongClick(MultiselectSampleActivity.this, position);

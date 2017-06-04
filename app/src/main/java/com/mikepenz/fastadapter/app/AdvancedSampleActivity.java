@@ -21,6 +21,8 @@ import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
+import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -84,7 +86,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withSelectOnLongClick(true);
         mFastAdapter.withPositionBasedStateManagement(false);
-        mFastAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<IItem>() {
+        mFastAdapter.withOnPreClickListener(new OnClickListener<IItem>() {
             @Override
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
@@ -93,7 +95,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
             }
         });
 
-        mFastAdapter.withOnPreLongClickListener(new FastAdapter.OnLongClickListener<IItem>() {
+        mFastAdapter.withOnPreLongClickListener(new OnLongClickListener<IItem>() {
             @Override
             public boolean onLongClick(View v, IAdapter adapter, IItem item, int position) {
                 //we do not want expandable items to be selected

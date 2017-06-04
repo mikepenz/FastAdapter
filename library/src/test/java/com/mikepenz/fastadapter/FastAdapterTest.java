@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.listeners.OnBindViewHolderListener;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -184,7 +185,7 @@ public class FastAdapterTest {
 
     @Test
     public void withBindViewHolderListener_OnBindViewHolder_Callback() throws Exception {
-        FastAdapter.OnBindViewHolderListener listener = mock(FastAdapter.OnBindViewHolderListener.class);
+        OnBindViewHolderListener listener = mock(OnBindViewHolderListener.class);
         RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(mock(View.class)) {};
         adapter.withOnBindViewHolderListener(listener);
 

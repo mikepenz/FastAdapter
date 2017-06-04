@@ -8,9 +8,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IClickable;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.listeners.OnClickListener;
 
 import java.util.Collections;
 import java.util.List;
@@ -133,7 +133,7 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
     }
 
     //this listener is called before any processing is done within the fastAdapter (comes before the FastAdapter item pre click listener)
-    protected FastAdapter.OnClickListener<Item> mOnItemPreClickListener;
+    protected OnClickListener<Item> mOnItemPreClickListener;
 
     /**
      * provide a listener which is called before any processing is done within the adapter
@@ -143,7 +143,7 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
      * @return this
      */
     @Override
-    public Item withOnItemPreClickListener(FastAdapter.OnClickListener<Item> onItemPreClickListener) {
+    public Item withOnItemPreClickListener(OnClickListener<Item> onItemPreClickListener) {
         mOnItemPreClickListener = onItemPreClickListener;
         return (Item) this;
     }
@@ -151,12 +151,12 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
     /**
      * @return the on PRE item click listener
      */
-    public FastAdapter.OnClickListener<Item> getOnPreItemClickListener() {
+    public OnClickListener<Item> getOnPreItemClickListener() {
         return mOnItemPreClickListener;
     }
 
     //listener called after the operations were done on click (comes before the FastAdapter item click listener)
-    protected FastAdapter.OnClickListener<Item> mOnItemClickListener;
+    protected OnClickListener<Item> mOnItemClickListener;
 
     /**
      * provide a listener which is called before the click listener is called within the adapter
@@ -166,7 +166,7 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
      * @return this
      */
     @Override
-    public Item withOnItemClickListener(FastAdapter.OnClickListener<Item> onItemClickListener) {
+    public Item withOnItemClickListener(OnClickListener<Item> onItemClickListener) {
         mOnItemClickListener = onItemClickListener;
         return (Item) this;
     }
@@ -174,7 +174,7 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
     /**
      * @return the OnItemClickListener
      */
-    public FastAdapter.OnClickListener<Item> getOnItemClickListener() {
+    public OnClickListener<Item> getOnItemClickListener() {
         return mOnItemClickListener;
     }
 

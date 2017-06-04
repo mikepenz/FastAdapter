@@ -11,7 +11,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
@@ -20,6 +19,7 @@ import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
 import com.mikepenz.fastadapter.app.helpers.CustomStickyRecyclerHeadersDecoration;
 import com.mikepenz.fastadapter.app.items.LetterItem;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
+import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
 import com.mopub.nativeads.ViewBinder;
@@ -34,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by Gagan on 5/3/2017.
  */
 
-public class StickyHeaderMopubAdsActivity extends AppCompatActivity implements FastAdapter.OnClickListener<LetterItem> {
+public class StickyHeaderMopubAdsActivity extends AppCompatActivity implements OnClickListener<LetterItem> {
 
     private MopubFastItemAdapter<IItem> mAdapter;
     private static final String[] headers = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};

@@ -14,13 +14,14 @@ import android.widget.Toast;
 
 import com.michaelflisar.dragselectrecyclerview.DragSelectTouchListener;
 import com.mikepenz.aboutlibraries.util.UIUtils;
-import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISelectionListener;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.HeaderSelectionItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.fastadapter_extensions.RangeSelectorHelper;
 import com.mikepenz.fastadapter_extensions.utilities.SubItemUtil;
@@ -67,7 +68,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                 .withSelectable(true)
                 .withMultiSelect(true)
                 .withSelectOnLongClick(true)
-                .withOnPreClickListener(new FastAdapter.OnClickListener<IItem>() {
+                .withOnPreClickListener(new OnClickListener<IItem>() {
                     @Override
                     public boolean onClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
                         //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
@@ -79,7 +80,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                         return res != null ? res : false;
                     }
                 })
-                .withOnClickListener(new FastAdapter.OnClickListener<IItem>() {
+                .withOnClickListener(new OnClickListener<IItem>() {
                     @Override
                     public boolean onClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
                         // check if the actionMode consumes the click. This returns true, if it does, false if not
@@ -91,7 +92,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                         return false;
                     }
                 })
-                .withOnPreLongClickListener(new FastAdapter.OnLongClickListener<IItem>() {
+                .withOnPreLongClickListener(new OnLongClickListener<IItem>() {
                     @Override
                     public boolean onLongClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
                         boolean actionModeWasActive = mActionModeHelper.isActive();

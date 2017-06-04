@@ -9,7 +9,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
@@ -17,6 +16,7 @@ import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.commons.items.AbstractExpandableItem;
 import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
+import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialize.util.UIUtils;
 
@@ -34,7 +34,7 @@ public class SimpleSubExpandableItem<Parent extends IItem & IExpandable, SubItem
     public StringHolder name;
     public StringHolder description;
 
-    private FastAdapter.OnClickListener<SimpleSubExpandableItem> mOnClickListener;
+    private OnClickListener<SimpleSubExpandableItem> mOnClickListener;
 
     public SimpleSubExpandableItem<Parent, SubItem> withHeader(String header) {
         this.header = header;
@@ -61,17 +61,17 @@ public class SimpleSubExpandableItem<Parent extends IItem & IExpandable, SubItem
         return this;
     }
 
-    public FastAdapter.OnClickListener<SimpleSubExpandableItem> getOnClickListener() {
+    public OnClickListener<SimpleSubExpandableItem> getOnClickListener() {
         return mOnClickListener;
     }
 
-    public SimpleSubExpandableItem<Parent, SubItem> withOnClickListener(FastAdapter.OnClickListener<SimpleSubExpandableItem> mOnClickListener) {
+    public SimpleSubExpandableItem<Parent, SubItem> withOnClickListener(OnClickListener<SimpleSubExpandableItem> mOnClickListener) {
         this.mOnClickListener = mOnClickListener;
         return this;
     }
 
     //we define a clickListener in here so we can directly animate
-    final private FastAdapter.OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> onClickListener = new FastAdapter.OnClickListener<SimpleSubExpandableItem<Parent, SubItem>>() {
+    final private OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> onClickListener = new OnClickListener<SimpleSubExpandableItem<Parent, SubItem>>() {
         @Override
         public boolean onClick(View v, IAdapter adapter, SimpleSubExpandableItem item, int position) {
             if (item.getSubItems() != null) {
@@ -92,7 +92,7 @@ public class SimpleSubExpandableItem<Parent extends IItem & IExpandable, SubItem
      * @return
      */
     @Override
-    public FastAdapter.OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> getOnItemClickListener() {
+    public OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> getOnItemClickListener() {
         return onClickListener;
     }
 
