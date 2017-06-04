@@ -57,6 +57,7 @@ public class FastAdapterTest {
 
     @Test
     public void select() throws Exception {
+        adapter.withSelectable(true);
         itemAdapter.set(TestDataGenerator.genTestItemList(100));
 
         assertThat(adapter.getSelectedItems().size()).isEqualTo(0);

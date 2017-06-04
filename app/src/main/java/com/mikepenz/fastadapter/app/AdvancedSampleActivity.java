@@ -91,7 +91,6 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         mFastAdapter.withSelectable(true);
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withSelectOnLongClick(true);
-        mFastAdapter.withPositionBasedStateManagement(false);
         mFastAdapter.withOnPreClickListener(new OnClickListener<IItem>() {
             @Override
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {

@@ -21,7 +21,6 @@ import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 import com.mikepenz.fastadapter.listeners.OnTouchListener;
 import com.mikepenz.fastadapter.listeners.TouchEventHook;
 import com.mikepenz.fastadapter.select.SelectExtension;
-import com.mikepenz.fastadapter.utils.AdapterUtil;
 import com.mikepenz.fastadapter.utils.EventHookUtil;
 
 import java.util.ArrayList;
@@ -58,8 +57,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     //
     private SelectExtension<Item> mSelectExtension = new SelectExtension<>();
-    // if we use the positionBasedStateManagement or the "stateless" management
-    private boolean mPositionBasedStateManagement = true;
     // legacy bindView mode. if activated we will forward onBindView without paylodas to the method with payloads
     private boolean mLegacyBindViewMode = false;
 
@@ -395,7 +392,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public FastAdapter<Item> withSelectable(boolean selectable) {
         if (selectable) {
-            mExtensions.add(mSelectExtension);
+            addExtension(mSelectExtension);
         } else {
             mExtensions.remove(mSelectExtension);
         }
@@ -403,19 +400,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         mSelectExtension.withSelectable(selectable);
         return this;
     }
-
-    /**
-     * set if we want to use the positionBasedStateManagement (high performant for lists up to Integer.MAX_INT)
-     * set to false if you want to use the new stateManagement which will come with more flexibility (but worse performance on long lists)
-     *
-     * @param mPositionBasedStateManagement false to enable the alternative "stateLess" stateManagement
-     * @return this
-     */
-    public FastAdapter<Item> withPositionBasedStateManagement(boolean mPositionBasedStateManagement) {
-        this.mPositionBasedStateManagement = mPositionBasedStateManagement;
-        return this;
-    }
-
 
     /**
      * set to true if you want the FastAdapter to forward all calls from onBindViewHolder(final RecyclerView.ViewHolder holder, int position) to onBindViewHolder(final RecyclerView.ViewHolder holder, int position, List payloads)
@@ -444,13 +428,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public boolean isSelectable() {
         return mSelectExtension.isSelectable();
-    }
-
-    /**
-     * @return if this FastAdapter is configured with the PositionBasedStateManagement
-     */
-    public boolean isPositionBasedStateManagement() {
-        return mPositionBasedStateManagement;
     }
 
     /**
@@ -1116,11 +1093,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         }
         cacheSizes();
         notifyDataSetChanged();
-
-        if (mPositionBasedStateManagement) {
-            //we make sure the new items are displayed properly
-            AdapterUtil.handleStates(this, 0, getItemCount() - 1);
-        }
     }
 
     /**

@@ -64,10 +64,7 @@ public class ItemFilter<Item extends IItem> extends Filter {
             return results;
         }
 
-        //we can not filter on expanded or selected items, because the remembered positions will change
-        if (mItemAdapter.getFastAdapter().isPositionBasedStateManagement()) {
-            mItemAdapter.getFastAdapter().deselect();
-        }
+        //call extensions
         for (IAdapterExtension<Item> ext : mItemAdapter.getFastAdapter().getExtensions()) {
             ext.performFiltering(constraint);
         }

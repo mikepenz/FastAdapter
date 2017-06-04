@@ -72,7 +72,6 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         //create our FastAdapter which will manage everything
         fastAdapter = FastAdapter.with(Arrays.asList(itemAdapter));
         fastAdapter.withSelectable(true);
-        fastAdapter.withPositionBasedStateManagement(false);
 
         //configure our fastAdapter
         fastAdapter.withOnClickListener(new OnClickListener<SimpleItem>() {

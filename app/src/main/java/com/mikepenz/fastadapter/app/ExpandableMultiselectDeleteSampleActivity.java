@@ -68,7 +68,6 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
 
         fastItemAdapter
                 .addExtension(mExpandableExtension)
-                .withPositionBasedStateManagement(false)
                 .withSelectable(true)
                 .withMultiSelect(true)
                 .withSelectOnLongClick(true)

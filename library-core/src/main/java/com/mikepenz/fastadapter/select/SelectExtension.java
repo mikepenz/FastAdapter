@@ -7,7 +7,6 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
@@ -28,8 +27,6 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
 
     //
     private FastAdapter<Item> mFastAdapter;
-    // we need to remember all selections to recreate them after orientation change
-    public Set<Integer> mSelections = new ArraySet<>();
     // if enabled we will select the item via a notifyItemChanged -> will animate with the Animator
     // you can also use this if you have any custom logic for selections, and do not depend on the "selected" state of the view
     // note if enabled it will feel a bit slower because it will animate the selection
@@ -137,29 +134,18 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
         //make sure already done selections are removed
         deselect();
 
-        if (mFastAdapter.isPositionBasedStateManagement()) {
-            //restore the selections
-            int[] selections = savedInstanceState.getIntArray(BUNDLE_SELECTIONS + prefix);
-            if (selections != null) {
-                for (Integer selection : selections) {
-                    select(selection);
-                }
+        ArrayList<String> selectedItems = savedInstanceState.getStringArrayList(BUNDLE_SELECTIONS + prefix);
+        Item item;
+        String id;
+        for (int i = 0, size = mFastAdapter.getItemCount(); i < size; i++) {
+            item = mFastAdapter.getItem(i);
+            id = String.valueOf(item.getIdentifier());
+            if (selectedItems != null && selectedItems.contains(id)) {
+                mFastAdapter.select(i);
             }
-        } else {
-            ArrayList<String> selectedItems = savedInstanceState.getStringArrayList(BUNDLE_SELECTIONS + prefix);
 
-            Item item;
-            String id;
-            for (int i = 0, size = mFastAdapter.getItemCount(); i < size; i++) {
-                item = mFastAdapter.getItem(i);
-                id = String.valueOf(item.getIdentifier());
-                if (selectedItems != null && selectedItems.contains(id)) {
-                    mFastAdapter.select(i);
-                }
-
-                //we also have to restore the selections for subItems
-                AdapterUtil.restoreSubItemSelectionStatesForAlternativeStateManagement(item, selectedItems);
-            }
+            //we also have to restore the selections for subItems
+            AdapterUtil.restoreSubItemSelectionStatesForAlternativeStateManagement(item, selectedItems);
         }
     }
 
@@ -168,31 +154,20 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
         if (savedInstanceState == null) {
             return;
         }
-        if (mFastAdapter.isPositionBasedStateManagement()) {
-            //remember the selections
-            int[] selections = new int[mSelections.size()];
-            int index = 0;
-            for (Integer selection : mSelections) {
-                selections[index] = selection;
-                index++;
-            }
-            savedInstanceState.putIntArray(BUNDLE_SELECTIONS + prefix, selections);
-        } else {
-            ArrayList<String> selections = new ArrayList<>();
+        ArrayList<String> selections = new ArrayList<>();
 
-            Item item;
-            for (int i = 0, size = mFastAdapter.getItemCount(); i < size; i++) {
-                item = mFastAdapter.getItem(i);
-                if (item.isSelected()) {
-                    selections.add(String.valueOf(item.getIdentifier()));
-                }
-                //we also have to find all selections in the sub hirachies
-                AdapterUtil.findSubItemSelections(item, selections);
+        Item item;
+        for (int i = 0, size = mFastAdapter.getItemCount(); i < size; i++) {
+            item = mFastAdapter.getItem(i);
+            if (item.isSelected()) {
+                selections.add(String.valueOf(item.getIdentifier()));
             }
-
-            //remember the selections
-            savedInstanceState.putStringArrayList(BUNDLE_SELECTIONS + prefix, selections);
+            //we also have to find all selections in the sub hirachies
+            AdapterUtil.findSubItemSelections(item, selections);
         }
+
+        //remember the selections
+        savedInstanceState.putStringArrayList(BUNDLE_SELECTIONS + prefix, selections);
     }
 
     @Override
@@ -221,48 +196,22 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
 
     @Override
     public void notifyAdapterDataSetChanged() {
-        if (mFastAdapter.isPositionBasedStateManagement()) {
-            mSelections.clear();
-        }
     }
 
     @Override
     public void notifyAdapterItemRangeInserted(int position, int itemCount) {
-        //we have to update all current stored selection and expandable states in our map
-        if (mFastAdapter.isPositionBasedStateManagement()) {
-            mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount);
-            //we make sure the new items are displayed properly
-            AdapterUtil.handleStates(mFastAdapter, position, position + itemCount - 1);
-        }
     }
 
     @Override
     public void notifyAdapterItemRangeRemoved(int position, int itemCount) {
-        //we have to update all current stored selection and expandable states in our map
-        if (mFastAdapter.isPositionBasedStateManagement()) {
-            mSelections = AdapterUtil.adjustPosition(mSelections, position, Integer.MAX_VALUE, itemCount * (-1));
-        }
     }
 
     @Override
     public void notifyAdapterItemMoved(int fromPosition, int toPosition) {
-        if (mFastAdapter.isPositionBasedStateManagement()) {
-            if (!mSelections.contains(fromPosition) && mSelections.contains(toPosition)) {
-                mSelections.remove(toPosition);
-                mSelections.add(fromPosition);
-            } else if (mSelections.contains(fromPosition) && !mSelections.contains(toPosition)) {
-                mSelections.remove(fromPosition);
-                mSelections.add(toPosition);
-            }
-        }
     }
 
     @Override
     public void notifyAdapterItemRangeChanged(int position, int itemCount, Object payload) {
-        if (mFastAdapter.isPositionBasedStateManagement()) {
-            //we make sure the new items are displayed properly
-            AdapterUtil.handleStates(mFastAdapter, position, position + itemCount - 1);
-        }
     }
 
     @Override
@@ -285,19 +234,13 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * @return a set with the global positions of all selected items
      */
     public Set<Integer> getSelections() {
-        if (mFastAdapter.isPositionBasedStateManagement()) {
-            return mSelections;
-        } else {
-            Set<Integer> selections = new ArraySet<>();
-            Item item;
-            for (int i = 0, size = mFastAdapter.getItemCount(); i < size; i++) {
-                item = mFastAdapter.getItem(i);
-                if (item.isSelected()) {
-                    selections.add(i);
-                }
+        Set<Integer> selections = new ArraySet<>();
+        for (int i = 0, size = mFastAdapter.getItemCount(); i < size; i++) {
+            if (mFastAdapter.getItem(i).isSelected()) {
+                selections.add(i);
             }
-            return selections;
         }
+        return selections;
     }
 
 
@@ -305,10 +248,12 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * @return a set with the items which are currently selected
      */
     public Set<Item> getSelectedItems() {
-        Set<Integer> selections = getSelections();
-        Set<Item> items = new ArraySet<>(selections.size());
-        for (Integer position : selections) {
-            items.add(mFastAdapter.getItem(position));
+        Set<Item> items = new ArraySet<>();
+        for (int i = 0, size = mFastAdapter.getItemCount(); i < size; i++) {
+            Item item = mFastAdapter.getItem(i);
+            if (item.isSelected()) {
+                items.add(item);
+            }
         }
         return items;
     }
@@ -319,18 +264,10 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * @param position the global position
      */
     public void toggleSelection(int position) {
-        if (mFastAdapter.isPositionBasedStateManagement()) {
-            if (mSelections.contains(position)) {
-                deselect(position);
-            } else {
-                select(position);
-            }
+        if (mFastAdapter.getItem(position).isSelected()) {
+            deselect(position);
         } else {
-            if (mFastAdapter.getItem(position).isSelected()) {
-                deselect(position);
-            } else {
-                select(position);
-            }
+            select(position);
         }
     }
 
@@ -350,12 +287,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
             return;
         }
 
-        boolean selected = false;
-        if (mFastAdapter.isPositionBasedStateManagement()) {
-            selected = mSelections.contains(position);
-        } else {
-            selected = item.isSelected();
-        }
+        boolean selected = item.isSelected();
 
         if (mSelectWithItemUpdate || view == null) {
             if (!mMultiSelect) {
@@ -369,22 +301,10 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
         } else {
             if (!mMultiSelect) {
                 //we have to separately handle deselection here because if we toggle the current item we do not want to deselect this first!
-
-                if (mFastAdapter.isPositionBasedStateManagement()) {
-                    Iterator<Integer> entries = mSelections.iterator();
-                    while (entries.hasNext()) {
-                        //deselect all but the current one! this is important!
-                        Integer pos = entries.next();
-                        if (pos != position) {
-                            deselect(pos, entries);
-                        }
-                    }
-                } else {
-                    Set<Integer> selections = getSelections();
-                    for (int pos : selections) {
-                        if (pos != position) {
-                            deselect(pos);
-                        }
+                Set<Integer> selections = getSelections();
+                for (int pos : selections) {
+                    if (pos != position) {
+                        deselect(pos);
                     }
                 }
             }
@@ -392,17 +312,6 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
             //we toggle the state of the view
             item.withSetSelected(!selected);
             view.setSelected(!selected);
-
-            //now we make sure we remember the selection!
-            if (mFastAdapter.isPositionBasedStateManagement()) {
-                if (selected) {
-                    if (mSelections.contains(position)) {
-                        mSelections.remove(position);
-                    }
-                } else {
-                    mSelections.add(position);
-                }
-            }
 
             //notify that the selection changed
             if (mSelectionListener != null)
@@ -459,10 +368,6 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
 
         item.withSetSelected(true);
 
-        if (mFastAdapter.isPositionBasedStateManagement()) {
-            mSelections.add(position);
-        }
-
         mFastAdapter.notifyItemChanged(position);
 
         if (mSelectionListener != null)
@@ -477,19 +382,15 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * deselects all selections
      */
     public void deselect() {
-        if (mFastAdapter.isPositionBasedStateManagement()) {
-            deselect(mSelections);
-        } else {
-            for (Item item : AdapterUtil.getAllItems(mFastAdapter)) {
-                if (item.isSelected()) {
-                    item.withSetSelected(false);
-                    if (mSelectionListener != null) {
-                        mSelectionListener.onSelectionChanged(item, false);
-                    }
+        for (Item item : AdapterUtil.getAllItems(mFastAdapter)) {
+            if (item.isSelected()) {
+                item.withSetSelected(false);
+                if (mSelectionListener != null) {
+                    mSelectionListener.onSelectionChanged(item, false);
                 }
             }
-            mFastAdapter.notifyDataSetChanged();
         }
+        mFastAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -505,23 +406,17 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
     public void select(boolean considerSelectableFlag) {
-        if (mFastAdapter.isPositionBasedStateManagement()) {
-            for (int i = 0, size = mFastAdapter.getItemCount(); i < size; i++) {
-                select(i, false, considerSelectableFlag);
+        for (Item item : AdapterUtil.getAllItems(mFastAdapter)) {
+            if (considerSelectableFlag && !item.isSelectable()) {
+                continue;
             }
-        } else {
-            for (Item item : AdapterUtil.getAllItems(mFastAdapter)) {
-                if (considerSelectableFlag && !item.isSelectable()) {
-                    continue;
-                }
-                item.withSetSelected(true);
+            item.withSetSelected(true);
 
-                if (mSelectionListener != null) {
-                    mSelectionListener.onSelectionChanged(item, true);
-                }
+            if (mSelectionListener != null) {
+                mSelectionListener.onSelectionChanged(item, true);
             }
-            mFastAdapter.notifyDataSetChanged();
         }
+        mFastAdapter.notifyDataSetChanged();
     }
 
     /**
@@ -557,11 +452,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
         if (item != null) {
             item.withSetSelected(false);
         }
-        if (entries == null) {
-            if (mFastAdapter.isPositionBasedStateManagement()) {
-                mSelections.remove(position);
-            }
-        } else {
+        if (entries != null) {
             entries.remove();
         }
         mFastAdapter.notifyItemChanged(position);
@@ -579,28 +470,11 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     public List<Item> deleteAllSelectedItems() {
         List<Item> deletedItems = new ArrayList<>();
         //we have to re-fetch the selections array again and again as the position will change after one item is deleted
-
-        if (mFastAdapter.isPositionBasedStateManagement()) {
-            Set<Integer> selections = getSelections();
-            while (selections.size() > 0) {
-                Iterator<Integer> iterator = selections.iterator();
-                int position = iterator.next();
-                IAdapter adapter = mFastAdapter.getAdapter(position);
-                if (adapter != null && adapter instanceof IItemAdapter) {
-                    deletedItems.add(mFastAdapter.getItem(position));
-                    ((IItemAdapter) adapter).remove(position);
-                } else {
-                    iterator.remove();
-                }
-                selections = getSelections();
-            }
-        } else {
-            for (int i = mFastAdapter.getItemCount() - 1; i >= 0; i--) {
-                FastAdapter.RelativeInfo<Item> ri = mFastAdapter.getRelativeInfo(i);
-                if (ri.item.isSelected()) {
-                    if (ri.adapter != null && ri.adapter instanceof IItemAdapter) {
-                        ((IItemAdapter) ri.adapter).remove(i);
-                    }
+        for (int i = mFastAdapter.getItemCount() - 1; i >= 0; i--) {
+            FastAdapter.RelativeInfo<Item> ri = mFastAdapter.getRelativeInfo(i);
+            if (ri.item.isSelected()) {
+                if (ri.adapter != null && ri.adapter instanceof IItemAdapter) {
+                    ((IItemAdapter) ri.adapter).remove(i);
                 }
             }
         }
