@@ -223,7 +223,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         }
 
         //reset the filter
-        if (resetFilter && getItemFilter() != null && getItemFilter().getConstraint() != null) {
+        if (resetFilter && getItemFilter().getConstraint() != null) {
             getItemFilter().performFiltering(null);
         }
 
@@ -296,7 +296,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
 
         //reset the filter
         CharSequence filter = null;
-        if (getItemFilter() != null && getItemFilter().getConstraint() != null) {
+        if (getItemFilter().getConstraint() != null) {
             filter = getItemFilter().getConstraint();
             getItemFilter().performFiltering(null);
         }
