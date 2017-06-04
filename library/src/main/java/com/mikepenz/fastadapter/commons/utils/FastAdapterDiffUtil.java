@@ -21,9 +21,6 @@ public class FastAdapterDiffUtil {
             IdDistributor.checkIds(items);
         }
 
-        //first collapse all items
-        adapter.getFastAdapter().collapse(false);
-
         //if we have a comparator then sort
         if (adapter.getComparator() != null) {
             Collections.sort(items, adapter.getComparator());

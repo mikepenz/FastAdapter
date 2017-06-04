@@ -32,11 +32,6 @@ public class AdapterUtil {
                 } else if (fastAdapter.getSelections().contains(i)) {
                     fastAdapter.getSelections().remove(i);
                 }
-                if (updateItem instanceof IExpandable) {
-                    if (((IExpandable) updateItem).isExpanded() && fastAdapter.getExpanded().indexOfKey(i) < 0) {
-                        fastAdapter.expand(i);
-                    }
-                }
             }
         }
     }
@@ -66,7 +61,7 @@ public class AdapterUtil {
                 //if we removed items and we are within the bounds we have to check if the item was removed
                 //adjustBy is negative in this case
                 if (position > startPosition + adjustBy && position <= startPosition) {
-                    ;//we are within the removed items range we don't add this item anymore
+                    //we are within the removed items range we don't add this item anymore
                 } else {
                     //otherwise we adjust our position
                     newPositions.add(position + adjustBy);
@@ -102,7 +97,7 @@ public class AdapterUtil {
                 //if we removed items and we are within the bounds we have to check if the item was removed
                 //adjustBy is negative in this case
                 if (position > startPosition + adjustBy && position <= startPosition) {
-                    ;//we are within the removed items range we don't add this item anymore
+                    //we are within the removed items range we don't add this item anymore
                 } else {
                     //otherwise we adjust our position
                     newPositions.put(position + adjustBy, positions.valueAt(i));

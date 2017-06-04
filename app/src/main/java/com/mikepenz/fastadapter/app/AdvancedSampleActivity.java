@@ -14,6 +14,7 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
@@ -21,6 +22,7 @@ import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
+import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
@@ -48,6 +50,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     private FastAdapter<IItem> mFastAdapter;
     private ItemAdapter<SimpleItem> mHeaderAdapter;
     private ItemAdapter<IItem> mItemAdapter;
+    private ExpandableExtension<IItem> mExpandableExtension;
 
     private ActionModeHelper mActionModeHelper;
 
@@ -73,12 +76,15 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         mItemAdapter = items();
         StickyHeaderAdapter<IItem> stickyHeaderAdapter = new StickyHeaderAdapter<>();
 
+        //we also want the expandable feature
+        mExpandableExtension = new ExpandableExtension<>();
+
         //create our FastAdapter
-        mFastAdapter = FastAdapter.with(Arrays.asList(mHeaderAdapter, mItemAdapter));
+        mFastAdapter = FastAdapter.with(Arrays.asList(mHeaderAdapter, mItemAdapter), Arrays.<IAdapterExtension<IItem>>asList(mExpandableExtension));
 
         //we init our ActionModeHelper
         mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
-        mActionModeHelper.withSupportSubItems(true);
+        mActionModeHelper.withSupportSubItems(mExpandableExtension);
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things

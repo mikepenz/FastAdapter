@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.adapters;
 
 import android.widget.Filter;
 
+import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.listeners.ItemFilterListener;
@@ -67,7 +68,9 @@ public class ItemFilter<Item extends IItem> extends Filter {
         if (mItemAdapter.getFastAdapter().isPositionBasedStateManagement()) {
             mItemAdapter.getFastAdapter().deselect();
         }
-        mItemAdapter.getFastAdapter().collapse(false);
+        for (IAdapterExtension<Item> ext : mItemAdapter.getFastAdapter().getExtensions()) {
+            ext.performFiltering(constraint);
+        }
 
         mConstraint = constraint;
 

@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.mikepenz.fastadapter.AbstractAdapter;
+import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
@@ -226,8 +227,9 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             getItemFilter().performFiltering(null);
         }
 
-        //first collapse all items
-        getFastAdapter().collapse(false);
+        for (IAdapterExtension<Item> ext : getFastAdapter().getExtensions()) {
+            ext.set(items, resetFilter);
+        }
 
         //get sizes
         int newItemsCount = items.size();
