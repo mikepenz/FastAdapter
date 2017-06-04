@@ -30,6 +30,7 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class SampleActivity extends AppCompatActivity {
@@ -146,20 +147,21 @@ public class SampleActivity extends AppCompatActivity {
                 .withSelectedItemByPosition(-1)
                 .build();
 
+        //create our ItemAdapter which will host our items
+        mItemAdapter = new ItemAdapter<>();
+
         //create our FastAdapter which will manage everything
-        mFastAdapter = new FastAdapter<>();
+        mFastAdapter = FastAdapter.with(Arrays.asList(mItemAdapter));
         mFastAdapter.withSelectable(true);
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withSelectOnLongClick(false);
-        //create our ItemAdapter which will host our items
-        mItemAdapter = new ItemAdapter<>();
 
         //configure our fastAdapter
         //get our recyclerView and do basic setup
         mRecyclerView = (RecyclerView) findViewById(R.id.rv);
         //mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        mRecyclerView.setAdapter(mItemAdapter.wrap(mFastAdapter));
+        mRecyclerView.setAdapter(mFastAdapter);
         mRecyclerView.setItemAnimator(new SlideDownAlphaAnimator());
         mRecyclerView.getItemAnimator().setAddDuration(500);
         mRecyclerView.getItemAnimator().setRemoveDuration(500);
@@ -205,7 +207,7 @@ public class SampleActivity extends AppCompatActivity {
                 return true;
             case R.id.item_change:
                 for (Integer pos : mFastAdapter.getSelections()) {
-                    SimpleImageItem i = mItemAdapter.getItem(pos);
+                    SimpleImageItem i = mItemAdapter.getAdapterItem(pos);
                     i.withName("CHANGED");
                     i.withDescription("This item was modified");
                     mItemAdapter.set(pos, i);

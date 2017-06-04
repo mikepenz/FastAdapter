@@ -23,6 +23,7 @@ import com.turingtechnologies.materialscrollbar.CustomIndicator;
 import com.turingtechnologies.materialscrollbar.DragScrollBar;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -45,17 +46,8 @@ public class GenericItemActivity extends AppCompatActivity {
         //style our ui
         new MaterializeBuilder().withActivity(this).build();
 
-
-        //create our FastAdapter which will manage everything
-        fastAdapter = new FastAdapter();
-        fastAdapter.withSelectable(true);
-
-        //get our recyclerView and do basic setup
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
-
-        //init our gridLayoutManager and configure RV
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
-
+        //adapters
+        FastScrollIndicatorAdapter fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter();
         GenericItemAdapter<IconModel, GenericIconItem> itemAdapter = new GenericItemAdapter<>(new Function<IconModel, GenericIconItem>() {
             @Override
             public GenericIconItem apply(IconModel iconModel) {
@@ -63,15 +55,22 @@ public class GenericItemActivity extends AppCompatActivity {
             }
         });
 
-        final FastScrollIndicatorAdapter<GenericIconItem> fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter<>();
-        rv.setAdapter(fastScrollIndicatorAdapter.wrap(itemAdapter.wrap(fastAdapter)));
+        //create our FastAdapter which will manage everything
+        fastAdapter = FastAdapter.with(Arrays.asList(itemAdapter));
+        fastAdapter.withSelectable(true);
+
+        //get our recyclerView and do basic setup
+        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+
+        //init our gridLayoutManager and configure RV
+        rv.setAdapter(fastScrollIndicatorAdapter.wrap(fastAdapter));
 
         DragScrollBar materialScrollBar = new DragScrollBar(this, rv, true);
         materialScrollBar.setHandleColour(ContextCompat.getColor(this, R.color.colorAccent));
         materialScrollBar.setHandleOffColour(ContextCompat.getColor(this, R.color.colorAccent));
         materialScrollBar.addIndicator(new CustomIndicator(this), true);
 
-        rv.setLayoutManager(gridLayoutManager);
+        rv.setLayoutManager(new GridLayoutManager(this, 3));
         rv.setItemAnimator(new SlideDownAlphaAnimator());
 
         //order fonts by their name

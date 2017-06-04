@@ -27,6 +27,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import static com.mikepenz.fastadapter.adapters.ItemAdapter.items;
+
 /**
  * Created by mikepenz on 27.12.15.
  */
@@ -38,7 +40,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     // we remember all adapters
     //priority queue...
-    final private SparseArray<IAdapter<Item>> mAdapters = new SparseArray<>();
+    final private ArrayList<IAdapter<Item>> mAdapters = new ArrayList<>();
     // we remember all possible types so we can create a new view efficiently
     final private SparseArray<Item> mTypeInstances = new SparseArray<>();
     // cache the sizes of the different adapters so we can access the items more performant
@@ -112,6 +114,72 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public FastAdapter<Item> enableVerboseLog() {
         this.mVerbose = true;
         return this;
+    }
+
+    /**
+     * creates a new FastAdapter with the provided adapters
+     * if adapters is null, a default ItemAdapter is defined
+     *
+     * @param adapter the adapters which this FastAdapter should use
+     * @return a new FastAdapter
+     */
+    public static <Item extends IItem, A extends IAdapter> FastAdapter<Item> with(A adapter) {
+        FastAdapter<Item> fastAdapter = new FastAdapter<>();
+        fastAdapter.addAdapter(0, adapter);
+        return fastAdapter;
+    }
+
+    /**
+     * creates a new FastAdapter with the provided adapters
+     * if adapters is null, a default ItemAdapter is defined
+     *
+     * @param adapters the adapters which this FastAdapter should use
+     * @return a new FastAdapter
+     */
+    public static <Item extends IItem, A extends IAdapter> FastAdapter<Item> with(@Nullable Collection<A> adapters) {
+        FastAdapter<Item> fastAdapter = new FastAdapter<>();
+        if (adapters == null) {
+            fastAdapter.mAdapters.add((IAdapter<Item>) items());
+        } else {
+            for (A adapter : adapters) {
+                fastAdapter.mAdapters.add(adapter);
+            }
+        }
+        for (int i = 0; i < fastAdapter.mAdapters.size(); i++) {
+            fastAdapter.mAdapters.get(i).withFastAdapter(fastAdapter).setOrder(i);
+        }
+        fastAdapter.cacheSizes();
+        return fastAdapter;
+    }
+
+    /**
+     * add's a new adapter at the specific position
+     *
+     * @param index   the index where the new adapter should be added
+     * @param adapter the new adapter to be added
+     * @return this
+     */
+    public FastAdapter<Item> addAdapter(int index, IAdapter<Item> adapter) {
+        mAdapters.add(index, adapter);
+        for (int i = 0; i < mAdapters.size(); i++) {
+            mAdapters.get(i).withFastAdapter(this).setOrder(i);
+        }
+        cacheSizes();
+        return this;
+    }
+
+    /**
+     * Tries to get an adapter by a specific order
+     *
+     * @param order the order (position) to search the adapter at
+     * @return the IAdapter if found
+     */
+    @Nullable
+    public IAdapter<Item> adapter(int order) {
+        if (mAdapters.size() <= order) {
+            return null;
+        }
+        return mAdapters.get(order);
     }
 
     /**
@@ -433,18 +501,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * registers an AbstractAdapter which will be hooked into the adapter chain
-     *
-     * @param adapter an adapter which extends the AbstractAdapter
-     */
-    public <A extends AbstractAdapter<Item>> void registerAdapter(A adapter) {
-        if (mAdapters.indexOfKey(adapter.getOrder()) < 0) {
-            mAdapters.put(adapter.getOrder(), adapter);
-            cacheSizes();
-        }
-    }
-
-    /**
      * register a new type into the TypeInstances to be able to efficiently create thew ViewHolders
      *
      * @param item an IItem which will be shown in the list
@@ -738,8 +794,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public int getPosition(long identifier) {
         int position = 0;
-        for (int i = 0, size = mAdapters.size(); i < size; i++) {
-            IAdapter<Item> adapter = mAdapters.valueAt(i);
+        for (IAdapter<Item> adapter : mAdapters) {
             if (adapter.getOrder() < 0) {
                 continue;
             }
@@ -855,13 +910,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         int size = 0;
 
         //count the number of items before the adapter with the given order
-        for (int i = 0, adapterSize = mAdapters.size(); i < adapterSize; i++) {
-            IAdapter<Item> adapter = mAdapters.valueAt(i);
-            if (adapter.getOrder() == order) {
-                return size;
-            } else {
-                size = size + adapter.getAdapterItemCount();
-            }
+        for (int i = 0; i < Math.min(order, mAdapters.size()); i++) {
+            size = size + mAdapters.get(i).getAdapterItemCount();
         }
 
         //get the count of items which are before this order
@@ -987,12 +1037,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * we cache the sizes of our adapters so get accesses are faster
      */
-    private void cacheSizes() {
+    protected void cacheSizes() {
         mAdapterSizes.clear();
         int size = 0;
 
-        for (int i = 0, adapterSize = mAdapters.size(); i < adapterSize; i++) {
-            IAdapter<Item> adapter = mAdapters.valueAt(i);
+        for (IAdapter<Item> adapter : mAdapters) {
             if (adapter.getAdapterItemCount() > 0) {
                 mAdapterSizes.append(size, adapter);
                 size = size + adapter.getAdapterItemCount();
@@ -1001,7 +1050,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
         //we also have to add this for the first adapter otherwise the floorIndex method will return the wrong value
         if (size == 0 && mAdapters.size() > 0) {
-            mAdapterSizes.append(0, mAdapters.valueAt(0));
+            mAdapterSizes.append(0, mAdapters.get(0));
         }
 
         mGlobalSize = size;

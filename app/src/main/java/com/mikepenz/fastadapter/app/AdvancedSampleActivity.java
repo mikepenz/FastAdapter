@@ -16,7 +16,6 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
@@ -29,9 +28,12 @@ import com.mikepenz.materialize.util.UIUtils;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+
+import static com.mikepenz.fastadapter.adapters.ItemAdapter.items;
 
 /**
  * This sample showcases compatibility the awesome Sticky-Headers library by timehop
@@ -42,7 +44,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
     //save our FastAdapter
     private FastAdapter<IItem> mFastAdapter;
-    private HeaderAdapter<SimpleItem> mHeaderAdapter;
+    private ItemAdapter<SimpleItem> mHeaderAdapter;
     private ItemAdapter<IItem> mItemAdapter;
 
     private ActionModeHelper mActionModeHelper;
@@ -64,17 +66,17 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         //style our ui
         new MaterializeBuilder().withActivity(this).build();
 
+        //create our adapters
+        mHeaderAdapter = items();
+        mItemAdapter = items();
+        StickyHeaderAdapter<IItem> stickyHeaderAdapter = new StickyHeaderAdapter<>();
+
         //create our FastAdapter
-        mFastAdapter = new FastAdapter<>();
+        mFastAdapter = FastAdapter.with(Arrays.asList(mHeaderAdapter, mItemAdapter));
 
         //we init our ActionModeHelper
         mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
         mActionModeHelper.withSupportSubItems(true);
-
-        //create our adapters
-        final StickyHeaderAdapter stickyHeaderAdapter = new StickyHeaderAdapter();
-        mItemAdapter = new ItemAdapter<>();
-        mHeaderAdapter = new HeaderAdapter<>();
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
@@ -116,14 +118,13 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
-        rv.setAdapter(stickyHeaderAdapter.wrap(mItemAdapter.wrap(mHeaderAdapter.wrap(mFastAdapter))));
+        rv.setAdapter(stickyHeaderAdapter.wrap(mFastAdapter));
 
         final StickyRecyclerHeadersDecoration decoration = new StickyRecyclerHeadersDecoration(stickyHeaderAdapter);
         rv.addItemDecoration(decoration);
 
-
         //so the headers are aware of changes
-        stickyHeaderAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        mFastAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
             @Override
             public void onChanged() {
                 decoration.invalidateHeaders();

@@ -4,6 +4,7 @@ import android.support.annotation.IntDef;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 
+import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IDraggable;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
@@ -81,8 +82,9 @@ public class SimpleDragCallback extends ItemTouchHelper.SimpleCallback {
             ItemAdapter itemAdapter = null;
             if (adapter instanceof FastItemAdapter) {
                 itemAdapter = ((FastItemAdapter) adapter).getItemAdapter();
-            } else if (adapter instanceof ItemAdapter) {
-                itemAdapter = (ItemAdapter) adapter;
+            } else if (adapter instanceof FastAdapter) {
+                //TODO this logic only works for the adapter at position 0 --> in the past it also only worked for the outer adapter
+                itemAdapter = (ItemAdapter) ((FastAdapter) adapter).adapter(0);
             }
             if (itemAdapter != null) {
                 itemAdapter.move(itemAdapter.getFastAdapter().getHolderAdapterPosition(viewHolder), itemAdapter.getFastAdapter().getHolderAdapterPosition(target));

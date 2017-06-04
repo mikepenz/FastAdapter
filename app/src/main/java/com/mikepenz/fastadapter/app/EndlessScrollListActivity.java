@@ -22,7 +22,7 @@ import android.widget.Toast;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.adapters.FooterAdapter;
+import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.listeners.ItemFilterListener;
@@ -38,11 +38,13 @@ import com.mikepenz.materialize.MaterializeBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.mikepenz.fastadapter.adapters.ItemAdapter.items;
+
 public class EndlessScrollListActivity extends AppCompatActivity implements ItemTouchCallback, ItemFilterListener<SimpleItem> {
 
     //save our FastAdapter
     private FastItemAdapter<SimpleItem> fastItemAdapter;
-    private FooterAdapter<ProgressItem> footerAdapter;
+    private ItemAdapter footerAdapter;
 
     //drag & drop
     private SimpleDragCallback touchCallback;
@@ -67,7 +69,8 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         fastItemAdapter.withSelectable(true);
 
         //create our FooterAdapter which will manage the progress items
-        footerAdapter = new FooterAdapter<>();
+        footerAdapter = items();
+        fastItemAdapter.addAdapter(1, footerAdapter);
 
         //configure our fastAdapter
         fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<SimpleItem>() {
@@ -94,7 +97,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(footerAdapter.wrap(fastItemAdapter));
+        recyclerView.setAdapter(fastItemAdapter);
         recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(footerAdapter) {
             @Override
             public void onLoadMore(final int currentPage) {
@@ -191,7 +194,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
 
     @Override
     public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-        DragDropUtil.onMove(fastItemAdapter, oldPosition, newPosition); // change position
+        DragDropUtil.onMove(fastItemAdapter.getItemAdapter(), oldPosition, newPosition); // change position
         return true;
     }
 

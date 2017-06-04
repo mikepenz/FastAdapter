@@ -9,7 +9,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
@@ -90,7 +89,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
         return this;
     }
 
-    public FastAdapterDialog<Item> withAdapter(AbstractAdapter<Item> adapter) {
+    public FastAdapterDialog<Item> withAdapter(FastAdapter<Item> adapter) {
         this.mRecyclerView.setAdapter(adapter);
         return this;
     }

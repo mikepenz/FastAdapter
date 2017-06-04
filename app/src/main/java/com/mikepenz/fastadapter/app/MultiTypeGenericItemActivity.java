@@ -21,6 +21,7 @@ import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -43,17 +44,6 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
         //style our ui
         new MaterializeBuilder().withActivity(this).build();
 
-
-        //create our FastAdapter which will manage everything
-        fastAdapter = new FastAdapter();
-        fastAdapter.withSelectable(true);
-
-        //get our recyclerView and do basic setup
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
-
-        //init our gridLayoutManager and configure RV
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
-
         //if you need multiple items for different models you can also do this be defining a Function which get's the model object and returns the item (extends IItem)
         GenericItemAdapter<IconModel, GenericIconItem> itemAdapter = new GenericItemAdapter<>(new Function<IconModel, GenericIconItem>() {
             @Override
@@ -66,9 +56,19 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
             }
         });
 
+        //create our FastAdapter which will manage everything
+        fastAdapter = FastAdapter.with(Arrays.asList(itemAdapter));
+        fastAdapter.withSelectable(true);
+
+        //get our recyclerView and do basic setup
+        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+
+        //init our gridLayoutManager and configure RV
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+
         rv.setLayoutManager(gridLayoutManager);
         rv.setItemAnimator(new SlideDownAlphaAnimator());
-        rv.setAdapter(itemAdapter.wrap(fastAdapter));
+        rv.setAdapter(fastAdapter);
 
         //order fonts by their name
         List<ITypeface> mFonts = new ArrayList<>(Iconics.getRegisteredFonts(this));

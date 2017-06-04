@@ -7,8 +7,8 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.adapters.FooterAdapter;
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
+import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.utils.Function;
 
 import java.lang.ref.WeakReference;
@@ -53,7 +53,12 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         super(layoutManager, visibleThreshold);
     }
 
-    public EndlessScrollHelper(LayoutManager layoutManager, int visibleThreshold, FooterAdapter footerAdapter) {
+    /**
+     * @param layoutManager
+     * @param visibleThreshold
+     * @param footerAdapter    the itemAdapter used to host Footer items
+     */
+    public EndlessScrollHelper(LayoutManager layoutManager, int visibleThreshold, ItemAdapter footerAdapter) {
         super(layoutManager, visibleThreshold, footerAdapter);
     }
 

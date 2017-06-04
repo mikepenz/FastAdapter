@@ -20,11 +20,19 @@ import static java.util.Arrays.asList;
 /**
  * Created by mikepenz on 27.12.15.
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
- * This adapter has the order of 500 which is the centered order
  */
 public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> implements IItemAdapter<Item> {
     //the items handled and managed by this item
     private List<Item> mItems = new ArrayList<>();
+
+    /**
+     * static method to retrieve a new `ItemAdapter`
+     *
+     * @return a new ItemAdapter
+     */
+    public static <Item extends IItem> ItemAdapter<Item> items() {
+        return new ItemAdapter<>();
+    }
 
     //defines if the IdDistributor is used to set ID's to all added items
     private boolean mUseIdDistributor = true;
@@ -118,14 +126,6 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      */
     public Comparator<Item> getComparator() {
         return mComparator;
-    }
-
-    /**
-     * @return the order of the items within the FastAdapter
-     */
-    @Override
-    public int getOrder() {
-        return 500;
     }
 
     /**
@@ -307,7 +307,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
         }
 
         if (filter != null && retainFilter) {
-            getItemFilter().filter(filter);
+            getItemFilter().publishResults(filter, getItemFilter().performFiltering(filter));
         } else {
             getFastAdapter().notifyAdapterDataSetChanged();
         }
@@ -319,7 +319,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
      * forces to remap all possible types for the RecyclerView
      */
     public void remapMappedTypes() {
-        clearMappedTypes();
+        getFastAdapter().clearTypeInstance();
         mapPossibleTypes(mItems);
     }
 
@@ -396,7 +396,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
             IdDistributor.checkId(item);
         }
         mItems.set(position - getFastAdapter().getPreItemCount(position), item);
-        mapPossibleType(item);
+        mFastAdapter.registerTypeInstance(item);
 
         getFastAdapter().notifyAdapterItemChanged(position);
         return this;

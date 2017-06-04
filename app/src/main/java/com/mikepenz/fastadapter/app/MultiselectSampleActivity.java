@@ -16,7 +16,6 @@ import android.widget.Toast;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.ISelectionListener;
-import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
@@ -26,6 +25,7 @@ import com.mikepenz.materialize.MaterializeBuilder;
 import com.mikepenz.materialize.util.UIUtils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 
@@ -51,8 +51,12 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         //style our ui
         new MaterializeBuilder().withActivity(this).build();
 
+        //create our adapters
+        final ItemAdapter<SimpleItem> headerAdapter = new ItemAdapter<>();
+        ItemAdapter<SimpleItem> itemAdapter = new ItemAdapter<>();
+
         //create our FastAdapter
-        mFastAdapter = new FastAdapter<>();
+        mFastAdapter = FastAdapter.with(Arrays.asList(headerAdapter, itemAdapter));
 
         //
         mUndoHelper = new UndoHelper(mFastAdapter, new UndoHelper.UndoListener<SimpleItem>() {
@@ -64,10 +68,6 @@ public class MultiselectSampleActivity extends AppCompatActivity {
 
         //we init our ActionModeHelper
         mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
-
-        //create our adapters
-        ItemAdapter<SimpleItem> itemAdapter = new ItemAdapter<>();
-        final HeaderAdapter<SimpleItem> headerAdapter = new HeaderAdapter<>();
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
@@ -115,7 +115,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new SlideDownAlphaAnimator());
-        rv.setAdapter(itemAdapter.wrap(headerAdapter.wrap(mFastAdapter)));
+        rv.setAdapter(mFastAdapter);
 
         //fill with some sample data
         SimpleItem SimpleItem = new SimpleItem();

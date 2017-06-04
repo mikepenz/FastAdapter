@@ -194,7 +194,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
 
     @Override
     public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-        DragDropUtil.onMove(fastItemAdapter, oldPosition, newPosition);  // change position
+        DragDropUtil.onMove(fastItemAdapter.getItemAdapter(), oldPosition, newPosition);  // change position
         return true;
     }
 

@@ -8,7 +8,6 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
@@ -93,7 +92,7 @@ public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomShee
         return this;
     }
 
-    public FastAdapterBottomSheetDialog<Item> withAdapter(AbstractAdapter<Item> adapter) {
+    public FastAdapterBottomSheetDialog<Item> withAdapter(FastAdapter<Item> adapter) {
         this.mRecyclerView.setAdapter(adapter);
         return this;
     }

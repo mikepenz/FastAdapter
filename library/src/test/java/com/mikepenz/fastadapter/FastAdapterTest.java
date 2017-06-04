@@ -29,10 +29,9 @@ public class FastAdapterTest {
 
     @Before
     public void setUp() throws Exception {
-        adapter = new FastAdapter<>();
-        //adapter.withPositionBasedStateManagement(true);
         itemAdapter = new ItemAdapter<>();
-        itemAdapter.wrap(adapter);
+        adapter = FastAdapter.with(itemAdapter);
+        //adapter.withPositionBasedStateManagement(true);
     }
 
     @Test
