@@ -640,7 +640,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (mLegacyBindViewMode) {
-            if (mVerbose)
+            if (mVerbose) {
                 Log.v(TAG, "onBindViewHolderLegacy: " + position + "/" + holder.getItemViewType() + " isLegacy: true");
             }
             //set the R.id.fastadapter_item_adapter tag to the adapter so we always have the proper bound adapter available
