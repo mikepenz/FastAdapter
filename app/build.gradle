@@ -13,14 +13,14 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 260
-        versionName '2.6.0'
+        versionCode 261
+        versionName '2.6.1'
 
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
-                def file = output.outputFile
-                def fileName = file.name.replace(".apk", "-v" + versionName + "-c" + versionCode + ".apk")
-                output.outputFile = new File(file.parentFile, fileName)
+                def file = output.outputFileName
+                def fileName = file.replace(".apk", "-v" + versionName + "-c" + versionCode + ".apk")
+                output.outputFileName = new File(fileName)
             }
         }
     }
