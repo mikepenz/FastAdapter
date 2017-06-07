@@ -493,7 +493,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private ClickEventHook<Item> fastAdapterViewClickListener = new ClickEventHook<Item>() {
         @Override
         public void onClick(View v, int pos, FastAdapter<Item> fastAdapter, Item item) {
-            IAdapter<Item> adapter = getAdapter(pos);
+            IAdapter<Item> adapter = fastAdapter.getAdapter(pos);
             if (adapter != null && item != null && item.isEnabled()) {
                 boolean consumed = false;
                 //on the very first we call the click listener from the item itself (if defined)
@@ -502,30 +502,30 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 }
 
                 //first call the onPreClickListener which would allow to prevent executing of any following code, including selection
-                if (!consumed && mOnPreClickListener != null) {
-                    consumed = mOnPreClickListener.onClick(v, adapter, item, pos);
+                if (!consumed && fastAdapter.mOnPreClickListener != null) {
+                    consumed = fastAdapter.mOnPreClickListener.onClick(v, adapter, item, pos);
                 }
 
                 //handle the selection if the event was not yet consumed, and we are allowed to select an item (only occurs when we select with long click only)
                 //this has to happen before expand or collapse. otherwise the position is wrong which is used to select
-                if (!consumed && !mSelectOnLongClick && mSelectable) {
-                    handleSelection(v, item, pos);
+                if (!consumed && !fastAdapter.mSelectOnLongClick && fastAdapter.mSelectable) {
+                    fastAdapter.handleSelection(v, item, pos);
                 }
 
                 //if this is a expandable item :D (this has to happen after we handled the selection as we refer to the position)
                 if (!consumed && item instanceof IExpandable) {
                     if (((IExpandable) item).isAutoExpanding() && ((IExpandable) item).getSubItems() != null) {
-                        toggleExpandable(pos);
+                        fastAdapter.toggleExpandable(pos);
                     }
                 }
 
                 //if there should be only one expanded item we want to collapse all the others but the current one (this has to happen after we handled the selection as we refer to the position)
-                if (!consumed && mOnlyOneExpandedItem && item instanceof IExpandable) {
+                if (!consumed && fastAdapter.mOnlyOneExpandedItem && item instanceof IExpandable) {
                     if (((IExpandable) item).getSubItems() != null && ((IExpandable) item).getSubItems().size() > 0) {
-                        int[] expandedItems = getExpandedItems();
+                        int[] expandedItems = fastAdapter.getExpandedItems();
                         for (int i = expandedItems.length - 1; i >= 0; i--) {
                             if (expandedItems[i] != pos) {
-                                collapse(expandedItems[i], true);
+                                fastAdapter.collapse(expandedItems[i], true);
                             }
                         }
                     }
@@ -537,8 +537,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 }
 
                 //call the normal click listener after selection was handlded
-                if (!consumed && mOnClickListener != null) {
-                    mOnClickListener.onClick(v, adapter, item, pos);
+                if (!consumed && fastAdapter.mOnClickListener != null) {
+                    fastAdapter.mOnClickListener.onClick(v, adapter, item, pos);
                 }
             }
         }
@@ -551,21 +551,21 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         @Override
         public boolean onLongClick(View v, int pos, FastAdapter<Item> fastAdapter, Item item) {
             boolean consumed = false;
-            IAdapter<Item> adapter = getAdapter(pos);
+            IAdapter<Item> adapter = fastAdapter.getAdapter(pos);
             if (adapter != null && item != null && item.isEnabled()) {
                 //first call the OnPreLongClickListener which would allow to prevent executing of any following code, including selection
-                if (mOnPreLongClickListener != null) {
-                    consumed = mOnPreLongClickListener.onLongClick(v, adapter, item, pos);
+                if (fastAdapter.mOnPreLongClickListener != null) {
+                    consumed = fastAdapter.mOnPreLongClickListener.onLongClick(v, adapter, item, pos);
                 }
 
                 //now handle the selection if we are in multiSelect mode and allow selecting on longClick
-                if (!consumed && mSelectOnLongClick && mSelectable) {
-                    handleSelection(v, item, pos);
+                if (!consumed && fastAdapter.mSelectOnLongClick && fastAdapter.mSelectable) {
+                    fastAdapter.handleSelection(v, item, pos);
                 }
 
                 //call the normal long click listener after selection was handled
-                if (!consumed && mOnLongClickListener != null) {
-                    consumed = mOnLongClickListener.onLongClick(v, adapter, item, pos);
+                if (!consumed && fastAdapter.mOnLongClickListener != null) {
+                    consumed = fastAdapter.mOnLongClickListener.onLongClick(v, adapter, item, pos);
                 }
             }
             return consumed;
@@ -578,10 +578,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private TouchEventHook<Item> fastAdapterViewTouchListener = new TouchEventHook<Item>() {
         @Override
         public boolean onTouch(View v, MotionEvent event, int position, FastAdapter<Item> fastAdapter, Item item) {
-            if (mOnTouchListener != null) {
-                IAdapter<Item> adapter = getAdapter(position);
+            if (fastAdapter.mOnTouchListener != null) {
+                IAdapter<Item> adapter = fastAdapter.getAdapter(position);
                 if (adapter != null) {
-                    return mOnTouchListener.onTouch(v, event, adapter, item, position);
+                    return fastAdapter.mOnTouchListener.onTouch(v, event, adapter, item, position);
                 }
             }
             return false;
@@ -1498,7 +1498,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                     //first we find out how many items were added in total
                     //also counting subitems
                     int totalAddedItems = expandable.getSubItems().size();
-                    for (int i = position + 1; i < position + totalAddedItems; i++) {
+                    for (int i = position + 1; i < position + totalAddedItems + 1; i++) {
                         Item tmp = getItem(i);
                         if (tmp instanceof IExpandable) {
                             IExpandable tmpExpandable = ((IExpandable) tmp);
