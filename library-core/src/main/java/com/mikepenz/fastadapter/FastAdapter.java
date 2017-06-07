@@ -493,19 +493,17 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private ClickEventHook<Item> fastAdapterViewClickListener = new ClickEventHook<Item>() {
         @Override
         public void onClick(View v, int pos, FastAdapter<Item> fastAdapter, Item item) {
-            if (item != null && item.isEnabled()) {
-                //get the relativeInfo from the position
-                RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
-
+            IAdapter<Item> adapter = getAdapter(pos);
+            if (adapter != null && item != null && item.isEnabled()) {
                 boolean consumed = false;
                 //on the very first we call the click listener from the item itself (if defined)
                 if (item instanceof IClickable && ((IClickable) item).getOnPreItemClickListener() != null) {
-                    consumed = ((IClickable<Item>) item).getOnPreItemClickListener().onClick(v, relativeInfo.adapter, item, pos);
+                    consumed = ((IClickable<Item>) item).getOnPreItemClickListener().onClick(v, adapter, item, pos);
                 }
 
                 //first call the onPreClickListener which would allow to prevent executing of any following code, including selection
                 if (!consumed && mOnPreClickListener != null) {
-                    consumed = mOnPreClickListener.onClick(v, relativeInfo.adapter, item, pos);
+                    consumed = mOnPreClickListener.onClick(v, adapter, item, pos);
                 }
 
                 //handle the selection if the event was not yet consumed, and we are allowed to select an item (only occurs when we select with long click only)
@@ -535,12 +533,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
                 //before calling the global adapter onClick listener call the item specific onClickListener
                 if (!consumed && item instanceof IClickable && ((IClickable) item).getOnItemClickListener() != null) {
-                    consumed = ((IClickable<Item>) item).getOnItemClickListener().onClick(v, relativeInfo.adapter, item, pos);
+                    consumed = ((IClickable<Item>) item).getOnItemClickListener().onClick(v, adapter, item, pos);
                 }
 
                 //call the normal click listener after selection was handlded
                 if (!consumed && mOnClickListener != null) {
-                    mOnClickListener.onClick(v, relativeInfo.adapter, item, pos);
+                    mOnClickListener.onClick(v, adapter, item, pos);
                 }
             }
         }
@@ -553,21 +551,21 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         @Override
         public boolean onLongClick(View v, int pos, FastAdapter<Item> fastAdapter, Item item) {
             boolean consumed = false;
-            RelativeInfo<Item> relativeInfo = getRelativeInfo(pos);
-            if (relativeInfo.item != null && relativeInfo.item.isEnabled()) {
+            IAdapter<Item> adapter = getAdapter(pos);
+            if (adapter != null && item != null && item.isEnabled()) {
                 //first call the OnPreLongClickListener which would allow to prevent executing of any following code, including selection
                 if (mOnPreLongClickListener != null) {
-                    consumed = mOnPreLongClickListener.onLongClick(v, relativeInfo.adapter, relativeInfo.item, pos);
+                    consumed = mOnPreLongClickListener.onLongClick(v, adapter, item, pos);
                 }
 
                 //now handle the selection if we are in multiSelect mode and allow selecting on longClick
                 if (!consumed && mSelectOnLongClick && mSelectable) {
-                    handleSelection(v, relativeInfo.item, pos);
+                    handleSelection(v, item, pos);
                 }
 
                 //call the normal long click listener after selection was handled
                 if (!consumed && mOnLongClickListener != null) {
-                    consumed = mOnLongClickListener.onLongClick(v, relativeInfo.adapter, relativeInfo.item, pos);
+                    consumed = mOnLongClickListener.onLongClick(v, adapter, item, pos);
                 }
             }
             return consumed;
@@ -581,8 +579,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         @Override
         public boolean onTouch(View v, MotionEvent event, int position, FastAdapter<Item> fastAdapter, Item item) {
             if (mOnTouchListener != null) {
-                RelativeInfo<Item> relativeInfo = getRelativeInfo(position);
-                return mOnTouchListener.onTouch(v, event, relativeInfo.adapter, relativeInfo.item, position);
+                IAdapter<Item> adapter = getAdapter(position);
+                if (adapter != null) {
+                    return mOnTouchListener.onTouch(v, event, adapter, item, position);
+                }
             }
             return false;
         }
@@ -627,8 +627,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (mLegacyBindViewMode) {
-            if (mVerbose)
+            if (mVerbose) {
                 Log.v(TAG, "onBindViewHolderLegacy: " + position + "/" + holder.getItemViewType());
+            }
+            //set the R.id.fastadapter_item_adapter tag to the adapter so we always have the proper bound adapter available
+            holder.itemView.setTag(R.id.fastadapter_item_adapter, this);
+            //now use our bindViewHolderListener to bind the viewHolder
             mOnBindViewHolderListener.onBindViewHolder(holder, position, Collections.EMPTY_LIST);
         }
         //empty implementation we want the users to use the payloads too
@@ -645,6 +649,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public void onBindViewHolder(RecyclerView.ViewHolder holder, int position, List<Object> payloads) {
         if (mVerbose) Log.v(TAG, "onBindViewHolder: " + position + "/" + holder.getItemViewType());
         super.onBindViewHolder(holder, position, payloads);
+        //set the R.id.fastadapter_item_adapter tag to the adapter so we always have the proper bound adapter available
+        holder.itemView.setTag(R.id.fastadapter_item_adapter, this);
+        //now use our bindViewHolderListener to bind the viewHolder
         mOnBindViewHolderListener.onBindViewHolder(holder, position, payloads);
     }
 
@@ -791,6 +798,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      * @return the adapter responsible for this global position
      */
+    @Nullable
     public IAdapter<Item> getAdapter(int position) {
         //if we are out of range just return null
         if (position < 0 || position >= mGlobalSize) {
@@ -1992,11 +2000,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List<Object> payloads) {
             IItem item = getItem(position);
             if (item != null) {
-                item.bindView(viewHolder, payloads);
                 //set the R.id.fastadapter_item tag of this item to the item object (can be used when retrieving the view)
                 viewHolder.itemView.setTag(R.id.fastadapter_item, item);
-                //set the R.id.fastadapter_item_adapter tag to the adapter so we always have the proper bound adapter available
-                viewHolder.itemView.setTag(R.id.fastadapter_item_adapter, FastAdapter.this);
+                //bind the viewholder itself
+                item.bindView(viewHolder, payloads);
             }
         }
 
