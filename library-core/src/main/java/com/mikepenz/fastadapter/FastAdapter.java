@@ -1498,7 +1498,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                     //first we find out how many items were added in total
                     //also counting subitems
                     int totalAddedItems = expandable.getSubItems().size();
-                    for (int i = position + 1; i < position + totalAddedItems; i++) {
+                    for (int i = position + 1; i < position + totalAddedItems + 1; i++) {
                         Item tmp = getItem(i);
                         if (tmp instanceof IExpandable) {
                             IExpandable tmpExpandable = ((IExpandable) tmp);
