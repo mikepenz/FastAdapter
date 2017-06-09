@@ -1,4 +1,6 @@
 ### Upgrade Notes
+#### v3.0.0
+* the initial page of the `EndlessRecyclerOnScrollListener` is now starting also with `0` (like the `EndlessRecyclerOnTopScrollListener`)
 
 #### v2.6.0
 * the `ItemFilter` was moved to it's own class

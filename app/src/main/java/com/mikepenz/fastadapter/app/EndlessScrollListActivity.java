@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter.app;
 
 import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
@@ -120,7 +119,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         //fill with some sample data (load the first page here)
         List<SimpleItem> items = new ArrayList<>();
         for (int i = 1; i < 16; i++) {
-            items.add(new SimpleItem().withName("Item " + i + " Page " + 1));
+            items.add(new SimpleItem().withName("Item " + i + " Page 0"));
         }
         fastItemAdapter.add(items);
 
@@ -167,27 +166,23 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         //search icon
         menu.findItem(R.id.search).setIcon(new IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_search).color(Color.BLACK).actionBar());
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-            final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
-            searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-                @Override
-                public boolean onQueryTextSubmit(String s) {
-                    touchCallback.setIsDragEnabled(false);
-                    fastItemAdapter.filter(s);
-                    return true;
-                }
+        final SearchView searchView = (SearchView) menu.findItem(R.id.search).getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String s) {
+                touchCallback.setIsDragEnabled(false);
+                fastItemAdapter.filter(s);
+                return true;
+            }
 
 
-                @Override
-                public boolean onQueryTextChange(String s) {
-                    fastItemAdapter.filter(s);
-                    touchCallback.setIsDragEnabled(TextUtils.isEmpty(s));
-                    return true;
-                }
-            });
-        } else {
-            menu.findItem(R.id.search).setVisible(false);
-        }
+            @Override
+            public boolean onQueryTextChange(String s) {
+                fastItemAdapter.filter(s);
+                touchCallback.setIsDragEnabled(TextUtils.isEmpty(s));
+                return true;
+            }
+        });
 
         return super.onCreateOptionsMenu(menu);
     }

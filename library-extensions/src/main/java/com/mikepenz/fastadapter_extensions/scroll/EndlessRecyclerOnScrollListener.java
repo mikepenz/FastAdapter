@@ -16,7 +16,7 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     private boolean mIsOrientationHelperVertical;
     private OrientationHelper mOrientationHelper;
 
-    private int mCurrentPage = 1;
+    private int mCurrentPage = 0;
 
     private ItemAdapter mFooterAdapter;
 
