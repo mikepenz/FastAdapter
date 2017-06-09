@@ -2,7 +2,7 @@
     <string name="app_name">FastAdapter</string>
 
     <string name="sample_simple_item_list">SimpleItemList Sample</string>
-    <string name="sample_simple_item_list_descr">FastScroller, Filter, Drag&amp;Drop</string>
+    <string name="sample_simple_item_list_descr">Filter, Drag&amp;Drop</string>
     <string name="sample_swipe_list">SwipeList Sample</string>
     <string name="sample_swipe_list_descr">Swipe, leave-behinds and actions</string>
     <string name="sample_icon_grid">IconGrid Sample</string>

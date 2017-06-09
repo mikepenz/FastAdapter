@@ -509,7 +509,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private ClickEventHook<Item> fastAdapterViewClickListener = new ClickEventHook<Item>() {
         @Override
         public void onClick(View v, int pos, FastAdapter<Item> fastAdapter, Item item) {
-            IAdapter<Item> adapter = getAdapter(pos);
+            IAdapter<Item> adapter = fastAdapter.getAdapter(pos);
             if (adapter != null && item != null && item.isEnabled()) {
                 boolean consumed = false;
                 //on the very first we call the click listener from the item itself (if defined)
@@ -518,12 +518,12 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 }
 
                 //first call the onPreClickListener which would allow to prevent executing of any following code, including selection
-                if (!consumed && mOnPreClickListener != null) {
-                    consumed = mOnPreClickListener.onClick(v, adapter, item, pos);
+                if (!consumed && fastAdapter.mOnPreClickListener != null) {
+                    consumed = fastAdapter.mOnPreClickListener.onClick(v, adapter, item, pos);
                 }
 
                 // handle our extensions
-                for (IAdapterExtension<Item> ext : mExtensions) {
+                for (IAdapterExtension<Item> ext : fastAdapter.mExtensions) {
                     if (!consumed) {
                         consumed = ext.onClick(v, pos, fastAdapter, item);
                     } else {
@@ -537,8 +537,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 }
 
                 //call the normal click listener after selection was handlded
-                if (!consumed && mOnClickListener != null) {
-                    mOnClickListener.onClick(v, adapter, item, pos);
+                if (!consumed && fastAdapter.mOnClickListener != null) {
+                    fastAdapter.mOnClickListener.onClick(v, adapter, item, pos);
                 }
             }
         }
@@ -551,15 +551,15 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         @Override
         public boolean onLongClick(View v, int pos, FastAdapter<Item> fastAdapter, Item item) {
             boolean consumed = false;
-            IAdapter<Item> adapter = getAdapter(pos);
+            IAdapter<Item> adapter = fastAdapter.getAdapter(pos);
             if (adapter != null && item != null && item.isEnabled()) {
                 //first call the OnPreLongClickListener which would allow to prevent executing of any following code, including selection
-                if (mOnPreLongClickListener != null) {
-                    consumed = mOnPreLongClickListener.onLongClick(v, adapter, item, pos);
+                if (fastAdapter.mOnPreLongClickListener != null) {
+                    consumed = fastAdapter.mOnPreLongClickListener.onLongClick(v, adapter, item, pos);
                 }
 
                 // handle our extensions
-                for (IAdapterExtension<Item> ext : mExtensions) {
+                for (IAdapterExtension<Item> ext : fastAdapter.mExtensions) {
                     if (!consumed) {
                         consumed = ext.onLongClick(v, pos, fastAdapter, item);
                     } else {
@@ -568,8 +568,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
                 }
 
                 //call the normal long click listener after selection was handled
-                if (!consumed && mOnLongClickListener != null) {
-                    consumed = mOnLongClickListener.onLongClick(v, adapter, item, pos);
+                if (!consumed && fastAdapter.mOnLongClickListener != null) {
+                    consumed = fastAdapter.mOnLongClickListener.onLongClick(v, adapter, item, pos);
                 }
             }
             return consumed;
@@ -584,17 +584,17 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         public boolean onTouch(View v, MotionEvent event, int position, FastAdapter<Item> fastAdapter, Item item) {
             boolean consumed = false;
             // handle our extensions
-            for (IAdapterExtension<Item> ext : mExtensions) {
+            for (IAdapterExtension<Item> ext : fastAdapter.mExtensions) {
                 if (!consumed) {
                     consumed = ext.onTouch(v, event, position, fastAdapter, item);
                 } else {
                     break;
                 }
             }
-            if (mOnTouchListener != null) {
-                IAdapter<Item> adapter = getAdapter(position);
+            if (fastAdapter.mOnTouchListener != null) {
+                IAdapter<Item> adapter = fastAdapter.getAdapter(position);
                 if (adapter != null) {
-                    return mOnTouchListener.onTouch(v, event, adapter, item, position);
+                    return fastAdapter.mOnTouchListener.onTouch(v, event, adapter, item, position);
                 }
             }
             return consumed;

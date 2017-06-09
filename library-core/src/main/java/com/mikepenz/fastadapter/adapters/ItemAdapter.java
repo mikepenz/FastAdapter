@@ -261,12 +261,15 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
                 getFastAdapter().notifyAdapterItemRangeChanged(itemsBeforeThisAdapter, previousItemsCount);
             }
             getFastAdapter().notifyAdapterItemRangeInserted(itemsBeforeThisAdapter + previousItemsCount, newItemsCount - previousItemsCount);
-        } else if (newItemsCount > 0 && newItemsCount < previousItemsCount) {
+        } else if (newItemsCount > 0) {
             getFastAdapter().notifyAdapterItemRangeChanged(itemsBeforeThisAdapter, newItemsCount);
-            getFastAdapter().notifyAdapterItemRangeRemoved(itemsBeforeThisAdapter + newItemsCount, previousItemsCount - newItemsCount);
+            if (newItemsCount < previousItemsCount) {
+                getFastAdapter().notifyAdapterItemRangeRemoved(itemsBeforeThisAdapter + newItemsCount, previousItemsCount - newItemsCount);
+            }
         } else if (newItemsCount == 0) {
             getFastAdapter().notifyAdapterItemRangeRemoved(itemsBeforeThisAdapter, previousItemsCount);
         } else {
+            //this condition should practically never happen
             getFastAdapter().notifyAdapterDataSetChanged();
         }
 
