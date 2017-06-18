@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
 
+group "com.mikepenz"
+version "3.0.0.4"
+
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
     buildToolsVersion rootProject.ext.buildToolsVersion
