@@ -173,7 +173,7 @@ fastItemAdapter.withItemEvent(new ClickEventHook<SampleItem> {
 // Call this in onQueryTextSubmit() & onQueryTextChange() when using SearchView
 fastAdapter.filter("yourSearchTerm");
 
-fastAdapter.withFilterPredicate(new IItemAdapter.Predicate<Item>() {
+fastAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<Item>() {
     @Override
     public boolean filter(Item item, CharSequence constraint) {
 	return item.getName().startsWith(String.valueOf(constraint));
