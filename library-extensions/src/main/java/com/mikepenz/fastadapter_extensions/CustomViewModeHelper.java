@@ -40,7 +40,7 @@ public class CustomViewModeHelper {
      * @param fastAdapter                 current fastAdapter
      * @param viewModeInteractionListener listened to trigger custom view display
      */
-    public ViewModeHelper(FastAdapter fastAdapter, ViewModeInteractionListener viewModeInteractionListener) {
+    public CustomViewModeHelper(FastAdapter fastAdapter, ViewModeInteractionListener viewModeInteractionListener) {
         this.mFastAdapter = fastAdapter;
         checkActionMode(fastAdapter.getSelectedItems().size());
         this.viewModeInteractionListener = viewModeInteractionListener;
@@ -50,7 +50,7 @@ public class CustomViewModeHelper {
      * @param savedInstanceState generated instance state from activity or fragment
      * @return self for builder
      */
-    public ViewModeHelper withInstanceState(Bundle savedInstanceState) {
+    public CustomViewModeHelper withInstanceState(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             if (savedInstanceState.get(ACTION_VIEW_STATE) != null)
                 actionViewEnabled = savedInstanceState.getBoolean(ACTION_VIEW_STATE, false);
@@ -84,7 +84,7 @@ public class CustomViewModeHelper {
      * @param autoDeselect auto-deselect on final
      * @return self for builder
      */
-    public ViewModeHelper withAutoDeselect(boolean autoDeselect) {
+    public CustomViewModeHelper withAutoDeselect(boolean autoDeselect) {
         this.mAutoDeselect = autoDeselect;
         return this;
     }
@@ -104,7 +104,7 @@ public class CustomViewModeHelper {
      * @param newRangeOnSelection enable multi-tiered range selection
      * @return self for builder
      */
-    public ViewModeHelper withNewRangeOnSelection(boolean newRangeOnSelection) {
+    public CustomViewModeHelper withNewRangeOnSelection(boolean newRangeOnSelection) {
         this.newRangeOnSelection = newRangeOnSelection;
         return this;
     }
