@@ -7,19 +7,19 @@ import com.mikepenz.fastadapter.IItem;
 
 /**
  * Created by tvelo on 7/7/2017.
- * based on extension from mikepenz. 
+ * based on extension from mikepenz.
  * intentded to be used with custom view (button or dialog that displays
  * on multi-select mode activation. Implement interface in your fragment
  * or activity and use the onCreateSelectionView() to notify of needed
  * action view. OnSelectionChanged notifies of selection changes.
- * OnDestroySelectionView notifies of deselect. 
+ * OnDestroySelectionView notifies of deselect.
  * NOTE it is recommended to:
  * - Use the helper's methods for deselect and show / hide calls for the
- *    custom view. 
+ *    custom view.
  * - Use the count from the OnSelectionChanged method, as the timing of
- *    onClick \ onLongCLick are pre-selection so the FastAdapter won't 
+ *    onClick \ onLongCLick are pre-selection so the FastAdapter won't
  *    know about the new selection, but the OnSelectionChanged will.
- * TODO: Wire-in sub-selections for expandables.
+ * TODO: Wire-in sub-selections for expandable.
  */
 
 public class CustomViewModeHelper {
@@ -93,7 +93,7 @@ public class CustomViewModeHelper {
      * @param rangeEnabled enable range selection mode
      * @return self for builder
      */
-    public ViewModeHelper withRangeEnabled(boolean rangeEnabled) {
+    public CustomViewModeHelper withRangeEnabled(boolean rangeEnabled) {
         this.rangeEnabled = rangeEnabled;
         return this;
     }
