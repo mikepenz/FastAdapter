@@ -30,6 +30,9 @@
         <activity
             android:name="com.mikepenz.fastadapter.app.MultiselectSampleActivity"
             android:label="@string/sample_multi_select" />
+         <activity
+            android:name=".ExpandableMultiselectDeleteSampleActivity"
+            android:label="@string/sample_collapsible_multi_select_delete" />
         <activity
             android:name="com.mikepenz.fastadapter.app.ExpandableSampleActivity"
             android:label="@string/sample_collapsible" />
