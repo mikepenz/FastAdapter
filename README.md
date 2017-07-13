@@ -150,8 +150,9 @@ fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<Item>() {
 ### 4. Click listeners for views inside your item
 ```java
 //just add an `EventHook` to your `FastAdapter` by implementing either a `ClickEventHook`, `LongClickEventHook`, `TouchEventHook`, `CustomEventHook`
-fastItemAdapter.withItemEvent(new ClickEventHook<SampleItem> {
+fastItemAdapter.withEventHook(new ClickEventHook<SampleItem>() {
     
+    @Nullable
     @Override
     public View onBind(@NonNull RecyclerView.ViewHolder viewHolder) {
         //return the views on which you want to bind this event
