@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.fastadapter.listeners.OnBindViewHolderListener;
 
 import org.junit.Before;
@@ -24,14 +25,17 @@ import static org.mockito.Mockito.verify;
  * @author Shubham Chaudhary on 17/03/16
  */
 @RunWith(RobolectricGradleTestRunner.class)
-public class FastAdapterTest {
+public class ExpandableFastAdapterTest {
     private FastAdapter<TestItem> adapter;
     private ItemAdapter<TestItem> itemAdapter;
+    private ExpandableExtension<TestItem> expandableExtension;
 
     @Before
     public void setUp() throws Exception {
         itemAdapter = new ItemAdapter<>();
+        expandableExtension = new ExpandableExtension<>();
         adapter = FastAdapter.with(itemAdapter);
+        adapter.addExtension(expandableExtension);
         //adapter.withPositionBasedStateManagement(true);
     }
 
@@ -141,6 +145,16 @@ public class FastAdapterTest {
         itemAdapter.set(items);
 
         assertThat(adapter.getPreItemCount(40)).isEqualTo(0);
+    }
+
+    @Test
+    public void getExpandedItemsCount() throws Exception {
+        List<TestItem> items = TestDataGenerator.genTestItemWithSubItemsList(10, 1);
+        itemAdapter.set(items);
+
+        expandableExtension.expand(5);
+
+        assertThat(expandableExtension.getExpandedItemsCount(0, 100)).isEqualTo(10);
     }
 
     @Test
