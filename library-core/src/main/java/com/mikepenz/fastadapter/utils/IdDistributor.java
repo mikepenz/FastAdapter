@@ -11,7 +11,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * Created by mikepenz on 19.09.15.
  */
 public class IdDistributor {
-    private static final AtomicLong idDistributor = new AtomicLong(9000000000000000000L);
+    private static final AtomicLong idDistributor = new AtomicLong(-2L);
 
     /**
      * set an unique identifier for all items which do not have one set already
@@ -47,7 +47,7 @@ public class IdDistributor {
      */
     public static <T extends IIdentifyable> T checkId(@NonNull T item) {
         if (item.getIdentifier() == -1) {
-            item.withIdentifier(idDistributor.incrementAndGet());
+            item.withIdentifier(idDistributor.decrementAndGet());
         }
         return item;
     }

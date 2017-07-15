@@ -36,7 +36,7 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     }
 
     //defines if the IdDistributor is used to set ID's to all added items
-    private boolean mUseIdDistributor = true;
+    private boolean mUseIdDistributor = false;
 
     /**
      * defines if the IdDistributor is used to provide an ID to all added items which do not yet define an id
