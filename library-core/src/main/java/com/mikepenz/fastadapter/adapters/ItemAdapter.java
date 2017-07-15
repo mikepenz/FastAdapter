@@ -5,10 +5,8 @@ import android.support.annotation.Nullable;
 
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
-import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.utils.IdDistributor;
 
 import java.util.ArrayList;
@@ -189,21 +187,6 @@ public class ItemAdapter<Item extends IItem> extends AbstractAdapter<Item> imple
     @Override
     public Item getAdapterItem(int position) {
         return mItems.get(position);
-    }
-
-    /**
-     * sets the subItems of the given collapsible
-     * This method also makes sure identifiers are set if we use the IdDistributor
-     *
-     * @param collapsible the collapsible which gets the subItems set
-     * @param subItems    the subItems for this collapsible item
-     * @return the item type of the collapsible
-     */
-    public <T extends IItem & IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems) {
-        if (mUseIdDistributor) {
-            IdDistributor.checkIds(subItems);
-        }
-        return collapsible.withSubItems(subItems);
     }
 
     /**

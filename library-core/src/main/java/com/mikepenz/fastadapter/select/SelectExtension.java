@@ -11,7 +11,6 @@ import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.ISelectionListener;
-import com.mikepenz.fastadapter.utils.AdapterUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -143,9 +142,6 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
             if (selectedItems != null && selectedItems.contains(id)) {
                 mFastAdapter.select(i);
             }
-
-            //we also have to restore the selections for subItems
-            AdapterUtil.restoreSubItemSelectionStatesForAlternativeStateManagement(item, selectedItems);
         }
     }
 
@@ -162,8 +158,6 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
             if (item.isSelected()) {
                 selections.add(String.valueOf(item.getIdentifier()));
             }
-            //we also have to find all selections in the sub hirachies
-            AdapterUtil.findSubItemSelections(item, selections);
         }
 
         //remember the selections
@@ -382,15 +376,26 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * deselects all selections
      */
     public void deselect() {
-        for (Item item : AdapterUtil.getAllItems(mFastAdapter)) {
-            if (item.isSelected()) {
-                item.withSetSelected(false);
-                if (mSelectionListener != null) {
-                    mSelectionListener.onSelectionChanged(item, false);
-                }
-            }
+        int size = mFastAdapter.getItemCount();
+        for (int i = 0; i < size; i++) {
+            Item item = mFastAdapter.getItem(i);
+            deselect(item);
         }
         mFastAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * deselect's a provided item, this won't notify the adapter
+     *
+     * @param item the item to select
+     */
+    public void deselect(Item item) {
+        if (item.isSelected()) {
+            item.withSetSelected(false);
+            if (mSelectionListener != null) {
+                mSelectionListener.onSelectionChanged(item, false);
+            }
+        }
     }
 
     /**
@@ -406,17 +411,29 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
     public void select(boolean considerSelectableFlag) {
-        for (Item item : AdapterUtil.getAllItems(mFastAdapter)) {
-            if (considerSelectableFlag && !item.isSelectable()) {
-                continue;
-            }
-            item.withSetSelected(true);
-
-            if (mSelectionListener != null) {
-                mSelectionListener.onSelectionChanged(item, true);
-            }
+        int size = mFastAdapter.getItemCount();
+        for (int i = 0; i < size; i++) {
+            Item item = mFastAdapter.getItem(i);
+            select(item, considerSelectableFlag);
         }
         mFastAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * select's a provided item, this won't notify the adapter
+     *
+     * @param item                   the item to select
+     * @param considerSelectableFlag true if the select method should not select an item if its not selectable
+     */
+    public void select(Item item, boolean considerSelectableFlag) {
+        if (considerSelectableFlag && !item.isSelectable()) {
+            return;
+        }
+        item.withSetSelected(true);
+
+        if (mSelectionListener != null) {
+            mSelectionListener.onSelectionChanged(item, true);
+        }
     }
 
     /**

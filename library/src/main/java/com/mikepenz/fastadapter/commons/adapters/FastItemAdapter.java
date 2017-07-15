@@ -1,9 +1,7 @@
 package com.mikepenz.fastadapter.commons.adapters;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemFilter;
 
@@ -110,18 +108,6 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
      */
     public Item getAdapterItem(int position) {
         return getItemAdapter().getAdapterItem(position);
-    }
-
-    /**
-     * sets the subItems of the given collapsible
-     * This method also makes sure identifiers are set if we use the IdDistributor
-     *
-     * @param collapsible the collapsible which gets the subItems set
-     * @param subItems    the subItems for this collapsible item
-     * @return the item type of the collapsible
-     */
-    public <T extends IItem & IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems) {
-        return getItemAdapter().setSubItems(collapsible, subItems);
     }
 
     /**

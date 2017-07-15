@@ -8,15 +8,6 @@ import java.util.List;
 public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
 
     /**
-     * sets the subItems of the given collapsible
-     *
-     * @param collapsible the collapsible which gets the subItems set
-     * @param subItems    the subItems for this collapsible item
-     * @return the item type of the collapsible
-     */
-    <T extends IItem & IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems);
-
-    /**
      * set a new list of items and apply it to the existing list (clear - add) for this adapter
      *
      * @param items

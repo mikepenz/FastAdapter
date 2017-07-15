@@ -12,6 +12,7 @@ import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter.utils.AdapterUtil;
 
 import java.util.ArrayList;
@@ -23,6 +24,7 @@ import java.util.List;
 
 public class ExpandableExtension<Item extends IItem> implements IAdapterExtension<Item> {
     protected static final String BUNDLE_EXPANDED = "bundle_expanded";
+    protected static final String BUNDLE_EXPANDED_SELECTIONS = "bundle_expanded_selections";
 
     //
     private FastAdapter<Item> mFastAdapter;
@@ -62,6 +64,7 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
             return;
         }
         ArrayList<String> expandedItems = savedInstanceState.getStringArrayList(BUNDLE_EXPANDED + prefix);
+        ArrayList<String> selectedItems = savedInstanceState.getStringArrayList(BUNDLE_EXPANDED_SELECTIONS + prefix);
         Item item;
         String id;
         for (int i = 0, size = mFastAdapter.getItemCount(); i < size; i++) {
@@ -71,6 +74,9 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
                 expand(i);
                 size = mFastAdapter.getItemCount();
             }
+
+            //we also have to restore the selections for subItems
+            AdapterUtil.restoreSubItemSelectionStatesForAlternativeStateManagement(item, selectedItems);
         }
     }
 
@@ -88,11 +94,16 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
             if (item instanceof IExpandable && ((IExpandable) item).isExpanded()) {
                 expandedItems.add(String.valueOf(item.getIdentifier()));
             }
+            if (item.isSelected()) {
+                selections.add(String.valueOf(item.getIdentifier()));
+            }
             //we also have to find all selections in the sub hirachies
             AdapterUtil.findSubItemSelections(item, selections);
         }
         //remember the collapsed states
         savedInstanceState.putStringArrayList(BUNDLE_EXPANDED + prefix, expandedItems);
+        //remember the selections
+        savedInstanceState.putStringArrayList(BUNDLE_EXPANDED_SELECTIONS + prefix, selections);
     }
 
     @Override
@@ -421,4 +432,35 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
         }
         return totalAddedItems;
     }
+
+    /**
+     * deselects all selections
+     */
+    public void deselect() {
+        SelectExtension<Item> selectExtension = mFastAdapter.getSelectExtension();
+        if (selectExtension == null) {
+            return;
+        }
+        for (Item item : AdapterUtil.getAllItems(mFastAdapter)) {
+            selectExtension.deselect(item);
+        }
+        mFastAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * select all items
+     *
+     * @param considerSelectableFlag true if the select method should not select an item if its not selectable
+     */
+    public void select(boolean considerSelectableFlag) {
+        SelectExtension<Item> selectExtension = mFastAdapter.getSelectExtension();
+        if (selectExtension == null) {
+            return;
+        }
+        for (Item item : AdapterUtil.getAllItems(mFastAdapter)) {
+            selectExtension.select(item, considerSelectableFlag);
+        }
+        mFastAdapter.notifyDataSetChanged();
+    }
+
 }

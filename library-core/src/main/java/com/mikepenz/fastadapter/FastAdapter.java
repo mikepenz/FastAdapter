@@ -953,6 +953,14 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     //-------------------------
     //-------------------------
 
+
+    /**
+     * @return the selectExtension defined for this FastAdaper
+     */
+    public SelectExtension<Item> getSelectExtension() {
+        return mSelectExtension;
+    }
+
     /**
      * @return a set with the global positions of all selected items
      */
