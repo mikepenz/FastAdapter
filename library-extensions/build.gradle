@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 2600
-        versionName '2.6.0'
+        versionCode 3005
+        versionName '3.0.0.5-SNAPSHOT'
     }
     buildTypes {
         release {

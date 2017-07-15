@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 2600
-        versionName '2.6.0'
+        versionCode 3005
+        versionName '3.0.0.5-SNAPSHOT'
     }
     buildTypes {
         release {
@@ -25,7 +25,7 @@ android {
     }
 }
 
-if (project.hasProperty('pushall') || project.hasProperty('libraryextensiononly')) {
+if (project.hasProperty('pushall') || project.hasProperty('libraryextensionexpandablemonly')) {
     apply from: '../gradle-mvn-push.gradle'
     apply plugin: 'com.novoda.bintray-release'
     apply from: '../gradle-jcenter-push.gradle'
