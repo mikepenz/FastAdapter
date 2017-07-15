@@ -86,7 +86,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
             public boolean filter(SimpleItem item, CharSequence constraint) {
                 //return true if we should filter it out
                 //return false to keep it
-                return !item.name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
+                return item.name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
             }
         });
 

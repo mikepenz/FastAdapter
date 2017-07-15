@@ -95,7 +95,7 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
         /**
          * @param item       the item which is checked if it should get filtered
          * @param constraint the string constraint used to filter items away
-         * @return false if it should stay. true if it should get filtered away
+         * @return true if it should stay. false if it should get filtered away
          */
         boolean filter(Item item, CharSequence constraint);
     }

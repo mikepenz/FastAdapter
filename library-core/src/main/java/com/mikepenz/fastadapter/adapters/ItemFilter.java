@@ -92,7 +92,7 @@ public class ItemFilter<Item extends IItem> extends Filter {
             // We perform filtering operation
             if (mFilterPredicate != null) {
                 for (Item item : mOriginalItems) {
-                    if (!mFilterPredicate.filter(item, constraint)) {
+                    if (mFilterPredicate.filter(item, constraint)) {
                         filteredItems.add(item);
                     }
                 }
