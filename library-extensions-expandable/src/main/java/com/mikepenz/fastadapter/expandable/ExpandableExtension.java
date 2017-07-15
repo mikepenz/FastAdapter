@@ -65,10 +65,9 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
         }
         ArrayList<String> expandedItems = savedInstanceState.getStringArrayList(BUNDLE_EXPANDED + prefix);
         ArrayList<String> selectedItems = savedInstanceState.getStringArrayList(BUNDLE_EXPANDED_SELECTIONS + prefix);
-        Item item;
         String id;
         for (int i = 0, size = mFastAdapter.getItemCount(); i < size; i++) {
-            item = mFastAdapter.getItem(i);
+            Item item = mFastAdapter.getItem(i);
             id = String.valueOf(item.getIdentifier());
             if (expandedItems != null && expandedItems.contains(id)) {
                 expand(i);
@@ -438,7 +437,7 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
      */
     public void deselect() {
         SelectExtension<Item> selectExtension = mFastAdapter.getSelectExtension();
-        if (selectExtension == null) {
+        if(selectExtension == null) {
             return;
         }
         for (Item item : AdapterUtil.getAllItems(mFastAdapter)) {
@@ -454,7 +453,7 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
      */
     public void select(boolean considerSelectableFlag) {
         SelectExtension<Item> selectExtension = mFastAdapter.getSelectExtension();
-        if (selectExtension == null) {
+        if(selectExtension == null) {
             return;
         }
         for (Item item : AdapterUtil.getAllItems(mFastAdapter)) {

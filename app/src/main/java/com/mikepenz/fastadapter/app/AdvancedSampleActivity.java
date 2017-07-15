@@ -35,7 +35,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static com.mikepenz.fastadapter.adapters.ItemAdapter.items;
 
@@ -158,27 +158,28 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 .withIdentifier(1);
         mHeaderAdapter.add(sampleItem);
         //fill with some sample data
+        AtomicInteger id = new AtomicInteger(1);
         List<IItem> items = new ArrayList<>();
-        int size = new Random().nextInt(25) + 10;
+        int size = 25;
         for (int i = 1; i <= size; i++) {
             if (i % 6 == 0) {
                 SimpleSubExpandableItem<SimpleSubExpandableItem, SimpleSubExpandableItem> expandableItem = new SimpleSubExpandableItem<>();
-                expandableItem.withName("Test " + i)
+                expandableItem.withName("Test " + id.get())
                         .withHeader(headers[i / 5])
-                        .withIdentifier(100 + i);
+                        .withIdentifier(id.getAndIncrement());
                 List<SimpleSubExpandableItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 3; ii++) {
                     SimpleSubExpandableItem<SimpleSubExpandableItem, SimpleSubItem> subItem = new SimpleSubExpandableItem<>();
-                    subItem.withName("-- SubTest " + ii)
+                    subItem.withName("-- SubTest " + id.get())
                             .withHeader(headers[i / 5])
-                            .withIdentifier(1000 + ii);
+                            .withIdentifier(id.getAndIncrement());
 
                     List<SimpleSubItem> subSubItems = new LinkedList<>();
                     for (int iii = 1; iii <= 3; iii++) {
                         SimpleSubItem subSubItem = new SimpleSubItem();
-                        subSubItem.withName("---- SubSubTest " + iii)
+                        subSubItem.withName("---- SubSubTest " + id.get())
                                 .withHeader(headers[i / 5])
-                                .withIdentifier(10000 + iii);
+                                .withIdentifier(id.getAndIncrement());
                         subSubItems.add(subSubItem);
                     }
                     subItem.withSubItems(subSubItems);
@@ -188,7 +189,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 expandableItem.withSubItems(subItems);
                 items.add(expandableItem);
             } else {
-                items.add(new SimpleSubItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(i));
+                items.add(new SimpleSubItem().withName("Test " + id.get()).withHeader(headers[i / 5]).withIdentifier(id.getAndIncrement()));
             }
         }
         mItemAdapter.set(items);

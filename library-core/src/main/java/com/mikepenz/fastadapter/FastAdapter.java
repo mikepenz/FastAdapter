@@ -457,6 +457,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         for (IAdapterExtension<Item> ext : mExtensions) {
             ext.withSavedInstanceState(savedInstanceState, prefix);
         }
+
         return this;
     }
 

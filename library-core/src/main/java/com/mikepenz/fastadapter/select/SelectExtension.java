@@ -130,9 +130,6 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
         if (savedInstanceState == null) {
             return;
         }
-        //make sure already done selections are removed
-        deselect();
-
         ArrayList<String> selectedItems = savedInstanceState.getStringArrayList(BUNDLE_SELECTIONS + prefix);
         Item item;
         String id;
@@ -140,9 +137,10 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
             item = mFastAdapter.getItem(i);
             id = String.valueOf(item.getIdentifier());
             if (selectedItems != null && selectedItems.contains(id)) {
-                mFastAdapter.select(i);
+                select(item, true);
             }
         }
+        notifyAdapterDataSetChanged();
     }
 
     @Override

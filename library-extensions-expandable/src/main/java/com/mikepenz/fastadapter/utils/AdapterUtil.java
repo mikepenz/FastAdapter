@@ -20,11 +20,9 @@ public class AdapterUtil {
     public static <Item extends IItem> void restoreSubItemSelectionStatesForAlternativeStateManagement(Item item, List<String> selectedItems) {
         if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
             List<Item> subItems = (List<Item>) ((IExpandable<Item, ?>) item).getSubItems();
-            Item subItem;
-            String id;
             for (int i = 0, size = subItems.size(); i < size; i++) {
-                subItem = subItems.get(i);
-                id = String.valueOf(subItem.getIdentifier());
+                Item subItem = subItems.get(i);
+                String id = String.valueOf(subItem.getIdentifier());
                 if (selectedItems != null && selectedItems.contains(id)) {
                     subItem.withSetSelected(true);
                 }
@@ -42,11 +40,9 @@ public class AdapterUtil {
     public static <Item extends IItem> void findSubItemSelections(Item item, List<String> selections) {
         if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
             List<Item> subItems = (List<Item>) ((IExpandable<Item, ?>) item).getSubItems();
-            Item subItem;
-            String id;
             for (int i = 0, size = subItems.size(); i < size; i++) {
-                subItem = subItems.get(i);
-                id = String.valueOf(subItem.getIdentifier());
+                Item subItem = subItems.get(i);
+                String id = String.valueOf(subItem.getIdentifier());
                 if (subItem.isSelected()) {
                     selections.add(id);
                 }
