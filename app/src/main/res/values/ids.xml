@@ -7,8 +7,8 @@
     <item name="fastadapter_image_item_id" type="id" />
     <item name="fastadapter_simple_image_item_id" type="id" />
     <item name="fastadapter_icon_item_id" type="id" />
-    <item name="fastadapter_generic_icon_item_id" type="id" />
-    <item name="fastadapter_right_generic_icon_item_id" type="id" />
+    <item name="fastadapter_model_icon_item_id" type="id" />
+    <item name="fastadapter_right_Model_icon_item_id" type="id" />
     <item name="fastadapter_checkbox_sample_item_id" type="id" />
     <item name="fastadapter_radiobutton_sample_item_id" type="id" />
     <item name="fastadapter_swipable_item_id" type="id" />

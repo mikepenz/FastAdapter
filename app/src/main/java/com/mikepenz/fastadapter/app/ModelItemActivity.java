@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,16 +10,17 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
-import com.mikepenz.fastadapter.app.generic.GenericIconItem;
-import com.mikepenz.fastadapter.app.generic.IconModel;
-import com.mikepenz.fastadapter.app.generic.RightGenericIconItem;
-import com.mikepenz.fastadapter.app.generic.RightIconModel;
+import com.mikepenz.fastadapter.adapters.ModelItemAdapter;
+import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter;
+import com.mikepenz.fastadapter.app.model.ModelIconItem;
+import com.mikepenz.fastadapter.app.model.IconModel;
 import com.mikepenz.fastadapter.utils.Function;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.materialize.MaterializeBuilder;
+import com.turingtechnologies.materialscrollbar.CustomIndicator;
+import com.turingtechnologies.materialscrollbar.DragScrollBar;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +28,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class MultiTypeGenericItemActivity extends AppCompatActivity {
+public class ModelItemActivity extends AppCompatActivity {
     //save our FastAdapter
     private FastAdapter fastAdapter;
 
@@ -39,20 +41,17 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.sample_multi_generic_item);
+        getSupportActionBar().setTitle(R.string.sample_model_item);
 
         //style our ui
         new MaterializeBuilder().withActivity(this).build();
 
-        //if you need multiple items for different models you can also do this be defining a Function which get's the model object and returns the item (extends IItem)
-        GenericItemAdapter<IconModel, GenericIconItem> itemAdapter = new GenericItemAdapter<>(new Function<IconModel, GenericIconItem>() {
+        //adapters
+        FastScrollIndicatorAdapter fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter();
+        ModelItemAdapter<IconModel, ModelIconItem> itemAdapter = new ModelItemAdapter<>(new Function<IconModel, ModelIconItem>() {
             @Override
-            public GenericIconItem apply(IconModel o) {
-                if (o instanceof RightIconModel) {
-                    return new RightGenericIconItem(o);
-                } else {
-                    return new GenericIconItem(o);
-                }
+            public ModelIconItem apply(IconModel iconModel) {
+                return new ModelIconItem(iconModel);
             }
         });
 
@@ -64,11 +63,15 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
 
         //init our gridLayoutManager and configure RV
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
+        rv.setAdapter(fastScrollIndicatorAdapter.wrap(fastAdapter));
 
-        rv.setLayoutManager(gridLayoutManager);
+        DragScrollBar materialScrollBar = new DragScrollBar(this, rv, true);
+        materialScrollBar.setHandleColour(ContextCompat.getColor(this, R.color.colorAccent));
+        materialScrollBar.setHandleOffColour(ContextCompat.getColor(this, R.color.colorAccent));
+        materialScrollBar.addIndicator(new CustomIndicator(this), true);
+
+        rv.setLayoutManager(new GridLayoutManager(this, 3));
         rv.setItemAnimator(new SlideDownAlphaAnimator());
-        rv.setAdapter(fastAdapter);
 
         //order fonts by their name
         List<ITypeface> mFonts = new ArrayList<>(Iconics.getRegisteredFonts(this));
@@ -81,15 +84,9 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
 
         //add all icons of all registered Fonts to the list
         ArrayList<IconModel> models = new ArrayList<>();
-        int i = 0;
         for (ITypeface font : mFonts) {
             for (String icon : font.getIcons()) {
-                if (i % 3 == 0) {
-                    models.add(new IconModel(font.getIcon(icon)));
-                } else {
-                    models.add(new RightIconModel(font.getIcon(icon)));
-                }
-                i++;
+                models.add(new IconModel(font.getIcon(icon)));
             }
         }
 

@@ -20,7 +20,7 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 - Easily extensible
 - Endless Scroll ([EndlessScrollSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/EndlessScrollListActivity.java))
 - "Leave-Behind"-Pattern ([SwipeListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SwipeListActivity.java))
-- Split item view and model ([GenericItem](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/GenericItemActivity.java), [MultiTypeGenericItem](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiTypeGenericItemActivity.java))
+- Split item view and model ([ModelItem](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/ModelItemActivity.java), [MultiTypeModelItem](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiTypeModelItemActivity.java))
 - Chain other Adapters ([SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java), [StickyHeaderSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/StickyHeaderSampleActivity.java))
 - Comes with useful Helpers
  - ActionModeHelper ([MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java))
@@ -206,7 +206,7 @@ FastItemAdapter fastAdapter = new FastItemAdapter<>();
 // Head is a model class for your header
 HeaderAdapter<Header> headerAdapter = new HeaderAdapter<>();
 ```
-Initialize a generic FastAdapter:
+Initialize a Model FastAdapter:
 ```java
 FastItemAdapter<IItem> fastAdapter = new FastItemAdapter<>();
 ```
@@ -245,7 +245,7 @@ For the complete tutorial and more features such as multi-select and CAB check o
 
 ### ExpandableItems
 The `FastAdapter` comes with native support for expandable items. These items have to implement the `IExpandable` interface, and the sub items the `ISubItem` interface. This allows better support. 
-The sample app provides sample implementations of those. (Those in the sample are kept generic which allows them to be used with different parent / subitems)
+The sample app provides sample implementations of those. (Those in the sample are kept Model which allows them to be used with different parent / subitems)
 
 As of the way how `SubItems` and their state are handled it is highly recommended to use the `identifier` based `StateManagement`. Just add `withPositionBasedStateManagement(false)` to your `FastAdapter` setup.
 

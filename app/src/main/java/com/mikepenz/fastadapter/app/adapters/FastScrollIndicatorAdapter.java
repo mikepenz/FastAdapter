@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.app.generic.GenericIconItem;
+import com.mikepenz.fastadapter.app.model.ModelIconItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.turingtechnologies.materialscrollbar.ICustomAdapter;
 import com.turingtechnologies.materialscrollbar.INameableAdapter;
@@ -31,9 +31,9 @@ public class FastScrollIndicatorAdapter<Item extends IItem> extends RecyclerView
     @Override
     public String getCustomStringForElement(int position) {
         IItem item = getItem(position);
-        if (item instanceof GenericIconItem && ((GenericIconItem) item).getModel().icon.getName() != null) {
+        if (item instanceof ModelIconItem && ((ModelIconItem) item).getModel().icon.getName() != null) {
             //based on the position we set the headers text
-            return ((GenericIconItem) item).getModel().icon.getName();
+            return ((ModelIconItem) item).getModel().icon.getName();
         }
         return "";
     }

@@ -1,12 +1,12 @@
-package com.mikepenz.fastadapter.app.generic;
+package com.mikepenz.fastadapter.app.model;
 
 import com.mikepenz.fastadapter.app.R;
 
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class RightGenericIconItem extends GenericIconItem {
-    public RightGenericIconItem(IconModel icon) {
+public class RightModelIconItem extends ModelIconItem {
+    public RightModelIconItem(IconModel icon) {
         super(icon);
     }
 
@@ -17,7 +17,7 @@ public class RightGenericIconItem extends GenericIconItem {
      */
     @Override
     public int getType() {
-        return R.id.fastadapter_right_generic_icon_item_id;
+        return R.id.fastadapter_right_Model_icon_item_id;
     }
 
     /**

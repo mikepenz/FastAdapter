@@ -222,7 +222,6 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
 
     /**
      * This method returns the ViewHolder for our item, using the provided View.
-     * By default it will try to get the ViewHolder from the ViewHolderFactory. If this one is not implemented it will go over the generic way, wasting ~5ms
      *
      * @param v
      * @return the ViewHolder for this Item

@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
+import com.mikepenz.fastadapter.adapters.ModelItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.utils.Function;
 
@@ -33,8 +33,8 @@ import static android.support.v7.widget.com_mikepenz_fastadapter_extensions_scro
  * <li>Prevention of memory leaks when implemented properly (i.e. {@link OnLoadMoreHandler
  * OnLoadMoreHandler} should be implemented via static classes or lambda expressions).</li>
  * <li>An easier way to deliver results to an {@link #withNewItemsDeliveredTo(IItemAdapter,
- * Function)  IItemAdapter} or {@link #withNewItemsDeliveredTo(GenericItemAdapter)
- * GenericItemAdapter}.</li>
+ * Function)  IItemAdapter} or {@link #withNewItemsDeliveredTo(ModelItemAdapter)
+ * ModelItemAdapter}.</li>
  * </ul>
  * Created by jayson on 3/26/2016.
  */
@@ -139,7 +139,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
      * @param onNewItemsListener
      * @return
      * @see #withNewItemsDeliveredTo(IItemAdapter, Function) withNewItemsDeliveredTo(IItemAdapter, Function)
-     * @see #withNewItemsDeliveredTo(GenericItemAdapter) withNewItemsDeliveredTo(GenericItemAdapter)
+     * @see #withNewItemsDeliveredTo(ModelItemAdapter) withNewItemsDeliveredTo(ModelItemAdapter)
      */
     public EndlessScrollHelper<Model> withOnNewItemsListener(@NonNull OnNewItemsListener<Model> onNewItemsListener) {
         mOnNewItemsListener = onNewItemsListener;
@@ -164,14 +164,14 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
 
     /**
      * Registers an {@link OnNewItemsListener OnNewItemsListener} that delivers results to the
-     * specified {@link GenericItemAdapter} through its {@link GenericItemAdapter#addModel} method.
+     * specified {@link ModelItemAdapter} through its {@link ModelItemAdapter#addModel} method.
      *
-     * @param genericItemAdapter
+     * @param modelItemAdapter
      * @return
-     * @see #withNewItemsDeliveredTo(GenericItemAdapter, OnNewItemsListener) withNewItemsDeliveredTo(GenericItemAdapter, OnNewItemsListener)
+     * @see #withNewItemsDeliveredTo(ModelItemAdapter, OnNewItemsListener) withNewItemsDeliveredTo(ModelItemAdapter, OnNewItemsListener)
      */
-    public EndlessScrollHelper<Model> withNewItemsDeliveredTo(@NonNull GenericItemAdapter<Model, ?> genericItemAdapter) {
-        mOnNewItemsListener = new DeliverToGenericItemAdapter<>(genericItemAdapter);
+    public EndlessScrollHelper<Model> withNewItemsDeliveredTo(@NonNull ModelItemAdapter<Model, ?> modelItemAdapter) {
+        mOnNewItemsListener = new DeliverToModelItemAdapter<>(modelItemAdapter);
         return this;
     }
 
@@ -191,15 +191,15 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
     }
 
     /**
-     * An overload of {@link #withNewItemsDeliveredTo(GenericItemAdapter) withNewItemsDeliveredTo()}
+     * An overload of {@link #withNewItemsDeliveredTo(ModelItemAdapter) withNewItemsDeliveredTo()}
      * that allows additional callbacks.
      *
-     * @param genericItemAdapter
+     * @param modelItemAdapter
      * @param extraOnNewItemsListener
      * @return
      */
-    public EndlessScrollHelper<Model> withNewItemsDeliveredTo(@NonNull GenericItemAdapter<Model, ?> genericItemAdapter, @NonNull OnNewItemsListener<Model> extraOnNewItemsListener) {
-        mOnNewItemsListener = new DeliverToGenericItemAdapter2<>(genericItemAdapter, extraOnNewItemsListener);
+    public EndlessScrollHelper<Model> withNewItemsDeliveredTo(@NonNull ModelItemAdapter<Model, ?> modelItemAdapter, @NonNull OnNewItemsListener<Model> extraOnNewItemsListener) {
+        mOnNewItemsListener = new DeliverToModelItemAdapter2<>(modelItemAdapter, extraOnNewItemsListener);
         return this;
     }
 
@@ -331,17 +331,17 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         }
     }
 
-    private static class DeliverToGenericItemAdapter<Model> implements OnNewItemsListener<Model> {
+    private static class DeliverToModelItemAdapter<Model> implements OnNewItemsListener<Model> {
         @NonNull
-        private final GenericItemAdapter<Model, ?> mGenericItemAdapter;
+        private final ModelItemAdapter<Model, ?> mModelItemAdapter;
 
-        DeliverToGenericItemAdapter(@NonNull GenericItemAdapter<Model, ?> genericItemAdapter) {
-            mGenericItemAdapter = genericItemAdapter;
+        DeliverToModelItemAdapter(@NonNull ModelItemAdapter<Model, ?> modelItemAdapter) {
+            mModelItemAdapter = modelItemAdapter;
         }
 
         @Override
         public void onNewItems(@NonNull List<Model> newItems, int page) {
-            mGenericItemAdapter.addModel(newItems);
+            mModelItemAdapter.addModel(newItems);
         }
     }
 
@@ -361,12 +361,12 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         }
     }
 
-    private static class DeliverToGenericItemAdapter2<Model> extends DeliverToGenericItemAdapter<Model> {
+    private static class DeliverToModelItemAdapter2<Model> extends DeliverToModelItemAdapter<Model> {
         @NonNull
         private final OnNewItemsListener<Model> mExtraOnNewItemsListener;
 
-        DeliverToGenericItemAdapter2(@NonNull GenericItemAdapter<Model, ?> genericItemAdapter, @NonNull OnNewItemsListener<Model> extraOnNewItemsListener) {
-            super(genericItemAdapter);
+        DeliverToModelItemAdapter2(@NonNull ModelItemAdapter<Model, ?> modelItemAdapter, @NonNull OnNewItemsListener<Model> extraOnNewItemsListener) {
+            super(modelItemAdapter);
             mExtraOnNewItemsListener = extraOnNewItemsListener;
         }
 

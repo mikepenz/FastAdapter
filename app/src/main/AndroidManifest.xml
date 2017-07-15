@@ -46,11 +46,11 @@
             android:name="com.mikepenz.fastadapter.app.IconGridActivity"
             android:label="@string/sample_icon_grid" />
         <activity
-            android:name="com.mikepenz.fastadapter.app.GenericItemActivity"
-            android:label="@string/sample_generic_item" />
+            android:name="com.mikepenz.fastadapter.app.ModelItemActivity"
+            android:label="@string/sample_model_item" />
         <activity
-            android:name="com.mikepenz.fastadapter.app.MultiTypeGenericItemActivity"
-            android:label="@string/sample_multi_generic_item" />
+            android:name="com.mikepenz.fastadapter.app.MultiTypeModelItemActivity"
+            android:label="@string/sample_multi_model_item" />
         <activity
             android:name="com.mikepenz.fastadapter.app.CheckBoxSampleActivity"
             android:label="@string/sample_checkbox_item" />

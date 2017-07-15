@@ -72,8 +72,8 @@ public class SampleActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName(R.string.sample_collapsible).withDescription(R.string.sample_collapsible_descr).withSelectable(false).withIdentifier(2).withIcon(MaterialDesignIconic.Icon.gmi_check_all),
                         new PrimaryDrawerItem().withName(R.string.sample_sticky_header).withDescription(R.string.sample_sticky_header_descr).withSelectable(false).withIdentifier(3).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
                         new PrimaryDrawerItem().withName(R.string.sample_advanced).withDescription(R.string.sample_advanced_descr).withSelectable(false).withIdentifier(4).withIcon(MaterialDesignIconic.Icon.gmi_coffee),
-                        new PrimaryDrawerItem().withName(R.string.sample_generic_item).withDescription(R.string.sample_generic_item_descr).withSelectable(false).withIdentifier(7).withIcon(MaterialDesignIconic.Icon.gmi_font),
-                        new PrimaryDrawerItem().withName(R.string.sample_multi_generic_item).withDescription(R.string.sample_multi_generic_item_descr).withSelectable(false).withIdentifier(9).withIcon(MaterialDesignIconic.Icon.gmi_format_list_numbered),
+                        new PrimaryDrawerItem().withName(R.string.sample_model_item).withDescription(R.string.sample_model_item_descr).withSelectable(false).withIdentifier(7).withIcon(MaterialDesignIconic.Icon.gmi_font),
+                        new PrimaryDrawerItem().withName(R.string.sample_multi_model_item).withDescription(R.string.sample_multi_model_item_descr).withSelectable(false).withIdentifier(9).withIcon(MaterialDesignIconic.Icon.gmi_format_list_numbered),
                         new PrimaryDrawerItem().withName(R.string.sample_checkbox_item).withDescription(R.string.sample_checkbox_item_descr).withSelectable(false).withIdentifier(10).withIcon(CommunityMaterial.Icon.cmd_checkbox_marked),
                         new PrimaryDrawerItem().withName(R.string.sample_radiobutton_item).withDescription(R.string.sample_radiobutton_item_descr).withSelectable(false).withIdentifier(11).withIcon(CommunityMaterial.Icon.cmd_radiobox_marked),
                         new PrimaryDrawerItem().withName(R.string.sample_swipe_list).withDescription(R.string.sample_swipe_list_descr).withSelectable(false).withIdentifier(12).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
@@ -104,11 +104,11 @@ public class SampleActivity extends AppCompatActivity {
                             } else if (drawerItem.getIdentifier() == 6) {
                                 intent = new Intent(SampleActivity.this, SimpleItemListActivity.class);
                             } else if (drawerItem.getIdentifier() == 7) {
-                                intent = new Intent(SampleActivity.this, GenericItemActivity.class);
+                                intent = new Intent(SampleActivity.this, ModelItemActivity.class);
                             } else if (drawerItem.getIdentifier() == 8) {
                                 intent = new Intent(SampleActivity.this, IconGridActivity.class);
                             } else if (drawerItem.getIdentifier() == 9) {
-                                intent = new Intent(SampleActivity.this, MultiTypeGenericItemActivity.class);
+                                intent = new Intent(SampleActivity.this, MultiTypeModelItemActivity.class);
                             } else if (drawerItem.getIdentifier() == 10) {
                                 intent = new Intent(SampleActivity.this, CheckBoxSampleActivity.class);
                             } else if (drawerItem.getIdentifier() == 11) {
