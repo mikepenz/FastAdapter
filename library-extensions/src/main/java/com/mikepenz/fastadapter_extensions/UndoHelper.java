@@ -17,6 +17,8 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
+import static java.util.Arrays.asList;
+
 /**
  * Created by mikepenz on 04.01.16.
  */
@@ -85,7 +87,8 @@ public class UndoHelper<Item extends IItem> {
         });
     }
 
-    public @Nullable Snackbar getSnackBar() {
+    public @Nullable
+    Snackbar getSnackBar() {
         return mSnackBar;
     }
 
@@ -95,7 +98,8 @@ public class UndoHelper<Item extends IItem> {
      * @param positions the positions where the items were removed
      * @return the snackbar or null if {@link #withSnackBar(Snackbar, String)} was not previously called
      */
-    public @Nullable Snackbar remove(Set<Integer> positions) {
+    public @Nullable
+    Snackbar remove(Set<Integer> positions) {
         if (mSnackBar == null) {
             return null;
         }
@@ -214,8 +218,8 @@ public class UndoHelper<Item extends IItem> {
                 for (int i = 0, size = mHistory.items.size(); i < size; i++) {
                     FastAdapter.RelativeInfo<Item> relativeInfo = mHistory.items.get(i);
                     if (relativeInfo.adapter instanceof IItemAdapter) {
-                        IItemAdapter<Item> adapter = (IItemAdapter<Item>) relativeInfo.adapter;
-                        adapter.add(relativeInfo.position, relativeInfo.item);
+                        IItemAdapter<?, Item> adapter = (IItemAdapter<?, Item>) relativeInfo.adapter;
+                        adapter.addInternal(relativeInfo.position, asList(relativeInfo.item));
                         if (relativeInfo.item.isSelected()) {
                             mAdapter.select(relativeInfo.position);
                         }

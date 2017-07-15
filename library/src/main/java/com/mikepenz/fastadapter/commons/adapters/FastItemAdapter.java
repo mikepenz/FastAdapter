@@ -47,7 +47,7 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
     /**
      * @return the filter used to filter items
      */
-    public ItemFilter<Item> getItemFilter() {
+    public ItemFilter<?, Item> getItemFilter() {
         return getItemAdapter().getItemFilter();
     }
 
