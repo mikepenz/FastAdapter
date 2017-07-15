@@ -1,6 +1,8 @@
 apply plugin: 'com.android.library'
 apply plugin: 'realm-android'
 
+group "com.mikepenz"
+
 buildscript {
     repositories {
         jcenter()

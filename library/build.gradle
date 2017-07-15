@@ -1,7 +1,6 @@
 apply plugin: 'com.android.library'
 
 group "com.mikepenz"
-version "2.6.0"
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
