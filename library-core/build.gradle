@@ -10,7 +10,7 @@ android {
     defaultConfig {
         minSdkVersion 14
         targetSdkVersion 25
-        versionCode 3005
+        versionCode 3006
         versionName '3.0.0.5'
     }
     buildTypes {

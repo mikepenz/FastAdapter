@@ -7,8 +7,8 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.adapters.ModelItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.adapters.ModelItemAdapter;
 import com.mikepenz.fastadapter.utils.Function;
 
 import java.lang.ref.WeakReference;
@@ -157,7 +157,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
      * @return
      * @see #withNewItemsDeliveredTo(IItemAdapter, Function, OnNewItemsListener) withNewItemsDeliveredTo(IItemAdapter, Function, OnNewItemsListener)
      */
-    public <Item extends IItem> EndlessScrollHelper<Model> withNewItemsDeliveredTo(@NonNull IItemAdapter<Item> itemAdapter, @NonNull Function<Model, Item> itemFactory) {
+    public <Item extends IItem> EndlessScrollHelper<Model> withNewItemsDeliveredTo(@NonNull IItemAdapter<?, Item> itemAdapter, @NonNull Function<Model, Item> itemFactory) {
         mOnNewItemsListener = new DeliverToIItemAdapter<>(itemAdapter, itemFactory);
         return this;
     }
@@ -185,7 +185,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
      * @param <Item>
      * @return
      */
-    public <Item extends IItem> EndlessScrollHelper<Model> withNewItemsDeliveredTo(@NonNull IItemAdapter<Item> itemAdapter, @NonNull Function<Model, Item> itemFactory, @NonNull OnNewItemsListener<Model> extraOnNewItemsListener) {
+    public <Item extends IItem> EndlessScrollHelper<Model> withNewItemsDeliveredTo(@NonNull IItemAdapter<?, Item> itemAdapter, @NonNull Function<Model, Item> itemFactory, @NonNull OnNewItemsListener<Model> extraOnNewItemsListener) {
         mOnNewItemsListener = new DeliverToIItemAdapter2<>(itemAdapter, itemFactory, extraOnNewItemsListener);
         return this;
     }
@@ -311,11 +311,11 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
 
     private static class DeliverToIItemAdapter<Model, Item extends IItem> implements OnNewItemsListener<Model> {
         @NonNull
-        private final IItemAdapter<Item> mItemAdapter;
+        private final IItemAdapter<?, Item> mItemAdapter;
         @NonNull
         private final Function<Model, Item> mItemFactory;
 
-        DeliverToIItemAdapter(@NonNull IItemAdapter<Item> itemAdapter, @NonNull Function<Model, Item> itemFactory) {
+        DeliverToIItemAdapter(@NonNull IItemAdapter<?, Item> itemAdapter, @NonNull Function<Model, Item> itemFactory) {
             mItemAdapter = itemAdapter;
             mItemFactory = itemFactory;
         }
@@ -327,7 +327,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
             for (int i = 0; i < size; i++) {
                 iitems.add(mItemFactory.apply(newItems.get(i)));
             }
-            mItemAdapter.add(iitems);
+            mItemAdapter.addInternal(iitems);
         }
     }
 
@@ -349,7 +349,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         @NonNull
         private final OnNewItemsListener<Model> mExtraOnNewItemsListener;
 
-        DeliverToIItemAdapter2(@NonNull IItemAdapter<Item> itemAdapter, @NonNull Function<Model, Item> itemFactory, @NonNull OnNewItemsListener<Model> extraOnNewItemsListener) {
+        DeliverToIItemAdapter2(@NonNull IItemAdapter<?, Item> itemAdapter, @NonNull Function<Model, Item> itemFactory, @NonNull OnNewItemsListener<Model> extraOnNewItemsListener) {
             super(itemAdapter, itemFactory);
             mExtraOnNewItemsListener = extraOnNewItemsListener;
         }
