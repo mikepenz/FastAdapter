@@ -6,7 +6,6 @@ import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.listeners.ItemFilterListener;
-import com.mikepenz.fastadapter.utils.IdDistributor;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -207,7 +206,7 @@ public class ItemFilter<Model, Item extends IItem> extends Filter {
     public ModelAdapter<?, Item> add(List<Item> items) {
         if (mOriginalItems != null && items.size() > 0) {
             if (mItemAdapter.isUseIdDistributor()) {
-                IdDistributor.checkIds(items);
+                mItemAdapter.getIdDistributor().checkIds(items);
             }
             mOriginalItems.addAll(items);
             publishResults(mConstraint, performFiltering(mConstraint));
@@ -237,7 +236,7 @@ public class ItemFilter<Model, Item extends IItem> extends Filter {
     public ModelAdapter<?, Item> add(int position, List<Item> items) {
         if (mOriginalItems != null && items.size() > 0) {
             if (mItemAdapter.isUseIdDistributor()) {
-                IdDistributor.checkIds(items);
+                mItemAdapter.getIdDistributor().checkIds(items);
             }
             mOriginalItems.addAll(getAdapterPosition(mItemAdapter.getAdapterItems().get(position)) - mItemAdapter.getFastAdapter().getPreItemCount(position), items);
             publishResults(mConstraint, performFiltering(mConstraint));
@@ -256,7 +255,7 @@ public class ItemFilter<Model, Item extends IItem> extends Filter {
     public ModelAdapter<?, Item> set(int position, Item item) {
         if (mOriginalItems != null) {
             if (mItemAdapter.isUseIdDistributor()) {
-                IdDistributor.checkId(item);
+                mItemAdapter.getIdDistributor().checkId(item);
             }
             mOriginalItems.set(getAdapterPosition(mItemAdapter.getAdapterItems().get(position)) - mItemAdapter.getFastAdapter().getPreItemCount(position), item);
             publishResults(mConstraint, performFiltering(mConstraint));

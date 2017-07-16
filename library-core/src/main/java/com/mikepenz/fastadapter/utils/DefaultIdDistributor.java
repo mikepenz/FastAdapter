@@ -2,16 +2,15 @@ package com.mikepenz.fastadapter.utils;
 
 import android.support.annotation.NonNull;
 
+import com.mikepenz.fastadapter.IIdDistributor;
 import com.mikepenz.fastadapter.IIdentifyable;
 
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by mikepenz on 19.09.15.
  */
-public class IdDistributor {
-    private static final AtomicLong idDistributor = new AtomicLong(-2L);
+public abstract class DefaultIdDistributor<Identifiable extends IIdentifyable> implements IIdDistributor<Identifiable> {
 
     /**
      * set an unique identifier for all items which do not have one set already
@@ -19,7 +18,8 @@ public class IdDistributor {
      * @param items
      * @return
      */
-    public static <T extends IIdentifyable> List<T> checkIds(@NonNull List<T> items) {
+    @Override
+    public List<Identifiable> checkIds(@NonNull List<Identifiable> items) {
         for (int i = 0, size = items.size(); i < size; i++) {
             checkId(items.get(i));
         }
@@ -32,8 +32,9 @@ public class IdDistributor {
      * @param items
      * @return
      */
-    public static <T extends IIdentifyable> T[] checkIds(@NonNull T... items) {
-        for (T item : items) {
+    @Override
+    public Identifiable[] checkIds(@NonNull Identifiable... items) {
+        for (Identifiable item : items) {
             checkId(item);
         }
         return items;
@@ -45,9 +46,10 @@ public class IdDistributor {
      * @param item
      * @return
      */
-    public static <T extends IIdentifyable> T checkId(@NonNull T item) {
+    @Override
+    public Identifiable checkId(@NonNull Identifiable item) {
         if (item.getIdentifier() == -1) {
-            item.withIdentifier(idDistributor.decrementAndGet());
+            item.withIdentifier(nextId(item));
         }
         return item;
     }

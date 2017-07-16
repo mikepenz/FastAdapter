@@ -5,10 +5,11 @@ import android.support.annotation.Nullable;
 
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
+import com.mikepenz.fastadapter.IIdDistributor;
 import com.mikepenz.fastadapter.IInterceptor;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.utils.IdDistributor;
+import com.mikepenz.fastadapter.utils.DefaultIdDistributorImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -61,13 +62,33 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         return items;
     }
 
-    //defines if the IdDistributor is used to set ID's to all added items
+    private IIdDistributor<Item> mIdDistributor;
+
+    /**
+     * defines the idDistributor that is used to provide an ID to all added items
+     *
+     * @param idDistributor the idDistributor to use
+     * @return this
+     */
+    public ModelAdapter<Model, Item> withIdDistributor(IIdDistributor<Item> idDistributor) {
+        this.mIdDistributor = idDistributor;
+        return this;
+    }
+
+    public IIdDistributor<Item> getIdDistributor() {
+        if (mIdDistributor == null) {
+            return (IIdDistributor<Item>) IIdDistributor.DEFAULT;
+        }
+        return mIdDistributor;
+    }
+
+    //defines if the DefaultIdDistributor is used to set ID's to all added items
     private boolean mUseIdDistributor = true;
 
     /**
-     * defines if the IdDistributor is used to provide an ID to all added items which do not yet define an id
+     * defines if the DefaultIdDistributor is used to provide an ID to all added items which do not yet define an id
      *
-     * @param useIdDistributor false if the IdDistributor shouldn't be used
+     * @param useIdDistributor false if the DefaultIdDistributor shouldn't be used
      * @return this
      */
     public ModelAdapter<Model, Item> withUseIdDistributor(boolean useIdDistributor) {
@@ -235,7 +256,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
 
     public ModelAdapter<Model, Item> setInternal(List<Item> items, boolean resetFilter) {
         if (mUseIdDistributor) {
-            IdDistributor.checkIds(items);
+            getIdDistributor().checkIds(items);
         }
 
         //reset the filter
@@ -312,7 +333,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         List<Item> items = intercept(list);
 
         if (mUseIdDistributor) {
-            IdDistributor.checkIds(items);
+            getIdDistributor().checkIds(items);
         }
 
         //reset the filter
@@ -368,7 +389,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
 
     public ModelAdapter<Model, Item> addInternal(List<Item> items) {
         if (mUseIdDistributor) {
-            IdDistributor.checkIds(items);
+            getIdDistributor().checkIds(items);
         }
         int countBefore = mItems.size();
         mItems.addAll(items);
@@ -407,7 +428,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
 
     public ModelAdapter<Model, Item> addInternal(int position, List<Item> items) {
         if (mUseIdDistributor) {
-            IdDistributor.checkIds(items);
+            getIdDistributor().checkIds(items);
         }
         if (items != null && items.size() > 0) {
             mItems.addAll(position - getFastAdapter().getPreItemCountByOrder(getOrder()), items);
@@ -431,7 +452,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
 
     public ModelAdapter<Model, Item> setInternal(int position, Item item) {
         if (mUseIdDistributor) {
-            IdDistributor.checkId(item);
+            getIdDistributor().checkId(item);
         }
         mItems.set(position - getFastAdapter().getPreItemCount(position), item);
         mFastAdapter.registerTypeInstance(item);

@@ -10,12 +10,7 @@ import com.mikepenz.fastadapter.IItem;
 public class ItemAdapter<Item extends IItem> extends ModelAdapter<Item, Item> {
 
     public ItemAdapter() {
-        super(new IInterceptor<Item, Item>() {
-            @Override
-            public Item intercept(Item item) {
-                return item;
-            }
-        });
+        super((IInterceptor<Item, Item>) IInterceptor.DEFAULT);
     }
 
     /**
