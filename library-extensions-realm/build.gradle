@@ -1,12 +1,14 @@
 apply plugin: 'com.android.library'
 apply plugin: 'realm-android'
 
+group "com.mikepenz"
+
 buildscript {
     repositories {
         jcenter()
     }
     dependencies {
-        classpath "io.realm:realm-gradle-plugin:3.3.1"
+        classpath "io.realm:realm-gradle-plugin:3.5.0"
     }
 }
 

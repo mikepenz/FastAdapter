@@ -1,18 +1,16 @@
 package com.mikepenz.fastadapter_extensions.utilities;
 
-import android.util.Log;
-
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.ISubItem;
+import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
@@ -258,7 +256,7 @@ public class SubItemUtil {
      * @param deleteEmptyHeaders if true, empty headers will be removed from the adapter
      * @return List of items that have been removed from the adapter
      */
-    public static List<IItem> deleteSelected(final FastAdapter fastAdapter, boolean notifyParent, boolean deleteEmptyHeaders) {
+    public static List<IItem> deleteSelected(final FastAdapter fastAdapter, final ExpandableExtension expandableExtension, boolean notifyParent, boolean deleteEmptyHeaders) {
         List<IItem> deleted = new ArrayList<>();
 
         // we use a LinkedList, because this has performance advantages when modifying the listIterator during iteration!
@@ -287,7 +285,7 @@ public class SubItemUtil {
 
                 // check if parent is expanded and notify the adapter about the removed item, if necessary (only if parent is visible)
                 if (parentPos != -1 && ((IExpandable) parent).isExpanded()) {
-                    fastAdapter.notifyAdapterSubItemsChanged(parentPos, ((IExpandable) parent).getSubItems().size() + 1);
+                    expandableExtension.notifyAdapterSubItemsChanged(parentPos, ((IExpandable) parent).getSubItems().size() + 1);
                 }
 
                 // if desired, notify the parent about its changed items (only if parent is visible!)
@@ -296,7 +294,7 @@ public class SubItemUtil {
                     fastAdapter.notifyAdapterItemChanged(parentPos);
                     // expand the item again if it was expanded before calling notifyAdapterItemChanged
                     if (expanded) {
-                        fastAdapter.expand(parentPos);
+                        expandableExtension.expand(parentPos);
                     }
                 }
 
@@ -334,7 +332,7 @@ public class SubItemUtil {
      * @param deleteEmptyHeaders if true, empty headers will be removed from the adapter
      * @return List of items that have been removed from the adapter
      */
-    public static List<IItem> delete(final FastAdapter fastAdapter, Collection<Long> identifiersToDelete, boolean notifyParent, boolean deleteEmptyHeaders) {
+    public static List<IItem> delete(final FastAdapter fastAdapter, final ExpandableExtension expandableExtension, Collection<Long> identifiersToDelete, boolean notifyParent, boolean deleteEmptyHeaders) {
         List<IItem> deleted = new ArrayList<>();
         if (identifiersToDelete == null || identifiersToDelete.size() == 0) {
             return deleted;
@@ -366,7 +364,7 @@ public class SubItemUtil {
 
                 // check if parent is expanded and notify the adapter about the removed item, if necessary (only if parent is visible)
                 if (parentPos != -1 && ((IExpandable) parent).isExpanded()) {
-                    fastAdapter.notifyAdapterSubItemsChanged(parentPos, ((IExpandable) parent).getSubItems().size() + 1);
+                    expandableExtension.notifyAdapterSubItemsChanged(parentPos, ((IExpandable) parent).getSubItems().size() + 1);
                 }
 
                 // if desired, notify the parent about it's changed items (only if parent is visible!)
@@ -375,7 +373,7 @@ public class SubItemUtil {
                     fastAdapter.notifyAdapterItemChanged(parentPos);
                     // expand the item again if it was expanded before calling notifyAdapterItemChanged
                     if (expanded) {
-                        fastAdapter.expand(parentPos);
+                        expandableExtension.expand(parentPos);
                     }
                 }
 
@@ -412,8 +410,8 @@ public class SubItemUtil {
      * @param adapter the adapter
      * @param identifiers set of identifiers that should be notified
      */
-    public static <Item extends IItem & IExpandable> void notifyItemsChanged(final FastAdapter adapter, Set<Long> identifiers) {
-        notifyItemsChanged(adapter, identifiers, false);
+    public static <Item extends IItem & IExpandable> void notifyItemsChanged(final FastAdapter adapter, ExpandableExtension expandableExtension, Set<Long> identifiers) {
+        notifyItemsChanged(adapter, expandableExtension, identifiers, false);
     }
 
     /**
@@ -423,13 +421,13 @@ public class SubItemUtil {
      * @param identifiers set of identifiers that should be notified
      * @param restoreExpandedState true, if expanded headers should stay expanded
      */
-    public static <Item extends IItem & IExpandable> void notifyItemsChanged(final FastAdapter adapter, Set<Long> identifiers, boolean restoreExpandedState) {
+    public static <Item extends IItem & IExpandable> void notifyItemsChanged(final FastAdapter adapter, ExpandableExtension expandableExtension, Set<Long> identifiers, boolean restoreExpandedState) {
         int i;
         IItem item;
         for (i = 0; i < adapter.getItemCount(); i++) {
             item = adapter.getItem(i);
             if (item instanceof IExpandable) {
-                notifyItemsChanged(adapter, (Item) item, identifiers, true, restoreExpandedState);
+                notifyItemsChanged(adapter, expandableExtension, (Item) item, identifiers, true, restoreExpandedState);
             } else if (identifiers.contains(item.getIdentifier())) {
                 adapter.notifyAdapterItemChanged(i);
             }
@@ -445,7 +443,7 @@ public class SubItemUtil {
      * @param checkSubItems true, if sub items of headers items should be checked recursively
      * @param restoreExpandedState true, if expanded headers should stay expanded
      */
-    public static <Item extends IItem & IExpandable> void notifyItemsChanged(final FastAdapter adapter, Item header, Set<Long> identifiers, boolean checkSubItems, boolean restoreExpandedState) {
+    public static <Item extends IItem & IExpandable> void notifyItemsChanged(final FastAdapter adapter, final ExpandableExtension expandableExtension, Item header, Set<Long> identifiers, boolean checkSubItems, boolean restoreExpandedState) {
         int subItems = header.getSubItems().size();
         int position = adapter.getPosition(header);
         boolean expanded = header.isExpanded();
@@ -463,12 +461,12 @@ public class SubItemUtil {
                     adapter.notifyAdapterItemChanged(position + i + 1);
                 }
                 if (checkSubItems && item instanceof IExpandable) {
-                    notifyItemsChanged(adapter, (Item)item, identifiers, true, restoreExpandedState);
+                    notifyItemsChanged(adapter, expandableExtension, (Item)item, identifiers, true, restoreExpandedState);
                 }
             }
         }
         if (restoreExpandedState && expanded) {
-            adapter.expand(position);
+            expandableExtension.expand(position);
         }
     }
 

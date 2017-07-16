@@ -1,8 +1,8 @@
 package com.mikepenz.fastadapter.commons.adapters;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IGenericItem;
-import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
+import com.mikepenz.fastadapter.IModelItem;
+import com.mikepenz.fastadapter.adapters.ModelItemAdapter;
 import com.mikepenz.fastadapter.utils.Function;
 
 import java.util.List;
@@ -10,25 +10,25 @@ import java.util.List;
 /**
  * Created by fabianterhorst on 31.03.16.
  */
-public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item, ?>> extends FastAdapter<Item> {
-
-    private final GenericItemAdapter<Model, Item> mItemAdapter;
+public class ModelFastItemAdapter<Model, Item extends IModelItem<Model, Item, ?>> extends FastAdapter<Item> {
+    private ModelItemAdapter<Model, Item> modelItemAdapter;
 
     /**
      * @param itemFactory a factory that takes a model as an argument and returns an item as a result
      */
-    public GenericFastItemAdapter(Function<Model, Item> itemFactory) {
-        mItemAdapter = new GenericItemAdapter<>(itemFactory);
-        mItemAdapter.wrap(this);
+    public ModelFastItemAdapter(Function<Model, Item> itemFactory) {
+        modelItemAdapter = new ModelItemAdapter<>(itemFactory);
+        addAdapter(0, modelItemAdapter);
+        cacheSizes();
     }
 
     /**
-     * returns the internal created GenericItemAdapter
+     * returns the internal created ModelItemAdapter
      *
-     * @return the GenericItemAdapter used inside this GenericFastItemAdapter
+     * @return the ModelItemAdapter used inside this ModelFastItemAdapter
      */
-    public GenericItemAdapter<Model, Item> getGenericItemAdapter() {
-        return mItemAdapter;
+    public ModelItemAdapter<Model, Item> getModelItemAdapter() {
+        return modelItemAdapter;
     }
 
     /**
@@ -37,7 +37,7 @@ public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item
      * @return the list with all model objects
      */
     public List<Model> getModels() {
-        return mItemAdapter.getModels();
+        return getModelItemAdapter().getModels();
     }
 
     /**
@@ -45,8 +45,8 @@ public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item
      *
      * @param models the set models
      */
-    public GenericFastItemAdapter<Model, Item> setModel(List<Model> models) {
-        mItemAdapter.setModel(models);
+    public ModelFastItemAdapter<Model, Item> setModel(List<Model> models) {
+        getModelItemAdapter().setModel(models);
         return this;
     }
 
@@ -55,8 +55,8 @@ public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item
      *
      * @param models the set models
      */
-    public GenericFastItemAdapter<Model, Item> setNewModel(List<Model> models) {
-        mItemAdapter.setNewModel(models);
+    public ModelFastItemAdapter<Model, Item> setNewModel(List<Model> models) {
+        getModelItemAdapter().setNewModel(models);
         return this;
     }
 
@@ -66,8 +66,8 @@ public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item
      * @param models the added models
      */
     @SafeVarargs
-    public final GenericFastItemAdapter<Model, Item> addModel(Model... models) {
-        mItemAdapter.addModel(models);
+    public final ModelFastItemAdapter<Model, Item> addModel(Model... models) {
+        getModelItemAdapter().addModel(models);
         return this;
     }
 
@@ -76,8 +76,8 @@ public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item
      *
      * @param models the added models
      */
-    public GenericFastItemAdapter<Model, Item> addModel(List<Model> models) {
-        mItemAdapter.addModel(models);
+    public ModelFastItemAdapter<Model, Item> addModel(List<Model> models) {
+        getModelItemAdapter().addModel(models);
         return this;
     }
 
@@ -88,8 +88,8 @@ public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item
      * @param models   the added models
      */
     @SafeVarargs
-    public final GenericFastItemAdapter<Model, Item> addModel(int position, Model... models) {
-        mItemAdapter.addModel(position, models);
+    public final ModelFastItemAdapter<Model, Item> addModel(int position, Model... models) {
+        getModelItemAdapter().addModel(position, models);
         return this;
     }
 
@@ -99,8 +99,8 @@ public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item
      * @param position the global position
      * @param models   the added models
      */
-    public GenericFastItemAdapter<Model, Item> addModel(int position, List<Model> models) {
-        mItemAdapter.addModel(position, models);
+    public ModelFastItemAdapter<Model, Item> addModel(int position, List<Model> models) {
+        getModelItemAdapter().addModel(position, models);
         return this;
     }
 
@@ -110,16 +110,16 @@ public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item
      * @param position the global position
      * @param model    the set model
      */
-    public GenericFastItemAdapter<Model, Item> setModel(int position, Model model) {
-        mItemAdapter.setModel(position, model);
+    public ModelFastItemAdapter<Model, Item> setModel(int position, Model model) {
+        getModelItemAdapter().setModel(position, model);
         return this;
     }
 
     /**
      * clear all models
      */
-    public GenericFastItemAdapter<Model, Item> clearModel() {
-        mItemAdapter.clearModel();
+    public ModelFastItemAdapter<Model, Item> clearModel() {
+        getModelItemAdapter().clearModel();
         return this;
     }
 
@@ -130,8 +130,8 @@ public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item
      * @param toPosition   the global position to which to move
      * @return this
      */
-    public GenericFastItemAdapter<Model, Item> moveModel(int fromPosition, int toPosition) {
-        mItemAdapter.moveModel(fromPosition, toPosition);
+    public ModelFastItemAdapter<Model, Item> moveModel(int fromPosition, int toPosition) {
+        getModelItemAdapter().moveModel(fromPosition, toPosition);
         return this;
     }
 
@@ -141,8 +141,8 @@ public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item
      * @param position  the global position
      * @param itemCount the count of items which were removed
      */
-    public GenericFastItemAdapter<Model, Item> removeModelRange(int position, int itemCount) {
-        mItemAdapter.removeModelRange(position, itemCount);
+    public ModelFastItemAdapter<Model, Item> removeModelRange(int position, int itemCount) {
+        getModelItemAdapter().removeModelRange(position, itemCount);
         return this;
     }
 
@@ -151,8 +151,8 @@ public class GenericFastItemAdapter<Model, Item extends IGenericItem<Model, Item
      *
      * @param position the global position
      */
-    public GenericFastItemAdapter<Model, Item> removeModel(int position) {
-        mItemAdapter.removeModel(position);
+    public ModelFastItemAdapter<Model, Item> removeModel(int position) {
+        getModelItemAdapter().removeModel(position);
         return this;
     }
 }

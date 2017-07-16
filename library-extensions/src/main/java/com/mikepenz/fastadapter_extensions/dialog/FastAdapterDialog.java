@@ -9,10 +9,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
-import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.listeners.OnLongClickListener;
+import com.mikepenz.fastadapter.listeners.OnTouchListener;
 
 import java.util.List;
 
@@ -20,7 +21,8 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
 
     private RecyclerView mRecyclerView;
 
-    private FastItemAdapter<Item> mFastItemAdapter;
+    private FastAdapter<Item> mFastAdapter;
+    private ItemAdapter<Item> mItemAdapter;
 
     public FastAdapterDialog(Context context) {
         super(context);
@@ -66,31 +68,34 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
         return this;
     }
 
-    public FastAdapterDialog<Item> withFastItemAdapter(@NonNull FastItemAdapter<Item> fastItemAdapter) {
-        this.mFastItemAdapter = fastItemAdapter;
-        mRecyclerView.setAdapter(mFastItemAdapter);
+    public FastAdapterDialog<Item> withFastItemAdapter(@NonNull FastAdapter<Item> fastAdapter, @NonNull ItemAdapter<Item> itemAdapter) {
+        this.mFastAdapter = fastAdapter;
+        this.mItemAdapter = itemAdapter;
+        mRecyclerView.setAdapter(mFastAdapter);
         return this;
     }
 
-    public FastAdapterDialog<Item> withItems(@NonNull List<Item> items) {
-        if (mFastItemAdapter == null) {
-            mFastItemAdapter = new FastItemAdapter<>();
-            mRecyclerView.setAdapter(mFastItemAdapter);
+    private void initAdapterIfNeeded() {
+        if (mFastAdapter == null || mRecyclerView.getAdapter() == null) {
+            mItemAdapter = ItemAdapter.items();
+            mFastAdapter = FastAdapter.with(mItemAdapter);
+            mRecyclerView.setAdapter(mFastAdapter);
         }
-        mFastItemAdapter.set(items);
+    }
+
+    public FastAdapterDialog<Item> withItems(@NonNull List<Item> items) {
+        initAdapterIfNeeded();
+        mItemAdapter.set(items);
         return this;
     }
 
     public FastAdapterDialog<Item> withItems(@NonNull Item... items) {
-        if (mFastItemAdapter == null) {
-            mFastItemAdapter = new FastItemAdapter<>();
-            mRecyclerView.setAdapter(mFastItemAdapter);
-        }
-        mFastItemAdapter.add(items);
+        initAdapterIfNeeded();
+        mItemAdapter.add(items);
         return this;
     }
 
-    public FastAdapterDialog<Item> withAdapter(AbstractAdapter<Item> adapter) {
+    public FastAdapterDialog<Item> withAdapter(FastAdapter<Item> adapter) {
         this.mRecyclerView.setAdapter(adapter);
         return this;
     }
@@ -244,10 +249,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
         if (mRecyclerView.getLayoutManager() == null) {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         }
-        if (mFastItemAdapter == null && mRecyclerView.getAdapter() == null) {
-            mFastItemAdapter = new FastItemAdapter<>();
-            mRecyclerView.setAdapter(mFastItemAdapter);
-        }
+        initAdapterIfNeeded();
         super.show();
     }
 
@@ -262,8 +264,8 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param onClickListener the OnClickListener which will be used for a single item
      * @return this
      */
-    public FastAdapterDialog<Item> withOnClickListener(FastAdapter.OnClickListener<Item> onClickListener) {
-        this.mFastItemAdapter.withOnClickListener(onClickListener);
+    public FastAdapterDialog<Item> withOnClickListener(com.mikepenz.fastadapter.listeners.OnClickListener<Item> onClickListener) {
+        this.mFastAdapter.withOnClickListener(onClickListener);
         return this;
     }
 
@@ -273,8 +275,8 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param onPreClickListener the OnPreClickListener which will be called after a single item was clicked and all internal methods are done
      * @return this
      */
-    public FastAdapterDialog<Item> withOnPreClickListener(FastAdapter.OnClickListener<Item> onPreClickListener) {
-        this.mFastItemAdapter.withOnPreClickListener(onPreClickListener);
+    public FastAdapterDialog<Item> withOnPreClickListener(com.mikepenz.fastadapter.listeners.OnClickListener<Item> onPreClickListener) {
+        this.mFastAdapter.withOnPreClickListener(onPreClickListener);
         return this;
     }
 
@@ -284,8 +286,8 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param onLongClickListener the OnLongClickListener which will be used for a single item
      * @return this
      */
-    public FastAdapterDialog<Item> withOnLongClickListener(FastAdapter.OnLongClickListener<Item> onLongClickListener) {
-        this.mFastItemAdapter.withOnLongClickListener(onLongClickListener);
+    public FastAdapterDialog<Item> withOnLongClickListener(OnLongClickListener<Item> onLongClickListener) {
+        this.mFastAdapter.withOnLongClickListener(onLongClickListener);
         return this;
     }
 
@@ -295,8 +297,8 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param onPreLongClickListener the OnLongClickListener which will be called after a single item was clicked and all internal methods are done
      * @return this
      */
-    public FastAdapterDialog<Item> withOnPreLongClickListener(FastAdapter.OnLongClickListener<Item> onPreLongClickListener) {
-        this.mFastItemAdapter.withOnPreLongClickListener(onPreLongClickListener);
+    public FastAdapterDialog<Item> withOnPreLongClickListener(OnLongClickListener<Item> onPreLongClickListener) {
+        this.mFastAdapter.withOnPreLongClickListener(onPreLongClickListener);
         return this;
     }
 
@@ -306,8 +308,8 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param onTouchListener the TouchListener which will be used for a single item
      * @return this
      */
-    public FastAdapterDialog<Item> withOnTouchListener(FastAdapter.OnTouchListener<Item> onTouchListener) {
-        this.mFastItemAdapter.withOnTouchListener(onTouchListener);
+    public FastAdapterDialog<Item> withOnTouchListener(OnTouchListener<Item> onTouchListener) {
+        this.mFastAdapter.withOnTouchListener(onTouchListener);
         return this;
     }
 
@@ -317,7 +319,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param items the new items to set
      */
     public FastAdapterDialog<Item> set(List<Item> items) {
-        mFastItemAdapter.set(items);
+        mItemAdapter.set(items);
         return this;
     }
 
@@ -327,7 +329,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param items the new items to set
      */
     public FastAdapterDialog<Item> setNewList(List<Item> items) {
-        mFastItemAdapter.setNewList(items);
+        mItemAdapter.setNewList(items);
         return this;
     }
 
@@ -338,7 +340,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      */
     @SafeVarargs
     public final FastAdapterDialog<Item> add(Item... items) {
-        mFastItemAdapter.add(items);
+        mItemAdapter.add(items);
         return this;
     }
 
@@ -348,7 +350,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param items the items to add
      */
     public FastAdapterDialog<Item> add(List<Item> items) {
-        mFastItemAdapter.add(items);
+        mItemAdapter.add(items);
         return this;
     }
 
@@ -360,7 +362,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      */
     @SafeVarargs
     public final FastAdapterDialog<Item> add(int position, Item... items) {
-        mFastItemAdapter.add(position, items);
+        mItemAdapter.add(position, items);
         return this;
     }
 
@@ -371,7 +373,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param items    the items to add
      */
     public FastAdapterDialog<Item> add(int position, List<Item> items) {
-        mFastItemAdapter.add(position, items);
+        mItemAdapter.add(position, items);
         return this;
     }
 
@@ -382,7 +384,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param item     the item to set
      */
     public FastAdapterDialog<Item> set(int position, Item item) {
-        mFastItemAdapter.set(position, item);
+        mItemAdapter.set(position, item);
         return this;
     }
 
@@ -392,7 +394,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param item the item to add
      */
     public FastAdapterDialog<Item> add(Item item) {
-        mFastItemAdapter.add(item);
+        mItemAdapter.add(item);
         return this;
     }
 
@@ -403,7 +405,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param item     the item to add
      */
     public FastAdapterDialog<Item> add(int position, Item item) {
-        mFastItemAdapter.add(position, item);
+        mItemAdapter.add(position, item);
         return this;
     }
 
@@ -415,7 +417,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @return this
      */
     public FastAdapterDialog<Item> move(int fromPosition, int toPosition) {
-        mFastItemAdapter.move(fromPosition, toPosition);
+        mItemAdapter.move(fromPosition, toPosition);
         return this;
     }
 
@@ -425,7 +427,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param position the global position
      */
     public FastAdapterDialog<Item> remove(int position) {
-        mFastItemAdapter.remove(position);
+        mItemAdapter.remove(position);
         return this;
     }
 
@@ -436,7 +438,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * @param itemCount the count of items removed
      */
     public FastAdapterDialog<Item> removeItemRange(int position, int itemCount) {
-        mFastItemAdapter.removeItemRange(position, itemCount);
+        mItemAdapter.removeRange(position, itemCount);
         return this;
     }
 
@@ -444,7 +446,7 @@ public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
      * removes all items of this adapter
      */
     public FastAdapterDialog<Item> clear() {
-        mFastItemAdapter.clear();
+        mItemAdapter.clear();
         return this;
     }
 }

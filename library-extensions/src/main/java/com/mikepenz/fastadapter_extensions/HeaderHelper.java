@@ -1,6 +1,6 @@
 package com.mikepenz.fastadapter_extensions;
 
-import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
+import com.mikepenz.fastadapter.adapters.ModelItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 
 import java.util.Collections;
@@ -13,7 +13,7 @@ import java.util.List;
 
 public class HeaderHelper<Item, HeaderItem> {
     private ItemAdapter itemAdapter;
-    private GenericItemAdapter genericItemAdapter;
+    private ModelItemAdapter modelItemAdapter;
     private GroupingFunction<Item, HeaderItem> groupingFunction;
     private Comparator<Item> comparator;
 
@@ -34,11 +34,11 @@ public class HeaderHelper<Item, HeaderItem> {
     }
 
     /**
-     * @param genericItemAdapter
+     * @param modelItemAdapter
      * @param groupingFunction
      */
-    public HeaderHelper(GenericItemAdapter genericItemAdapter, GroupingFunction<Item, HeaderItem> groupingFunction) {
-        this.genericItemAdapter = genericItemAdapter;
+    public HeaderHelper(ModelItemAdapter modelItemAdapter, GroupingFunction<Item, HeaderItem> groupingFunction) {
+        this.modelItemAdapter = modelItemAdapter;
         this.groupingFunction = groupingFunction;
     }
 
@@ -81,8 +81,8 @@ public class HeaderHelper<Item, HeaderItem> {
         if (itemAdapter != null) {
             itemAdapter.set(items);
         }
-        if (genericItemAdapter != null) {
-            genericItemAdapter.setModel(items);
+        if (modelItemAdapter != null) {
+            modelItemAdapter.setModel(items);
         }
     }
 
@@ -112,21 +112,21 @@ public class HeaderHelper<Item, HeaderItem> {
      */
     public void setItemAdapter(ItemAdapter itemAdapter) {
         this.itemAdapter = itemAdapter;
-        this.genericItemAdapter = null;
+        this.modelItemAdapter = null;
     }
 
     /**
-     * @return the GenericItemAdapter
+     * @return the ModelItemAdapter
      */
-    public GenericItemAdapter getGenericItemAdapter() {
-        return genericItemAdapter;
+    public ModelItemAdapter getModelItemAdapter() {
+        return modelItemAdapter;
     }
 
     /**
-     * @param genericItemAdapter the GenericItemAdapter
+     * @param modelItemAdapter the ModelItemAdapter
      */
-    public void setGenericItemAdapter(GenericItemAdapter genericItemAdapter) {
-        this.genericItemAdapter = genericItemAdapter;
+    public void setModelItemAdapter(ModelItemAdapter modelItemAdapter) {
+        this.modelItemAdapter = modelItemAdapter;
         this.itemAdapter = null;
     }
 

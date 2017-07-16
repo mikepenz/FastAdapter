@@ -5,7 +5,7 @@ import android.support.v7.widget.RecyclerView;
 /**
  * Created by mikepenz on 03.02.15.
  */
-public interface IGenericItem<Model, Item extends IGenericItem<?, ?, ?>, VH extends RecyclerView.ViewHolder> extends IItem<Item, VH> {
+public interface IModelItem<Model, Item extends IModelItem<?, ?, ?>, VH extends RecyclerView.ViewHolder> extends IItem<Item, VH> {
 
     /**
      * set's the model of the item
@@ -13,7 +13,7 @@ public interface IGenericItem<Model, Item extends IGenericItem<?, ?, ?>, VH exte
      * @param model
      * @return
      */
-    IGenericItem<?, ?, ?> withModel(Model model);
+    IModelItem<?, ?, ?> withModel(Model model);
 
     /**
      * get's the model of the item

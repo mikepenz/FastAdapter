@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -12,20 +11,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.MopubFastItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
 import com.mikepenz.fastadapter.app.helpers.CustomStickyRecyclerHeadersDecoration;
 import com.mikepenz.fastadapter.app.items.LetterItem;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
+import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer;
 import com.mopub.nativeads.ViewBinder;
-import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +34,7 @@ import butterknife.ButterKnife;
  * Created by Gagan on 5/3/2017.
  */
 
-public class StickyHeaderMopubAdsActivity extends AppCompatActivity implements FastAdapter.OnClickListener<LetterItem> {
+public class StickyHeaderMopubAdsActivity extends AppCompatActivity implements OnClickListener<LetterItem> {
 
     private MopubFastItemAdapter<IItem> mAdapter;
     private static final String[] headers = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
@@ -61,9 +58,9 @@ public class StickyHeaderMopubAdsActivity extends AppCompatActivity implements F
         setSupportActionBar(toolbar);
 
         final StickyHeaderAdapter stickyHeaderAdapter = new StickyHeaderAdapter();
-        final HeaderAdapter headerAdapter = new HeaderAdapter();
-        final ItemAdapter itemAdapter = new ItemAdapter();
+        final ItemAdapter headerAdapter = new ItemAdapter();
         mAdapter = new MopubFastItemAdapter<>();
+        mAdapter.addAdapter(0, headerAdapter);
 
         ViewBinder viewBinder = new ViewBinder.Builder(R.layout.native_ad_item)
                 .iconImageId(R.id.native_icon_image)
@@ -73,7 +70,7 @@ public class StickyHeaderMopubAdsActivity extends AppCompatActivity implements F
                 .privacyInformationIconImageId(R.id.native_privacy_information_icon_image)
                 .build();
 
-        MoPubRecyclerAdapter adapter = new MoPubRecyclerAdapter(this, stickyHeaderAdapter.wrap(headerAdapter.wrap(mAdapter)));
+        MoPubRecyclerAdapter adapter = new MoPubRecyclerAdapter(this, stickyHeaderAdapter.wrap(mAdapter));
         adapter.registerAdRenderer(new MoPubStaticNativeAdRenderer(viewBinder));
         adapter.loadAds("76a3fefaced247959582d2d2df6f4757");
 

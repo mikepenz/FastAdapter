@@ -9,11 +9,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
-import com.mikepenz.fastadapter.app.generic.GenericIconItem;
-import com.mikepenz.fastadapter.app.generic.IconModel;
-import com.mikepenz.fastadapter.app.generic.RightGenericIconItem;
-import com.mikepenz.fastadapter.app.generic.RightIconModel;
+import com.mikepenz.fastadapter.adapters.ModelItemAdapter;
+import com.mikepenz.fastadapter.app.model.ModelIconItem;
+import com.mikepenz.fastadapter.app.model.IconModel;
+import com.mikepenz.fastadapter.app.model.RightModelIconItem;
+import com.mikepenz.fastadapter.app.model.RightIconModel;
 import com.mikepenz.fastadapter.utils.Function;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
@@ -21,11 +21,12 @@ import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-public class MultiTypeGenericItemActivity extends AppCompatActivity {
+public class MultiTypeModelItemActivity extends AppCompatActivity {
     //save our FastAdapter
     private FastAdapter fastAdapter;
 
@@ -38,14 +39,25 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
         // Handle Toolbar
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setTitle(R.string.sample_multi_generic_item);
+        getSupportActionBar().setTitle(R.string.sample_multi_model_item);
 
         //style our ui
         new MaterializeBuilder().withActivity(this).build();
 
+        //if you need multiple items for different models you can also do this be defining a Function which get's the model object and returns the item (extends IItem)
+        ModelItemAdapter<IconModel, ModelIconItem> itemAdapter = new ModelItemAdapter<>(new Function<IconModel, ModelIconItem>() {
+            @Override
+            public ModelIconItem apply(IconModel o) {
+                if (o instanceof RightIconModel) {
+                    return new RightModelIconItem(o);
+                } else {
+                    return new ModelIconItem(o);
+                }
+            }
+        });
 
         //create our FastAdapter which will manage everything
-        fastAdapter = new FastAdapter();
+        fastAdapter = FastAdapter.with(Arrays.asList(itemAdapter));
         fastAdapter.withSelectable(true);
 
         //get our recyclerView and do basic setup
@@ -54,21 +66,9 @@ public class MultiTypeGenericItemActivity extends AppCompatActivity {
         //init our gridLayoutManager and configure RV
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
 
-        //if you need multiple items for different models you can also do this be defining a Function which get's the model object and returns the item (extends IItem)
-        GenericItemAdapter<IconModel, GenericIconItem> itemAdapter = new GenericItemAdapter<>(new Function<IconModel, GenericIconItem>() {
-            @Override
-            public GenericIconItem apply(IconModel o) {
-                if (o instanceof RightIconModel) {
-                    return new RightGenericIconItem(o);
-                } else {
-                    return new GenericIconItem(o);
-                }
-            }
-        });
-
         rv.setLayoutManager(gridLayoutManager);
         rv.setItemAnimator(new SlideDownAlphaAnimator());
-        rv.setAdapter(itemAdapter.wrap(fastAdapter));
+        rv.setAdapter(fastAdapter);
 
         //order fonts by their name
         List<ITypeface> mFonts = new ArrayList<>(Iconics.getRegisteredFonts(this));

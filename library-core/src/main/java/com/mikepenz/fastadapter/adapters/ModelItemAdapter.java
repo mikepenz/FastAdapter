@@ -2,10 +2,9 @@ package com.mikepenz.fastadapter.adapters;
 
 import android.support.annotation.Nullable;
 
-import com.mikepenz.fastadapter.IGenericItem;
+import com.mikepenz.fastadapter.IModelItem;
 import com.mikepenz.fastadapter.utils.Function;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -17,13 +16,13 @@ import static java.util.Arrays.asList;
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  * This adapter has the order of 500 which is the centered order
  */
-public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model, ?, ?>> extends ItemAdapter<Item> {
+public class ModelItemAdapter<Model, Item extends IModelItem<? extends Model, ?, ?>> extends ItemAdapter<Item> {
     private final Function<Model, Item> mItemFactory;
 
     /**
      * @param itemFactory a factory that takes a model as an argument and returns an item as a result
      */
-    public GenericItemAdapter(Function<Model, Item> itemFactory) {
+    public ModelItemAdapter(Function<Model, Item> itemFactory) {
         this.mItemFactory = itemFactory;
     }
 
@@ -46,7 +45,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      *
      * @param models the set models
      */
-    public GenericItemAdapter<Model, Item> setModel(List<Model> models) {
+    public ModelItemAdapter<Model, Item> setModel(List<Model> models) {
         super.set(toItems(models));
         return this;
     }
@@ -56,7 +55,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      *
      * @param models the set models
      */
-    public GenericItemAdapter<Model, Item> setNewModel(List<Model> models) {
+    public ModelItemAdapter<Model, Item> setNewModel(List<Model> models) {
         super.setNewList(toItems(models));
         return this;
     }
@@ -67,7 +66,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      * @param models the added models
      */
     @SafeVarargs
-    public final GenericItemAdapter<Model, Item> addModel(Model... models) {
+    public final ModelItemAdapter<Model, Item> addModel(Model... models) {
         addModel(asList(models));
         return this;
     }
@@ -77,7 +76,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      *
      * @param models the added models
      */
-    public GenericItemAdapter<Model, Item> addModel(List<Model> models) {
+    public ModelItemAdapter<Model, Item> addModel(List<Model> models) {
         super.add(toItems(models));
         return this;
     }
@@ -89,7 +88,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      * @param models   the added models
      */
     @SafeVarargs
-    public final GenericItemAdapter<Model, Item> addModel(int position, Model... models) {
+    public final ModelItemAdapter<Model, Item> addModel(int position, Model... models) {
         addModel(position, asList(models));
         return this;
     }
@@ -100,7 +99,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      * @param position the global position
      * @param models   the added models
      */
-    public GenericItemAdapter<Model, Item> addModel(int position, List<Model> models) {
+    public ModelItemAdapter<Model, Item> addModel(int position, List<Model> models) {
         super.add(position, toItems(models));
         return this;
     }
@@ -111,7 +110,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      * @param position the global position
      * @param model    the set model
      */
-    public GenericItemAdapter<Model, Item> setModel(int position, Model model) {
+    public ModelItemAdapter<Model, Item> setModel(int position, Model model) {
         Item item = toItem(model);
         if (item != null) {
             super.set(position, item);
@@ -122,7 +121,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
     /**
      * clear all models
      */
-    public GenericItemAdapter<Model, Item> clearModel() {
+    public ModelItemAdapter<Model, Item> clearModel() {
         super.clear();
         return this;
     }
@@ -134,7 +133,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      * @param toPosition   the global position to which to move
      * @return this
      */
-    public GenericItemAdapter<Model, Item> moveModel(int fromPosition, int toPosition) {
+    public ModelItemAdapter<Model, Item> moveModel(int fromPosition, int toPosition) {
         super.move(fromPosition, toPosition);
         return this;
     }
@@ -146,7 +145,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      * @param position  the global position
      * @param itemCount the count of items which were removed
      */
-    public GenericItemAdapter<Model, Item> removeModelRange(int position, int itemCount) {
+    public ModelItemAdapter<Model, Item> removeModelRange(int position, int itemCount) {
         super.removeRange(position, itemCount);
         return this;
     }
@@ -156,7 +155,7 @@ public class GenericItemAdapter<Model, Item extends IGenericItem<? extends Model
      *
      * @param position the global position
      */
-    public GenericItemAdapter<Model, Item> removeModel(int position) {
+    public ModelItemAdapter<Model, Item> removeModel(int position) {
         super.remove(position);
         return this;
     }
