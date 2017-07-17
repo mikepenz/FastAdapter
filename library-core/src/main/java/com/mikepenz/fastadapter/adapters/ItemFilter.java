@@ -112,7 +112,7 @@ public class ItemFilter<Model, Item extends IItem> extends Filter {
     }
 
     @Override
-    protected void publishResults(CharSequence constraint, FilterResults results) {
+    protected void publishResults(@Nullable CharSequence constraint, FilterResults results) {
         // Now we have to inform the adapter about the new list filtered
         if (results.values != null) {
             mItemAdapter.setInternal((List<Item>) results.values, false);
