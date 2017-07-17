@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
@@ -31,6 +30,8 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import static com.mikepenz.fastadapter.adapters.ItemAdapter.items;
 
@@ -1182,7 +1183,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      * @param payload  additional payload
      */
-    public void notifyAdapterItemChanged(int position, Object payload) {
+    public void notifyAdapterItemChanged(int position, @Nullable Object payload) {
         notifyAdapterItemRangeChanged(position, 1, payload);
     }
 
@@ -1203,7 +1204,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param itemCount the count of items changed
      * @param payload   an additional payload
      */
-    public void notifyAdapterItemRangeChanged(int position, int itemCount, Object payload) {
+    public void notifyAdapterItemRangeChanged(int position, int itemCount, @Nullable Object payload) {
         // handle our extensions
         for (IAdapterExtension<Item> ext : mExtensions) {
             ext.notifyAdapterItemRangeChanged(position, itemCount, payload);

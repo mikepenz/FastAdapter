@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import static java.util.Arrays.asList;
 
 /**
@@ -55,7 +57,7 @@ public class ItemFilter<Model, Item extends IItem> extends Filter {
     }
 
     @Override
-    public FilterResults performFiltering(CharSequence constraint) {
+    public FilterResults performFiltering(@Nullable CharSequence constraint) {
         FilterResults results = new FilterResults();
 
         //return nothing

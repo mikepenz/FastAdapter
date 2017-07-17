@@ -1,6 +1,5 @@
 package com.mikepenz.fastadapter.utils;
 
-import com.mikepenz.fastadapter.IIdDistributor;
 import com.mikepenz.fastadapter.IIdentifyable;
 
 import java.util.concurrent.atomic.AtomicLong;

@@ -1,8 +1,5 @@
 package com.mikepenz.fastadapter.adapters;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IIdDistributor;
@@ -14,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import static java.util.Arrays.asList;
 
@@ -115,7 +114,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      * @param itemFilter the filter to use
      * @return this
      */
-    public ModelAdapter<Model, Item> withItemFilter(@NonNull ItemFilter<Model, Item> itemFilter) {
+    public ModelAdapter<Model, Item> withItemFilter(ItemFilter<Model, Item> itemFilter) {
         this.mItemFilter = itemFilter;
         return this;
     }
@@ -123,7 +122,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
     /**
      * @return the filter used to filter items
      */
-    @NonNull
     public ItemFilter<Model, Item> getItemFilter() {
         return mItemFilter;
     }
