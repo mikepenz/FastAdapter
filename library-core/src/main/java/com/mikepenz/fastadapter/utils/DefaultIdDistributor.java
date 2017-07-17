@@ -1,7 +1,5 @@
 package com.mikepenz.fastadapter.utils;
 
-import android.support.annotation.NonNull;
-
 import com.mikepenz.fastadapter.IIdDistributor;
 import com.mikepenz.fastadapter.IIdentifyable;
 
@@ -19,7 +17,7 @@ public abstract class DefaultIdDistributor<Identifiable extends IIdentifyable> i
      * @return
      */
     @Override
-    public List<Identifiable> checkIds(@NonNull List<Identifiable> items) {
+    public List<Identifiable> checkIds(List<Identifiable> items) {
         for (int i = 0, size = items.size(); i < size; i++) {
             checkId(items.get(i));
         }
@@ -33,7 +31,7 @@ public abstract class DefaultIdDistributor<Identifiable extends IIdentifyable> i
      * @return
      */
     @Override
-    public Identifiable[] checkIds(@NonNull Identifiable... items) {
+    public Identifiable[] checkIds(Identifiable... items) {
         for (Identifiable item : items) {
             checkId(item);
         }
@@ -47,7 +45,7 @@ public abstract class DefaultIdDistributor<Identifiable extends IIdentifyable> i
      * @return
      */
     @Override
-    public Identifiable checkId(@NonNull Identifiable item) {
+    public Identifiable checkId(Identifiable item) {
         if (item.getIdentifier() == -1) {
             item.withIdentifier(nextId(item));
         }

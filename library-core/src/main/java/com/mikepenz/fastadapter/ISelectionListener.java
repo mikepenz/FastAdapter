@@ -1,5 +1,7 @@
 package com.mikepenz.fastadapter;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by flisar on 21.09.2016.
  */
@@ -11,5 +13,5 @@ public interface ISelectionListener<Item extends IItem> {
      * @param item the item who's selection state changed
      *             param selected the new selection state of the item
      */
-    void onSelectionChanged(Item item, boolean selected);
+    void onSelectionChanged(@Nullable Item item, boolean selected);
 }

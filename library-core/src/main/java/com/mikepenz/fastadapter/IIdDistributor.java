@@ -1,7 +1,5 @@
 package com.mikepenz.fastadapter;
 
-import android.support.annotation.NonNull;
-
 import com.mikepenz.fastadapter.utils.DefaultIdDistributorImpl;
 
 import java.util.List;
@@ -13,11 +11,11 @@ public interface IIdDistributor<Identifiable extends IIdentifyable> {
 
     IIdDistributor<? extends IIdentifyable> DEFAULT = new DefaultIdDistributorImpl<>();
 
-    List<Identifiable> checkIds(@NonNull List<Identifiable> items);
+    List<Identifiable> checkIds(List<Identifiable> items);
 
-    Identifiable[] checkIds(@NonNull Identifiable... items);
+    Identifiable[] checkIds(Identifiable... items);
 
-    Identifiable checkId(@NonNull Identifiable item);
+    Identifiable checkId(Identifiable item);
 
     long nextId(Identifiable item);
 }

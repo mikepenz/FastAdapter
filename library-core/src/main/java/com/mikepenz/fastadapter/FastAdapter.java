@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
@@ -32,6 +31,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import static com.mikepenz.fastadapter.adapters.ItemAdapter.items;
 
 /**
@@ -57,7 +58,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     //
     private SelectExtension<Item> mSelectExtension = new SelectExtension<>();
-    // legacy bindView mode. if activated we will forward onBindView without paylodas to the method with payloads
+    // legacy bindView mode. if activated we will forward onBindView without payloads to the method with payloads
     private boolean mLegacyBindViewMode = false;
 
     // verbose
@@ -905,7 +906,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      *                           recently supplied in Note: Otherwise it is null.
      * @return the passed bundle with the newly added data
      */
-    public Bundle saveInstanceState(Bundle savedInstanceState) {
+    public Bundle saveInstanceState(@Nullable Bundle savedInstanceState) {
         return saveInstanceState(savedInstanceState, "");
     }
 
@@ -918,7 +919,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param prefix             a prefix added to the savedInstance key so we can store multiple states
      * @return the passed bundle with the newly added data
      */
-    public Bundle saveInstanceState(Bundle savedInstanceState, String prefix) {
+    public Bundle saveInstanceState(@Nullable Bundle savedInstanceState, String prefix) {
         // handle our extensions
         for (IAdapterExtension<Item> ext : mExtensions) {
             ext.saveInstanceState(savedInstanceState, prefix);
@@ -1182,7 +1183,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position the global position
      * @param payload  additional payload
      */
-    public void notifyAdapterItemChanged(int position, Object payload) {
+    public void notifyAdapterItemChanged(int position, @Nullable Object payload) {
         notifyAdapterItemRangeChanged(position, 1, payload);
     }
 
@@ -1203,7 +1204,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param itemCount the count of items changed
      * @param payload   an additional payload
      */
-    public void notifyAdapterItemRangeChanged(int position, int itemCount, Object payload) {
+    public void notifyAdapterItemRangeChanged(int position, int itemCount, @Nullable Object payload) {
         // handle our extensions
         for (IAdapterExtension<Item> ext : mExtensions) {
             ext.notifyAdapterItemRangeChanged(position, itemCount, payload);

@@ -1,20 +1,18 @@
 package com.mikepenz.fastadapter.adapters;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IIdDistributor;
 import com.mikepenz.fastadapter.IInterceptor;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.utils.DefaultIdDistributorImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 import static java.util.Arrays.asList;
 
@@ -50,14 +48,18 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         return this;
     }
 
+    @Nullable
     private Item intercept(Model model) {
         return mInterceptor.intercept(model);
     }
 
     private List<Item> intercept(List<Model> models) {
         List<Item> items = new ArrayList<>(models.size());
+        Item item;
         for (Model model : models) {
-            items.add(intercept(model));
+            item = intercept(model);
+            if (item == null) continue;
+            items.add(item);
         }
         return items;
     }
@@ -112,7 +114,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      * @param itemFilter the filter to use
      * @return this
      */
-    public ModelAdapter<Model, Item> withItemFilter(@NonNull ItemFilter<Model, Item> itemFilter) {
+    public ModelAdapter<Model, Item> withItemFilter(ItemFilter<Model, Item> itemFilter) {
         this.mItemFilter = itemFilter;
         return this;
     }
@@ -120,7 +122,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
     /**
      * @return the filter used to filter items
      */
-    @NonNull
     public ItemFilter<Model, Item> getItemFilter() {
         return mItemFilter;
     }
@@ -447,6 +448,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      */
     public ModelAdapter<Model, Item> set(int position, Model element) {
         Item item = intercept(element);
+        if (item == null) return this;
         return setInternal(position, item);
     }
 

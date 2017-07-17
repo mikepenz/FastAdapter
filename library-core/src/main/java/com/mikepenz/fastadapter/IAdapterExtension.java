@@ -1,11 +1,12 @@
 package com.mikepenz.fastadapter;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by mikepenz on 04/06/2017.
@@ -16,7 +17,7 @@ public interface IAdapterExtension<Item extends IItem> {
 
     void withSavedInstanceState(@Nullable Bundle savedInstanceState, String prefix);
 
-    void saveInstanceState(Bundle savedInstanceState, String prefix);
+    void saveInstanceState(@Nullable Bundle savedInstanceState, String prefix);
 
     boolean onClick(View v, int pos, FastAdapter<Item> fastAdapter, Item item);
 
@@ -32,9 +33,9 @@ public interface IAdapterExtension<Item extends IItem> {
 
     void notifyAdapterItemMoved(int fromPosition, int toPosition);
 
-    void notifyAdapterItemRangeChanged(int position, int itemCount, Object payload);
+    void notifyAdapterItemRangeChanged(int position, int itemCount, @Nullable Object payload);
 
     void set(List<Item> items, boolean resetFilter);
 
-    void performFiltering(CharSequence constraint);
+    void performFiltering(@Nullable CharSequence constraint);
 }
