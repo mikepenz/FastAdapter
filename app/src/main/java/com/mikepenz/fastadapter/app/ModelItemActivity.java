@@ -10,11 +10,11 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.adapters.ModelItemAdapter;
+import com.mikepenz.fastadapter.IInterceptor;
+import com.mikepenz.fastadapter.adapters.ModelAdapter;
 import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter;
-import com.mikepenz.fastadapter.app.model.ModelIconItem;
 import com.mikepenz.fastadapter.app.model.IconModel;
-import com.mikepenz.fastadapter.utils.Function;
+import com.mikepenz.fastadapter.app.model.ModelIconItem;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
@@ -48,9 +48,9 @@ public class ModelItemActivity extends AppCompatActivity {
 
         //adapters
         FastScrollIndicatorAdapter fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter();
-        ModelItemAdapter<IconModel, ModelIconItem> itemAdapter = new ModelItemAdapter<>(new Function<IconModel, ModelIconItem>() {
+        ModelAdapter<IconModel, ModelIconItem> itemAdapter = new ModelAdapter<>(new IInterceptor<IconModel, ModelIconItem>() {
             @Override
-            public ModelIconItem apply(IconModel iconModel) {
+            public ModelIconItem intercept(IconModel iconModel) {
                 return new ModelIconItem(iconModel);
             }
         });
@@ -91,7 +91,7 @@ public class ModelItemActivity extends AppCompatActivity {
         }
 
         //fill with some sample data
-        itemAdapter.addModel(models);
+        itemAdapter.add(models);
 
         //restore selections (this has to be done after the items were added
         fastAdapter.withSavedInstanceState(savedInstanceState);

@@ -9,12 +9,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.adapters.ModelItemAdapter;
-import com.mikepenz.fastadapter.app.model.ModelIconItem;
+import com.mikepenz.fastadapter.IInterceptor;
+import com.mikepenz.fastadapter.adapters.ModelAdapter;
 import com.mikepenz.fastadapter.app.model.IconModel;
-import com.mikepenz.fastadapter.app.model.RightModelIconItem;
+import com.mikepenz.fastadapter.app.model.ModelIconItem;
 import com.mikepenz.fastadapter.app.model.RightIconModel;
-import com.mikepenz.fastadapter.utils.Function;
+import com.mikepenz.fastadapter.app.model.RightModelIconItem;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
@@ -45,9 +45,9 @@ public class MultiTypeModelItemActivity extends AppCompatActivity {
         new MaterializeBuilder().withActivity(this).build();
 
         //if you need multiple items for different models you can also do this be defining a Function which get's the model object and returns the item (extends IItem)
-        ModelItemAdapter<IconModel, ModelIconItem> itemAdapter = new ModelItemAdapter<>(new Function<IconModel, ModelIconItem>() {
+        ModelAdapter<IconModel, ModelIconItem> itemAdapter = new ModelAdapter<>(new IInterceptor<IconModel, ModelIconItem>() {
             @Override
-            public ModelIconItem apply(IconModel o) {
+            public ModelIconItem intercept(IconModel o) {
                 if (o instanceof RightIconModel) {
                     return new RightModelIconItem(o);
                 } else {
@@ -94,7 +94,7 @@ public class MultiTypeModelItemActivity extends AppCompatActivity {
         }
 
         //fill with some sample data
-        itemAdapter.addModel(models);
+        itemAdapter.add(models);
 
         //restore selections (this has to be done after the items were added
         fastAdapter.withSavedInstanceState(savedInstanceState);
