@@ -2,7 +2,6 @@ package com.mikepenz.fastadapter.items;
 
 import android.content.Context;
 import android.support.annotation.CallSuper;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,8 @@ import com.mikepenz.fastadapter.listeners.OnClickListener;
 
 import java.util.Collections;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by mikepenz on 14.07.15.

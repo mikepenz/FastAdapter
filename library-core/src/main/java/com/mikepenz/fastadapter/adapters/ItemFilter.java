@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.annotation.Nullable;
+
 import static java.util.Arrays.asList;
 
 /**
@@ -55,7 +57,7 @@ public class ItemFilter<Model, Item extends IItem> extends Filter {
     }
 
     @Override
-    public FilterResults performFiltering(CharSequence constraint) {
+    public FilterResults performFiltering(@Nullable CharSequence constraint) {
         FilterResults results = new FilterResults();
 
         //return nothing
@@ -110,7 +112,7 @@ public class ItemFilter<Model, Item extends IItem> extends Filter {
     }
 
     @Override
-    protected void publishResults(CharSequence constraint, FilterResults results) {
+    protected void publishResults(@Nullable CharSequence constraint, FilterResults results) {
         // Now we have to inform the adapter about the new list filtered
         if (results.values != null) {
             mItemAdapter.setInternal((List<Item>) results.values, false);

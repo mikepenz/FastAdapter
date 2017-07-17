@@ -2,6 +2,8 @@ package com.mikepenz.fastadapter;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by mikepenz on 30.12.15.
  */
@@ -111,6 +113,6 @@ public interface IItemAdapter<Model, Item extends IItem> extends IAdapter<Item> 
          * @param constraint the string constraint used to filter items away
          * @return true if it should stay. false if it should get filtered away
          */
-        boolean filter(Item item, CharSequence constraint);
+        boolean filter(Item item, @Nullable CharSequence constraint);
     }
 }

@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter.select;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.util.ArraySet;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 /**
  * Created by mikepenz on 04/06/2017.
@@ -144,7 +145,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     }
 
     @Override
-    public void saveInstanceState(Bundle savedInstanceState, String prefix) {
+    public void saveInstanceState(@Nullable Bundle savedInstanceState, String prefix) {
         if (savedInstanceState == null) {
             return;
         }
@@ -203,7 +204,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     }
 
     @Override
-    public void notifyAdapterItemRangeChanged(int position, int itemCount, Object payload) {
+    public void notifyAdapterItemRangeChanged(int position, int itemCount, @Nullable Object payload) {
     }
 
     @Override
@@ -268,7 +269,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      *
      * @param position the global position
      */
-    private void handleSelection(View view, Item item, int position) {
+    private void handleSelection(@Nullable View view, Item item, int position) {
         //if this item is not selectable don't continue
         if (!item.isSelectable()) {
             return;
@@ -462,7 +463,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * @param position the global position
      * @param entries  the iterator which is used to deselect all
      */
-    public void deselect(int position, Iterator<Integer> entries) {
+    public void deselect(int position, @Nullable Iterator<Integer> entries) {
         Item item = mFastAdapter.getItem(position);
         if (item != null) {
             item.withSetSelected(false);
