@@ -9,7 +9,6 @@ import com.mikepenz.fastadapter.IIdDistributor;
 import com.mikepenz.fastadapter.IInterceptor;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.utils.DefaultIdDistributorImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,14 +49,18 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         return this;
     }
 
+    @Nullable
     private Item intercept(Model model) {
         return mInterceptor.intercept(model);
     }
 
     private List<Item> intercept(List<Model> models) {
         List<Item> items = new ArrayList<>(models.size());
+        Item item;
         for (Model model : models) {
-            items.add(intercept(model));
+            item = intercept(model);
+            if (item == null) continue;
+            items.add(item);
         }
         return items;
     }
@@ -447,6 +450,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      */
     public ModelAdapter<Model, Item> set(int position, Model element) {
         Item item = intercept(element);
+        if (item == null) return this;
         return setInternal(position, item);
     }
 

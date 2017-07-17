@@ -1,5 +1,7 @@
 package com.mikepenz.fastadapter;
 
+import android.support.annotation.Nullable;
+
 /**
  * Created by mikepenz on 30.12.15.
  */
@@ -12,5 +14,6 @@ public interface IInterceptor<Element, Item extends IItem> {
         }
     };
 
+    @Nullable
     Item intercept(Element element);
 }
