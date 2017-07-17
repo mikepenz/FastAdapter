@@ -150,8 +150,9 @@ fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<Item>() {
 ### 4. Click listeners for views inside your item
 ```java
 //just add an `EventHook` to your `FastAdapter` by implementing either a `ClickEventHook`, `LongClickEventHook`, `TouchEventHook`, `CustomEventHook`
-fastItemAdapter.withItemEvent(new ClickEventHook<SampleItem> {
+fastItemAdapter.withEventHook(new ClickEventHook<SampleItem>() {
     
+    @Nullable
     @Override
     public View onBind(@NonNull RecyclerView.ViewHolder viewHolder) {
         //return the views on which you want to bind this event
@@ -173,7 +174,7 @@ fastItemAdapter.withItemEvent(new ClickEventHook<SampleItem> {
 // Call this in onQueryTextSubmit() & onQueryTextChange() when using SearchView
 fastAdapter.filter("yourSearchTerm");
 
-fastAdapter.withFilterPredicate(new IItemAdapter.Predicate<Item>() {
+fastAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<Item>() {
     @Override
     public boolean filter(Item item, CharSequence constraint) {
 	return item.getName().startsWith(String.valueOf(constraint));
