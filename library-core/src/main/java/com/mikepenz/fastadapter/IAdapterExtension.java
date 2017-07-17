@@ -17,7 +17,7 @@ public interface IAdapterExtension<Item extends IItem> {
 
     void withSavedInstanceState(@Nullable Bundle savedInstanceState, String prefix);
 
-    void saveInstanceState(Bundle savedInstanceState, String prefix);
+    void saveInstanceState(@Nullable Bundle savedInstanceState, String prefix);
 
     boolean onClick(View v, int pos, FastAdapter<Item> fastAdapter, Item item);
 

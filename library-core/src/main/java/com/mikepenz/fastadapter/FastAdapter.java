@@ -906,7 +906,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      *                           recently supplied in Note: Otherwise it is null.
      * @return the passed bundle with the newly added data
      */
-    public Bundle saveInstanceState(Bundle savedInstanceState) {
+    public Bundle saveInstanceState(@Nullable Bundle savedInstanceState) {
         return saveInstanceState(savedInstanceState, "");
     }
 
@@ -919,7 +919,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param prefix             a prefix added to the savedInstance key so we can store multiple states
      * @return the passed bundle with the newly added data
      */
-    public Bundle saveInstanceState(Bundle savedInstanceState, String prefix) {
+    public Bundle saveInstanceState(@Nullable Bundle savedInstanceState, String prefix) {
         // handle our extensions
         for (IAdapterExtension<Item> ext : mExtensions) {
             ext.saveInstanceState(savedInstanceState, prefix);
