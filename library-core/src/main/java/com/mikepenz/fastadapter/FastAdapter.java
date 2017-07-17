@@ -58,7 +58,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     //
     private SelectExtension<Item> mSelectExtension = new SelectExtension<>();
-    // legacy bindView mode. if activated we will forward onBindView without paylodas to the method with payloads
+    // legacy bindView mode. if activated we will forward onBindView without payloads to the method with payloads
     private boolean mLegacyBindViewMode = false;
 
     // verbose
