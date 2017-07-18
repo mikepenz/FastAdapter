@@ -10,6 +10,10 @@ android:
 jdk:
   - oraclejdk8
 
+before_script:
+    # Install SDK license so Android Gradle plugin can install deps.
+    - mkdir "$ANDROID_HOME/licenses" || true
+
 script: ./gradlew clean test
 
 branches:
