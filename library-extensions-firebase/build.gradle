@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 2600
-        versionName '2.6.0'
+        versionCode 2630
+        versionName '2.6.3'
     }
     buildTypes {
         release {
