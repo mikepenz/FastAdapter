@@ -2,23 +2,18 @@ language: android
 
 android:
   components:
-    # Uncomment the lines below if you want to
-    # use the latest revision of Android SDK Tools
-    # - platform-tools
+    # Update tools and then platform-tools explicitly so lint gets an updated database. Can be removed once 3.0 is out.
     - tools
-
-    # The BuildTools version used by your project
-    - build-tools-25.0.2
-
-    # The SDK version used to compile your project
-    - android-25
-
-    # Additional components
-    - extra-google-m2repository
-    - extra-android-m2repository
+    - platform-tools
+    - sys-img-armeabi-v7a-android-18
 
 jdk:
   - oraclejdk8
+
+before_script:
+    # Install SDK license so Android Gradle plugin can install deps.
+    - mkdir "$ANDROID_HOME/licenses" || true
+    - echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
 
 script: ./gradlew clean test
 
@@ -31,6 +26,9 @@ notifications:
 
 sudo: false
 
+before_cache:
+    - rm -f $HOME/.gradle/caches/modules-2/modules-2.lock
+
 cache:
   directories:
-    - $HOME/.m2
+    - $HOME/.gradle

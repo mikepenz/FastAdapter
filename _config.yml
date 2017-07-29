@@ -1,0 +1,8 @@
+title: FastAdapter
+description: The bullet proof, fast and easy to use adapter library, which minimizes developing time to a fraction...
+show_downloads: true
+theme: jekyll-theme-minimal
+
+gems:
+  - jekyll-mentions
+  - jekyll-readme-index

@@ -7,22 +7,14 @@ try {
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion setup.compileSdk
+    buildToolsVersion setup.buildTools
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 25
-        versionCode 262
-        versionName '2.6.2'
-
-        applicationVariants.all { variant ->
-            variant.outputs.each { output ->
-                def file = output.outputFileName
-                def fileName = file.replace(".apk", "-v" + versionName + "-c" + versionCode + ".apk")
-                output.outputFileName = new File(fileName)
-            }
-        }
+        minSdkVersion setup.minSdk
+        targetSdkVersion setup.targetSdk
+        versionCode 263
+        versionName '2.6.3'
     }
     buildTypes {
         debug {
@@ -51,18 +43,19 @@ dependencies {
     compile project(':library')
     compile project(':library-extensions')
 
-    compile "com.android.support:cardview-v7:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:cardview-v7:${versions.supportLib}"
 
     // used to base on some backwards compatible themes
     // contains util classes to support various android versions, and clean up code
     // comes with the awesome "Holder"-Pattern
     // https://github.com/mikepenz/Materialize
-    compile 'com.mikepenz:materialize:1.0.2@aar'
+    compile 'com.mikepenz:materialize:1.0.3@aar'
 
     // used to provide out of the box icon font support. simplifies development,
     // and provides scalable icons. the core is very very light
     // https://github.com/mikepenz/Android-Iconics
-    compile 'com.mikepenz:iconics-core:2.8.5@aar'
+    compile 'com.mikepenz:iconics-core:2.9.1@aar'
+    compile "com.mikepenz:iconics-views:2.9.1@aar"
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
@@ -72,7 +65,7 @@ dependencies {
     }
     //used to provide different itemAnimators for the RecyclerView
     //https://github.com/mikepenz/ItemAnimators
-    compile 'com.mikepenz:itemanimators:0.5.0@aar'
+    compile 'com.mikepenz:itemanimators:1.0.0@aar'
     //used to generate the Open Source section
     //https://github.com/mikepenz/AboutLibraries
     compile('com.mikepenz:aboutlibraries:5.9.5@aar') {
@@ -84,7 +77,7 @@ dependencies {
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
     compile 'com.mikepenz:community-material-typeface:1.7.22.1@aar'
     compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
-    compile 'com.mikepenz:fontawesome-typeface:4.6.0.3@aar'
+    compile 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
 
     //Used for the StickyHeaderSample
     //https://github.com/timehop/sticky-headers-recyclerview
@@ -97,12 +90,12 @@ dependencies {
     compile 'com.turingtechnologies.materialscrollbar:lib:10.0.1'
 
     //https://github.com/JakeWharton/butterknife
-    compile 'com.jakewharton:butterknife:8.6.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
+    compile 'com.jakewharton:butterknife:8.7.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
 
     //used to load the images in the ImageListSample
     //https://github.com/bumptech/glide
-    compile 'com.github.bumptech.glide:glide:3.7.0'
+    compile 'com.github.bumptech.glide:glide:3.8.0'
 
     //Used to provide the drag selection like google photos
     compile 'com.github.MFlisar:DragSelectRecyclerView:0.2'

@@ -40,21 +40,21 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-compile('com.mikepenz:fastadapter:2.6.2@aar') {
+compile('com.mikepenz:fastadapter:2.6.3@aar') {
     transitive = true
 }
 ```
 
 The commons package comes with some useful helpers (which are not needed in all cases) This one for example includes the `FastItemAdapter`
 ```gradle
-compile 'com.mikepenz:fastadapter-commons:2.6.0@aar'
+compile 'com.mikepenz:fastadapter-commons:2.6.3@aar'
 ```
 
 All additions are included in the following dependency.
 ```gradle
-compile 'com.mikepenz:fastadapter-extensions:2.6.0@aar'
+compile 'com.mikepenz:fastadapter-extensions:2.6.3@aar'
 //The tiny Materialize library used for its useful helper classes
-compile 'com.mikepenz:materialize:1.0.2@aar'
+compile 'com.mikepenz:materialize:1.0.3@aar'
 ```
 
 > If you upgrade from < 2.5.0 follow the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md)
@@ -150,8 +150,9 @@ fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<Item>() {
 ### 4. Click listeners for views inside your item
 ```java
 //just add an `EventHook` to your `FastAdapter` by implementing either a `ClickEventHook`, `LongClickEventHook`, `TouchEventHook`, `CustomEventHook`
-fastItemAdapter.withItemEvent(new ClickEventHook<SampleItem> {
+fastItemAdapter.withEventHook(new ClickEventHook<SampleItem>() {
     
+    @Nullable
     @Override
     public View onBind(@NonNull RecyclerView.ViewHolder viewHolder) {
         //return the views on which you want to bind this event
@@ -173,7 +174,7 @@ fastItemAdapter.withItemEvent(new ClickEventHook<SampleItem> {
 // Call this in onQueryTextSubmit() & onQueryTextChange() when using SearchView
 fastAdapter.filter("yourSearchTerm");
 
-fastAdapter.withFilterPredicate(new IItemAdapter.Predicate<Item>() {
+fastAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<Item>() {
     @Override
     public boolean filter(Item item, CharSequence constraint) {
 	return item.getName().startsWith(String.valueOf(constraint));
