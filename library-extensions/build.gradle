@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion setup.compileSdk
+    buildToolsVersion setup.buildTools
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 25
+        minSdkVersion setup.minSdk
+        targetSdkVersion setup.targetSdk
         versionCode 2600
         versionName '2.6.0'
     }
@@ -31,8 +31,8 @@ if (project.hasProperty('pushall') || project.hasProperty('libraryextensiononly'
 
 dependencies {
     compile project(':library')
-    compile "com.android.support:design:${rootProject.ext.supportLibVersion}"
-    compile "com.android.support:support-annotations:${rootProject.ext.supportLibVersion}"
+    compile "com.android.support:design:${versions.supportLib}"
+    compile "com.android.support:support-annotations:${versions.supportLib}"
 
-    compile 'com.mikepenz:materialize:1.0.2@aar'
+    compile 'com.mikepenz:materialize:1.0.3@aar'
 }

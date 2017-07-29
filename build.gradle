@@ -1,27 +1,32 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
+    ext {
+        setup = [
+                compileSdk: 26,
+                buildTools: "26.0.0",
+                minSdk    : 14,
+                targetSdk : 26
+        ]
+
+        versions = [
+                supportLib: "26.0.0"
+        ]
+    }
+
     repositories {
-        maven { url 'https://maven.google.com' }
+        google()
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.0.0-alpha3'
+        classpath 'com.android.tools.build:gradle:3.0.0-alpha8'
         classpath 'com.novoda:bintray-release:0.5.0'
-        classpath "io.realm:realm-gradle-plugin:3.3.1"
+        classpath "io.realm:realm-gradle-plugin:3.5.0"
     }
-}
-
-// To avoid manually setting the same values in all Android modules, set the value on the root
-// project and then reference this from the modules
-ext {
-    compileSdkVersion = 25
-    buildToolsVersion = "25.0.2"
-    supportLibVersion = "25.4.0"
 }
 
 allprojects {
     repositories {
-        maven { url 'https://maven.google.com' }
+        google()
         jcenter()
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://jitpack.io" }

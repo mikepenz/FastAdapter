@@ -11,12 +11,12 @@ buildscript {
 }
 
 android {
-    compileSdkVersion rootProject.ext.compileSdkVersion
-    buildToolsVersion rootProject.ext.buildToolsVersion
+    compileSdkVersion setup.compileSdk
+    buildToolsVersion setup.buildTools
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 25
+        minSdkVersion setup.minSdk
+        targetSdkVersion setup.targetSdk
         versionCode 2600
         versionName '2.6.0'
     }
