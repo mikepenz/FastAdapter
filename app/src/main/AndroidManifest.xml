@@ -72,6 +72,9 @@
         <activity
             android:name="com.mikepenz.fastadapter.app.StickyHeaderMopubAdsActivity"
             android:label="@string/sample_sticky_header_mopub" />
+        <activity
+            android:name="com.mikepenz.fastadapter.app.DiffUtilActivity"
+            android:label="@string/sample_diff_util" />
 
         <!-- USED FOR THE MopubAdsActivity sample-->
         <activity
