@@ -136,7 +136,7 @@ public class DiffUtilActivity extends AppCompatActivity {
             public DiffUtil.DiffResult apply(List<SimpleItem> simpleItems) throws Exception {
                 return FastAdapterDiffUtil.calculateDiff(fastItemAdapter, simpleItems);
             }
-        }).subscribeOn(Schedulers.newThread())
+        }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Consumer<DiffUtil.DiffResult>() {
                     @Override
