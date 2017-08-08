@@ -10,7 +10,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
-import com.mikepenz.fastadapter.ISwipeable;
 import com.mikepenz.library_extensions.R;
 
 

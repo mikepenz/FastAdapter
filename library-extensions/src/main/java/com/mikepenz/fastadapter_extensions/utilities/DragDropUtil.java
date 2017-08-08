@@ -6,7 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
-import com.mikepenz.fastadapter_extensions.IExtendedDraggable;
+import com.mikepenz.fastadapter_extensions.drag.IExtendedDraggable;
 
 /**
  * Created by flisar on 30.09.2016.

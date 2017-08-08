@@ -8,7 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.mikepenz.fastadapter.IClickable;
-import com.mikepenz.fastadapter.IDraggable;
+import com.mikepenz.fastadapter_extensions.drag.IDraggable;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;

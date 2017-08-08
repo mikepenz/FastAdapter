@@ -1,4 +1,6 @@
-package com.mikepenz.fastadapter;
+package com.mikepenz.fastadapter_extensions.drag;
+
+import com.mikepenz.fastadapter.IItem;
 
 /**
  * Created by mikepenz on 30.12.15.
