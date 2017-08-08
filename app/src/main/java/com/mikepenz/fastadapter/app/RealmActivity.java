@@ -119,7 +119,7 @@ public class RealmActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //add the values which need to be saved from the adapter to the bundel
+        //add the values which need to be saved from the adapter to the bundle
         outState = mFastItemAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }
