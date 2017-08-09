@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/item_refresh"
+        android:title="Refresh"
+        android:titleCondensed="Refresh"
+        app:showAsAction="always"/>
+
+    <item
+        android:id="@+id/item_refresh_async"
+        android:title="Refresh async"
+        android:titleCondensed="Refresh"
+        app:showAsAction="always"/>
+
+</menu>

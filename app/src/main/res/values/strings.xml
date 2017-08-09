@@ -38,6 +38,8 @@
     <string name="sample_sticky_header_mopub_descr">Simple sticky header mopub adapter usage example</string>
     <string name="sample_realm_list">Realm Sample</string>
     <string name="sample_realm_list_descr">Realm, Implement IItem interface</string>
+    <string name="sample_diff_util">Diff Util Sample</string>
+    <string name="sample_diff_util_descr">Diff Util, refresh list using DiffUtil</string>
     <string name="open_source">Open Source</string>
     <string name="search_title">Suche</string>
     <string name="action_undo">UNDO</string>
