@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 group "com.mikepenz"
-version "3.0.0.7-SNAPSHOT"
+version "3.0.0.8-SNAPSHOT"
 
 android {
     compileSdkVersion setup.compileSdk
