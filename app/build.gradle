@@ -13,8 +13,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 3007
-        versionName '3.0.0.7-SNAPSHOT'
+        versionCode 3008
+        versionName '3.0.0.8-SNAPSHOT'
     }
     buildTypes {
         debug {

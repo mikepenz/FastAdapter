@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 3007
-        versionName '3.0.0.7-SNAPSHOT'
+        versionCode 3008
+        versionName '3.0.0.8-SNAPSHOT'
     }
     buildTypes {
         release {
@@ -39,10 +39,10 @@ dependencies {
 
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-all:1.10.19'
-    testCompile 'org.robolectric:robolectric:3.1.1'
-    testCompile 'org.robolectric:robolectric-utils:3.1.1'
-    testCompile 'org.robolectric:shadows-core:3.1.1'
-    testCompile 'org.robolectric:shadows-support-v4:3.1.1'
+    testCompile 'org.robolectric:robolectric:3.1.4'
+    testCompile 'org.robolectric:robolectric-utils:3.1.4'
+    testCompile 'org.robolectric:shadows-core:3.1.4'
+    testCompile 'org.robolectric:shadows-support-v4:3.1.4'
     testCompile 'com.squareup.assertj:assertj-android:1.1.1'
     testCompile 'com.squareup.assertj:assertj-android-design:1.1.1@aar'
     testCompile 'com.squareup.assertj:assertj-android-appcompat-v7:1.1.1@aar'
