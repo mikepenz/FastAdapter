@@ -179,17 +179,19 @@ public class FastAdapterTest {
     public void issue491() {
         ItemAdapter<TestItem> firstAdapter = new ItemAdapter<>();
         final ItemAdapter<TestItem> secondAdapter = new ItemAdapter<>();
-        FastAdapter<TestItem> fastAdapter = FastAdapter.with(firstAdapter);
+        final FastAdapter<TestItem> fastAdapter = FastAdapter.with(firstAdapter);
         fastAdapter.addAdapter(1, secondAdapter);
-
 
         firstAdapter.add(new TestItem());
         secondAdapter.add(new TestItem());
+
+        assertThat(fastAdapter.getItemCount()).isEqualTo(2);
 
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 secondAdapter.remove(0);
+                assertThat(fastAdapter.getItemCount()).isEqualTo(1);
             }
         }, 5000);
     }
