@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -177,10 +178,12 @@ public class FastAdapterTest {
 
     @Test
     public void issue491() {
+        RecyclerView recyclerView = new RecyclerView(RuntimeEnvironment.application);
         ItemAdapter<TestItem> firstAdapter = new ItemAdapter<>();
         final ItemAdapter<TestItem> secondAdapter = new ItemAdapter<>();
         final FastAdapter<TestItem> fastAdapter = FastAdapter.with(firstAdapter);
         fastAdapter.addAdapter(1, secondAdapter);
+        recyclerView.setAdapter(fastAdapter);
 
         firstAdapter.add(new TestItem());
         secondAdapter.add(new TestItem());
