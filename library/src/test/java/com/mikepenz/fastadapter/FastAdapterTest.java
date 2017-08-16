@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter;
 
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -172,6 +173,25 @@ public class FastAdapterTest {
         assertThat(itemAdapter.getAdapterItemCount()).isEqualTo(100);
         itemAdapter.clear();
         assertThat(itemAdapter.getAdapterItemCount()).isEqualTo(0);
+    }
+
+    @Test
+    public void issue491() {
+        ItemAdapter<TestItem> firstAdapter = new ItemAdapter<>();
+        final ItemAdapter<TestItem> secondAdapter = new ItemAdapter<>();
+        FastAdapter<TestItem> fastAdapter = FastAdapter.with(firstAdapter);
+        fastAdapter.addAdapter(1, secondAdapter);
+
+
+        firstAdapter.add(new TestItem());
+        secondAdapter.add(new TestItem());
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                secondAdapter.remove(0);
+            }
+        }, 5000);
     }
 
     @Test
