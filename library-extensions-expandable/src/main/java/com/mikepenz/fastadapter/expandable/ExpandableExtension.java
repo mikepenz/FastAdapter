@@ -394,7 +394,7 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
             if (!expandable.isExpanded() && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
                 IAdapter<Item> adapter = mFastAdapter.getAdapter(position);
                 if (adapter != null && adapter instanceof IItemAdapter) {
-                    ((IItemAdapter<?, Item>) adapter).add(position + 1, expandable.getSubItems());
+                    ((IItemAdapter<?, Item>) adapter).addInternal(position + 1, expandable.getSubItems());
                 }
 
                 //remember that this item is now opened (not collapsed)
