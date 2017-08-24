@@ -20,6 +20,7 @@ import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 import com.mikepenz.fastadapter.listeners.OnTouchListener;
 import com.mikepenz.fastadapter.listeners.TouchEventHook;
 import com.mikepenz.fastadapter.select.SelectExtension;
+import com.mikepenz.fastadapter.utils.DefaultTypeInstanceCache;
 import com.mikepenz.fastadapter.utils.EventHookUtil;
 
 import java.util.ArrayList;
@@ -45,7 +46,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     //priority queue...
     final private ArrayList<IAdapter<Item>> mAdapters = new ArrayList<>();
     // we remember all possible types so we can create a new view efficiently
-    final private SparseArray<Item> mTypeInstances = new SparseArray<>();
+    private ITypeInstanceCache<Item> mTypeInstanceCache;
     // cache the sizes of the different adapters so we can access the items more performant
     final private SparseArray<IAdapter<Item>> mAdapterSizes = new SparseArray<>();
     // the total size
@@ -98,6 +99,29 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public FastAdapter<Item> enableVerboseLog() {
         this.mVerbose = true;
         return this;
+    }
+
+    /**
+     *
+     * Sets an type instance cache to this fast adapter instance.
+     * The cache will manage the type instances to create new views more efficient.
+     * Normally an shared cache is used over all adapter instances.
+     *
+     * @param mTypeInstanceCache
+     */
+    public void setTypeInstanceCache(ITypeInstanceCache<Item> mTypeInstanceCache) {
+        this.mTypeInstanceCache = mTypeInstanceCache;
+    }
+
+    /**
+     *
+     * @return the current type instance cache
+     */
+    public ITypeInstanceCache<Item> getTypeInstanceCache() {
+        if (mTypeInstanceCache == null) {
+            mTypeInstanceCache = (ITypeInstanceCache<Item>) ITypeInstanceCache.DEFAULT;
+        }
+        return mTypeInstanceCache;
     }
 
     /**
@@ -468,8 +492,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param item an IItem which will be shown in the list
      */
     public void registerTypeInstance(Item item) {
-        if (mTypeInstances.indexOfKey(item.getType()) < 0) {
-            mTypeInstances.put(item.getType(), item);
+        if (getTypeInstanceCache().register(item)) {
             //check if the item implements hookable when its added for the first time
             if (item instanceof IHookable) {
                 withEventHooks(((IHookable<Item>) item).getEventHooks());
@@ -484,14 +507,14 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return the Item typeInstance
      */
     public Item getTypeInstance(int type) {
-        return mTypeInstances.get(type);
+        return getTypeInstanceCache().get(type);
     }
 
     /**
      * clears the internal mapper - be sure, to remap everything before going on
      */
     public void clearTypeInstance() {
-        mTypeInstances.clear();
+        getTypeInstanceCache().clear();
     }
 
     /**
