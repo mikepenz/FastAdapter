@@ -119,7 +119,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public ITypeInstanceCache<Item> getTypeInstanceCache() {
         if (mTypeInstanceCache == null) {
-            mTypeInstanceCache = (ITypeInstanceCache<Item>) ITypeInstanceCache.DEFAULT;
+            mTypeInstanceCache = new DefaultTypeInstanceCache<>();
         }
         return mTypeInstanceCache;
     }
