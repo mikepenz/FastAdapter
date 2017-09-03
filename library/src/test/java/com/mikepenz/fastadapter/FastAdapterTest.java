@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter;
 
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -10,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -172,6 +174,29 @@ public class FastAdapterTest {
         assertThat(itemAdapter.getAdapterItemCount()).isEqualTo(100);
         itemAdapter.clear();
         assertThat(itemAdapter.getAdapterItemCount()).isEqualTo(0);
+    }
+
+    @Test
+    public void issue491() {
+        RecyclerView recyclerView = new RecyclerView(RuntimeEnvironment.application);
+        ItemAdapter<TestItem> firstAdapter = new ItemAdapter<>();
+        final ItemAdapter<TestItem> secondAdapter = new ItemAdapter<>();
+        final FastAdapter<TestItem> fastAdapter = FastAdapter.with(firstAdapter);
+        fastAdapter.addAdapter(1, secondAdapter);
+        recyclerView.setAdapter(fastAdapter);
+
+        firstAdapter.add(new TestItem());
+        secondAdapter.add(new TestItem());
+
+        assertThat(fastAdapter.getItemCount()).isEqualTo(2);
+
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                secondAdapter.remove(0);
+                assertThat(fastAdapter.getItemCount()).isEqualTo(1);
+            }
+        }, 5000);
     }
 
     @Test
