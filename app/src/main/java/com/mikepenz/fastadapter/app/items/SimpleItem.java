@@ -110,7 +110,7 @@ public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> 
         }
 
         @Override
-        public void bindView(SimpleItem item, List payloads) {
+        public void bindView(SimpleItem item, List<Object> payloads) {
             //get the context
             Context ctx = itemView.getContext();
 
