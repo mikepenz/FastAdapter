@@ -194,7 +194,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      *
      * @return a List of initial Model's
      */
-    private List<Model> getModels() {
+    public List<Model> getModels() {
         if (mReverseInterceptor != null) {
             ArrayList<Model> list = new ArrayList<>(mItems.size());
             for (Item item : mItems) {
