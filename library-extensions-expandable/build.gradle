@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 3008
-        versionName '3.0.0.8-SNAPSHOT'
+        versionCode 3009
+        versionName '3.0.0.9-SNAPSHOT'
     }
     buildTypes {
         release {
