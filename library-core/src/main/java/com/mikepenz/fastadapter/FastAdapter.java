@@ -102,7 +102,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     *
      * Sets an type instance cache to this fast adapter instance.
      * The cache will manage the type instances to create new views more efficient.
      * Normally an shared cache is used over all adapter instances.
@@ -114,7 +113,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     *
      * @return the current type instance cache
      */
     public ITypeInstanceCache<Item> getTypeInstanceCache() {
@@ -1246,5 +1244,48 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         public IAdapter<Item> adapter = null;
         public Item item = null;
         public int position = -1;
+    }
+
+    /**
+     * A ViewHolder provided from the FastAdapter to allow handling the important event's within the ViewHolder
+     * instead of the item
+     *
+     * @param <Item>
+     */
+    public static abstract class ViewHolder<Item extends IItem> extends RecyclerView.ViewHolder {
+        public ViewHolder(View itemView) {
+            super(itemView);
+        }
+
+        /**
+         * binds the data of this item onto the viewHolder
+         */
+        public abstract void bindView(Item item, List<Object> payloads);
+
+        /**
+         * View needs to release resources when its recycled
+         */
+        public abstract void unbindView(Item item);
+
+        /**
+         * View got attached to the window
+         */
+        public void attachToWindow(Item item) {
+        }
+
+        /**
+         * View got detached from the window
+         */
+        public void detachFromWindow(Item item) {
+        }
+
+        /**
+         * View is in a transient state and could not be recycled
+         *
+         * @return return true if you want to recycle anyways (after clearing animations or so)
+         */
+        public boolean failedToRecycle(Item item) {
+            return false;
+        }
     }
 }
