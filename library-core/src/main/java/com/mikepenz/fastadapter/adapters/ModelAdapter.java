@@ -48,6 +48,17 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         return this;
     }
 
+    private IInterceptor<Item, Model> mReverseInterceptor;
+
+    public IInterceptor<Item, Model> getReverseInterceptor() {
+        return mReverseInterceptor;
+    }
+
+    public ModelAdapter<Model, Item> withReverseInterceptor(IInterceptor<Item, Model> reverseInterceptor) {
+        this.mReverseInterceptor = reverseInterceptor;
+        return this;
+    }
+
     @Nullable
     private Item intercept(Model model) {
         return mInterceptor.intercept(model);
@@ -175,6 +186,24 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      */
     public Comparator<Item> getComparator() {
         return mComparator;
+    }
+
+    /**
+     * the ModelAdapter does not keep a list of input model's to get retrieve them a `reverseInterceptor` is required
+     * usually it is used to get the `Model` from a `IModelItem`
+     *
+     * @return a List of initial Model's
+     */
+    private List<Model> getModels() {
+        if (mReverseInterceptor != null) {
+            ArrayList<Model> list = new ArrayList<>(mItems.size());
+            for (Item item : mItems) {
+                list.add(mReverseInterceptor.intercept(item));
+            }
+            return list;
+        } else {
+            throw new RuntimeException("please provide a reverseInterceptor");
+        }
     }
 
     /**
