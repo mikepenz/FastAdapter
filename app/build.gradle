@@ -50,13 +50,13 @@ dependencies {
     // contains util classes to support various android versions, and clean up code
     // comes with the awesome "Holder"-Pattern
     // https://github.com/mikepenz/Materialize
-    compile 'com.mikepenz:materialize:1.0.3@aar'
+    compile 'com.mikepenz:materialize:1.1.1@aar'
 
     // used to provide out of the box icon font support. simplifies development,
     // and provides scalable icons. the core is very very light
     // https://github.com/mikepenz/Android-Iconics
-    compile 'com.mikepenz:iconics-core:2.9.1@aar'
-    compile "com.mikepenz:iconics-views:2.9.1@aar"
+    compile 'com.mikepenz:iconics-core:2.9.3@aar'
+    compile "com.mikepenz:iconics-views:2.9.3@aar"
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
@@ -77,7 +77,7 @@ dependencies {
     //https://github.com/mikepenz/Android-Iconics
     compile 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
     compile 'com.mikepenz:community-material-typeface:1.7.22.1@aar'
-    compile 'com.mikepenz:google-material-typeface:2.2.0.3.original@aar'
+    compile 'com.mikepenz:google-material-typeface:3.0.1.1.original@aar'
     compile 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
 
     //Used for the StickyHeaderSample
@@ -91,8 +91,8 @@ dependencies {
     compile 'com.turingtechnologies.materialscrollbar:lib:10.0.1'
 
     //https://github.com/JakeWharton/butterknife
-    compile 'com.jakewharton:butterknife:8.7.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
+    compile 'com.jakewharton:butterknife:8.8.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     //used to load the images in the ImageListSample
     //https://github.com/bumptech/glide
