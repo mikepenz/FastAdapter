@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.adapters;
 
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
+import com.mikepenz.fastadapter.IAdapterNotifier;
 import com.mikepenz.fastadapter.IIdDistributor;
 import com.mikepenz.fastadapter.IInterceptor;
 import com.mikepenz.fastadapter.IItem;
@@ -271,7 +272,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
     /**
      * set a new list of items and apply it to the existing list (clear - add) for this adapter
      * NOTE may consider using setNewList if the items list is a reference to the list which is used inside the adapter
-     * NOTE this will not sort
      *
      * @param items the items to set
      */
@@ -281,10 +281,33 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
 
     protected ModelAdapter<Model, Item> set(List<Model> list, boolean resetFilter) {
         List<Item> items = intercept(list);
-        return setInternal(items, resetFilter);
+        return setInternal(items, resetFilter, null);
     }
 
-    public ModelAdapter<Model, Item> setInternal(List<Item> items, boolean resetFilter) {
+    /**
+     * set a new list of model items and apply it to the existing list (clear - add) for this adapter
+     * NOTE may consider using setNewList if the items list is a reference to the list which is used inside the adapter
+     *
+     * @param list            the items to set
+     * @param resetFilter     `true` if the filter should get reset
+     * @param adapterNotifier a `IAdapterNotifier` allowing to modify the notify logic for the adapter (keep null for default)
+     * @return this
+     */
+    public ModelAdapter<Model, Item> set(List<Model> list, boolean resetFilter, @Nullable IAdapterNotifier adapterNotifier) {
+        List<Item> items = intercept(list);
+        return setInternal(items, resetFilter, adapterNotifier);
+    }
+
+    /**
+     * set a new list of model and apply it to the existing list (clear - add) for this adapter
+     * NOTE may consider using setNewList if the items list is a reference to the list which is used inside the adapter
+     *
+     * @param items           the items to set
+     * @param resetFilter     `true` if the filter should get reset
+     * @param adapterNotifier a `IAdapterNotifier` allowing to modify the notify logic for the adapter (keep null for default)
+     * @return this
+     */
+    public ModelAdapter<Model, Item> setInternal(List<Item> items, boolean resetFilter, IAdapterNotifier adapterNotifier) {
         if (mUseIdDistributor) {
             getIdDistributor().checkIds(items);
         }
@@ -323,22 +346,10 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         }
 
         //now properly notify the adapter about the changes
-        if (newItemsCount > previousItemsCount) {
-            if (previousItemsCount > 0) {
-                getFastAdapter().notifyAdapterItemRangeChanged(itemsBeforeThisAdapter, previousItemsCount);
-            }
-            getFastAdapter().notifyAdapterItemRangeInserted(itemsBeforeThisAdapter + previousItemsCount, newItemsCount - previousItemsCount);
-        } else if (newItemsCount > 0) {
-            getFastAdapter().notifyAdapterItemRangeChanged(itemsBeforeThisAdapter, newItemsCount);
-            if (newItemsCount < previousItemsCount) {
-                getFastAdapter().notifyAdapterItemRangeRemoved(itemsBeforeThisAdapter + newItemsCount, previousItemsCount - newItemsCount);
-            }
-        } else if (newItemsCount == 0) {
-            getFastAdapter().notifyAdapterItemRangeRemoved(itemsBeforeThisAdapter, previousItemsCount);
-        } else {
-            //this condition should practically never happen
-            getFastAdapter().notifyAdapterDataSetChanged();
+        if (adapterNotifier == null) {
+            adapterNotifier = IAdapterNotifier.DEFAULT;
         }
+        adapterNotifier.notify(getFastAdapter(), newItemsCount, previousItemsCount, itemsBeforeThisAdapter);
 
         return this;
     }

@@ -115,7 +115,7 @@ public class ItemFilter<Model, Item extends IItem> extends Filter {
     protected void publishResults(@Nullable CharSequence constraint, FilterResults results) {
         // Now we have to inform the adapter about the new list filtered
         if (results.values != null) {
-            mItemAdapter.setInternal((List<Item>) results.values, false);
+            mItemAdapter.setInternal((List<Item>) results.values, false, null);
         }
 
         if (mItemFilterListener != null) {
