@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.ModelAbstractItem;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.view.IconicsImageView;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public class ModelIconItem extends ModelAbstractItem<com.mikepenz.fastadapter.ap
         super.bindView(viewHolder, payloads);
 
         //define our data for the view
-        viewHolder.image.setIcon(getModel().icon);
+        viewHolder.image.setIcon(new IconicsDrawable(viewHolder.image.getContext(), getModel().icon));
         viewHolder.name.setText(getModel().icon.getName());
     }
 

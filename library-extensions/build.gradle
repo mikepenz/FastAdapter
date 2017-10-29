@@ -32,11 +32,13 @@ if (project.hasProperty('pushall') || project.hasProperty('libraryextensiononly'
 }
 
 dependencies {
-    compile project(':library')
-    compile project(':library-extensions-expandable')
+    implementation  project(':library-core')
+    implementation  project(':library')
+    implementation  project(':library-extensions-expandable')
 
-    compile "com.android.support:design:${versions.supportLib}"
-    compile "com.android.support:support-annotations:${versions.supportLib}"
+    implementation  "com.android.support:recyclerview-v7:${versions.supportLib}"
+    implementation  "com.android.support:design:${versions.supportLib}"
+    implementation  "com.android.support:support-annotations:${versions.supportLib}"
 
-    compile 'com.mikepenz:materialize:1.0.3@aar'
+    implementation  'com.mikepenz:materialize:1.1.1@aar'
 }
