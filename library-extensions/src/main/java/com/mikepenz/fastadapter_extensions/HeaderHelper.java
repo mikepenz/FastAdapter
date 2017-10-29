@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter_extensions;
 
-import com.mikepenz.fastadapter.adapters.GenericItemAdapter;
-import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.adapters.ModelAdapter;
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -12,8 +11,7 @@ import java.util.List;
  */
 
 public class HeaderHelper<Item, HeaderItem> {
-    private ItemAdapter itemAdapter;
-    private GenericItemAdapter genericItemAdapter;
+    private ModelAdapter modelAdapter;
     private GroupingFunction<Item, HeaderItem> groupingFunction;
     private Comparator<Item> comparator;
 
@@ -25,20 +23,11 @@ public class HeaderHelper<Item, HeaderItem> {
     }
 
     /**
-     * @param itemAdapter
+     * @param modelAdapter
      * @param groupingFunction
      */
-    public HeaderHelper(ItemAdapter itemAdapter, GroupingFunction<Item, HeaderItem> groupingFunction) {
-        this.itemAdapter = itemAdapter;
-        this.groupingFunction = groupingFunction;
-    }
-
-    /**
-     * @param genericItemAdapter
-     * @param groupingFunction
-     */
-    public HeaderHelper(GenericItemAdapter genericItemAdapter, GroupingFunction<Item, HeaderItem> groupingFunction) {
-        this.genericItemAdapter = genericItemAdapter;
+    public HeaderHelper(ModelAdapter modelAdapter, GroupingFunction<Item, HeaderItem> groupingFunction) {
+        this.modelAdapter = modelAdapter;
         this.groupingFunction = groupingFunction;
     }
 
@@ -76,13 +65,10 @@ public class HeaderHelper<Item, HeaderItem> {
         }
 
         /**
-         * set the sorted list to the itemAdapter if provided
+         * set the sorted list to the modelAdapter if provided
          */
-        if (itemAdapter != null) {
-            itemAdapter.set(items);
-        }
-        if (genericItemAdapter != null) {
-            genericItemAdapter.setModel(items);
+        if (modelAdapter != null) {
+            modelAdapter.set(items);
         }
     }
 
@@ -101,33 +87,17 @@ public class HeaderHelper<Item, HeaderItem> {
     }
 
     /**
-     * @return the ItemAdapter
+     * @return the ModelAdapter
      */
-    public ItemAdapter getItemAdapter() {
-        return itemAdapter;
+    public ModelAdapter getModelAdapter() {
+        return modelAdapter;
     }
 
     /**
-     * @param itemAdapter the ItemAdapter
+     * @param modelAdapter the ModelAdapter
      */
-    public void setItemAdapter(ItemAdapter itemAdapter) {
-        this.itemAdapter = itemAdapter;
-        this.genericItemAdapter = null;
-    }
-
-    /**
-     * @return the GenericItemAdapter
-     */
-    public GenericItemAdapter getGenericItemAdapter() {
-        return genericItemAdapter;
-    }
-
-    /**
-     * @param genericItemAdapter the GenericItemAdapter
-     */
-    public void setGenericItemAdapter(GenericItemAdapter genericItemAdapter) {
-        this.genericItemAdapter = genericItemAdapter;
-        this.itemAdapter = null;
+    public void setModelAdapter(ModelAdapter modelAdapter) {
+        this.modelAdapter = modelAdapter;
     }
 
     /**

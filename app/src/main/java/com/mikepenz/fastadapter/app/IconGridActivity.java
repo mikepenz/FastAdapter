@@ -13,6 +13,7 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.IconItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
+import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.iconics.typeface.ITypeface;
@@ -48,6 +49,10 @@ public class IconGridActivity extends AppCompatActivity {
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = new FastItemAdapter();
+
+        //we want to have expandables
+        ExpandableExtension expandableExtension = new ExpandableExtension();
+        fastItemAdapter.addExtension(expandableExtension);
 
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
@@ -112,7 +117,7 @@ public class IconGridActivity extends AppCompatActivity {
             fastItemAdapter.withSavedInstanceState(savedInstanceState);
         } else {
             //expand one item to make sample look a bit more interesting
-            fastItemAdapter.expand(2);
+            expandableExtension.expand(2);
         }
 
         //set the back arrow in the toolbar
@@ -122,7 +127,7 @@ public class IconGridActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //add the values which need to be saved from the adapter to the bundel
+        //add the values which need to be saved from the adapter to the bundle
         outState = fastItemAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }

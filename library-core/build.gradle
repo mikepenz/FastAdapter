@@ -1,5 +1,8 @@
 apply plugin: 'com.android.library'
 
+group "com.mikepenz"
+version "3.0.0"
+
 android {
     compileSdkVersion setup.compileSdk
     buildToolsVersion setup.buildTools
@@ -7,8 +10,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 263
-        versionName '2.6.3'
+        versionCode 3000
+        versionName '3.0.0'
     }
     buildTypes {
         release {
@@ -30,7 +33,8 @@ if (project.hasProperty('pushall') || project.hasProperty('librarycoreonly')) {
 }
 
 dependencies {
-    compile "com.android.support:appcompat-v7:${versions.supportLib}"
-    compile "com.android.support:recyclerview-v7:${versions.supportLib}"
-    compile "com.android.support:support-annotations:${versions.supportLib}"
+    implementation  "com.android.support:appcompat-v7:${versions.supportLib}"
+    implementation  "com.android.support:recyclerview-v7:${versions.supportLib}"
+    implementation  "com.android.support:support-annotations:${versions.supportLib}"
+    provided "com.google.code.findbugs:jsr305:3.0.2"
 }

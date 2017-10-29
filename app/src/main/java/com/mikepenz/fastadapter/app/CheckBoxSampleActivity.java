@@ -10,10 +10,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.app.items.CheckBoxSampleItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
@@ -45,7 +45,7 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
         fastItemAdapter.withSelectable(true);
 
         //configure our fastAdapter
-        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<CheckBoxSampleItem>() {
+        fastItemAdapter.withOnClickListener(new OnClickListener<CheckBoxSampleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<CheckBoxSampleItem> adapter, CheckBoxSampleItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
@@ -53,7 +53,7 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
             }
         });
 
-        fastItemAdapter.withOnPreClickListener(new FastAdapter.OnClickListener<CheckBoxSampleItem>() {
+        fastItemAdapter.withOnPreClickListener(new OnClickListener<CheckBoxSampleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<CheckBoxSampleItem> adapter, CheckBoxSampleItem item, int position) {
                 // consume otherwise radio/checkbox will be deselected
@@ -90,7 +90,7 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //add the values which need to be saved from the adapter to the bundel
+        //add the values which need to be saved from the adapter to the bundle
         outState = fastItemAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }

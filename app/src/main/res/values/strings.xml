@@ -19,10 +19,10 @@
     <string name="sample_sticky_header_descr">StickyHeader, Select</string>
     <string name="sample_advanced">Advanced Sample</string>
     <string name="sample_advanced_descr">Header, StickyHeader, Expandable, CAB, MultiSelect</string>
-    <string name="sample_generic_item">GenericItem Sample</string>
-    <string name="sample_generic_item_descr">Split up Item and Model</string>
-    <string name="sample_multi_generic_item">MultiGenericItem Sample</string>
-    <string name="sample_multi_generic_item_descr">Split up multiple Items and Models in one GenericAdapter</string>
+    <string name="sample_model_item">ModelItem Sample</string>
+    <string name="sample_model_item_descr">Split up Item and Model</string>
+    <string name="sample_multi_model_item">MultiModelItem Sample</string>
+    <string name="sample_multi_model_item_descr">Split up multiple Items and Models in one ModelAdapter</string>
     <string name="sample_checkbox_item">CheckBox Sample</string>
     <string name="sample_checkbox_item_descr">Use FastAdapters internal state with a CheckBox</string>
     <string name="sample_radiobutton_item">RadioButton Sample</string>
@@ -38,6 +38,8 @@
     <string name="sample_sticky_header_mopub_descr">Simple sticky header mopub adapter usage example</string>
     <string name="sample_realm_list">Realm Sample</string>
     <string name="sample_realm_list_descr">Realm, Implement IItem interface</string>
+    <string name="sample_diff_util">Diff Util Sample</string>
+    <string name="sample_diff_util_descr">Diff Util, refresh list using DiffUtil</string>
     <string name="open_source">Open Source</string>
     <string name="search_title">Suche</string>
     <string name="action_undo">UNDO</string>

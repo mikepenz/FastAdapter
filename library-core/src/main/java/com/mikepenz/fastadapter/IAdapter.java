@@ -14,11 +14,22 @@ public interface IAdapter<Item extends IItem> {
     FastAdapter<Item> getFastAdapter();
 
     /**
-     * defines in which order this adapter should be hooked into the FastAdapter
+     * defines the FastAdapter which manages all the core logic
      *
-     * @return the order of this adapter
+     */
+    IAdapter<Item> withFastAdapter(FastAdapter<Item> fastAdapter);
+
+    /**
+     * returs the position of this Adapter in the FastAdapter
+     *
+     * @return the position of this Adapter in the FastAdapter
      */
     int getOrder();
+
+    /**
+     * sets the position of this Adapter in the FastAdapter
+     */
+    void setOrder(int order);
 
     /**
      * defines the count of items of THIS adapter
@@ -62,15 +73,4 @@ public interface IAdapter<Item extends IItem> {
      * @return the global position used for all methods
      */
     int getGlobalPosition(int position);
-
-    /**
-     * @return the global item count
-     */
-    int getItemCount();
-
-    /**
-     * @param position the global position
-     * @return the global item based on the global position
-     */
-    Item getItem(int position);
 }

@@ -9,6 +9,7 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.typeface.IIcon;
 import com.mikepenz.iconics.view.IconicsImageView;
 
@@ -77,7 +78,7 @@ public class IconItem<T extends IItem & IExpandable> extends AbstractItem<IconIt
         super.bindView(viewHolder, payloads);
 
         //define our data for the view
-        viewHolder.image.setIcon(mIcon);
+        viewHolder.image.setIcon(new IconicsDrawable(viewHolder.image.getContext(), mIcon));
         viewHolder.name.setText(mIcon.getName());
     }
 

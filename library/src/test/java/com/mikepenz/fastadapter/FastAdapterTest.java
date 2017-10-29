@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.listeners.OnBindViewHolderListener;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,10 +30,9 @@ public class FastAdapterTest {
 
     @Before
     public void setUp() throws Exception {
-        adapter = new FastAdapter<>();
-        //adapter.withPositionBasedStateManagement(true);
         itemAdapter = new ItemAdapter<>();
-        itemAdapter.wrap(adapter);
+        adapter = FastAdapter.with(itemAdapter);
+        //adapter.withPositionBasedStateManagement(true);
     }
 
     @Test
@@ -53,6 +53,7 @@ public class FastAdapterTest {
 
     @Test
     public void select() throws Exception {
+        adapter.withSelectable(true);
         itemAdapter.set(TestDataGenerator.genTestItemList(100));
 
         assertThat(adapter.getSelectedItems().size()).isEqualTo(0);
@@ -143,16 +144,6 @@ public class FastAdapterTest {
     }
 
     @Test
-    public void getExpandedItemsCount() throws Exception {
-        List<TestItem> items = TestDataGenerator.genTestItemWithSubItemsList(10, 1);
-        itemAdapter.set(items);
-
-        adapter.expand(5);
-
-        assertThat(adapter.getExpandedItemsCount(0, 100)).isEqualTo(10);
-    }
-
-    @Test
     public void wrap() throws Exception {
         assertThat(itemAdapter.getFastAdapter()).isEqualTo(adapter);
     }
@@ -185,7 +176,7 @@ public class FastAdapterTest {
 
     @Test
     public void withBindViewHolderListener_OnBindViewHolder_Callback() throws Exception {
-        FastAdapter.OnBindViewHolderListener listener = mock(FastAdapter.OnBindViewHolderListener.class);
+        OnBindViewHolderListener listener = mock(OnBindViewHolderListener.class);
         RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(mock(View.class)) {};
         adapter.withOnBindViewHolderListener(listener);
 

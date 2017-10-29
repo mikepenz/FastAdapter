@@ -16,10 +16,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -81,7 +81,7 @@ public class SortActivity extends AppCompatActivity {
         fastItemAdapter.withSelectable(true);
 
         //configure our fastAdapter
-        fastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<SimpleItem>() {
+        fastItemAdapter.withOnClickListener(new OnClickListener<SimpleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<SimpleItem> adapter,
                                    SimpleItem item, int position) {

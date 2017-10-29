@@ -1,10 +1,10 @@
 package com.mikepenz.fastadapter.listeners;
 
-import android.support.annotation.Nullable;
-
 import com.mikepenz.fastadapter.IItem;
 
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * interface for the ItemFilterListener

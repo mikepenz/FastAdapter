@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 
+group "com.mikepenz"
+
 android {
     compileSdkVersion setup.compileSdk
     buildToolsVersion setup.buildTools
@@ -7,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 263
-        versionName '2.6.3'
+        versionCode 3000
+        versionName '3.0.0'
     }
     buildTypes {
         release {
@@ -30,21 +32,21 @@ if (project.hasProperty('pushall') || project.hasProperty('librarycommonsonly'))
 }
 
 dependencies {
-    compile project(':library-core')
+    implementation  project(':library-core')
 
-    compile "com.android.support:appcompat-v7:${versions.supportLib}"
-    compile "com.android.support:recyclerview-v7:${versions.supportLib}"
-    compile "com.android.support:support-annotations:${versions.supportLib}"
+    implementation  "com.android.support:appcompat-v7:${versions.supportLib}"
+    implementation  "com.android.support:recyclerview-v7:${versions.supportLib}"
+    implementation  "com.android.support:support-annotations:${versions.supportLib}"
 
-    testCompile 'junit:junit:4.12'
-    testCompile 'org.mockito:mockito-all:1.10.19'
-    testCompile 'org.robolectric:robolectric:3.1.1'
-    testCompile 'org.robolectric:robolectric-utils:3.1.1'
-    testCompile 'org.robolectric:shadows-core:3.1.1'
-    testCompile 'org.robolectric:shadows-support-v4:3.1.1'
-    testCompile 'com.squareup.assertj:assertj-android:1.1.1'
-    testCompile 'com.squareup.assertj:assertj-android-design:1.1.1@aar'
-    testCompile 'com.squareup.assertj:assertj-android-appcompat-v7:1.1.1@aar'
+    testImplementation  'junit:junit:4.12'
+    testImplementation  'org.mockito:mockito-all:1.10.19'
+    testImplementation  'org.robolectric:robolectric:3.1.1'
+    testImplementation  'org.robolectric:robolectric-utils:3.1.1'
+    testImplementation  'org.robolectric:shadows-core:3.1.1'
+    testImplementation  'org.robolectric:shadows-support-v4:3.1.1'
+    testImplementation  'com.squareup.assertj:assertj-android:1.1.1'
+    testImplementation  'com.squareup.assertj:assertj-android-design:1.1.1@aar'
+    testImplementation  'com.squareup.assertj:assertj-android-appcompat-v7:1.1.1@aar'
     testCompile("com.squareup.assertj:assertj-android-support-v4:1.1.1@aar") {
         exclude group: "com.android.support", module: "support-annotations"
         exclude group: "com.android.support", module: "support-v4"

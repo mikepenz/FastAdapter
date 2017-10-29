@@ -5,10 +5,8 @@ import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter_extensions.IExtendedDraggable;
-
-import java.util.Collections;
+import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter_extensions.drag.IExtendedDraggable;
 
 /**
  * Created by flisar on 30.09.2016.
@@ -46,17 +44,15 @@ public class DragDropUtil
      * @param oldPosition the start position of the move
      * @param newPosition the end position of the move
      */
-    public static void onMove(FastItemAdapter fastItemAdapter, int oldPosition, int newPosition) {
+    public static void onMove(ItemAdapter itemAdapter, int oldPosition, int newPosition) {
         // necessary, because the positions passed to this function may be jumping in case of that the recycler view is scrolled while holding an item outside of the recycler view
         if (oldPosition < newPosition) {
             for (int i = oldPosition + 1; i <= newPosition; i++) {
-                Collections.swap(fastItemAdapter.getAdapterItems(), i, i - 1);
-                fastItemAdapter.notifyAdapterItemMoved(i, i - 1);
+                itemAdapter.move(i, i - 1);
             }
         } else {
             for (int i = oldPosition - 1; i >= newPosition; i--) {
-                Collections.swap(fastItemAdapter.getAdapterItems(), i, i + 1);
-                fastItemAdapter.notifyAdapterItemMoved(i, i + 1);
+                itemAdapter.move(i, i + 1);
             }
         }
     }

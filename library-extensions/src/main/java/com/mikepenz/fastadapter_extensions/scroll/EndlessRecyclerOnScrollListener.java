@@ -4,7 +4,7 @@ import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
-import com.mikepenz.fastadapter.adapters.FooterAdapter;
+import com.mikepenz.fastadapter.adapters.ItemAdapter;
 
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 
@@ -16,16 +16,19 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     private boolean mIsOrientationHelperVertical;
     private OrientationHelper mOrientationHelper;
 
-    private int mCurrentPage = 1;
+    private int mCurrentPage = 0;
 
-    private FooterAdapter mFooterAdapter;
+    private ItemAdapter mFooterAdapter;
 
     private RecyclerView.LayoutManager mLayoutManager;
 
     public EndlessRecyclerOnScrollListener() {
     }
 
-    public EndlessRecyclerOnScrollListener(FooterAdapter adapter) {
+    /**
+     * @param adapter the ItemAdapter used to host footer items
+     */
+    public EndlessRecyclerOnScrollListener(ItemAdapter adapter) {
         this.mFooterAdapter = adapter;
     }
 
@@ -42,7 +45,12 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
         this.mVisibleThreshold = visibleThreshold;
     }
 
-    public EndlessRecyclerOnScrollListener(RecyclerView.LayoutManager layoutManager, int visibleThreshold, FooterAdapter footerAdapter) {
+    /**
+     * @param layoutManager
+     * @param visibleThreshold
+     * @param footerAdapter    the ItemAdapter used to host footer items
+     */
+    public EndlessRecyclerOnScrollListener(RecyclerView.LayoutManager layoutManager, int visibleThreshold, ItemAdapter footerAdapter) {
         this.mLayoutManager = layoutManager;
         this.mVisibleThreshold = visibleThreshold;
         this.mFooterAdapter = footerAdapter;

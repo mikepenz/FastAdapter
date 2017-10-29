@@ -2,16 +2,17 @@ package com.mikepenz.fastadapter.app.items;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.mikepenz.fastadapter.IDraggable;
+import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter_extensions.drag.IDraggable;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialize.util.UIUtils;
 
@@ -87,42 +88,15 @@ public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> 
         return R.layout.sample_item;
     }
 
-    /**
-     * binds the data of this item onto the viewHolder
-     *
-     * @param viewHolder the viewHolder of this item
-     */
     @Override
-    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
-        super.bindView(viewHolder, payloads);
-
-        //get the context
-        Context ctx = viewHolder.itemView.getContext();
-
-        //set the background for the item
-        UIUtils.setBackground(viewHolder.view, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true));
-        //set the text for the name
-        StringHolder.applyTo(name, viewHolder.name);
-        //set the text for the description or hide
-        StringHolder.applyToOrHide(description, viewHolder.description);
-    }
-
-    @Override
-    public void unbindView(ViewHolder holder) {
-        super.unbindView(holder);
-        holder.name.setText(null);
-        holder.description.setText(null);
-    }
-
-    @Override
-    public ViewHolder getViewHolder(View v) {
+    public ViewHolder getViewHolder(@NonNull View v) {
         return new ViewHolder(v);
     }
 
     /**
      * our ViewHolder
      */
-    protected static class ViewHolder extends RecyclerView.ViewHolder {
+    protected static class ViewHolder extends FastAdapter.ViewHolder<SimpleItem> {
         protected View view;
         @BindView(R.id.material_drawer_name)
         TextView name;
@@ -133,6 +107,25 @@ public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> 
             super(view);
             ButterKnife.bind(this, view);
             this.view = view;
+        }
+
+        @Override
+        public void bindView(SimpleItem item, List<Object> payloads) {
+            //get the context
+            Context ctx = itemView.getContext();
+
+            //set the background for the item
+            UIUtils.setBackground(view, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true));
+            //set the text for the name
+            StringHolder.applyTo(item.name, name);
+            //set the text for the description or hide
+            StringHolder.applyToOrHide(item.description, description);
+        }
+
+        @Override
+        public void unbindView(SimpleItem item) {
+            name.setText(null);
+            description.setText(null);
         }
     }
 }
