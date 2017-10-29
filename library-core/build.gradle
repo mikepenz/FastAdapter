@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 group "com.mikepenz"
-version "3.0.0.9-SNAPSHOT"
+version "3.0.0"
 
 android {
     compileSdkVersion setup.compileSdk
@@ -10,8 +10,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 3009
-        versionName '3.0.0.8'
+        versionCode 3000
+        versionName '3.0.0'
     }
     buildTypes {
         release {
