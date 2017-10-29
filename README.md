@@ -64,7 +64,7 @@ compile 'com.mikepenz:materialize:1.0.3@aar'
 ### 1. Implement your item (the easy way)
 Just create a class which extends the `AbstractItem` as shown below. Implement the methods, and your item is ready.
 ```java
-public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> {
+public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> {
     public String name;
     public String description;
 
@@ -80,42 +80,35 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
         return R.layout.sample_item;
     }
 
-    //The logic to bind your data to the view
     @Override
-    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
-    	//call super so the selection is already handled for you
-    	super.bindView(viewHolder, payloads);
-    	
-    	//bind our data
-        //set the text for the name
-        viewHolder.name.setText(name);
-        //set the text for the description or hide
-        viewHolder.description.setText(description);
-    }
-
-    //reset the view here (this is an optional method, but recommended)
-    @Override
-    public void unbindView(ViewHolder holder) {
-        super.unbindView(holder);
-        holder.name.setText(null);
-        holder.description.setText(null);
-    }
-
-    //Init the viewHolder for this Item
-    @Override
-    public ViewHolder getViewHolder(View v) {
+    public ViewHolder getViewHolder(@NonNull View v) {
         return new ViewHolder(v);
     }
 
-    //The viewHolder used for this item. This viewHolder is always reused by the RecyclerView so scrolling is blazing fast
-    protected static class ViewHolder extends RecyclerView.ViewHolder {
-        protected TextView name;
-        protected TextView description;
+    /**
+     * our ViewHolder
+     */
+    protected static class ViewHolder extends FastAdapter.ViewHolder<SimpleItem> {
+        @BindView(R.id.material_drawer_name)
+        TextView name;
+        @BindView(R.id.material_drawer_description)
+        TextView description;
 
         public ViewHolder(View view) {
             super(view);
-            this.name = (TextView) view.findViewById(com.mikepenz.materialdrawer.R.id.material_drawer_name);
-            this.description = (TextView) view.findViewById(com.mikepenz.materialdrawer.R.id.material_drawer_description);
+            ButterKnife.bind(this, view);
+        }
+
+        @Override
+        public void bindView(SimpleItem item, List<Object> payloads) {
+            StringHolder.applyTo(item.name, name);
+            StringHolder.applyToOrHide(item.description, description);
+        }
+
+        @Override
+        public void unbindView(SimpleItem item) {
+            name.setText(null);
+            description.setText(null);
         }
     }
 }
@@ -123,15 +116,16 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
 
 ### 2. Set the Adapter to the RecyclerView
 ```java
-//create our FastAdapter which will manage everything
-FastItemAdapter fastAdapter = new FastItemAdapter();
+//create the ItemAdapter holding your Items
+ItemAdapter itemAdapter = new ItemAdapter();
+//create the managing FastAdapter, by passing in the itemAdapter
+FastAdapter fastAdapter = FastAdapter.with(itemAdapter);
 
 //set our adapters to the RecyclerView
-//we wrap our FastAdapter inside the ItemAdapter -> This allows us to chain adapters for more complex useCases
 recyclerView.setAdapter(fastAdapter);
 
 //set the items to your ItemAdapter
-fastAdapter.add(ITEMS);
+itemAdapter.add(ITEMS);
 ```
 
 ### 3. Click listener
@@ -203,27 +197,23 @@ Implement `ItemTouchCallback` interface in your Activity, and override the `item
 ### 7. Using different ViewHolders (like HeaderView)
 Start by initializing your adapters:
 ```java
-FastItemAdapter fastAdapter = new FastItemAdapter<>();
 // Head is a model class for your header
-HeaderAdapter<Header> headerAdapter = new HeaderAdapter<>();
+ItemAdapter<Header> headerAdapter = new ItemAdapter<>();
 ```
 Initialize a Model FastAdapter:
 ```java
-FastItemAdapter<IItem> fastAdapter = new FastItemAdapter<>();
+ItemAdapter<IItem> itemAdapter = new ItemAdapter<>();
 ```
 Finally, set the adapter:
 ```java
-recyclerView.setAdapter(headerAdapter.wrap(fastAdapter));
-```
-It is also possible to add in a third ViewHolder type by using the `wrap()` method again.
-```java
-recyclerView.setAdapter(thirdAdapter.wrap(headerAdapter.wrap(fastAdapter)));
+FastAdapter fastAdapter = FastAdapter.with(headerAdapter, itemAdapter); //the order defines in which order the items will show up
+recyclerView.setAdapter(fastAdapter);
 ```
 
 ### 8. Infinite (endless) scrolling
-Create a FooterAdapter. We need this to display a loading ProgressBar at the end of our list.
+Create a FooterAdapter. We need this to display a loading ProgressBar at the end of our list. (Don't forget to pass it into `FastAdapter.with(..)`)
 ```java
-FooterAdapter<ProgressItem> footerAdapter = new FooterAdapter<>();
+ItemAdapter<ProgressItem> footerAdapter = new ItemAdapter<>();
 ```
 Keep in mind that ProgressItem is provided by FastAdapter’s extensions.
 ```java
@@ -238,7 +228,7 @@ recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(footerAdapt
 });
 ```
 
-For the complete tutorial and more features such as multi-select and CAB check out the [sample app](https://github.com/mikepenz/FastAdapter/tree/develop/app) or, read [blog post](http://blog.grafixartist.com/recyclerview-adapter-android-made-fast-easy/).
+For the complete tutorial and more features such as multi-select and CAB check out the [sample app](https://github.com/mikepenz/FastAdapter/tree/develop/app).
 
 ## Advanced Usage
 ### Proguard
@@ -261,7 +251,8 @@ public class SimpleSubExpandableItem extends AbstractExpandableItem<SimpleSubExp
 ```
 
 
-
+## Articles
+- [RecyclerView Adapter made ease](http://blog.grafixartist.com/recyclerview-adapter-android-made-fast-easy/) (FastAdapter v2.x)
 
 ## Libs used in sample app:
 Mike Penz:

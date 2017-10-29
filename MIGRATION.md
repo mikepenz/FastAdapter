@@ -1,7 +1,17 @@
 ### Upgrade Notes
 #### v3.0.0
+v3 is a major new release of the `FastAdapter` library and comes with a big refactor. In most cases the upgrade should be still really straight-forward.
+A core part of the v3 refactor was to eliminate the `GenericItemAdapter`. It's functionality is now bundled inside the `ModelAdapter` and should be seen, as the default adapter.
+* `itemAdapter.wrap(...)` was removed in favor of `FastAdapter.with(IItemAdapter, ...)`
+* `GenericItemAdapter` -> `ModelAdapter`
+* `GenericAbstractItem` -> `ModelAbstractItem`
+* `ItemAdapter extends ModelAdapter`. as mentioned above the `ModelAdapter` is now the default and the base
+* The `ModelAdapter` and `ItemAdapter` no longer extend `RecyclerView.Adapter` and are really lightweight now.
+* The `FooterAdapter` and `HeaderAdapter` were removed. Simply use multiple `ItemAdapter` (the order in which they are passed to the `FastAdapter` defines at which position their items show up
 * the initial page of the `EndlessRecyclerOnScrollListener` is now starting also with `0` (like the `EndlessRecyclerOnTopScrollListener`)
 * the `filter` method of the `Predicate` was reversed to follow the API of rxJava http://reactivex.io/documentation/operators/filter.html (true means the item stays, false it will be removed)
+
+**SOMETHING MISSING?** Please open a issue and let me know. Or open a PR and add missing migration notes
 
 #### v2.6.0
 * the `ItemFilter` was moved to it's own class

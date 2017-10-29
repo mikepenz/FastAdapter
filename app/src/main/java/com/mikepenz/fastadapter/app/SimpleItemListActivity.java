@@ -34,7 +34,6 @@ import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -70,7 +69,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         itemAdapter = items();
 
         //create our FastAdapter which will manage everything
-        fastAdapter = FastAdapter.with(Arrays.asList(itemAdapter));
+        fastAdapter = FastAdapter.with(itemAdapter);
         fastAdapter.withSelectable(true);
 
         //configure our fastAdapter
