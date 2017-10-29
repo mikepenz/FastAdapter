@@ -120,8 +120,8 @@ public class TwoLineItem extends AbstractItem<TwoLineItem, TwoLineItem.ViewHolde
         }
         mName.applyTo(holder.name);
         mDescription.applyTo(holder.description);
-        ImageHolder.applyToOrSetInvisible(mAvatar, holder.avatar);
-        ImageHolder.applyToOrSetInvisible(mIcon, holder.icon);
+        ImageHolder.applyToOrSetGone(mAvatar, holder.avatar);
+        ImageHolder.applyToOrSetGone(mIcon, holder.icon);
     }
 
     @Override

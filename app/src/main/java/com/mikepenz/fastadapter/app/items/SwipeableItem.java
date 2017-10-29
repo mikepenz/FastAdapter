@@ -7,9 +7,9 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 import android.widget.TextView;
 
-import com.mikepenz.fastadapter.IDraggable;
+import com.mikepenz.fastadapter_extensions.drag.IDraggable;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.ISwipeable;
+import com.mikepenz.fastadapter_extensions.swipe.ISwipeable;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.materialdrawer.holder.StringHolder;

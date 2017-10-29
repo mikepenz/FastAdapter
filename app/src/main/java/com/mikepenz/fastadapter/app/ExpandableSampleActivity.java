@@ -13,6 +13,7 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
+import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -24,6 +25,7 @@ import java.util.List;
 public class ExpandableSampleActivity extends AppCompatActivity {
     //save our FastAdapter
     private FastItemAdapter<IItem> fastItemAdapter;
+    private ExpandableExtension<IItem> expandableExtension;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,8 @@ public class ExpandableSampleActivity extends AppCompatActivity {
         //create our FastAdapter
         fastItemAdapter = new FastItemAdapter<>();
         fastItemAdapter.withSelectable(true);
+        expandableExtension = new ExpandableExtension<>();
+        fastItemAdapter.addExtension(expandableExtension);
 
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
@@ -89,7 +93,7 @@ public class ExpandableSampleActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //add the values which need to be saved from the adapter to the bundel
+        //add the values which need to be saved from the adapter to the bundle
         outState = fastItemAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }

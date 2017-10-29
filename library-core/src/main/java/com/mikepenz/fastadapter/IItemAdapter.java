@@ -2,47 +2,47 @@ package com.mikepenz.fastadapter;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by mikepenz on 30.12.15.
  */
-public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
-
-    /**
-     * sets the subItems of the given collapsible
-     *
-     * @param collapsible the collapsible which gets the subItems set
-     * @param subItems    the subItems for this collapsible item
-     * @return the item type of the collapsible
-     */
-    <T extends IItem & IExpandable<T, S>, S extends IItem & ISubItem<Item, T>> T setSubItems(T collapsible, List<S> subItems);
+public interface IItemAdapter<Model, Item extends IItem> extends IAdapter<Item> {
 
     /**
      * set a new list of items and apply it to the existing list (clear - add) for this adapter
      *
      * @param items
      */
-    IItemAdapter<Item> set(List<Item> items);
+    IItemAdapter<Model, Item> set(List<Model> items);
 
     /**
      * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
      *
      * @param items
      */
-    IItemAdapter<Item> setNewList(List<Item> items);
+    IItemAdapter<Model, Item> setNewList(List<Model> items);
 
     /**
      * add an array of items to the end of the existing items
      *
      * @param items
      */
-    IItemAdapter<Item> add(Item... items);
+    IItemAdapter<Model, Item> add(Model... items);
 
     /**
      * add a list of items to the end of the existing items
      *
      * @param items
      */
-    IItemAdapter<Item> add(List<Item> items);
+    IItemAdapter<Model, Item> add(List<Model> items);
+
+    /**
+     * add a list of items to the end of the existing items
+     *
+     * @param items
+     */
+    IItemAdapter<Model, Item> addInternal(List<Item> items);
 
     /**
      * add an array of items at the given position within the existing items
@@ -50,7 +50,7 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
      * @param position the global position
      * @param items
      */
-    IItemAdapter<Item> add(int position, Item... items);
+    IItemAdapter<Model, Item> add(int position, Model... items);
 
     /**
      * add a list of items at the given position within the existing items
@@ -58,7 +58,15 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
      * @param position the global position
      * @param items
      */
-    IItemAdapter<Item> add(int position, List<Item> items);
+    IItemAdapter<Model, Item> add(int position, List<Model> items);
+
+    /**
+     * add a list of items at the given position within the existing items
+     *
+     * @param position the global position
+     * @param items
+     */
+    IItemAdapter<Model, Item> addInternal(int position, List<Item> items);
 
     /**
      * sets an item at the given position, overwriting the previous item
@@ -66,14 +74,22 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
      * @param position the global position
      * @param item
      */
-    IItemAdapter<Item> set(int position, Item item);
+    IItemAdapter<Model, Item> set(int position, Model item);
+
+    /**
+     * sets an item at the given position, overwriting the previous item
+     *
+     * @param position the global position
+     * @param item
+     */
+    IItemAdapter<Model, Item> setInternal(int position, Item item);
 
     /**
      * removes an item at the given position within the existing icons
      *
      * @param position the global position
      */
-    IItemAdapter<Item> remove(int position);
+    IItemAdapter<Model, Item> remove(int position);
 
     /**
      * removes a range of items starting with the given position within the existing icons
@@ -81,12 +97,12 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
      * @param position  the global position
      * @param itemCount
      */
-    IItemAdapter<Item> removeRange(int position, int itemCount);
+    IItemAdapter<Model, Item> removeRange(int position, int itemCount);
 
     /**
      * removes all items of this adapter
      */
-    IItemAdapter<Item> clear();
+    IItemAdapter<Model, Item> clear();
 
     /**
      * the interface used to filter the list inside the ItemFilter
@@ -95,8 +111,8 @@ public interface IItemAdapter<Item extends IItem> extends IAdapter<Item> {
         /**
          * @param item       the item which is checked if it should get filtered
          * @param constraint the string constraint used to filter items away
-         * @return false if it should stay. true if it should get filtered away
+         * @return true if it should stay. false if it should get filtered away
          */
-        boolean filter(Item item, CharSequence constraint);
+        boolean filter(Item item, @Nullable CharSequence constraint);
     }
 }

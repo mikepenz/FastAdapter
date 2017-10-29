@@ -11,11 +11,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData;
 import com.mikepenz.fastadapter.app.items.ImageItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 public class ImageListActivity extends AppCompatActivity {
@@ -40,7 +40,7 @@ public class ImageListActivity extends AppCompatActivity {
         mFastItemAdapter = new FastItemAdapter<>();
 
         //configure our fastAdapter
-        mFastItemAdapter.withOnClickListener(new FastAdapter.OnClickListener<ImageItem>() {
+        mFastItemAdapter.withOnClickListener(new OnClickListener<ImageItem>() {
             @Override
             public boolean onClick(View v, IAdapter<ImageItem> adapter, ImageItem item, int position) {
                 Toast.makeText(v.getContext(), item.mName, Toast.LENGTH_SHORT).show();
@@ -80,7 +80,7 @@ public class ImageListActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //add the values which need to be saved from the adapter to the bundel
+        //add the values which need to be saved from the adapter to the bundle
         outState = mFastItemAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }

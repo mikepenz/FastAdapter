@@ -1,5 +1,7 @@
 apply plugin: 'com.android.library'
 
+group "com.mikepenz"
+
 android {
     compileSdkVersion setup.compileSdk
     buildToolsVersion setup.buildTools
@@ -7,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 2630
-        versionName '2.6.3'
+        versionCode 3009
+        versionName '3.0.0.9-SNAPSHOT'
     }
     buildTypes {
         release {
@@ -30,9 +32,13 @@ if (project.hasProperty('pushall') || project.hasProperty('libraryextensiononly'
 }
 
 dependencies {
-    compile project(':library')
-    compile "com.android.support:design:${versions.supportLib}"
-    compile "com.android.support:support-annotations:${versions.supportLib}"
+    implementation  project(':library-core')
+    implementation  project(':library')
+    implementation  project(':library-extensions-expandable')
 
-    compile 'com.mikepenz:materialize:1.0.3@aar'
+    implementation  "com.android.support:recyclerview-v7:${versions.supportLib}"
+    implementation  "com.android.support:design:${versions.supportLib}"
+    implementation  "com.android.support:support-annotations:${versions.supportLib}"
+
+    implementation  'com.mikepenz:materialize:1.1.1@aar'
 }

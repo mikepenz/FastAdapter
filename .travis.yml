@@ -7,13 +7,25 @@ android:
     - platform-tools
     - sys-img-armeabi-v7a-android-18
 
+    # The BuildTools version used by your project
+    - build-tools-27.0.0
+
+    # The SDK version used to compile your project
+    - android-27
+
+    # Additional components
+    - extra-google-m2repository
+    - extra-android-m2repository
+  licenses:
+    - '.+'
+
 jdk:
   - oraclejdk8
 
 before_script:
     # Install SDK license so Android Gradle plugin can install deps.
     - mkdir "$ANDROID_HOME/licenses" || true
-    - echo "8933bad161af4178b1185d1a37fbf41ea5269c55" > "$ANDROID_HOME/licenses/android-sdk-license"
+    - echo "\n8933bad161af4178b1185d1a37fbf41ea5269c55\nd56f5187479451eabf01fb78af6dfcb131a6481e\n84831b9409646a918e30573bab4c9c91346d8abd" > "$ANDROID_HOME/licenses/android-sdk-license"
 
 script: ./gradlew clean test
 

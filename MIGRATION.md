@@ -1,4 +1,23 @@
 ### Upgrade Notes
+#### v3.0.0
+v3 is a major new release of the `FastAdapter` library and comes with a big refactor. In most cases the upgrade should be still really straight-forward.
+A core part of the v3 refactor was to eliminate the `GenericItemAdapter`. It's functionality is now bundled inside the `ModelAdapter` and should be seen, as the default adapter.
+* `itemAdapter.wrap(...)` was removed in favor of `FastAdapter.with(IItemAdapter, ...)`
+* `GenericItemAdapter` -> `ModelAdapter`
+* `GenericAbstractItem` -> `ModelAbstractItem`
+* all `setModel`, .. methods of the `ModelAdapter` do longer exist, use the normal `set`, ..  methods instead (The ModelAdapter will just keep the item list (not the original model list))
+* `ItemAdapter extends ModelAdapter`. as mentioned above the `ModelAdapter` is now the default and the base
+* The `ModelAdapter` and `ItemAdapter` no longer extend `RecyclerView.Adapter` and are really lightweight now.
+* The `FooterAdapter` and `HeaderAdapter` were removed. Simply use multiple `ItemAdapter` (the order in which they are passed to the `FastAdapter` defines at which position their items show up
+* the initial page of the `EndlessRecyclerOnScrollListener` is now starting also with `0` (like the `EndlessRecyclerOnTopScrollListener`)
+* the `filter` method of the `Predicate` was reversed to follow the API of rxJava http://reactivex.io/documentation/operators/filter.html (true means the item stays, false it will be removed)
+* by default the `FastAdapter` no longer contains expandable functionality, please add the `expandable` module (as described) in the readme
+```java
+expandableExtension = new ExpandableExtension<>();
+fastAdapter.addExtension(expandableExtension);
+```
+
+**SOMETHING MISSING?** Please open a issue and let me know. Or open a PR and add missing migration notes
 
 #### v2.6.0
 * the `ItemFilter` was moved to it's own class
@@ -62,13 +81,13 @@ public ViewHolder getViewHolder(View v) {
 
 **SHORT OVERVIEW**
 * If you have items implemented by using the interface you have to implement the new methods (**unbindView**)
-* If you have expandable items make sure to adjust the generic type definitions as metioned below. Check out the `AbstractExpandableItem` to simplify this for you
+* If you have expandable items make sure to adjust the Model type definitions as metioned below. Check out the `AbstractExpandableItem` to simplify this for you
 * If you use the `MaterialDrawer`, the `AboutLibraries` in your project, please make sure to update them so the changed interfaces do not cause conflicts
 
 **DETAILED**
 * New `unbindView` method was added to the `IItem` --> This method is called when the current item is no longer set and before the `ViewHolder` is used for the next item
  * You should move your view resetting logic here, or for example glide image loading canceling
-* `IExpandable` generic types changes
+* `IExpandable` Model types changes
  * it is now required to define the type which will be used for the subItems. This can be an implementation or `ISubItem`. We now require this, as we will keep the references between childs, and parents.
  * this allows more optimizations, and many additional usecases
 * New `ISubItem` interface added 
@@ -92,4 +111,4 @@ public ViewHolder getViewHolder(View v) {
 * the `IExpandable` interface has a new method `isAutoExpanding` which needs to be implemented (default value `true`). This allows to disable the auto toggling of `Expandable` items in the `FastAdapter` which is a problem for custom behaviors. Like issue #157
 
 #### v1.x.x -> v1.4.0
-* with v1.4.0 by default a FastAdapter is now `withSelectable(false)` (for normal lists) if you have selection enabled in your list, add `withSelectable(true)` to your `FastAdapter`, `FastItemAdapter` or `GenericFastItemAdapter``
+* with v1.4.0 by default a FastAdapter is now `withSelectable(false)` (for normal lists) if you have selection enabled in your list, add `withSelectable(true)` to your `FastAdapter`, `FastItemAdapter` or `ModelFastItemAdapter``

@@ -2,15 +2,17 @@ package com.mikepenz.fastadapter.adapters;
 
 import android.widget.Filter;
 
+import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.listeners.ItemFilterListener;
-import com.mikepenz.fastadapter.utils.IdDistributor;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
+import javax.annotation.Nullable;
 
 import static java.util.Arrays.asList;
 
@@ -18,12 +20,12 @@ import static java.util.Arrays.asList;
  * ItemFilter which extends the Filter api provided by Android
  * This calls automatically all required methods, just overwrite the filterItems method
  */
-public class ItemFilter<Item extends IItem> extends Filter {
+public class ItemFilter<Model, Item extends IItem> extends Filter {
     private List<Item> mOriginalItems;
     private CharSequence mConstraint;
-    private ItemAdapter<Item> mItemAdapter;
+    private ModelAdapter<?, Item> mItemAdapter;
 
-    public ItemFilter(ItemAdapter<Item> itemAdapter) {
+    public ItemFilter(ModelAdapter<?, Item> itemAdapter) {
         this.mItemAdapter = itemAdapter;
     }
 
@@ -35,7 +37,7 @@ public class ItemFilter<Item extends IItem> extends Filter {
      * @param listener which will be called after the items were filtered
      * @return this
      */
-    public ItemFilter<Item> withItemFilterListener(ItemFilterListener<Item> listener) {
+    public ItemFilter<Model, Item> withItemFilterListener(ItemFilterListener<Item> listener) {
         mItemFilterListener = listener;
         return this;
     }
@@ -49,13 +51,13 @@ public class ItemFilter<Item extends IItem> extends Filter {
      * @param filterPredicate the predicate used to filter the list inside the ItemFilter
      * @return this
      */
-    public ItemFilter<Item> withFilterPredicate(IItemAdapter.Predicate<Item> filterPredicate) {
+    public ItemFilter<Model, Item> withFilterPredicate(IItemAdapter.Predicate<Item> filterPredicate) {
         this.mFilterPredicate = filterPredicate;
         return this;
     }
 
     @Override
-    public FilterResults performFiltering(CharSequence constraint) {
+    public FilterResults performFiltering(@Nullable CharSequence constraint) {
         FilterResults results = new FilterResults();
 
         //return nothing
@@ -63,11 +65,10 @@ public class ItemFilter<Item extends IItem> extends Filter {
             return results;
         }
 
-        //we can not filter on expanded or selected items, because the remembered positions will change
-        if (mItemAdapter.getFastAdapter().isPositionBasedStateManagement()) {
-            mItemAdapter.getFastAdapter().deselect();
+        //call extensions
+        for (IAdapterExtension<Item> ext : mItemAdapter.getFastAdapter().getExtensions()) {
+            ext.performFiltering(constraint);
         }
-        mItemAdapter.getFastAdapter().collapse(false);
 
         mConstraint = constraint;
 
@@ -92,7 +93,7 @@ public class ItemFilter<Item extends IItem> extends Filter {
             // We perform filtering operation
             if (mFilterPredicate != null) {
                 for (Item item : mOriginalItems) {
-                    if (!mFilterPredicate.filter(item, constraint)) {
+                    if (mFilterPredicate.filter(item, constraint)) {
                         filteredItems.add(item);
                     }
                 }
@@ -111,10 +112,10 @@ public class ItemFilter<Item extends IItem> extends Filter {
     }
 
     @Override
-    protected void publishResults(CharSequence constraint, FilterResults results) {
+    protected void publishResults(@Nullable CharSequence constraint, FilterResults results) {
         // Now we have to inform the adapter about the new list filtered
         if (results.values != null) {
-            mItemAdapter.set((List<Item>) results.values, false);
+            mItemAdapter.setInternal((List<Item>) results.values, false, null);
         }
 
         if (mItemFilterListener != null) {
@@ -194,7 +195,7 @@ public class ItemFilter<Item extends IItem> extends Filter {
      * @param items the items to add
      */
     @SafeVarargs
-    public final ItemAdapter<Item> add(Item... items) {
+    public final ModelAdapter<?, Item> add(Item... items) {
         return add(asList(items));
     }
 
@@ -204,16 +205,16 @@ public class ItemFilter<Item extends IItem> extends Filter {
      *
      * @param items the items to add
      */
-    public ItemAdapter<Item> add(List<Item> items) {
+    public ModelAdapter<?, Item> add(List<Item> items) {
         if (mOriginalItems != null && items.size() > 0) {
             if (mItemAdapter.isUseIdDistributor()) {
-                IdDistributor.checkIds(items);
+                mItemAdapter.getIdDistributor().checkIds(items);
             }
             mOriginalItems.addAll(items);
             publishResults(mConstraint, performFiltering(mConstraint));
             return mItemAdapter;
         } else {
-            return mItemAdapter.add(items);
+            return mItemAdapter.addInternal(items);
         }
     }
 
@@ -224,7 +225,7 @@ public class ItemFilter<Item extends IItem> extends Filter {
      * @param items    the items to add
      */
     @SafeVarargs
-    public final ItemAdapter<Item> add(int position, Item... items) {
+    public final ModelAdapter<?, Item> add(int position, Item... items) {
         return add(position, asList(items));
     }
 
@@ -234,16 +235,16 @@ public class ItemFilter<Item extends IItem> extends Filter {
      * @param position the global position
      * @param items    the items to add
      */
-    public ItemAdapter<Item> add(int position, List<Item> items) {
+    public ModelAdapter<?, Item> add(int position, List<Item> items) {
         if (mOriginalItems != null && items.size() > 0) {
             if (mItemAdapter.isUseIdDistributor()) {
-                IdDistributor.checkIds(items);
+                mItemAdapter.getIdDistributor().checkIds(items);
             }
             mOriginalItems.addAll(getAdapterPosition(mItemAdapter.getAdapterItems().get(position)) - mItemAdapter.getFastAdapter().getPreItemCount(position), items);
             publishResults(mConstraint, performFiltering(mConstraint));
             return mItemAdapter;
         } else {
-            return mItemAdapter.add(position, items);
+            return mItemAdapter.addInternal(position, items);
         }
     }
 
@@ -253,16 +254,16 @@ public class ItemFilter<Item extends IItem> extends Filter {
      * @param position the global position
      * @param item     the item to set
      */
-    public ItemAdapter<Item> set(int position, Item item) {
+    public ModelAdapter<?, Item> set(int position, Item item) {
         if (mOriginalItems != null) {
             if (mItemAdapter.isUseIdDistributor()) {
-                IdDistributor.checkId(item);
+                mItemAdapter.getIdDistributor().checkId(item);
             }
             mOriginalItems.set(getAdapterPosition(mItemAdapter.getAdapterItems().get(position)) - mItemAdapter.getFastAdapter().getPreItemCount(position), item);
             publishResults(mConstraint, performFiltering(mConstraint));
             return mItemAdapter;
         } else {
-            return mItemAdapter.set(position, item);
+            return mItemAdapter.setInternal(position, item);
         }
     }
 
@@ -273,7 +274,7 @@ public class ItemFilter<Item extends IItem> extends Filter {
      * @param toPosition   the global position to which to move
      * @return this
      */
-    public ItemAdapter<Item> move(int fromPosition, int toPosition) {
+    public ModelAdapter<?, Item> move(int fromPosition, int toPosition) {
         if (mOriginalItems != null) {
             int preItemCount = mItemAdapter.getFastAdapter().getPreItemCount(fromPosition);
             int adjustedFrom = getAdapterPosition(mItemAdapter.getAdapterItems().get(fromPosition));
@@ -293,7 +294,7 @@ public class ItemFilter<Item extends IItem> extends Filter {
      *
      * @param position the global position
      */
-    public ItemAdapter<Item> remove(int position) {
+    public ModelAdapter<?, Item> remove(int position) {
         if (mOriginalItems != null) {
             mOriginalItems.remove(getAdapterPosition(mItemAdapter.getAdapterItems().get(position)) - mItemAdapter.getFastAdapter().getPreItemCount(position));
             publishResults(mConstraint, performFiltering(mConstraint));
@@ -309,7 +310,7 @@ public class ItemFilter<Item extends IItem> extends Filter {
      * @param position  the global position
      * @param itemCount the count of items which were removed
      */
-    public ItemAdapter<Item> removeRange(int position, int itemCount) {
+    public ModelAdapter<?, Item> removeRange(int position, int itemCount) {
         if (mOriginalItems != null) {
             //global position to relative
             int length = mOriginalItems.size();
@@ -329,7 +330,7 @@ public class ItemFilter<Item extends IItem> extends Filter {
     /**
      * removes all items of this adapter
      */
-    public ItemAdapter<Item> clear() {
+    public ModelAdapter<?, Item> clear() {
         if (mOriginalItems != null) {
             mOriginalItems.clear();
             publishResults(mConstraint, performFiltering(mConstraint));

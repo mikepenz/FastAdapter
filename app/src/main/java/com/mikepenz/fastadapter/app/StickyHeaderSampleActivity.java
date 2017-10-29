@@ -11,7 +11,6 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.adapters.HeaderAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
@@ -19,6 +18,7 @@ import com.mikepenz.materialize.MaterializeBuilder;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -45,14 +45,15 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
         //style our ui
         new MaterializeBuilder().withActivity(this).build();
 
-        //create our FastAdapter
-        fastAdapter = new FastAdapter();
-        fastAdapter.withSelectable(true);
-
         //create our adapters
         final StickyHeaderAdapter stickyHeaderAdapter = new StickyHeaderAdapter();
-        final HeaderAdapter headerAdapter = new HeaderAdapter();
+        final ItemAdapter headerAdapter = new ItemAdapter();
         final ItemAdapter itemAdapter = new ItemAdapter();
+
+        //create our FastAdapter
+        fastAdapter = FastAdapter.with(Arrays.asList(headerAdapter, itemAdapter));
+        fastAdapter.withSelectable(true);
+
 
         //configure our fastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
@@ -62,7 +63,7 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
-        rv.setAdapter(stickyHeaderAdapter.wrap(itemAdapter.wrap(headerAdapter.wrap(fastAdapter))));
+        rv.setAdapter(stickyHeaderAdapter.wrap(fastAdapter));
 
         //this adds the Sticky Headers within our list
         final StickyRecyclerHeadersDecoration decoration = new StickyRecyclerHeadersDecoration(stickyHeaderAdapter);
@@ -94,7 +95,7 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //add the values which need to be saved from the adapter to the bundel
+        //add the values which need to be saved from the adapter to the bundle
         outState = fastAdapter.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
     }

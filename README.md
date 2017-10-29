@@ -20,7 +20,7 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 - Easily extensible
 - Endless Scroll ([EndlessScrollSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/EndlessScrollListActivity.java))
 - "Leave-Behind"-Pattern ([SwipeListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SwipeListActivity.java))
-- Split item view and model ([GenericItem](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/GenericItemActivity.java), [MultiTypeGenericItem](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiTypeGenericItemActivity.java))
+- Split item view and model ([ModelItem](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/ModelItemActivity.java), [MultiTypeModelItem](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiTypeModelItemActivity.java))
 - Chain other Adapters ([SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java), [StickyHeaderSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/StickyHeaderSampleActivity.java))
 - Comes with useful Helpers
  - ActionModeHelper ([MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java))
@@ -40,21 +40,29 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-compile('com.mikepenz:fastadapter:2.6.3@aar') {
-    transitive = true
-}
+implementation 'com.mikepenz:fastadapter:2.6.3@aar'
+implementation  'com.android.support:appcompat-v7:${latestSupportLib}'
+implementation  'com.android.support:recyclerview-v7:${latestSupportLib}'
 ```
 
 The commons package comes with some useful helpers (which are not needed in all cases) This one for example includes the `FastItemAdapter`
 ```gradle
-compile 'com.mikepenz:fastadapter-commons:2.6.3@aar'
+implementation 'com.mikepenz:fastadapter-commons:2.6.3@aar'
 ```
 
-All additions are included in the following dependency.
+Expandable support is included and can be added via this
 ```gradle
-compile 'com.mikepenz:fastadapter-extensions:2.6.3@aar'
+implementation 'com.mikepenz:fastadapter-extensions-expandable:2.6.3@aar'
 //The tiny Materialize library used for its useful helper classes
-compile 'com.mikepenz:materialize:1.0.3@aar'
+implementation 'com.mikepenz:materialize:${latestVersion}@aar'
+```
+
+Many helper classes are included in the following dependency. (This functionality also needs the `Expandable` extension
+```gradle
+implementation 'com.mikepenz:fastadapter-extensions:2.6.3@aar'
+implementation  'com.android.support:design:${versions.supportLib}'
+//The tiny Materialize library used for its useful helper classes
+implementation 'com.mikepenz:materialize:${latestVersion}@aar'
 ```
 
 > If you upgrade from < 2.5.0 follow the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md)
@@ -64,7 +72,7 @@ compile 'com.mikepenz:materialize:1.0.3@aar'
 ### 1. Implement your item (the easy way)
 Just create a class which extends the `AbstractItem` as shown below. Implement the methods, and your item is ready.
 ```java
-public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> {
+public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> {
     public String name;
     public String description;
 
@@ -80,42 +88,35 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
         return R.layout.sample_item;
     }
 
-    //The logic to bind your data to the view
     @Override
-    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
-    	//call super so the selection is already handled for you
-    	super.bindView(viewHolder, payloads);
-    	
-    	//bind our data
-        //set the text for the name
-        viewHolder.name.setText(name);
-        //set the text for the description or hide
-        viewHolder.description.setText(description);
-    }
-
-    //reset the view here (this is an optional method, but recommended)
-    @Override
-    public void unbindView(ViewHolder holder) {
-        super.unbindView(holder);
-        holder.name.setText(null);
-        holder.description.setText(null);
-    }
-
-    //Init the viewHolder for this Item
-    @Override
-    public ViewHolder getViewHolder(View v) {
+    public ViewHolder getViewHolder(@NonNull View v) {
         return new ViewHolder(v);
     }
 
-    //The viewHolder used for this item. This viewHolder is always reused by the RecyclerView so scrolling is blazing fast
-    protected static class ViewHolder extends RecyclerView.ViewHolder {
-        protected TextView name;
-        protected TextView description;
+    /**
+     * our ViewHolder
+     */
+    protected static class ViewHolder extends FastAdapter.ViewHolder<SimpleItem> {
+        @BindView(R.id.material_drawer_name)
+        TextView name;
+        @BindView(R.id.material_drawer_description)
+        TextView description;
 
         public ViewHolder(View view) {
             super(view);
-            this.name = (TextView) view.findViewById(com.mikepenz.materialdrawer.R.id.material_drawer_name);
-            this.description = (TextView) view.findViewById(com.mikepenz.materialdrawer.R.id.material_drawer_description);
+            ButterKnife.bind(this, view);
+        }
+
+        @Override
+        public void bindView(SimpleItem item, List<Object> payloads) {
+            StringHolder.applyTo(item.name, name);
+            StringHolder.applyToOrHide(item.description, description);
+        }
+
+        @Override
+        public void unbindView(SimpleItem item) {
+            name.setText(null);
+            description.setText(null);
         }
     }
 }
@@ -123,15 +124,16 @@ public class SampleItem extends AbstractItem<SampleItem, SampleItem.ViewHolder> 
 
 ### 2. Set the Adapter to the RecyclerView
 ```java
-//create our FastAdapter which will manage everything
-FastItemAdapter fastAdapter = new FastItemAdapter();
+//create the ItemAdapter holding your Items
+ItemAdapter itemAdapter = new ItemAdapter();
+//create the managing FastAdapter, by passing in the itemAdapter
+FastAdapter fastAdapter = FastAdapter.with(itemAdapter);
 
 //set our adapters to the RecyclerView
-//we wrap our FastAdapter inside the ItemAdapter -> This allows us to chain adapters for more complex useCases
 recyclerView.setAdapter(fastAdapter);
 
 //set the items to your ItemAdapter
-fastAdapter.add(ITEMS);
+itemAdapter.add(ITEMS);
 ```
 
 ### 3. Click listener
@@ -203,27 +205,23 @@ Implement `ItemTouchCallback` interface in your Activity, and override the `item
 ### 7. Using different ViewHolders (like HeaderView)
 Start by initializing your adapters:
 ```java
-FastItemAdapter fastAdapter = new FastItemAdapter<>();
 // Head is a model class for your header
-HeaderAdapter<Header> headerAdapter = new HeaderAdapter<>();
+ItemAdapter<Header> headerAdapter = new ItemAdapter<>();
 ```
-Initialize a generic FastAdapter:
+Initialize a Model FastAdapter:
 ```java
-FastItemAdapter<IItem> fastAdapter = new FastItemAdapter<>();
+ItemAdapter<IItem> itemAdapter = new ItemAdapter<>();
 ```
 Finally, set the adapter:
 ```java
-recyclerView.setAdapter(headerAdapter.wrap(fastAdapter));
-```
-It is also possible to add in a third ViewHolder type by using the `wrap()` method again.
-```java
-recyclerView.setAdapter(thirdAdapter.wrap(headerAdapter.wrap(fastAdapter)));
+FastAdapter fastAdapter = FastAdapter.with(headerAdapter, itemAdapter); //the order defines in which order the items will show up
+recyclerView.setAdapter(fastAdapter);
 ```
 
 ### 8. Infinite (endless) scrolling
-Create a FooterAdapter. We need this to display a loading ProgressBar at the end of our list.
+Create a FooterAdapter. We need this to display a loading ProgressBar at the end of our list. (Don't forget to pass it into `FastAdapter.with(..)`)
 ```java
-FooterAdapter<ProgressItem> footerAdapter = new FooterAdapter<>();
+ItemAdapter<ProgressItem> footerAdapter = new ItemAdapter<>();
 ```
 Keep in mind that ProgressItem is provided by FastAdapter’s extensions.
 ```java
@@ -238,15 +236,22 @@ recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(footerAdapt
 });
 ```
 
-For the complete tutorial and more features such as multi-select and CAB check out the [sample app](https://github.com/mikepenz/FastAdapter/tree/develop/app) or, read [blog post](http://blog.grafixartist.com/recyclerview-adapter-android-made-fast-easy/).
+For the complete tutorial and more features such as multi-select and CAB check out the [sample app](https://github.com/mikepenz/FastAdapter/tree/develop/app).
 
 ## Advanced Usage
 ### Proguard
 * As of v2.5.0 there are no more known requirements to use the `FastAdapter` with Proguard
 
 ### ExpandableItems
-The `FastAdapter` comes with native support for expandable items. These items have to implement the `IExpandable` interface, and the sub items the `ISubItem` interface. This allows better support. 
-The sample app provides sample implementations of those. (Those in the sample are kept generic which allows them to be used with different parent / subitems)
+The `FastAdapter` comes with support for expandable items. After adding the dependency set up the `Expandable` extension via:
+
+```java
+expandableExtension = new ExpandableExtension<>();
+fastAdapter.addExtension(expandableExtension);
+```
+
+Expandable items have to implement the `IExpandable` interface, and the sub items the `ISubItem` interface. This allows better support.
+The sample app provides sample implementations of those. (Those in the sample are kept Model which allows them to be used with different parent / subitems)
 
 As of the way how `SubItems` and their state are handled it is highly recommended to use the `identifier` based `StateManagement`. Just add `withPositionBasedStateManagement(false)` to your `FastAdapter` setup.
 
@@ -261,7 +266,8 @@ public class SimpleSubExpandableItem extends AbstractExpandableItem<SimpleSubExp
 ```
 
 
-
+## Articles
+- [RecyclerView Adapter made ease](http://blog.grafixartist.com/recyclerview-adapter-android-made-fast-easy/) (FastAdapter v2.x)
 
 ## Libs used in sample app:
 Mike Penz:

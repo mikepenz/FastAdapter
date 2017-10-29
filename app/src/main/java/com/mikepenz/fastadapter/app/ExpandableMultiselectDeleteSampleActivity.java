@@ -14,13 +14,15 @@ import android.widget.Toast;
 
 import com.michaelflisar.dragselectrecyclerview.DragSelectTouchListener;
 import com.mikepenz.aboutlibraries.util.UIUtils;
-import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISelectionListener;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.HeaderSelectionItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.expandable.ExpandableExtension;
+import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.fastadapter_extensions.RangeSelectorHelper;
 import com.mikepenz.fastadapter_extensions.utilities.SubItemUtil;
@@ -35,6 +37,7 @@ import java.util.List;
 public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity {
     //save our FastAdapter
     private FastItemAdapter<IItem> fastItemAdapter;
+    private ExpandableExtension<IItem> mExpandableExtension;
     private ActionModeHelper mActionModeHelper;
     private RangeSelectorHelper mRangeSelectorHelper;
     private DragSelectTouchListener mDragSelectTouchListener;
@@ -61,13 +64,14 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
 
         //create our FastAdapter
         fastItemAdapter = new FastItemAdapter<>();
+        mExpandableExtension = new ExpandableExtension<>();
 
         fastItemAdapter
-                .withPositionBasedStateManagement(false)
+                .addExtension(mExpandableExtension)
                 .withSelectable(true)
                 .withMultiSelect(true)
                 .withSelectOnLongClick(true)
-                .withOnPreClickListener(new FastAdapter.OnClickListener<IItem>() {
+                .withOnPreClickListener(new OnClickListener<IItem>() {
                     @Override
                     public boolean onClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
                         //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
@@ -79,7 +83,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                         return res != null ? res : false;
                     }
                 })
-                .withOnClickListener(new FastAdapter.OnClickListener<IItem>() {
+                .withOnClickListener(new OnClickListener<IItem>() {
                     @Override
                     public boolean onClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
                         // check if the actionMode consumes the click. This returns true, if it does, false if not
@@ -91,7 +95,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                         return false;
                     }
                 })
-                .withOnPreLongClickListener(new FastAdapter.OnLongClickListener<IItem>() {
+                .withOnPreLongClickListener(new OnLongClickListener<IItem>() {
                     @Override
                     public boolean onLongClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
                         boolean actionModeWasActive = mActionModeHelper.isActive();
@@ -119,7 +123,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                     }
                 })
                 // important so that the helper knows, that is should use the SubItemUtil for validating its state
-                .withSupportSubItems(true);
+                .withSupportSubItems(mExpandableExtension);
 
         // this will take care of selecting range of items via long press on the first and afterwards on the last item
         mRangeSelectorHelper = new RangeSelectorHelper(fastItemAdapter)
@@ -186,7 +190,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
             }
         }
         fastItemAdapter.add(items);
-        fastItemAdapter.expand();
+        mExpandableExtension.expand();
 
         fastItemAdapter.withSelectionListener(new ISelectionListener() {
             @Override
@@ -217,7 +221,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //add the values which need to be saved from the adapter to the bundel
+        //add the values which need to be saved from the adapter to the bundle
         outState = fastItemAdapter.saveInstanceState(outState);
         outState = mRangeSelectorHelper.saveInstanceState(outState);
         super.onSaveInstanceState(outState);
@@ -248,7 +252,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
 
             // delete the selected items with the SubItemUtil to correctly handle sub items
             // this will even delete empty headers if you want to
-            List<IItem> deleted = SubItemUtil.deleteSelected(fastItemAdapter, true, true);
+            List<IItem> deleted = SubItemUtil.deleteSelected(fastItemAdapter, mExpandableExtension,true, true);
             //as we no longer have a selection so the actionMode can be finished
             mode.finish();
             //we consume the event

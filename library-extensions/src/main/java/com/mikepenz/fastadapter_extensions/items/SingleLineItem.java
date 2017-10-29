@@ -110,8 +110,8 @@ public class SingleLineItem extends AbstractItem<SingleLineItem, SingleLineItem.
             holder.itemView.setBackgroundResource(FastAdapterUIUtils.getSelectableBackground(holder.itemView.getContext()));
         }
         mName.applyTo(holder.name);
-        ImageHolder.applyToOrSetInvisible(mAvatar, holder.avatar);
-        ImageHolder.applyToOrSetInvisible(mIcon, holder.icon);
+        ImageHolder.applyToOrSetGone(mAvatar, holder.avatar);
+        ImageHolder.applyToOrSetGone(mIcon, holder.icon);
     }
 
     @Override

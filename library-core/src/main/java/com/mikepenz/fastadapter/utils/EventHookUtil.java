@@ -1,7 +1,5 @@
 package com.mikepenz.fastadapter.utils;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,6 +16,8 @@ import com.mikepenz.fastadapter.listeners.TouchEventHook;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by mikepenz on 25.01.16.
  */
@@ -27,7 +27,7 @@ public class EventHookUtil {
      *
      * @param viewHolder the viewHolder of the item
      */
-    public static <Item extends IItem> void bind(@NonNull final RecyclerView.ViewHolder viewHolder, @Nullable final List<EventHook<Item>> eventHooks) {
+    public static <Item extends IItem> void bind(RecyclerView.ViewHolder viewHolder, @Nullable final List<EventHook<Item>> eventHooks) {
         if (eventHooks == null) {
             return;
         }
@@ -53,7 +53,7 @@ public class EventHookUtil {
      * @param viewHolder the viewHolder containing this view
      * @param view       the view to attach to
      */
-    public static <Item extends IItem> void attachToView(@NonNull final EventHook<Item> event, @NonNull final RecyclerView.ViewHolder viewHolder, @NonNull final View view) {
+    public static <Item extends IItem> void attachToView(final EventHook<Item> event, final RecyclerView.ViewHolder viewHolder, View view) {
         if (event instanceof ClickEventHook) {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override
