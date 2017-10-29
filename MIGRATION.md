@@ -11,6 +11,11 @@ A core part of the v3 refactor was to eliminate the `GenericItemAdapter`. It's f
 * The `FooterAdapter` and `HeaderAdapter` were removed. Simply use multiple `ItemAdapter` (the order in which they are passed to the `FastAdapter` defines at which position their items show up
 * the initial page of the `EndlessRecyclerOnScrollListener` is now starting also with `0` (like the `EndlessRecyclerOnTopScrollListener`)
 * the `filter` method of the `Predicate` was reversed to follow the API of rxJava http://reactivex.io/documentation/operators/filter.html (true means the item stays, false it will be removed)
+* by default the `FastAdapter` no longer contains expandable functionality, please add the `expandable` module (as described) in the readme
+```java
+expandableExtension = new ExpandableExtension<>();
+fastAdapter.addExtension(expandableExtension);
+```
 
 **SOMETHING MISSING?** Please open a issue and let me know. Or open a PR and add missing migration notes
 

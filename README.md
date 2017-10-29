@@ -243,7 +243,14 @@ For the complete tutorial and more features such as multi-select and CAB check o
 * As of v2.5.0 there are no more known requirements to use the `FastAdapter` with Proguard
 
 ### ExpandableItems
-The `FastAdapter` comes with native support for expandable items. These items have to implement the `IExpandable` interface, and the sub items the `ISubItem` interface. This allows better support. 
+The `FastAdapter` comes with support for expandable items. After adding the dependency set up the `Expandable` extension via:
+
+```java
+expandableExtension = new ExpandableExtension<>();
+fastAdapter.addExtension(expandableExtension);
+```
+
+Expandable items have to implement the `IExpandable` interface, and the sub items the `ISubItem` interface. This allows better support.
 The sample app provides sample implementations of those. (Those in the sample are kept Model which allows them to be used with different parent / subitems)
 
 As of the way how `SubItems` and their state are handled it is highly recommended to use the `identifier` based `StateManagement`. Just add `withPositionBasedStateManagement(false)` to your `FastAdapter` setup.
