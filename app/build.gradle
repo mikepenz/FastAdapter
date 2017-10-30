@@ -42,27 +42,27 @@ android {
 }
 
 dependencies {
-    implementation  project(':library-core')
-    implementation  project(':library')
-    implementation  project(':library-extensions')
-    implementation  project(':library-extensions-expandable')
+    implementation project(':library-core')
+    implementation project(':library')
+    implementation project(':library-extensions')
+    implementation project(':library-extensions-expandable')
 
-    implementation  "com.android.support:appcompat-v7:${versions.supportLib}"
-    implementation  "com.android.support:recyclerview-v7:${versions.supportLib}"
-    implementation  "com.android.support:cardview-v7:${versions.supportLib}"
-    implementation  "com.android.support:design:${versions.supportLib}"
+    implementation "com.android.support:appcompat-v7:${versions.supportLib}"
+    implementation "com.android.support:recyclerview-v7:${versions.supportLib}"
+    implementation "com.android.support:cardview-v7:${versions.supportLib}"
+    implementation "com.android.support:design:${versions.supportLib}"
 
     // used to base on some backwards compatible themes
     // contains util classes to support various android versions, and clean up code
     // comes with the awesome "Holder"-Pattern
     // https://github.com/mikepenz/Materialize
-    implementation  'com.mikepenz:materialize:1.1.1@aar'
+    implementation 'com.mikepenz:materialize:1.1.1@aar'
 
     // used to provide out of the box icon font support. simplifies development,
     // and provides scalable icons. the core is very very light
     // https://github.com/mikepenz/Android-Iconics
-    implementation  'com.mikepenz:iconics-core:2.9.5@aar'
-    implementation  "com.mikepenz:iconics-views:2.9.5@aar"
+    implementation 'com.mikepenz:iconics-core:2.9.5@aar'
+    implementation "com.mikepenz:iconics-views:2.9.5@aar"
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
@@ -71,7 +71,7 @@ dependencies {
     }
     //used to provide different itemAnimators for the RecyclerView
     //https://github.com/mikepenz/ItemAnimators
-    implementation  'com.mikepenz:itemanimators:1.0.1@aar'
+    implementation 'com.mikepenz:itemanimators:1.0.1@aar'
     //used to generate the Open Source section
     //https://github.com/mikepenz/AboutLibraries
     compile('com.mikepenz:aboutlibraries:6.0.0@aar') {
@@ -79,10 +79,10 @@ dependencies {
     }
     //used to display the icons in the drawer
     //https://github.com/mikepenz/Android-Iconics
-    implementation  'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
-    implementation  'com.mikepenz:community-material-typeface:1.7.22.1@aar'
-    implementation  'com.mikepenz:google-material-typeface:3.0.1.1.original@aar'
-    implementation  'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
+    implementation 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
+    implementation 'com.mikepenz:community-material-typeface:1.7.22.1@aar'
+    implementation 'com.mikepenz:google-material-typeface:3.0.1.1.original@aar'
+    implementation 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
 
     //Used for the StickyHeaderSample
     //https://github.com/timehop/sticky-headers-recyclerview
@@ -95,15 +95,15 @@ dependencies {
     implementation 'com.turingtechnologies.materialscrollbar:lib:10.0.1'
 
     //https://github.com/JakeWharton/butterknife
-    implementation  'com.jakewharton:butterknife:8.8.1'
+    implementation 'com.jakewharton:butterknife:8.8.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
     //used to load the images in the ImageListSample
     //https://github.com/bumptech/glide
-    implementation  'com.github.bumptech.glide:glide:3.8.0'
+    implementation 'com.github.bumptech.glide:glide:3.8.0'
 
     //Used to provide the drag selection like google photos
-    implementation  'com.github.MFlisar:DragSelectRecyclerView:0.2'
+    implementation 'com.github.MFlisar:DragSelectRecyclerView:0.2'
 
     //mopub sdk to showcase the usage of the mopub adapter
     compile('com.mopub:mopub-sdk:4.7.1@aar') {
@@ -112,8 +112,8 @@ dependencies {
     }
 
     //Used to async operations
-    implementation  'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation  'io.reactivex.rxjava2:rxjava:2.1.2'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.2'
 
     configurations.all {
         resolutionStrategy.force "com.mikepenz:iconics-core:2.9.5"
