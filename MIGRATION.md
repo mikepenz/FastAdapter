@@ -16,6 +16,7 @@ A core part of the v3 refactor was to eliminate the `GenericItemAdapter`. It's f
 expandableExtension = new ExpandableExtension<>();
 fastAdapter.addExtension(expandableExtension);
 ```
+* moved all previous intern `FastAdapter.*Listener` to their own interfaces
 
 **SOMETHING MISSING?** Please open a issue and let me know. Or open a PR and add missing migration notes
 
