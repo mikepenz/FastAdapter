@@ -41,14 +41,14 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-implementation 'com.mikepenz:fastadapter:3.0.0@aar'
+implementation 'com.mikepenz:fastadapter:3.0.1@aar'
 implementation  'com.android.support:appcompat-v7:${latestSupportLib}'
 implementation  'com.android.support:recyclerview-v7:${latestSupportLib}'
 ```
 
 The commons package comes with some useful helpers (which are not needed in all cases) This one for example includes the `FastItemAdapter`
 ```gradle
-implementation 'com.mikepenz:fastadapter-commons:3.0.0@aar'
+implementation 'com.mikepenz:fastadapter-commons:3.0.1@aar'
 ```
 
 Expandable support is included and can be added via this
