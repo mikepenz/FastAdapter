@@ -7,6 +7,7 @@ import com.mikepenz.fastadapter.IIdDistributor;
 import com.mikepenz.fastadapter.IInterceptor;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
+import com.mikepenz.fastadapter.IModelItem;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -196,15 +197,17 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      * @return a List of initial Model's
      */
     public List<Model> getModels() {
-        if (mReverseInterceptor != null) {
-            ArrayList<Model> list = new ArrayList<>(mItems.size());
-            for (Item item : mItems) {
+        ArrayList<Model> list = new ArrayList<>(mItems.size());
+        for (Item item : mItems) {
+            if (mReverseInterceptor != null) {
                 list.add(mReverseInterceptor.intercept(item));
+            } else if (item instanceof IModelItem) {
+                list.add((Model) ((IModelItem) item).getModel());
+            } else {
+                throw new RuntimeException("to get the list of models, the item either needs to implement `IModelItem` or you have to provide a `reverseInterceptor`");
             }
-            return list;
-        } else {
-            throw new RuntimeException("please provide a reverseInterceptor");
         }
+        return list;
     }
 
     /**
