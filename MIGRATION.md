@@ -5,18 +5,18 @@ A core part of the v3 refactor was to eliminate the `GenericItemAdapter`. It's f
 * `itemAdapter.wrap(...)` was removed in favor of `FastAdapter.with(IItemAdapter, ...)`
 * `GenericItemAdapter` -> `ModelAdapter`
 * `GenericAbstractItem` -> `ModelAbstractItem`
-* all `setModel`, .. methods of the `ModelAdapter` do longer exist, use the normal `set`, ..  methods instead (The ModelAdapter will just keep the item list (not the original model list))
-* `ItemAdapter extends ModelAdapter`. as mentioned above the `ModelAdapter` is now the default and the base
+* all `setModel`-methods of the `ModelAdapter` do not longer exist -> use the normal `set`-methods instead (The ModelAdapter will just keep the item list (not the original model list))
+* `ItemAdapter extends ModelAdapter`: as mentioned above the `ModelAdapter` is now the default and the base
 * The `ModelAdapter` and `ItemAdapter` no longer extend `RecyclerView.Adapter` and are really lightweight now.
-* The `FooterAdapter` and `HeaderAdapter` were removed. Simply use multiple `ItemAdapter` (the order in which they are passed to the `FastAdapter` defines at which position their items show up
-* the initial page of the `EndlessRecyclerOnScrollListener` is now starting also with `0` (like the `EndlessRecyclerOnTopScrollListener`)
-* the `filter` method of the `Predicate` was reversed to follow the API of rxJava http://reactivex.io/documentation/operators/filter.html (true means the item stays, false it will be removed)
+* The `FooterAdapter` and `HeaderAdapter` were removed. Simply use multiple `ItemAdapter` (the order in which they are passed to the `FastAdapter` defines at which position their items show up)
+* The initial page of the `EndlessRecyclerOnScrollListener` is now starting also with `0` (like the `EndlessRecyclerOnTopScrollListener`)
+* The logic of the `Predicate.filter` method was reversed to follow the API of RxJava http://reactivex.io/documentation/operators/filter.html (`true` means the item stays, `false` it will be removed)
 * by default the `FastAdapter` no longer contains expandable functionality, please add the `expandable` module (as described) in the readme
 ```java
 expandableExtension = new ExpandableExtension<>();
 fastAdapter.addExtension(expandableExtension);
 ```
-* moved all previous intern `FastAdapter.*Listener` to their own interfaces
+* moved all previous internal `FastAdapter.*Listener` to their own interfaces
 
 **SOMETHING MISSING?** Please open a issue and let me know. Or open a PR and add missing migration notes
 
