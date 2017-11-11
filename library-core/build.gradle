@@ -12,6 +12,8 @@ android {
         targetSdkVersion setup.targetSdk
         versionCode 3010
         versionName '3.0.1'
+
+        consumerProguardFiles 'consumer-proguard-rules.pro'
     }
     buildTypes {
         release {
