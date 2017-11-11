@@ -61,6 +61,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     private SelectExtension<Item> mSelectExtension = new SelectExtension<>();
     // legacy bindView mode. if activated we will forward onBindView without payloads to the method with payloads
     private boolean mLegacyBindViewMode = false;
+    // if set to `false` will not attach any listeners to the list. click events will have to be handled manually
+    private boolean mAttachDefaultListeners = true;
 
     // verbose
     private boolean mVerbose = false;
@@ -436,6 +438,19 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * if set to `false` will not attach any listeners to the list. click events will have to be handled manually
+     * It is important to remember, if deactivated no listeners won't be attached at a later time either, as the
+     * listeners are only attached at ViewHolder creation time.
+     *
+     * @param mAttachDefaultListeners false if you want no listeners attached to the item (default = true)
+     * @return this
+     */
+    public FastAdapter<Item> withAttachDefaultListeners(boolean mAttachDefaultListeners) {
+        this.mAttachDefaultListeners = mAttachDefaultListeners;
+        return this;
+    }
+
+    /**
      * set a listener that get's notified whenever an item is selected or deselected
      *
      * @param selectionListener the listener that will be notified about selection changes
@@ -640,14 +655,16 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         //set the adapter
         holder.itemView.setTag(R.id.fastadapter_item_adapter, FastAdapter.this);
 
-        //handle click behavior
-        EventHookUtil.attachToView(fastAdapterViewClickListener, holder, holder.itemView);
+        if (mAttachDefaultListeners) {
+            //handle click behavior
+            EventHookUtil.attachToView(fastAdapterViewClickListener, holder, holder.itemView);
 
-        //handle long click behavior
-        EventHookUtil.attachToView(fastAdapterViewLongClickListener, holder, holder.itemView);
+            //handle long click behavior
+            EventHookUtil.attachToView(fastAdapterViewLongClickListener, holder, holder.itemView);
 
-        //handle touch behavior
-        EventHookUtil.attachToView(fastAdapterViewTouchListener, holder, holder.itemView);
+            //handle touch behavior
+            EventHookUtil.attachToView(fastAdapterViewTouchListener, holder, holder.itemView);
+        }
 
         return mOnCreateViewHolderListener.onPostCreateViewHolder(this, holder);
     }
@@ -972,10 +989,39 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     //-------------------------
     //-------------------------
-    //Selection stuff
+    //Convenient getters
     //-------------------------
     //-------------------------
 
+    /**
+     * @return the `ClickEventHook` which is attached by default (if not deactivated) via `withAttachDefaultListeners`
+     * @see #withAttachDefaultListeners(boolean)
+     */
+    public ClickEventHook<Item> getViewClickListener() {
+        return fastAdapterViewClickListener;
+    }
+
+    /**
+     * @return the `LongClickEventHook` which is attached by default (if not deactivated) via `withAttachDefaultListeners`
+     * @see #withAttachDefaultListeners(boolean)
+     */
+    public LongClickEventHook<Item> getViewLongClickListener() {
+        return fastAdapterViewLongClickListener;
+    }
+
+    /**
+     * @return the `TouchEventHook` which is attached by default (if not deactivated) via `withAttachDefaultListeners`
+     * @see #withAttachDefaultListeners(boolean)
+     */
+    public TouchEventHook<Item> getViewTouchListener() {
+        return fastAdapterViewTouchListener;
+    }
+
+    //-------------------------
+    //-------------------------
+    //Selection stuff
+    //-------------------------
+    //-------------------------
 
     /**
      * @return the selectExtension defined for this FastAdaper
