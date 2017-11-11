@@ -142,7 +142,7 @@ itemAdapter.add(ITEMS);
 ### 3. Click listener
 ```java
 fastAdapter.withSelectable(true);
-fastAdapter.withOnClickListener(new FastAdapter.OnClickListener<Item>() {
+fastAdapter.withOnClickListener(new OnClickListener<Item>() {
     @Override
     public boolean onClick(View v, IAdapter<Item> adapter, Item item, int position) {
        // Handle click here
