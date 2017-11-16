@@ -309,7 +309,7 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
      */
     @Override
     public boolean equals(int id) {
-        return id == mIdentifier;
+        return id == getIdentifier();
     }
 
     /**
@@ -323,7 +323,7 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         AbstractItem<?, ?> that = (AbstractItem<?, ?>) o;
-        return mIdentifier == that.mIdentifier;
+        return getIdentifier() == that.getIdentifier();
     }
 
     /**
@@ -333,6 +333,6 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
      */
     @Override
     public int hashCode() {
-        return Long.valueOf(mIdentifier).hashCode();
+        return Long.valueOf(getIdentifier()).hashCode();
     }
 }
