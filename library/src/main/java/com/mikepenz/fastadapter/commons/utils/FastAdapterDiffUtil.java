@@ -5,7 +5,7 @@ import android.support.v7.util.DiffUtil;
 import android.support.v7.util.ListUpdateCallback;
 
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.adapters.ModelAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 
 import java.util.Collections;
@@ -17,7 +17,7 @@ import java.util.List;
 
 public class FastAdapterDiffUtil {
 
-    public static <A extends ItemAdapter<Item>, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
         if (adapter.isUseIdDistributor()) {
             adapter.getIdDistributor().checkIds(items);
         }
@@ -49,21 +49,39 @@ public class FastAdapterDiffUtil {
         return result;
     }
 
-    public static <A extends ItemAdapter<Item>, Item extends IItem> A set(final A adapter, DiffUtil.DiffResult result) {
+
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, DiffUtil.DiffResult result) {
         result.dispatchUpdatesTo(new FastAdapterListUpdateCallback<>(adapter));
         return adapter;
     }
 
-    public static <A extends ItemAdapter<Item>, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
         return calculateDiff(adapter, items, callback, true);
     }
 
-    public static <A extends ItemAdapter<Item>, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final boolean detectMoves) {
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final boolean detectMoves) {
         return calculateDiff(adapter, items, new DiffCallbackImpl<Item>(), detectMoves);
     }
 
-    public static <A extends ItemAdapter<Item>, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items) {
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items) {
         return calculateDiff(adapter, items, new DiffCallbackImpl<Item>(), true);
+    }
+
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
+        DiffUtil.DiffResult result = calculateDiff(adapter, items, callback, detectMoves);
+        return set(adapter, result);
+    }
+
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
+        return set(adapter, items, callback, true);
+    }
+
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, final List<Item> items, final boolean detectMoves) {
+        return set(adapter, items, new DiffCallbackImpl<Item>(), detectMoves);
+    }
+
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, final List<Item> items) {
+        return set(adapter, items, new DiffCallbackImpl<Item>());
     }
 
     public static <A extends FastItemAdapter<Item>, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
@@ -76,23 +94,6 @@ public class FastAdapterDiffUtil {
 
     public static <A extends FastItemAdapter<Item>, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items) {
         return calculateDiff(adapter.getItemAdapter(), items);
-    }
-
-    public static <A extends ItemAdapter<Item>, Item extends IItem> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
-        DiffUtil.DiffResult result = calculateDiff(adapter, items, callback, detectMoves);
-        return set(adapter, result);
-    }
-
-    public static <A extends ItemAdapter<Item>, Item extends IItem> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
-        return set(adapter, items, callback, true);
-    }
-
-    public static <A extends ItemAdapter<Item>, Item extends IItem> A set(final A adapter, final List<Item> items, final boolean detectMoves) {
-        return set(adapter, items, new DiffCallbackImpl<Item>(), detectMoves);
-    }
-
-    public static <A extends ItemAdapter<Item>, Item extends IItem> A set(final A adapter, final List<Item> items) {
-        return set(adapter, items, new DiffCallbackImpl<Item>());
     }
 
     public static <A extends FastItemAdapter<Item>, Item extends IItem> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
@@ -159,7 +160,7 @@ public class FastAdapterDiffUtil {
         }
     }
 
-    private static final class FastAdapterListUpdateCallback<A extends ItemAdapter<Item>, Item extends IItem> implements ListUpdateCallback {
+    private static final class FastAdapterListUpdateCallback<A extends ModelAdapter<Model, Item>, Model, Item extends IItem> implements ListUpdateCallback {
 
         private final A adapter;
 

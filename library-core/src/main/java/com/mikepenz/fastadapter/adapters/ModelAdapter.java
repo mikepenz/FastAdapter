@@ -61,12 +61,24 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         return this;
     }
 
+    /**
+     * Generates a `Item` based on it's `Model` using the interceptor
+     *
+     * @param model the `Model` which will be used to create the `Item`
+     * @return the generated `Item`
+     */
     @Nullable
-    private Item intercept(Model model) {
+    public Item intercept(Model model) {
         return mInterceptor.intercept(model);
     }
 
-    private List<Item> intercept(List<Model> models) {
+    /**
+     * Generates a `List<Item>` based on it's `List<Model>` using the interceptor
+     *
+     * @param models the `List<Model>` which will be used to create the `List<Item>`
+     * @return the generated `List<Item>`
+     */
+    public List<Item> intercept(List<Model> models) {
         List<Item> items = new ArrayList<>(models.size());
         Item item;
         for (Model model : models) {
