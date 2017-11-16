@@ -28,8 +28,6 @@ public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
                 if (viewHolder instanceof FastAdapter.ViewHolder) {
                     ((FastAdapter.ViewHolder) viewHolder).bindView(item, payloads);
                 }
-                //set the R.id.fastadapter_item tag of this item to the item object (can be used when retrieving the view)
-                viewHolder.itemView.setTag(R.id.fastadapter_item, item);
             }
         }
     }
@@ -42,14 +40,13 @@ public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
      */
     @Override
     public void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
+        IItem item = FastAdapter.getHolderAdapterItem(viewHolder, position);
         if (item != null) {
             item.unbindView(viewHolder);
             if (viewHolder instanceof FastAdapter.ViewHolder) {
                 ((FastAdapter.ViewHolder) viewHolder).unbindView(item);
             }
             //remove set tag's
-            viewHolder.itemView.setTag(R.id.fastadapter_item, null);
             viewHolder.itemView.setTag(R.id.fastadapter_item_adapter, null);
         } else {
             Log.e("FastAdapter", "The bindView method of this item should set the `Tag` on its itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.java#L189)");
@@ -64,7 +61,7 @@ public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
      */
     @Override
     public void onViewAttachedToWindow(RecyclerView.ViewHolder viewHolder, int position) {
-        IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
+        IItem item = FastAdapter.getHolderAdapterItem(viewHolder, position);
         if (item != null) {
             try {
                 item.attachToWindow(viewHolder);
@@ -85,7 +82,7 @@ public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
      */
     @Override
     public void onViewDetachedFromWindow(RecyclerView.ViewHolder viewHolder, int position) {
-        IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
+        IItem item = FastAdapter.getHolderAdapterItem(viewHolder, position);
         if (item != null) {
             item.detachFromWindow(viewHolder);
             if (viewHolder instanceof FastAdapter.ViewHolder) {
@@ -104,7 +101,7 @@ public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
      */
     @Override
     public boolean onFailedToRecycleView(RecyclerView.ViewHolder viewHolder, int position) {
-        IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
+        IItem item = FastAdapter.getHolderAdapterItem(viewHolder, position);
         if (item != null) {
             boolean recycle = item.failedToRecycle(viewHolder);
             if (viewHolder instanceof FastAdapter.ViewHolder) {

@@ -1,4 +1,8 @@
 ### Upgrade Notes
+
+#### v3.0.3
+* Remove the `R.id.fastadapter_item` Tag from the `ViewHolder` in favour of `FastAdapter.getHolderAdapterItem()` as this will make sure we always get the newest reference to our item
+
 #### v3.0.0
 v3 is a major new release of the `FastAdapter` library and comes with a big refactor. In most cases the upgrade should be still really straight-forward.
 A core part of the v3 refactor was to eliminate the `GenericItemAdapter`. It's functionality is now bundled inside the `ModelAdapter` and should be seen, as the default adapter.
