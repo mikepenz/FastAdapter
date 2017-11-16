@@ -52,10 +52,7 @@ public abstract class CustomEventHook<Item extends IItem> implements EventHook<I
         //make sure the click was done on a valid item
         if (pos != RecyclerView.NO_POSITION) {
             //we update our item with the changed property
-            Object tag = viewHolder.itemView.getTag(R.id.fastadapter_item);
-            if (tag instanceof IItem) {
-                return (Item) tag;
-            }
+            return adapter.getItem(pos);
         }
         return null;
     }

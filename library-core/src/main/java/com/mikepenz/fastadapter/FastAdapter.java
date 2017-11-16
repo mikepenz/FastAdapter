@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.SparseArray;
@@ -537,7 +538,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param holder the viewHolder of the item
      * @return the position of the holder
      */
-    public int getHolderAdapterPosition(RecyclerView.ViewHolder holder) {
+    public int getHolderAdapterPosition(@NonNull RecyclerView.ViewHolder holder) {
         return holder.getAdapterPosition();
     }
 
@@ -1281,6 +1282,43 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         } else {
             notifyItemRangeChanged(position, itemCount, payload);
         }
+    }
+
+    /**
+     * convenient helper method to get the Item from a holder
+     *
+     * @param holder the ViewHolder for which we want to retrieve the item
+     * @return the Item found for this ViewHolder
+     */
+    public static <Item extends IItem> Item getHolderAdapterItem(@Nullable RecyclerView.ViewHolder holder) {
+        if (holder != null) {
+            Object tag = holder.itemView.getTag(com.mikepenz.fastadapter.R.id.fastadapter_item_adapter);
+            if (tag instanceof FastAdapter) {
+                FastAdapter fastAdapter = ((FastAdapter) tag);
+                int pos = fastAdapter.getHolderAdapterPosition(holder);
+                if (pos != RecyclerView.NO_POSITION) {
+                    return (Item) fastAdapter.getItem(pos);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * convenient helper method to get the Item from a holder
+     *
+     * @param holder   the ViewHolder for which we want to retrieve the item
+     * @param position the position for which we want to retrieve the item
+     * @return the Item found for the given position and that ViewHolder
+     */
+    public static <Item extends IItem> Item getHolderAdapterItem(@Nullable RecyclerView.ViewHolder holder, int position) {
+        if (holder != null) {
+            Object tag = holder.itemView.getTag(com.mikepenz.fastadapter.R.id.fastadapter_item_adapter);
+            if (tag instanceof FastAdapter) {
+                return (Item) ((FastAdapter) tag).getItem(position);
+            }
+        }
+        return null;
     }
 
     /**

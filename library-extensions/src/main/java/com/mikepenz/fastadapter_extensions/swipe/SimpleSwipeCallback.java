@@ -10,7 +10,8 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
-import com.mikepenz.library_extensions.R;
+import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IItem;
 
 
 /**
@@ -88,8 +89,9 @@ public class SimpleSwipeCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public int getSwipeDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        if (viewHolder != null && viewHolder.itemView.getTag(R.id.fastadapter_item) instanceof ISwipeable) {
-            if (((ISwipeable) viewHolder.itemView.getTag(R.id.fastadapter_item)).isSwipeable()) {
+        IItem item = FastAdapter.getHolderAdapterItem(viewHolder);
+        if (item instanceof ISwipeable) {
+            if (((ISwipeable) item).isSwipeable()) {
                 return super.getSwipeDirs(recyclerView, viewHolder);
             } else {
                 return 0;
