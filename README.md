@@ -41,7 +41,7 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-implementation 'com.mikepenz:fastadapter:3.0.3@aar'
+implementation 'com.mikepenz:fastadapter:3.0.4@aar'
 implementation  'com.android.support:appcompat-v7:${latestSupportLib}'
 implementation  'com.android.support:recyclerview-v7:${latestSupportLib}'
 ```
