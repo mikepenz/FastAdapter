@@ -10,8 +10,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 3030
-        versionName '3.0.3'
+        versionCode 3040
+        versionName '3.0.4'
 
         consumerProguardFiles 'consumer-proguard-rules.pro'
     }
