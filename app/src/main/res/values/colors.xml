@@ -6,10 +6,10 @@
 
     android:theme="@style/MaterialDrawerTheme.Light.DarkActionBar.TranslucentStatus"
     -->
-    <color name="colorPrimary">#ffeb3b</color>
-    <color name="colorPrimaryDark">#ffd740</color>
-    <color name="colorPrimaryLight">#ffff00</color>
-    <color name="colorAccent">#8bc34a</color>
+    <color name="colorPrimary">#FFEB3B</color>
+    <color name="colorPrimaryDark">#FDD835</color>
+    <color name="colorPrimaryLight">#FFEE58</color>
+    <color name="colorAccent">#8BC34A</color>
 
     <!-- general colors for drawer -->
     <color name="list_background">#F2F2F2</color>
