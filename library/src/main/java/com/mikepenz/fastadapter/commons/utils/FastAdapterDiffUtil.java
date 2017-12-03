@@ -3,12 +3,10 @@ package com.mikepenz.fastadapter.commons.utils;
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.util.ListUpdateCallback;
-
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ModelAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -20,11 +18,6 @@ public class FastAdapterDiffUtil {
     public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
         if (adapter.isUseIdDistributor()) {
             adapter.getIdDistributor().checkIds(items);
-        }
-
-        //if we have a comparator then sort
-        if (adapter.getComparator() != null) {
-            Collections.sort(items, adapter.getComparator());
         }
 
         //map the types

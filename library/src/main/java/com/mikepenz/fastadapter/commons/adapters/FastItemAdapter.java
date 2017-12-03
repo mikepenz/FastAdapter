@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.commons.adapters;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.adapters.IItemList;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemFilter;
 
@@ -20,6 +21,12 @@ public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
      */
     public FastItemAdapter() {
         itemAdapter = items();
+        addAdapter(0, itemAdapter);
+        cacheSizes();
+    }
+
+    public FastItemAdapter(IItemList<Item> items) {
+        itemAdapter = new ItemAdapter<>(items);
         addAdapter(0, itemAdapter);
         cacheSizes();
     }

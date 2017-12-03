@@ -1,20 +1,19 @@
 package com.mikepenz.fastadapter.adapters;
 
+import android.support.v7.util.ListUpdateCallback;
 import com.mikepenz.fastadapter.AbstractAdapter;
+import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
-import com.mikepenz.fastadapter.IAdapterNotifier;
 import com.mikepenz.fastadapter.IIdDistributor;
 import com.mikepenz.fastadapter.IInterceptor;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.IModelItem;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
+import com.mikepenz.fastadapter.items.SimpleItemList;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 import static java.util.Arrays.asList;
 
@@ -24,10 +23,22 @@ import static java.util.Arrays.asList;
  */
 public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Item> implements IItemAdapter<Model, Item> {
     //the items handled and managed by this item
-    private List<Item> mItems = new ArrayList<>();
+    private final IItemList<Item> mItems;
 
     public ModelAdapter(IInterceptor<Model, Item> interceptor) {
+        this(null, interceptor);
+    }
+
+    public ModelAdapter(IItemList<Item> items, IInterceptor<Model, Item> interceptor) {
+        mItems = items == null ? new SimpleItemList<Item>() : items;
         this.mInterceptor = interceptor;
+    }
+
+    @Override
+    public AbstractAdapter<Item> withFastAdapter(FastAdapter<Item> fastAdapter) {
+        AbstractAdapter<Item> adapter = super.withFastAdapter(fastAdapter);
+        mItems.setListUpdateCallback(listCallback);
+        return adapter;
     }
 
     /**
@@ -160,48 +171,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         mItemFilter.filter(constraint);
     }
 
-    //
-    protected Comparator<Item> mComparator;
-
-    /**
-     * define a comparator which will be used to sort the list "everytime" it is altered
-     * NOTE this will only sort if you "set" a new list or "add" new items (not if you provide a position for the add function)
-     *
-     * @param comparator used to sort the list
-     * @return this
-     */
-    public ModelAdapter<Model, Item> withComparator(Comparator<Item> comparator) {
-        return withComparator(comparator, true);
-    }
-
-    /**
-     * define a comparator which will be used to sort the list "everytime" it is altered
-     * NOTE this will only sort if you "set" a new list or "add" new items (not if you provide a position for the add function)
-     *
-     * @param comparator used to sort the list
-     * @param sortNow    specifies if we use the provided comparator to sort now
-     * @return this
-     */
-    public ModelAdapter<Model, Item> withComparator(Comparator<Item> comparator, boolean sortNow) {
-        this.mComparator = comparator;
-
-        //we directly sort the list with the defined comparator
-        if (mItems != null && mComparator != null && sortNow) {
-            Collections.sort(mItems, mComparator);
-            getFastAdapter().notifyAdapterDataSetChanged();
-        }
-
-        return this;
-    }
-
-
-    /**
-     * @return the defined Comparator used for this ItemAdaper
-     */
-    public Comparator<Item> getComparator() {
-        return mComparator;
-    }
-
     /**
      * the ModelAdapter does not keep a list of input model's to get retrieve them a `reverseInterceptor` is required
      * usually it is used to get the `Model` from a `IModelItem`
@@ -210,7 +179,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      */
     public List<Model> getModels() {
         ArrayList<Model> list = new ArrayList<>(mItems.size());
-        for (Item item : mItems) {
+        for (Item item : mItems.getAll()) {
             if (mReverseInterceptor != null) {
                 list.add(mReverseInterceptor.intercept(item));
             } else if (item instanceof IModelItem) {
@@ -235,7 +204,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      */
     @Override
     public List<Item> getAdapterItems() {
-        return mItems;
+        return mItems.getAll();
     }
 
     /**
@@ -246,7 +215,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      */
     @Override
     public int getAdapterPosition(Item item) {
-        return getAdapterPosition(item.getIdentifier());
+        return mItems.getAdapterPosition(item);
     }
 
     /**
@@ -257,12 +226,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      */
     @Override
     public int getAdapterPosition(long identifier) {
-        for (int i = 0, size = mItems.size(); i < size; i++) {
-            if (mItems.get(i).getIdentifier() == identifier) {
-                return i;
-            }
-        }
-        return -1;
+        return mItems.getAdapterPosition(identifier);
     }
 
     /**
@@ -294,23 +258,17 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         return set(items, true);
     }
 
-    protected ModelAdapter<Model, Item> set(List<Model> list, boolean resetFilter) {
-        List<Item> items = intercept(list);
-        return setInternal(items, resetFilter, null);
-    }
-
     /**
      * set a new list of model items and apply it to the existing list (clear - add) for this adapter
      * NOTE may consider using setNewList if the items list is a reference to the list which is used inside the adapter
      *
      * @param list            the items to set
      * @param resetFilter     `true` if the filter should get reset
-     * @param adapterNotifier a `IAdapterNotifier` allowing to modify the notify logic for the adapter (keep null for default)
      * @return this
      */
-    public ModelAdapter<Model, Item> set(List<Model> list, boolean resetFilter, @Nullable IAdapterNotifier adapterNotifier) {
+    public ModelAdapter<Model, Item> set(List<Model> list, boolean resetFilter) {
         List<Item> items = intercept(list);
-        return setInternal(items, resetFilter, adapterNotifier);
+        return setInternal(items, resetFilter);
     }
 
     /**
@@ -319,10 +277,9 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      *
      * @param items           the items to set
      * @param resetFilter     `true` if the filter should get reset
-     * @param adapterNotifier a `IAdapterNotifier` allowing to modify the notify logic for the adapter (keep null for default)
      * @return this
      */
-    public ModelAdapter<Model, Item> setInternal(List<Item> items, boolean resetFilter, IAdapterNotifier adapterNotifier) {
+    public ModelAdapter<Model, Item> setInternal(List<Item> items, boolean resetFilter) {
         if (mUseIdDistributor) {
             getIdDistributor().checkIds(items);
         }
@@ -336,36 +293,21 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
             ext.set(items, resetFilter);
         }
 
-        //get sizes
-        int newItemsCount = items.size();
-        int previousItemsCount = mItems.size();
-        int itemsBeforeThisAdapter = getFastAdapter().getPreItemCountByOrder(getOrder());
-
-        //make sure the new items list is not a reference of the already mItems list
-        if (items != mItems) {
-            //remove all previous items
-            if (!mItems.isEmpty()) {
-                mItems.clear();
-            }
-
-            //add all new items to the list
-            mItems.addAll(items);
-        }
+        mItems.set(items);
 
         //map the types
         mapPossibleTypes(items);
 
-        //if we have a comparator then sort
-        if (mComparator != null) {
-            Collections.sort(mItems, mComparator);
-        }
+        return this;
+    }
 
-        //now properly notify the adapter about the changes
-        if (adapterNotifier == null) {
-            adapterNotifier = IAdapterNotifier.DEFAULT;
-        }
-        adapterNotifier.notify(getFastAdapter(), newItemsCount, previousItemsCount, itemsBeforeThisAdapter);
+    public IItemAdapter<Model, Item> update(Item item) {
+        mItems.update(item);
+        return this;
+    }
 
+    public IItemAdapter<Model, Item> update(Item oldItem, Item newItem) {
+        mItems.update(oldItem, newItem);
         return this;
     }
 
@@ -379,7 +321,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
     }
 
     /**
-     * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
+     * sets a complete new list of items onto this adapter, using the new list.
      *
      * @param list         the new items to set
      * @param retainFilter set to true if you want to keep the filter applied
@@ -399,17 +341,12 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
             getItemFilter().performFiltering(null);
         }
 
-        mItems = new ArrayList<>(items);
-        mapPossibleTypes(mItems);
+        mItems.set(items);
 
-        if (mComparator != null) {
-            Collections.sort(mItems, mComparator);
-        }
+        mapPossibleTypes(items);
 
         if (filter != null && retainFilter) {
             getItemFilter().publishResults(filter, getItemFilter().performFiltering(filter));
-        } else {
-            getFastAdapter().notifyAdapterDataSetChanged();
         }
 
         return this;
@@ -420,7 +357,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      */
     public void remapMappedTypes() {
         getFastAdapter().clearTypeInstance();
-        mapPossibleTypes(mItems);
+        mapPossibleTypes(mItems.getAll());
     }
 
     /**
@@ -447,16 +384,9 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         if (mUseIdDistributor) {
             getIdDistributor().checkIds(items);
         }
-        int countBefore = mItems.size();
+
         mItems.addAll(items);
         mapPossibleTypes(items);
-
-        if (mComparator == null) {
-            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getPreItemCountByOrder(getOrder()) + countBefore, items.size());
-        } else {
-            Collections.sort(mItems, mComparator);
-            getFastAdapter().notifyAdapterDataSetChanged();
-        }
         return this;
     }
 
@@ -489,8 +419,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         if (items != null && items.size() > 0) {
             mItems.addAll(position - getFastAdapter().getPreItemCountByOrder(getOrder()), items);
             mapPossibleTypes(items);
-
-            getFastAdapter().notifyAdapterItemRangeInserted(position, items.size());
         }
         return this;
     }
@@ -513,8 +441,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         }
         mItems.set(position - getFastAdapter().getPreItemCount(position), item);
         mFastAdapter.registerTypeInstance(item);
-
-        getFastAdapter().notifyAdapterItemChanged(position);
         return this;
     }
 
@@ -527,10 +453,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      */
     public ModelAdapter<Model, Item> move(int fromPosition, int toPosition) {
         int preItemCount = getFastAdapter().getPreItemCount(fromPosition);
-        Item item = mItems.get(fromPosition - preItemCount);
-        mItems.remove(fromPosition - preItemCount);
-        mItems.add(toPosition - preItemCount, item);
-        getFastAdapter().notifyAdapterItemMoved(fromPosition, toPosition);
+        mItems.move(fromPosition - preItemCount, toPosition - preItemCount);
         return this;
     }
 
@@ -541,7 +464,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      */
     public ModelAdapter<Model, Item> remove(int position) {
         mItems.remove(position - getFastAdapter().getPreItemCount(position));
-        getFastAdapter().notifyAdapterItemRemoved(position);
         return this;
     }
 
@@ -552,17 +474,9 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      * @param itemCount the count of items which were removed
      */
     public ModelAdapter<Model, Item> removeRange(int position, int itemCount) {
-        //global position to relative
-        int length = mItems.size();
         int preItemCount = getFastAdapter().getPreItemCount(position);
-        //make sure we do not delete to many items
-        int saveItemCount = Math.min(itemCount, length - position + preItemCount);
 
-        for (int i = 0; i < saveItemCount; i++) {
-            mItems.remove(position - preItemCount);
-        }
-
-        getFastAdapter().notifyAdapterItemRangeRemoved(position, saveItemCount);
+        mItems.removeRange(position - preItemCount, itemCount);
         return this;
     }
 
@@ -570,9 +484,29 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      * removes all items of this adapter
      */
     public ModelAdapter<Model, Item> clear() {
-        int count = mItems.size();
         mItems.clear();
-        getFastAdapter().notifyAdapterItemRangeRemoved(getFastAdapter().getPreItemCountByOrder(getOrder()), count);
         return this;
     }
+
+    private final ListUpdateCallback listCallback = new ListUpdateCallback() {
+        @Override
+        public void onInserted(int position, int count) {
+            mFastAdapter.notifyAdapterItemRangeInserted(getGlobalPosition(position), count);
+        }
+
+        @Override
+        public void onRemoved(int position, int count) {
+            mFastAdapter.notifyAdapterItemRangeRemoved(getGlobalPosition(position), count);
+        }
+
+        @Override
+        public void onMoved(int fromPosition, int toPosition) {
+            mFastAdapter.notifyAdapterItemMoved(getGlobalPosition(fromPosition), getGlobalPosition(toPosition));
+        }
+
+        @Override
+        public void onChanged(int position, int count, Object payload) {
+            mFastAdapter.notifyAdapterItemRangeChanged(getGlobalPosition(position), count, payload);
+        }
+    };
 }
