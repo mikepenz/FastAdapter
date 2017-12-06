@@ -11,7 +11,15 @@ import java.util.List;
 
 public class DefaultItemListImpl<Item extends IItem> extends DefaultItemList<Item> {
 
-    private ArrayList<Item> mItems = new ArrayList<>();
+    private List<Item> mItems;
+
+    public DefaultItemListImpl() {
+        this.mItems = new ArrayList<>();
+    }
+
+    public DefaultItemListImpl(List<Item> items) {
+        this.mItems = items;
+    }
 
     @Override
     public Item get(int position) {
