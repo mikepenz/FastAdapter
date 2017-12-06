@@ -10,9 +10,8 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.IItemList;
 import com.mikepenz.fastadapter.IModelItem;
+import com.mikepenz.fastadapter.utils.DefaultItemList;
 import com.mikepenz.fastadapter.utils.DefaultItemListImpl;
-import com.mikepenz.fastadapter.utils.DefaultListUpdateCallback;
-import com.mikepenz.fastadapter.utils.DefaultListUpdateCallbackImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,23 +30,20 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
     //the items handled and managed by this item
     private final IItemList<Item> mItems;
 
-    private final DefaultListUpdateCallback mCallback;
-
     public ModelAdapter(IInterceptor<Model, Item> interceptor) {
-        this.mInterceptor = interceptor;
-        this.mCallback = new DefaultListUpdateCallbackImpl();
-        this.mItems = new DefaultItemListImpl<>(this.mCallback);
+        this(new DefaultItemListImpl<Item>(), interceptor);
     }
 
-    public ModelAdapter(IItemList<Item> itemList, DefaultListUpdateCallback callback, IInterceptor<Model, Item> interceptor) {
+    public ModelAdapter(IItemList<Item> itemList, IInterceptor<Model, Item> interceptor) {
         this.mInterceptor = interceptor;
         this.mItems = itemList;
-        this.mCallback = callback;
     }
 
     @Override
     public AbstractAdapter<Item> withFastAdapter(FastAdapter<Item> fastAdapter) {
-        mCallback.setFastAdapter(fastAdapter);
+        if (mItems instanceof DefaultItemList) {
+            ((DefaultItemList<Item>) mItems).setFastAdapter(fastAdapter);
+        }
         return super.withFastAdapter(fastAdapter);
     }
 

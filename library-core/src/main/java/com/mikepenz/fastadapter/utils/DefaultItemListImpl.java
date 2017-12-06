@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter.utils;
 
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.IItemList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,15 +9,9 @@ import java.util.List;
  * The default item list implementation
  */
 
-public class DefaultItemListImpl<Item extends IItem> implements IItemList<Item> {
+public class DefaultItemListImpl<Item extends IItem> extends DefaultItemList<Item> {
 
     private ArrayList<Item> mItems = new ArrayList<>();
-
-    private DefaultListUpdateCallback mCallback;
-
-    public DefaultItemListImpl(DefaultListUpdateCallback callback) {
-        this.mCallback = callback;
-    }
 
     @Override
     public Item get(int position) {
@@ -43,7 +36,7 @@ public class DefaultItemListImpl<Item extends IItem> implements IItemList<Item> 
     @Override
     public void remove(int position, int preItemCount) {
         mItems.remove(position - preItemCount);
-        mCallback.onRemoved(position, 1);
+        getFastAdapter().notifyAdapterItemRemoved(position);
     }
 
     @Override
@@ -56,7 +49,7 @@ public class DefaultItemListImpl<Item extends IItem> implements IItemList<Item> 
         for (int i = 0; i < saveItemCount; i++) {
             mItems.remove(position - preItemCount);
         }
-        mCallback.onRemoved(position, saveItemCount);
+        getFastAdapter().notifyAdapterItemRangeRemoved(position, saveItemCount);
     }
 
     @Override
@@ -64,7 +57,7 @@ public class DefaultItemListImpl<Item extends IItem> implements IItemList<Item> 
         Item item = mItems.get(fromPosition - preItemCount);
         mItems.remove(fromPosition - preItemCount);
         mItems.add(toPosition - preItemCount, item);
-        mCallback.onMoved(fromPosition, toPosition);
+        getFastAdapter().notifyAdapterItemMoved(fromPosition, toPosition);
     }
 
     @Override
@@ -76,7 +69,7 @@ public class DefaultItemListImpl<Item extends IItem> implements IItemList<Item> 
     public void clear(int preItemCount) {
         int size = mItems.size();
         mItems.clear();
-        mCallback.onRemoved(preItemCount, size);
+        getFastAdapter().notifyAdapterItemRangeRemoved(preItemCount, size);
     }
 
     @Override
@@ -87,25 +80,25 @@ public class DefaultItemListImpl<Item extends IItem> implements IItemList<Item> 
     @Override
     public void set(int position, Item item) {
         mItems.set(position, item);
-        mCallback.onInserted(position, 1);
+        getFastAdapter().notifyAdapterItemInserted(position);
     }
 
     @Override
     public void addAll(List<Item> items, int preItemCount) {
         int countBefore = mItems.size();
         mItems.addAll(items);
-        mCallback.onInserted(preItemCount + countBefore, items.size());
+        getFastAdapter().notifyAdapterItemRangeInserted(preItemCount + countBefore, items.size());
     }
 
     @Override
     public void addAll(int position, List<Item> items, int preItemCount) {
         mItems.addAll(position - preItemCount, items);
-        mCallback.onInserted(position, items.size());
+        getFastAdapter().notifyAdapterItemRangeInserted(position, items.size());
     }
 
     @Override
     public void setNewList(List<Item> items) {
         mItems = new ArrayList<>(items);
-        mCallback.onDataSetChanged();
+        getFastAdapter().notifyAdapterDataSetChanged();
     }
 }
