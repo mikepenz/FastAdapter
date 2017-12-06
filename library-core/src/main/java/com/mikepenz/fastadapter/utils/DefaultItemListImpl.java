@@ -14,7 +14,7 @@ public class DefaultItemListImpl<Item extends IItem> extends DefaultItemList<Ite
     private List<Item> mItems;
 
     public DefaultItemListImpl() {
-        this.mItems = new ArrayList<>();
+        this(new ArrayList<Item>());
     }
 
     public DefaultItemListImpl(List<Item> items) {
