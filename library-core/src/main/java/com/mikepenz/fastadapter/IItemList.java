@@ -12,13 +12,13 @@ public interface IItemList<Item> {
 
     void remove(int position, int preItemCount);
 
-    int removeRange(int position, int itemCount, int preItemCount);
+    void removeRange(int position, int itemCount, int preItemCount);
 
     void move(int fromPosition, int toPosition, int preItemCount);
 
     int size();
 
-    void clear();
+    void clear(int preItemCount);
 
     boolean isEmpty();
 

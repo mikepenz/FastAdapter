@@ -1,5 +1,7 @@
 package com.mikepenz.fastadapter.utils;
 
+import android.support.v7.util.ListUpdateCallback;
+
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemList;
 
@@ -13,6 +15,12 @@ import java.util.List;
 public class DefaultItemListImpl<Item extends IItem> implements IItemList<Item> {
 
     private ArrayList<Item> mItems = new ArrayList<>();
+
+    private ListUpdateCallback mCallback;
+
+    public DefaultItemListImpl(ListUpdateCallback callback) {
+        this.mCallback = callback;
+    }
 
     @Override
     public Item get(int position) {
@@ -37,10 +45,11 @@ public class DefaultItemListImpl<Item extends IItem> implements IItemList<Item> 
     @Override
     public void remove(int position, int preItemCount) {
         mItems.remove(position - preItemCount);
+        mCallback.onRemoved(position, 1);
     }
 
     @Override
-    public int removeRange(int position, int itemCount, int preItemCount) {
+    public void removeRange(int position, int itemCount, int preItemCount) {
         //global position to relative
         int length = mItems.size();
         //make sure we do not delete to many items
@@ -49,7 +58,7 @@ public class DefaultItemListImpl<Item extends IItem> implements IItemList<Item> 
         for (int i = 0; i < saveItemCount; i++) {
             mItems.remove(position - preItemCount);
         }
-        return saveItemCount;
+        mCallback.onRemoved(position, saveItemCount);
     }
 
     @Override
@@ -57,6 +66,7 @@ public class DefaultItemListImpl<Item extends IItem> implements IItemList<Item> 
         Item item = mItems.get(fromPosition - preItemCount);
         mItems.remove(fromPosition - preItemCount);
         mItems.add(toPosition - preItemCount, item);
+        mCallback.onMoved(fromPosition, toPosition);
     }
 
     @Override
@@ -65,8 +75,10 @@ public class DefaultItemListImpl<Item extends IItem> implements IItemList<Item> 
     }
 
     @Override
-    public void clear() {
+    public void clear(int preItemCount) {
+        int size = mItems.size();
         mItems.clear();
+        mCallback.onRemoved(preItemCount, size);
     }
 
     @Override
@@ -77,6 +89,7 @@ public class DefaultItemListImpl<Item extends IItem> implements IItemList<Item> 
     @Override
     public void set(int position, Item item) {
         mItems.set(position, item);
+        mCallback.onInserted(position, 1);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.adapters;
 
 import com.mikepenz.fastadapter.AbstractAdapter;
+import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IAdapterNotifier;
 import com.mikepenz.fastadapter.IIdDistributor;
@@ -10,6 +11,8 @@ import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.IItemList;
 import com.mikepenz.fastadapter.IModelItem;
 import com.mikepenz.fastadapter.utils.DefaultItemListImpl;
+import com.mikepenz.fastadapter.utils.DefaultListUpdateCallback;
+import com.mikepenz.fastadapter.utils.DefaultListUpdateCallbackImpl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -28,13 +31,24 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
     //the items handled and managed by this item
     private final IItemList<Item> mItems;
 
+    private final DefaultListUpdateCallback mCallback;
+
     public ModelAdapter(IInterceptor<Model, Item> interceptor) {
-        this(new DefaultItemListImpl<Item>(), interceptor);
+        this.mInterceptor = interceptor;
+        this.mCallback = new DefaultListUpdateCallbackImpl();
+        this.mItems = new DefaultItemListImpl<>(this.mCallback);
     }
 
-    public ModelAdapter(IItemList<Item> itemList, IInterceptor<Model, Item> interceptor) {
+    public ModelAdapter(IItemList<Item> itemList, DefaultListUpdateCallback callback, IInterceptor<Model, Item> interceptor) {
         this.mInterceptor = interceptor;
         this.mItems = itemList;
+        this.mCallback = callback;
+    }
+
+    @Override
+    public AbstractAdapter<Item> withFastAdapter(FastAdapter<Item> fastAdapter) {
+        mCallback.setFastAdapter(fastAdapter);
+        return super.withFastAdapter(fastAdapter);
     }
 
     /**
@@ -348,7 +362,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         if (items != mItems) {
             //remove all previous items
             if (!mItems.isEmpty()) {
-                mItems.clear();
+                mItems.clear(itemsBeforeThisAdapter);
             }
 
             //add all new items to the list
@@ -516,8 +530,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         }
         mItems.set(position - getFastAdapter().getPreItemCount(position), item);
         mFastAdapter.registerTypeInstance(item);
-
-        getFastAdapter().notifyAdapterItemChanged(position);
         return this;
     }
 
@@ -530,7 +542,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      */
     public ModelAdapter<Model, Item> move(int fromPosition, int toPosition) {
         mItems.move(fromPosition, toPosition, getFastAdapter().getPreItemCount(fromPosition));
-        getFastAdapter().notifyAdapterItemMoved(fromPosition, toPosition);
         return this;
     }
 
@@ -541,7 +552,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      */
     public ModelAdapter<Model, Item> remove(int position) {
         mItems.remove(position, getFastAdapter().getPreItemCount(position));
-        getFastAdapter().notifyAdapterItemRemoved(position);
         return this;
     }
 
@@ -552,8 +562,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      * @param itemCount the count of items which were removed
      */
     public ModelAdapter<Model, Item> removeRange(int position, int itemCount) {
-        int saveItemCount = mItems.removeRange(position, itemCount, getFastAdapter().getPreItemCount(position));
-        getFastAdapter().notifyAdapterItemRangeRemoved(position, saveItemCount);
+        mItems.removeRange(position, itemCount, getFastAdapter().getPreItemCount(position));
         return this;
     }
 
@@ -561,9 +570,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      * removes all items of this adapter
      */
     public ModelAdapter<Model, Item> clear() {
-        int count = mItems.size();
-        mItems.clear();
-        getFastAdapter().notifyAdapterItemRangeRemoved(getFastAdapter().getPreItemCountByOrder(getOrder()), count);
+        mItems.clear(getFastAdapter().getPreItemCountByOrder(getOrder()));
         return this;
     }
 }
