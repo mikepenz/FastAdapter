@@ -12,6 +12,8 @@ public abstract class DefaultListUpdateCallback implements ListUpdateCallback {
 
     private FastAdapter fastAdapter;
 
+    public abstract void onDataSetChanged();
+
     public void setFastAdapter(FastAdapter fastAdapter) {
         this.fastAdapter = fastAdapter;
     }
@@ -19,4 +21,5 @@ public abstract class DefaultListUpdateCallback implements ListUpdateCallback {
     public FastAdapter getFastAdapter() {
         return fastAdapter;
     }
+
 }

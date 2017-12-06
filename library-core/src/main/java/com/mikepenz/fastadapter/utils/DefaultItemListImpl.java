@@ -1,7 +1,5 @@
 package com.mikepenz.fastadapter.utils;
 
-import android.support.v7.util.ListUpdateCallback;
-
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemList;
 
@@ -16,9 +14,9 @@ public class DefaultItemListImpl<Item extends IItem> implements IItemList<Item> 
 
     private ArrayList<Item> mItems = new ArrayList<>();
 
-    private ListUpdateCallback mCallback;
+    private DefaultListUpdateCallback mCallback;
 
-    public DefaultItemListImpl(ListUpdateCallback callback) {
+    public DefaultItemListImpl(DefaultListUpdateCallback callback) {
         this.mCallback = callback;
     }
 
@@ -93,17 +91,21 @@ public class DefaultItemListImpl<Item extends IItem> implements IItemList<Item> 
     }
 
     @Override
-    public void addAll(List<Item> items) {
+    public void addAll(List<Item> items, int preItemCount) {
+        int countBefore = mItems.size();
         mItems.addAll(items);
+        mCallback.onInserted(preItemCount + countBefore, items.size());
     }
 
     @Override
-    public void addAll(int position, List<Item> items) {
-        mItems.addAll(position, items);
+    public void addAll(int position, List<Item> items, int preItemCount) {
+        mItems.addAll(position - preItemCount, items);
+        mCallback.onInserted(position, items.size());
     }
 
     @Override
     public void setNewList(List<Item> items) {
         mItems = new ArrayList<>(items);
+        mCallback.onDataSetChanged();
     }
 }

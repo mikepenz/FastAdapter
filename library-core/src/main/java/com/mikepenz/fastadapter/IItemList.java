@@ -22,13 +22,13 @@ public interface IItemList<Item> {
 
     boolean isEmpty();
 
-    void addAll(List<Item> items);
+    void addAll(List<Item> items, int preItemCount);
 
     void set(int position, Item item);
 
     void setNewList(List<Item> items);
 
-    void addAll(int position, List<Item> items);
+    void addAll(int position, List<Item> items, int preItemCount);
 
     List<Item> getItems();
 

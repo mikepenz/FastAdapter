@@ -366,7 +366,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
             }
 
             //add all new items to the list
-            mItems.addAll(items);
+            mItems.addAll(items, itemsBeforeThisAdapter);
         }
 
         //map the types
@@ -465,7 +465,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
             getIdDistributor().checkIds(items);
         }
         int countBefore = mItems.size();
-        mItems.addAll(items);
+        mItems.addAll(items, getFastAdapter().getPreItemCountByOrder(getOrder()));
         mapPossibleTypes(items);
 
         if (mComparator == null) {
@@ -504,7 +504,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
             getIdDistributor().checkIds(items);
         }
         if (items.size() > 0) {
-            mItems.addAll(position - getFastAdapter().getPreItemCountByOrder(getOrder()), items);
+            mItems.addAll(position, items, getFastAdapter().getPreItemCountByOrder(getOrder()));
             mapPossibleTypes(items);
 
             getFastAdapter().notifyAdapterItemRangeInserted(position, items.size());

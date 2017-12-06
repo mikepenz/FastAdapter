@@ -35,4 +35,11 @@ public class DefaultListUpdateCallbackImpl extends DefaultListUpdateCallback {
         if (fastAdapter == null) return;
         fastAdapter.notifyAdapterItemRangeChanged(position, count, payload);
     }
+
+    @Override
+    public void onDataSetChanged() {
+        FastAdapter fastAdapter = getFastAdapter();
+        if (fastAdapter == null) return;
+        fastAdapter.notifyAdapterDataSetChanged();
+    }
 }
