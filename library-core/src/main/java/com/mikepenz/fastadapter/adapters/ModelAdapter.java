@@ -177,48 +177,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         mItemFilter.filter(constraint);
     }
 
-    //
-    protected Comparator<Item> mComparator;
-
-    /**
-     * define a comparator which will be used to sort the list "everytime" it is altered
-     * NOTE this will only sort if you "set" a new list or "add" new items (not if you provide a position for the add function)
-     *
-     * @param comparator used to sort the list
-     * @return this
-     */
-    public ModelAdapter<Model, Item> withComparator(Comparator<Item> comparator) {
-        return withComparator(comparator, true);
-    }
-
-    /**
-     * define a comparator which will be used to sort the list "everytime" it is altered
-     * NOTE this will only sort if you "set" a new list or "add" new items (not if you provide a position for the add function)
-     *
-     * @param comparator used to sort the list
-     * @param sortNow    specifies if we use the provided comparator to sort now
-     * @return this
-     */
-    public ModelAdapter<Model, Item> withComparator(Comparator<Item> comparator, boolean sortNow) {
-        this.mComparator = comparator;
-
-        //we directly sort the list with the defined comparator
-        if (mItems != null && mComparator != null && sortNow) {
-            Collections.sort(mItems.getItems(), mComparator);
-            getFastAdapter().notifyAdapterDataSetChanged();
-        }
-
-        return this;
-    }
-
-
-    /**
-     * @return the defined Comparator used for this ItemAdaper
-     */
-    public Comparator<Item> getComparator() {
-        return mComparator;
-    }
-
     /**
      * the ModelAdapter does not keep a list of input model's to get retrieve them a `reverseInterceptor` is required
      * usually it is used to get the `Model` from a `IModelItem`
@@ -367,12 +325,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
 
         //map the types
         mapPossibleTypes(items);
-
-        //if we have a comparator then sort
-        if (mComparator != null) {
-            Collections.sort(mItems.getItems(), mComparator);
-        }
-
         //now properly notify the adapter about the changes
         if (adapterNotifier == null) {
             adapterNotifier = IAdapterNotifier.DEFAULT;
@@ -415,14 +367,8 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         mItems.setNewList(items);
         mapPossibleTypes(mItems.getItems());
 
-        if (mComparator != null) {
-            Collections.sort(mItems.getItems(), mComparator);
-        }
-
         if (filter != null && retainFilter) {
             getItemFilter().publishResults(filter, getItemFilter().performFiltering(filter));
-        } else {
-            getFastAdapter().notifyAdapterDataSetChanged();
         }
 
         return this;
@@ -460,16 +406,8 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         if (mUseIdDistributor) {
             getIdDistributor().checkIds(items);
         }
-        int countBefore = mItems.size();
         mItems.addAll(items, getFastAdapter().getPreItemCountByOrder(getOrder()));
         mapPossibleTypes(items);
-
-        if (mComparator == null) {
-            getFastAdapter().notifyAdapterItemRangeInserted(getFastAdapter().getPreItemCountByOrder(getOrder()) + countBefore, items.size());
-        } else {
-            Collections.sort(mItems.getItems(), mComparator);
-            getFastAdapter().notifyAdapterDataSetChanged();
-        }
         return this;
     }
 
@@ -502,8 +440,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         if (items.size() > 0) {
             mItems.addAll(position, items, getFastAdapter().getPreItemCountByOrder(getOrder()));
             mapPossibleTypes(items);
-
-            getFastAdapter().notifyAdapterItemRangeInserted(position, items.size());
         }
         return this;
     }
