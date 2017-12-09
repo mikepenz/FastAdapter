@@ -213,7 +213,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
     /**
      * @return the items within this adapter
      */
-    //Todo: to keep migration low this will return the list reference instead of the ItemList
     @Override
     public List<Item> getAdapterItems() {
         return mItems.getItems();
