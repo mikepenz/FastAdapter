@@ -14,8 +14,6 @@ import com.mikepenz.fastadapter.utils.DefaultItemList;
 import com.mikepenz.fastadapter.utils.DefaultItemListImpl;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import javax.annotation.Nullable;
@@ -45,6 +43,13 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
             ((DefaultItemList<Item>) mItems).setFastAdapter(fastAdapter);
         }
         return super.withFastAdapter(fastAdapter);
+    }
+
+    /**
+     * @return the `IItemList` implementation used by this `ModelAdapter`
+     */
+    public IItemList<Item> getItemList() {
+        return mItems;
     }
 
     /**

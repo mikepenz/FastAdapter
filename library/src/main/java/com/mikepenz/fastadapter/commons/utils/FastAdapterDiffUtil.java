@@ -7,6 +7,7 @@ import android.support.v7.util.ListUpdateCallback;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ModelAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.utils.ComparableItemListImpl;
 
 import java.util.Collections;
 import java.util.List;
@@ -23,8 +24,8 @@ public class FastAdapterDiffUtil {
         }
 
         //if we have a comparator then sort
-        if (adapter.getComparator() != null) {
-            Collections.sort(items, adapter.getComparator());
+        if (adapter.getItemList() instanceof ComparableItemListImpl) {
+            Collections.sort(items, ((ComparableItemListImpl) adapter.getItemList()).getComparator());
         }
 
         //map the types

@@ -27,6 +27,13 @@ public class ComparableItemListImpl<Item extends IItem> extends DefaultItemListI
         this.mComparator = comparator;
     }
 
+    /**
+     * @return the defined Comparator used for this ItemAdaper
+     */
+    public Comparator<Item> getComparator() {
+        return mComparator;
+    }
+
     @Override
     public void move(int fromPosition, int toPosition, int preItemCount) {
         Item item = mItems.get(fromPosition - preItemCount);
