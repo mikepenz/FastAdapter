@@ -16,10 +16,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.utils.ComparableItemListImpl;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -56,7 +58,9 @@ public class SortActivity extends AppCompatActivity {
     RecyclerView recyclerView;
 
     //save our FastAdapter
-    private FastItemAdapter<SimpleItem> fastItemAdapter;
+    private FastAdapter<SimpleItem> fastAdapter;
+    private ItemAdapter<SimpleItem> itemAdapter;
+    private ComparableItemListImpl<SimpleItem> itemListImpl;
 
     @SortingStrategy
     private int sortingStrategy;
@@ -77,11 +81,13 @@ public class SortActivity extends AppCompatActivity {
         new MaterializeBuilder().withActivity(this).build();
 
         //create our FastAdapter which will manage everything
-        fastItemAdapter = new FastItemAdapter<>();
-        fastItemAdapter.withSelectable(true);
+        itemListImpl = new ComparableItemListImpl<>(getComparator());
+        itemAdapter = new ItemAdapter<>(itemListImpl);
+        fastAdapter = FastAdapter.with(itemAdapter);
+        fastAdapter.withSelectable(true);
 
         //configure our fastAdapter
-        fastItemAdapter.withOnClickListener(new OnClickListener<SimpleItem>() {
+        fastAdapter.withOnClickListener(new OnClickListener<SimpleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<SimpleItem> adapter,
                                    SimpleItem item, int position) {
@@ -95,7 +101,7 @@ public class SortActivity extends AppCompatActivity {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(fastItemAdapter);
+        recyclerView.setAdapter(fastAdapter);
 
         if (savedInstanceState != null) {
             //Retrieve the previous sorting strategy from the instance state
@@ -105,14 +111,11 @@ public class SortActivity extends AppCompatActivity {
             sortingStrategy = SORT_NONE;
         }
 
-        //we sort the list
-        fastItemAdapter.getItemAdapter().withComparator(getComparator());
-
         //initial filling of the list
-        fastItemAdapter.setNewList(generateUnsortedList());
+        itemAdapter.setNewList(generateUnsortedList());
 
         //restore selections (this has to be done after the items were added
-        fastItemAdapter.withSavedInstanceState(savedInstanceState);
+        fastAdapter.withSavedInstanceState(savedInstanceState);
 
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -127,7 +130,7 @@ public class SortActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         //add the values which need to be saved from the adapter to the bundle
-        outState = fastItemAdapter.saveInstanceState(outState);
+        outState = fastAdapter.saveInstanceState(outState);
         //We need to persist our sorting strategy between orientation changes
         outState.putInt("sorting_strategy", sortingStrategy);
         super.onSaveInstanceState(outState);
@@ -153,24 +156,24 @@ public class SortActivity extends AppCompatActivity {
                 //Set the new sorting strategy
                 sortingStrategy = SORT_NONE;
                 //randomize the items
-                Collections.shuffle(fastItemAdapter.getAdapterItems());
-                fastItemAdapter.notifyDataSetChanged();
+                Collections.shuffle(itemAdapter.getAdapterItems());
+                fastAdapter.notifyDataSetChanged();
                 return true;
             case R.id.item_sort_asc:
                 //Set the new sorting strategy
                 sortingStrategy = SORT_ASCENDING;
                 //Set the new comparator to the list
-                fastItemAdapter.getItemAdapter().withComparator(getComparator());
+                itemListImpl.withComparator(getComparator());
                 return true;
             case R.id.item_sort_desc:
                 //Set the new sorting strategy
                 sortingStrategy = SORT_DESCENDING;
                 //Set the new comparator to the list
-                fastItemAdapter.getItemAdapter().withComparator(getComparator());
+                itemListImpl.withComparator(getComparator());
                 return true;
             case android.R.id.home:
                 Toast.makeText(getApplicationContext(), "selections = " +
-                        fastItemAdapter.getSelections(), Toast.LENGTH_LONG).show();
+                        fastAdapter.getSelections(), Toast.LENGTH_LONG).show();
                 onBackPressed();
                 return true;
             default:

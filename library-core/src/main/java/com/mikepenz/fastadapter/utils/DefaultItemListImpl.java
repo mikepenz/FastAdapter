@@ -11,7 +11,7 @@ import java.util.List;
 
 public class DefaultItemListImpl<Item extends IItem> extends DefaultItemList<Item> {
 
-    private List<Item> mItems;
+    protected List<Item> mItems;
 
     public DefaultItemListImpl() {
         this(new ArrayList<Item>());
