@@ -306,7 +306,7 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
                 //first we find out how many items were added in total
                 //also counting subitems
                 int totalAddedItems = expandable.getSubItems().size();
-                for (int i = position + 1; i < position + totalAddedItems; i++) {
+                for (int i = position + 1; i <= position + totalAddedItems; i++) {
                     Item tmp = mFastAdapter.getItem(i);
                     if (tmp instanceof IExpandable) {
                         IExpandable tmpExpandable = ((IExpandable) tmp);
