@@ -48,6 +48,7 @@ public class ExpandableSampleActivity extends AppCompatActivity {
         fastItemAdapter = new FastItemAdapter<>();
         fastItemAdapter.withSelectable(true);
         expandableExtension = new ExpandableExtension<>();
+        expandableExtension.withOnlyOneExpandedItem(true);
         fastItemAdapter.addExtension(expandableExtension);
 
         //get our recyclerView and do basic setup
@@ -68,11 +69,22 @@ public class ExpandableSampleActivity extends AppCompatActivity {
                 //add subitems so we can showcase the collapsible functionality
                 List<IItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 5; ii++) {
-                    SimpleSubItem sampleItem = new SimpleSubItem();
-                    sampleItem
+                    subItem = new SimpleSubExpandableItem();
+                    subItem
                             .withName("-- Test " + ii)
                             .withIdentifier(1000 + ii);
-                    subItems.add(sampleItem);
+
+                    subSubItems = new LinkedList<>();
+                    for (int iii=1; iii<=5;iii++) {
+                        subSubItem = new SimpleSubItem();
+                        subSubItem
+                                .withName("--- Test " + iii)
+                                .withIdentifier(10000 + iii);
+                        subSubItems.add(subSubItem);
+                    }
+                    subItem.withSubItems(subSubItems);
+
+                    subItems.add(subItem);
                 }
                 expandableItem.withSubItems(subItems);
 
