@@ -49,6 +49,9 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
     private SimpleDragCallback touchCallback;
     private ItemTouchHelper touchHelper;
 
+    //endless scroll
+    EndlessRecyclerOnScrollListener endlessRecyclerOnScrollListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         findViewById(android.R.id.content).setSystemUiVisibility(findViewById(android.R.id.content).getSystemUiVisibility() | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR);
@@ -97,7 +100,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(fastItemAdapter);
-        recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(footerAdapter) {
+        endlessRecyclerOnScrollListener = new EndlessRecyclerOnScrollListener(footerAdapter) {
             @Override
             public void onLoadMore(final int currentPage) {
                 footerAdapter.clear();
@@ -114,7 +117,8 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
                     }
                 }, 2000);
             }
-        });
+        };
+        recyclerView.addOnScrollListener(endlessRecyclerOnScrollListener);
 
         //fill with some sample data (load the first page here)
         List<SimpleItem> items = new ArrayList<>();
@@ -183,6 +187,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
                 return true;
             }
         });
+        endlessRecyclerOnScrollListener.enable();
 
         return super.onCreateOptionsMenu(menu);
     }
@@ -200,11 +205,12 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
 
     @Override
     public void itemsFiltered(@Nullable CharSequence constraint, @Nullable List<SimpleItem> results) {
+        endlessRecyclerOnScrollListener.disable();
         Toast.makeText(EndlessScrollListActivity.this, "filtered items count: " + fastItemAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onReset() {
-
+        endlessRecyclerOnScrollListener.enable();
     }
 }
