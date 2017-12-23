@@ -1,5 +1,8 @@
 ### Upgrade Notes
 
+#### v3.0.5
+* The `ItemFilter`s `itemsFiltered` callback method will no longer be called after `onReset` (FIX bug making it impossible to detect when filtering was done)
+
 #### v3.0.3
 * Remove the `R.id.fastadapter_item` Tag from the `ViewHolder` in favour of `FastAdapter.getHolderAdapterItem()` as this will make sure we always get the newest reference to our item
 

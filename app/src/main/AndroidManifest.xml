@@ -6,7 +6,8 @@
     <application
         android:name="com.mikepenz.fastadapter.app.CustomApplication"
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:theme="@style/CustomTheme">
         <!-- android:supportsRtl="true" -->

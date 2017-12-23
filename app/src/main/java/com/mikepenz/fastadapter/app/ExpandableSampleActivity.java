@@ -10,9 +10,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
@@ -21,6 +21,7 @@ import com.mikepenz.materialize.MaterializeBuilder;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ExpandableSampleActivity extends AppCompatActivity {
     //save our FastAdapter
@@ -48,6 +49,7 @@ public class ExpandableSampleActivity extends AppCompatActivity {
         fastItemAdapter = new FastItemAdapter<>();
         fastItemAdapter.withSelectable(true);
         expandableExtension = new ExpandableExtension<>();
+        //expandableExtension.withOnlyOneExpandedItem(true);
         fastItemAdapter.addExtension(expandableExtension);
 
         //get our recyclerView and do basic setup
@@ -58,27 +60,39 @@ public class ExpandableSampleActivity extends AppCompatActivity {
 
         //fill with some sample data
         List<IItem> items = new ArrayList<>();
+        AtomicInteger identifier = new AtomicInteger(1);
         for (int i = 1; i <= 100; i++) {
-            if (i % 10 == 0) {
-                SimpleSubExpandableItem expandableItem = new SimpleSubExpandableItem();
-                expandableItem
-                        .withName("Test " + i)
-                        .withIdentifier(100 + i);
+            if (i % 3 == 0) {
+                SimpleSubExpandableItem parent = new SimpleSubExpandableItem();
+                parent.withName("Test " + i)
+                        .withIdentifier(identifier.getAndIncrement());
 
                 //add subitems so we can showcase the collapsible functionality
                 List<IItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 5; ii++) {
-                    SimpleSubItem sampleItem = new SimpleSubItem();
-                    sampleItem
-                            .withName("-- Test " + ii)
-                            .withIdentifier(1000 + ii);
-                    subItems.add(sampleItem);
-                }
-                expandableItem.withSubItems(subItems);
+                    SimpleSubExpandableItem subItem = new SimpleSubExpandableItem();
+                    subItem.withName("-- SubTest " + ii)
+                            .withIdentifier(identifier.getAndIncrement());
 
-                items.add(expandableItem);
+                    if (ii % 2 == 0) {
+                        //add sub-sub-items so we can showcase the collapsible functionality
+                        List<IItem> subSubItems = new LinkedList<>();
+                        for (int iii = 1; iii <= 5; iii++) {
+                            SimpleSubExpandableItem subSubItem = new SimpleSubExpandableItem();
+                            subSubItem
+                                    .withName("---- SubSubTest " + iii)
+                                    .withIdentifier(identifier.getAndIncrement());
+                            subSubItems.add(subSubItem);
+                        }
+                        subItem.withSubItems(subSubItems);
+                    }
+
+                    subItems.add(subItem);
+                }
+                parent.withSubItems(subItems);
+                items.add(parent);
             } else {
-                items.add(new SimpleSubItem().withName("Test " + i).withIdentifier(100 + i));
+                items.add(new SimpleSubItem().withName("Test " + i).withIdentifier(identifier.getAndIncrement()));
             }
         }
         fastItemAdapter.add(items);

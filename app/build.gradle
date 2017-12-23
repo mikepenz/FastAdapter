@@ -13,8 +13,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 3040
-        versionName '3.0.4'
+        versionCode 3050
+        versionName '3.0.5'
 
         setProperty("archivesBaseName", "FastAdapter-v$versionName-c$versionCode")
     }
@@ -61,8 +61,8 @@ dependencies {
     // used to provide out of the box icon font support. simplifies development,
     // and provides scalable icons. the core is very very light
     // https://github.com/mikepenz/Android-Iconics
-    implementation 'com.mikepenz:iconics-core:2.9.5@aar'
-    implementation "com.mikepenz:iconics-views:2.9.5@aar"
+    implementation 'com.mikepenz:iconics-core:3.0.0@aar'
+    implementation "com.mikepenz:iconics-views:3.0.0@aar"
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
@@ -119,7 +119,7 @@ dependencies {
 
     configurations.all {
         resolutionStrategy.force "com.mikepenz:materialize:1.1.2"
-        resolutionStrategy.force "com.mikepenz:iconics-core:2.9.5"
+        resolutionStrategy.force "com.mikepenz:iconics-core:3.0.0"
         resolutionStrategy.force "com.mikepenz:fastadapter:3.0.0"
         resolutionStrategy.force "com.android.support:support-v4:${versions.supportLib}"
         resolutionStrategy.force "com.android.support:appcompat-v7:${versions.supportLib}"
