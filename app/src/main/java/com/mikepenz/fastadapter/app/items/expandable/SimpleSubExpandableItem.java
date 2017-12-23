@@ -14,8 +14,8 @@ import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem;
 import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
+import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialize.util.UIUtils;
@@ -140,6 +140,12 @@ public class SimpleSubExpandableItem<Parent extends IItem & IExpandable, SubItem
         StringHolder.applyTo(name, viewHolder.name);
         //set the text for the description or hide
         StringHolder.applyToOrHide(description, viewHolder.description);
+
+        if (getSubItems() == null || getSubItems().size() == 0) {
+            viewHolder.icon.setVisibility(View.GONE);
+        } else {
+            viewHolder.icon.setVisibility(View.VISIBLE);
+        }
 
         if (isExpanded()) {
             ViewCompat.setRotation(viewHolder.icon, 0);
