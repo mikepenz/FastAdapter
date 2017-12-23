@@ -58,6 +58,19 @@ public class ExpandableSampleActivity extends AppCompatActivity {
 
         //fill with some sample data
         List<IItem> items = new ArrayList<>();
+
+        //see https://github.com/mikepenz/FastAdapter/pull/588
+        SimpleSubExpandableItem parentItem = new SimpleSubExpandableItem().withName("Expandable Parent Item");
+        List<IItem> parentSubItems = new LinkedList<>();
+        SimpleSubExpandableItem subItem = new SimpleSubExpandableItem().withName("-- Expandable Sub Item");
+        List<IItem> subSubItems = new LinkedList<>();
+        SimpleSubItem subSubItem = new SimpleSubItem().withName("---- Simple Sub Sub Item");
+        subSubItems.add(subSubItem);
+        subItem.withSubItems(subSubItems);
+        parentSubItems.add(subItem);
+        parentItem.withSubItems(parentSubItems);
+        items.add(parentItem);
+
         for (int i = 1; i <= 100; i++) {
             if (i % 10 == 0) {
                 SimpleSubExpandableItem expandableItem = new SimpleSubExpandableItem();
