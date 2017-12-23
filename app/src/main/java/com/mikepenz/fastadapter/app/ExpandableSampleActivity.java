@@ -49,6 +49,7 @@ public class ExpandableSampleActivity extends AppCompatActivity {
         fastItemAdapter = new FastItemAdapter<>();
         fastItemAdapter.withSelectable(true);
         expandableExtension = new ExpandableExtension<>();
+        //expandableExtension.withOnlyOneExpandedItem(true);
         fastItemAdapter.addExtension(expandableExtension);
 
         //get our recyclerView and do basic setup
