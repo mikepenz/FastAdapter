@@ -13,6 +13,10 @@ public class ItemAdapter<Item extends IItem> extends ModelAdapter<Item, Item> {
         super((IInterceptor<Item, Item>) IInterceptor.DEFAULT);
     }
 
+    public ItemAdapter(IItemList<Item> items) {
+        super(items, (IInterceptor<Item, Item>) IInterceptor.DEFAULT);
+    }
+
     /**
      * static method to retrieve a new `ItemAdapter`
      *

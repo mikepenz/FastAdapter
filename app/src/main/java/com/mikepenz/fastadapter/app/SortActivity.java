@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.IntDef;
 import android.support.annotation.IntRange;
-import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,10 +14,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
-
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.items.SortedItemList;
+import com.mikepenz.fastadapter.items.SortedItemList.Callback;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
@@ -31,9 +33,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * An Activity which showcases the sort feature of the library.
@@ -61,6 +60,8 @@ public class SortActivity extends AppCompatActivity {
     @SortingStrategy
     private int sortingStrategy;
 
+    private Comparator<SimpleItem> comparator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         findViewById(android.R.id.content).setSystemUiVisibility(findViewById(android.R.id.content)
@@ -76,9 +77,22 @@ public class SortActivity extends AppCompatActivity {
         //style our ui
         new MaterializeBuilder().withActivity(this).build();
 
+        if (savedInstanceState != null) {
+            //Retrieve the previous sorting strategy from the instance state
+            sortingStrategy = toSortingStrategy(savedInstanceState.getInt("sorting_strategy"));
+        } else {
+            //Set the default so
+            sortingStrategy = SORT_NONE;
+        }
+
+        setComparator();
+
+        List<SimpleItem> initialList = generateUnsortedList();
         //create our FastAdapter which will manage everything
-        fastItemAdapter = new FastItemAdapter<>();
+        SortedItemList<SimpleItem> itemList = new SortedItemList<SimpleItem>(sortedCallback, SimpleItem.class, initialList.size());
+        fastItemAdapter = new FastItemAdapter<>(itemList);
         fastItemAdapter.withSelectable(true);
+        fastItemAdapter.add(generateUnsortedList());
 
         //configure our fastAdapter
         fastItemAdapter.withOnClickListener(new OnClickListener<SimpleItem>() {
@@ -96,20 +110,6 @@ public class SortActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(fastItemAdapter);
-
-        if (savedInstanceState != null) {
-            //Retrieve the previous sorting strategy from the instance state
-            sortingStrategy = toSortingStrategy(savedInstanceState.getInt("sorting_strategy"));
-        } else {
-            //Set the default so
-            sortingStrategy = SORT_NONE;
-        }
-
-        //we sort the list
-        fastItemAdapter.getItemAdapter().withComparator(getComparator());
-
-        //initial filling of the list
-        fastItemAdapter.setNewList(generateUnsortedList());
 
         //restore selections (this has to be done after the items were added
         fastItemAdapter.withSavedInstanceState(savedInstanceState);
@@ -152,21 +152,26 @@ public class SortActivity extends AppCompatActivity {
             case R.id.item_sort_random:
                 //Set the new sorting strategy
                 sortingStrategy = SORT_NONE;
-                //randomize the items
-                Collections.shuffle(fastItemAdapter.getAdapterItems());
-                fastItemAdapter.notifyDataSetChanged();
+                setComparator();
+                List<SimpleItem> items = fastItemAdapter.getAdapterItems();
+                Collections.shuffle(items);
+                fastItemAdapter.setNewList(items);
                 return true;
             case R.id.item_sort_asc:
+                items = fastItemAdapter.getAdapterItems();
+                fastItemAdapter.clear();
                 //Set the new sorting strategy
                 sortingStrategy = SORT_ASCENDING;
-                //Set the new comparator to the list
-                fastItemAdapter.getItemAdapter().withComparator(getComparator());
+                setComparator();
+                fastItemAdapter.add(items);
                 return true;
             case R.id.item_sort_desc:
+                items = fastItemAdapter.getAdapterItems();
+                fastItemAdapter.clear();
                 //Set the new sorting strategy
                 sortingStrategy = SORT_DESCENDING;
-                //Set the new comparator to the list
-                fastItemAdapter.getItemAdapter().withComparator(getComparator());
+                setComparator();
+                fastItemAdapter.add(items);
                 return true;
             case android.R.id.home:
                 Toast.makeText(getApplicationContext(), "selections = " +
@@ -179,23 +184,23 @@ public class SortActivity extends AppCompatActivity {
     }
 
     /**
-     * Returns the appropriate Comparator for the current sorting strategy or null if no strategy is
+     * Sets the appropriate Comparator for the current sorting strategy or null if no strategy is
      * set. (SORT_NONE)
-     *
-     * @return The comparator or null.
      */
-    @Nullable
-    private Comparator<SimpleItem> getComparator() {
+    private void setComparator() {
         switch (sortingStrategy) {
             case SORT_ASCENDING:
-                return new AlphabetComparatorAscending();
+                comparator = new AlphabetComparatorAscending();
+                break;
             case SORT_DESCENDING:
-                return new AlphabetComparatorDescending();
+                comparator = new AlphabetComparatorDescending();
+                break;
             case SORT_NONE:
-                return null;
+                comparator = null;
+                break;
+            default:
+                throw new RuntimeException("This sortingStrategy is not supported.");
         }
-
-        throw new RuntimeException("This sortingStrategy is not supported.");
     }
 
     /**
@@ -267,4 +272,26 @@ public class SortActivity extends AppCompatActivity {
             return rhs.name.getText().toString().compareTo(lhs.name.getText().toString());
         }
     }
+
+    private final Callback<SimpleItem> sortedCallback = new Callback<SimpleItem>() {
+        @Override
+        public int compare(SimpleItem lhs, SimpleItem rhs) {
+            if(comparator == null) {
+                return 0;
+            }
+            else {
+                return comparator.compare(lhs, rhs);
+            }
+        }
+
+        @Override
+        public boolean isChanged(SimpleItem oldItem, SimpleItem newItem) {
+            return false;
+        }
+
+        @Override
+        public boolean areEqual(SimpleItem o1, SimpleItem o2) {
+            return o1.name.equals(o2.name);
+        }
+    };
 }
