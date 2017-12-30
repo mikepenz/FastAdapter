@@ -167,6 +167,9 @@ public class FastAdapterDiffUtil {
         public void onRemoved(int position, int count) {
             int preItemCount = adapter.getFastAdapter().getPreItemCountByOrder(adapter.getOrder());
             for (int i = position; i < position + count; i++) {
+                if (adapter.getAdapterItemCount() <= i) {
+                    break;
+                }
                 adapter.getAdapterItems().remove(preItemCount + i);
             }
             adapter.getFastAdapter().notifyAdapterItemRangeRemoved(preItemCount + position, count);
@@ -181,6 +184,9 @@ public class FastAdapterDiffUtil {
         public void onChanged(int position, int count, Object payload) {
             int preItemCount = adapter.getFastAdapter().getPreItemCountByOrder(adapter.getOrder());
             for (int i = position; i < position + count; i++) {
+                if (adapter.getAdapterItemCount() <= i || newItems.size() <= i) {
+                    break;
+                }
                 adapter.getAdapterItems().set(preItemCount + i, newItems.get(i));
             }
             adapter.getFastAdapter().notifyAdapterItemRangeChanged(preItemCount + position, count, payload);
