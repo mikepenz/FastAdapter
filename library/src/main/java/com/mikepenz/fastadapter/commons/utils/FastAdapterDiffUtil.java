@@ -31,28 +31,11 @@ public class FastAdapterDiffUtil {
         //map the types
         adapter.mapPossibleTypes(items);
 
-        //remember the old items
-        final List<Item> oldItems = adapter.getAdapterItems();
-
-        DiffUtil.DiffResult result = DiffUtil.calculateDiff(new FastAdapterCallback<>(oldItems, items, callback), detectMoves);
-
-        //make sure the new items list is not a reference of the already mItems list
-        if (items != oldItems) {
-            //remove all previous items
-            if (!oldItems.isEmpty()) {
-                oldItems.clear();
-            }
-
-            //add all new items to the list
-            oldItems.addAll(items);
-        }
-
-        return result;
+        return DiffUtil.calculateDiff(new FastAdapterCallback<>(adapter.getAdapterItems(), items, callback), detectMoves);
     }
 
-
-    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, DiffUtil.DiffResult result) {
-        result.dispatchUpdatesTo(new FastAdapterListUpdateCallback<>(adapter));
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, DiffUtil.DiffResult result, List<Item> items) {
+        result.dispatchUpdatesTo(new FastAdapterListUpdateCallback<>(adapter, items));
         return adapter;
     }
 
@@ -70,7 +53,7 @@ public class FastAdapterDiffUtil {
 
     public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
         DiffUtil.DiffResult result = calculateDiff(adapter, items, callback, detectMoves);
-        return set(adapter, result);
+        return set(adapter, result, items);
     }
 
     public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
@@ -116,8 +99,8 @@ public class FastAdapterDiffUtil {
         return set(adapter, items, new DiffCallbackImpl<Item>());
     }
 
-    public static <A extends FastItemAdapter<Item>, Item extends IItem> A set(final A adapter, DiffUtil.DiffResult result) {
-        set(adapter.getItemAdapter(), result);
+    public static <A extends FastItemAdapter<Item>, Item extends IItem> A set(final A adapter, DiffUtil.DiffResult result, List<Item> items) {
+        set(adapter.getItemAdapter(), result, items);
         return adapter;
     }
 
@@ -164,29 +147,49 @@ public class FastAdapterDiffUtil {
     private static final class FastAdapterListUpdateCallback<A extends ModelAdapter<Model, Item>, Model, Item extends IItem> implements ListUpdateCallback {
 
         private final A adapter;
+        private final List<Item> newItems;
 
-        FastAdapterListUpdateCallback(A adapter) {
+        FastAdapterListUpdateCallback(A adapter, List<Item> newItems) {
             this.adapter = adapter;
+            this.newItems = newItems;
         }
 
         @Override
         public void onInserted(int position, int count) {
-            adapter.getFastAdapter().notifyAdapterItemRangeInserted(adapter.getFastAdapter().getPreItemCountByOrder(adapter.getOrder()) + position, count);
+            int preItemCount = adapter.getFastAdapter().getPreItemCountByOrder(adapter.getOrder());
+            for (int i = position; i < position + count; i++) {
+                adapter.getAdapterItems().add(preItemCount + i, newItems.get(i));
+            }
+            adapter.getFastAdapter().notifyAdapterItemRangeInserted(preItemCount + position, count);
         }
 
         @Override
         public void onRemoved(int position, int count) {
-            adapter.getFastAdapter().notifyAdapterItemRangeRemoved(adapter.getFastAdapter().getPreItemCountByOrder(adapter.getOrder()) + position, count);
+            int preItemCount = adapter.getFastAdapter().getPreItemCountByOrder(adapter.getOrder());
+            for (int i = position; i < position + count; i++) {
+                if (adapter.getAdapterItemCount() <= i) {
+                    break;
+                }
+                adapter.getAdapterItems().remove(preItemCount + i);
+            }
+            adapter.getFastAdapter().notifyAdapterItemRangeRemoved(preItemCount + position, count);
         }
 
         @Override
         public void onMoved(int fromPosition, int toPosition) {
-            adapter.getFastAdapter().notifyAdapterItemMoved(adapter.getFastAdapter().getPreItemCountByOrder(adapter.getOrder()) + fromPosition, toPosition);
+            adapter.move(fromPosition, toPosition);
         }
 
         @Override
         public void onChanged(int position, int count, Object payload) {
-            adapter.getFastAdapter().notifyAdapterItemRangeChanged(adapter.getFastAdapter().getPreItemCountByOrder(adapter.getOrder()) + position, count, payload);
+            int preItemCount = adapter.getFastAdapter().getPreItemCountByOrder(adapter.getOrder());
+            for (int i = position; i < position + count; i++) {
+                if (adapter.getAdapterItemCount() <= i || newItems.size() <= i) {
+                    break;
+                }
+                adapter.getAdapterItems().set(preItemCount + i, newItems.get(i));
+            }
+            adapter.getFastAdapter().notifyAdapterItemRangeChanged(preItemCount + position, count, payload);
         }
     }
 }
