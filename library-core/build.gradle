@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 
 group "com.mikepenz"
-version "3.1.0"
+version "3.1.1"
 
 android {
     compileSdkVersion setup.compileSdk
@@ -10,8 +10,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 3100
-        versionName '3.1.0'
+        versionCode 3110
+        versionName '3.1.1'
 
         consumerProguardFiles 'consumer-proguard-rules.pro'
 
