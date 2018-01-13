@@ -1,9 +1,12 @@
 package com.mikepenz.fastadapter.utils;
 
+import com.mikepenz.fastadapter.IAdapterNotifier;
 import com.mikepenz.fastadapter.IItem;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.annotation.Nullable;
 
 /**
  * The default item list implementation
@@ -102,6 +105,30 @@ public class DefaultItemListImpl<Item extends IItem> extends DefaultItemList<Ite
     public void addAll(int position, List<Item> items, int preItemCount) {
         mItems.addAll(position - preItemCount, items);
         getFastAdapter().notifyAdapterItemRangeInserted(position, items.size());
+    }
+
+    @Override
+    public void set(List<Item> items, int preItemCount, @Nullable IAdapterNotifier adapterNotifier) {
+        //get sizes
+        int newItemsCount = items.size();
+        int previousItemsCount = mItems.size();
+
+        //make sure the new items list is not a reference of the already mItems list
+        if (items != mItems) {
+            //remove all previous items
+            if (!mItems.isEmpty()) {
+                mItems.clear();
+            }
+
+            //add all new items to the list
+            mItems.addAll(items);
+        }
+
+        //now properly notify the adapter about the changes
+        if (adapterNotifier == null) {
+            adapterNotifier = IAdapterNotifier.DEFAULT;
+        }
+        adapterNotifier.notify(getFastAdapter(), newItemsCount, previousItemsCount, preItemCount);
     }
 
     @Override

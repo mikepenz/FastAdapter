@@ -311,29 +311,12 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
             ext.set(items, resetFilter);
         }
 
-        //get sizes
-        int newItemsCount = items.size();
-        int previousItemsCount = mItems.size();
-        int itemsBeforeThisAdapter = getFastAdapter().getPreItemCountByOrder(getOrder());
-
-        //make sure the new items list is not a reference of the already mItems list
-        if (items != mItems) {
-            //remove all previous items
-            if (!mItems.isEmpty()) {
-                mItems.clear(itemsBeforeThisAdapter);
-            }
-
-            //add all new items to the list
-            mItems.addAll(items, itemsBeforeThisAdapter);
-        }
-
         //map the types
         mapPossibleTypes(items);
-        //now properly notify the adapter about the changes
-        if (adapterNotifier == null) {
-            adapterNotifier = IAdapterNotifier.DEFAULT;
-        }
-        adapterNotifier.notify(getFastAdapter(), newItemsCount, previousItemsCount, itemsBeforeThisAdapter);
+
+        //forward set
+        int itemsBeforeThisAdapter = getFastAdapter().getPreItemCountByOrder(getOrder());
+        mItems.set(items, itemsBeforeThisAdapter, adapterNotifier);
 
         return this;
     }
