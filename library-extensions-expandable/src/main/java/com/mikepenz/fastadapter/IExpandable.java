@@ -14,10 +14,10 @@ public interface IExpandable<T, Item extends IItem & ISubItem> {
     /**
      * use this method to set if the Expandable item is currently expanded
      *
-     * @param collapsed true if expanded (opened)
+     * @param expanded true if expanded (opened)
      * @return this
      */
-    T withIsExpanded(boolean collapsed);
+    T withIsExpanded(boolean expanded);
 
     /**
      * use this method to set the subItems of this item
