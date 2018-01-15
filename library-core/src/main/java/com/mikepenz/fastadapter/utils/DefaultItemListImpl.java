@@ -91,7 +91,7 @@ public class DefaultItemListImpl<Item extends IItem> extends DefaultItemList<Ite
     @Override
     public void set(int position, Item item) {
         mItems.set(position, item);
-        getFastAdapter().notifyAdapterItemInserted(position);
+        getFastAdapter().notifyAdapterItemChanged(position);
     }
 
     @Override
