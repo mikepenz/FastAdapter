@@ -173,7 +173,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                     final SimpleSubItem sampleItem = new SimpleSubItem();
                     sampleItem
                             .withName("-- Test " + (i + 1) + "." + ii)
-                            .withDescription("ID: " + (i + 1) * 100 + ii)
+                            .withDescription("ID: " + ((i + 1) * 100 + ii))
                             .withIdentifier((i + 1) * 100 + ii);
                     subItems.add(sampleItem);
 
