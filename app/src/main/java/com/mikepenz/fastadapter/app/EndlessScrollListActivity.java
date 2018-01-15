@@ -3,6 +3,7 @@ package com.mikepenz.fastadapter.app;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -77,7 +78,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         //configure our fastAdapter
         fastItemAdapter.withOnClickListener(new OnClickListener<SimpleItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<SimpleItem> adapter, SimpleItem item, int position) {
+            public boolean onClick(View v, IAdapter<SimpleItem> adapter, @NonNull SimpleItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
                 return false;
             }

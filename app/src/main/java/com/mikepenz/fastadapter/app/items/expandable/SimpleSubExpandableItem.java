@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.app.items.expandable;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -73,7 +74,7 @@ public class SimpleSubExpandableItem<Parent extends IItem & IExpandable, SubItem
     //we define a clickListener in here so we can directly animate
     final private OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> onClickListener = new OnClickListener<SimpleSubExpandableItem<Parent, SubItem>>() {
         @Override
-        public boolean onClick(View v, IAdapter adapter, SimpleSubExpandableItem item, int position) {
+        public boolean onClick(View v, IAdapter adapter, @NonNull SimpleSubExpandableItem item, int position) {
             if (item.getSubItems() != null) {
                 if (!item.isExpanded()) {
                     ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(180).start();
