@@ -110,7 +110,7 @@ public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> 
         }
 
         @Override
-        public void bindView(SimpleItem item, List<Object> payloads) {
+        public void bindView(@NonNull SimpleItem item, @NonNull List<Object> payloads) {
             //get the context
             Context ctx = itemView.getContext();
 
@@ -123,7 +123,7 @@ public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> 
         }
 
         @Override
-        public void unbindView(SimpleItem item) {
+        public void unbindView(@NonNull SimpleItem item) {
             name.setText(null);
             description.setText(null);
         }
