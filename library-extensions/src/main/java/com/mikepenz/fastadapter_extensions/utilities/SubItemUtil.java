@@ -177,8 +177,12 @@ public class SubItemUtil {
      * @return number of selected items underneath the header
      */
     public static <T extends IItem & IExpandable> int countSelectedSubItems(final FastAdapter adapter, T header) {
-        Set<IItem> selections = getSelectedItems(adapter);
-        return countSelectedSubItems(selections, header);
+        SelectExtension extension = FastAdapter.getExtension(adapter, SelectExtension.class);
+        if (extension != null) {
+            Set<IItem> selections = extension.getSelectedItems();
+            return countSelectedSubItems(selections, header);
+        }
+        return 0;
     }
 
     public static <T extends IItem & IExpandable> int countSelectedSubItems(Set<IItem> selections, T header) {
@@ -222,10 +226,13 @@ public class SubItemUtil {
         if (header.isExpanded()) {
             for (int i = 0; i < subItems; i++) {
                 if (((IItem) header.getSubItems().get(i)).isSelectable()) {
-                    if (select) {
-                        adapter.select(position + i + 1);
-                    } else {
-                        adapter.deselect(position + i + 1);
+                    SelectExtension extension = FastAdapter.getExtension(adapter, SelectExtension.class);
+                    if (extension != null) {
+                        if (select) {
+                            extension.select(position + i + 1);
+                        } else {
+                            extension.deselect(position + i + 1);
+                        }
                     }
                 }
                 if (header.getSubItems().get(i) instanceof IExpandable)
@@ -258,16 +265,20 @@ public class SubItemUtil {
      * @deprecated See {@link SelectExtension#selectByIdentifier(long, boolean, boolean)} ()} ()}
      */
     @Deprecated
-    public static boolean selectItem(final FastAdapter<IItem> adapter, final long identifier, final boolean select) {
-        Triple<Boolean, IItem, Integer> res = FastAdapter.recursive(adapter, new Predicate<IItem>() {
+    @SuppressWarnings("unchecked")
+    public static boolean selectItem(final FastAdapter adapter, final long identifier, final boolean select) {
+        Triple<Boolean, IItem, Integer> res = adapter.recursive(new Predicate() {
             @Override
-            public boolean apply(@NonNull FastAdapter<IItem> adapter, @NonNull IItem item, int position) {
+            public boolean apply(@NonNull FastAdapter adapter, @NonNull IItem item, int position) {
                 if (item.getIdentifier() == identifier) {
                     if (position != -1) {
-                        if (select) {
-                            adapter.select(position);
-                        } else {
-                            adapter.deselect(position);
+                        SelectExtension extension = FastAdapter.getExtension(adapter, SelectExtension.class);
+                        if (extension != null) {
+                            if (select) {
+                                extension.select(position);
+                            } else {
+                                extension.deselect(position);
+                            }
                         }
                     } else {
                         item.withSetSelected(select);
@@ -287,12 +298,16 @@ public class SubItemUtil {
      * @deprecated See {@link SelectExtension#deselect()} ()}
      */
     @Deprecated
+    @SuppressWarnings("unchecked")
     public static void deselect(final FastAdapter adapter) {
-        FastAdapter.recursive(adapter, new Predicate() {
+        adapter.recursive(new Predicate() {
             @Override
             public boolean apply(@NonNull FastAdapter adapter, @NonNull IItem item, int position) {
                 if (position != -1) {
-                    adapter.deselect(position);
+                    SelectExtension extension = FastAdapter.getExtension(adapter, SelectExtension.class);
+                    if (extension != null) {
+                        extension.deselect(position);
+                    }
                 } else {
                     item.withSetSelected(false);
                 }

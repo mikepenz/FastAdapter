@@ -247,9 +247,22 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param clazz the extension class, to retrieve its instance
      * @return the found IAdapterExtension or null if it is not found
      */
+    @Nullable
     @SuppressWarnings("unchecked")
-    public <T extends IAdapterExtension<Item>> T getExtension(Class clazz) {
+    private <T extends IAdapterExtension> T getExtension(Class clazz) {
         return (T) mExtensions.get(clazz);
+    }
+
+    /**
+     * @param fastAdapter the `FastAdapter` to retrieve the extension from
+     * @param clazz       the extension class, to retrieve its instance
+     * @param <T>         the type to auto cast to
+     * @return the found extension or null
+     */
+    @Nullable
+    @SuppressWarnings("unchecked")
+    public static <T extends IAdapterExtension> T getExtension(FastAdapter fastAdapter, Class<T> clazz) {
+        return (T) fastAdapter.getExtension(clazz);
     }
 
     /**
@@ -866,7 +879,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (identifier == -1) {
             return null;
         }
-        Triple result = FastAdapter.recursive(this, new Predicate() {
+        Triple result = recursive(new Predicate() {
             @Override
             public boolean apply(@NonNull FastAdapter adapter, @NonNull IItem item, int position) {
                 return item.getIdentifier() == identifier;
@@ -1079,7 +1092,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     /**
      * @return the selectExtension defined for this FastAdaper
-     * @deprecated deprecated in favor of {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public SelectExtension<Item> getSelectExtension() {
@@ -1088,7 +1101,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     /**
      * @return a set with the global positions of all selected items
-     * @deprecated deprecated in favor of {@link SelectExtension#getSelections()} , Retrieve it via {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link SelectExtension#getSelections()} , Retrieve it via {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public Set<Integer> getSelections() {
@@ -1098,7 +1111,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     /**
      * @return a set with the items which are currently selected
-     * @deprecated deprecated in favor of {@link SelectExtension#getSelectedItems()} , Retrieve it via {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link SelectExtension#getSelectedItems()} , Retrieve it via {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public Set<Item> getSelectedItems() {
@@ -1109,7 +1122,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * toggles the selection of the item at the given position
      *
      * @param position the global position
-     * @deprecated deprecated in favor of {@link SelectExtension#toggleSelection(int)} , Retrieve it via {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link SelectExtension#toggleSelection(int)} , Retrieve it via {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public void toggleSelection(int position) {
@@ -1120,7 +1133,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * selects all items at the positions in the iteratable
      *
      * @param positions the global positions to select
-     * @deprecated deprecated in favor of {@link SelectExtension#select(Iterable)}  , Retrieve it via {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link SelectExtension#select(Iterable)}  , Retrieve it via {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public void select(Iterable<Integer> positions) {
@@ -1131,7 +1144,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * selects an item and remembers its position in the selections list
      *
      * @param position the global position
-     * @deprecated deprecated in favor of {@link SelectExtension#select(int)}, Retrieve it via {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link SelectExtension#select(int)}, Retrieve it via {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public void select(int position) {
@@ -1143,7 +1156,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      *
      * @param position  the global position
      * @param fireEvent true if the onClick listener should be called
-     * @deprecated deprecated in favor of {@link SelectExtension#select(int, boolean)} , Retrieve it via {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link SelectExtension#select(int, boolean)} , Retrieve it via {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public void select(int position, boolean fireEvent) {
@@ -1156,7 +1169,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position               the global position
      * @param fireEvent              true if the onClick listener should be called
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
-     * @deprecated deprecated in favor of {@link SelectExtension#select(int, boolean, boolean)} , Retrieve it via {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link SelectExtension#select(int, boolean, boolean)} , Retrieve it via {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public void select(int position, boolean fireEvent, boolean considerSelectableFlag) {
@@ -1166,7 +1179,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * deselects all selections
      *
-     * @deprecated deprecated in favor of {@link SelectExtension#deselect()} , Retrieve it via {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link SelectExtension#deselect()} , Retrieve it via {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public void deselect() {
@@ -1176,7 +1189,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * select all items
      *
-     * @deprecated deprecated in favor of {@link SelectExtension#select()} , Retrieve it via {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link SelectExtension#select()} , Retrieve it via {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public void select() {
@@ -1187,7 +1200,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * select all items
      *
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
-     * @deprecated deprecated in favor of {@link SelectExtension#select(boolean)} , Retrieve it via {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link SelectExtension#select(boolean)} , Retrieve it via {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public void select(boolean considerSelectableFlag) {
@@ -1198,7 +1211,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * deselects all items at the positions in the iteratable
      *
      * @param positions the global positions to deselect
-     * @deprecated deprecated in favor of {@link SelectExtension#deselect(Iterable)} , Retrieve it via {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link SelectExtension#deselect(Iterable)} , Retrieve it via {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public void deselect(Iterable<Integer> positions) {
@@ -1209,7 +1222,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * deselects an item and removes its position in the selections list
      *
      * @param position the global position
-     * @deprecated deprecated in favor of {@link SelectExtension#deselect(int)} , Retrieve it via {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link SelectExtension#deselect(int)} , Retrieve it via {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public void deselect(int position) {
@@ -1222,7 +1235,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      *
      * @param position the global position
      * @param entries  the iterator which is used to deselect all
-     * @deprecated deprecated in favor of {@link SelectExtension#deselect(int, Iterator)}, Retrieve it via {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link SelectExtension#deselect(int, Iterator)}, Retrieve it via {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public void deselect(int position, Iterator<Integer> entries) {
@@ -1233,7 +1246,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * deletes all current selected items
      *
      * @return a list of the IItem elements which were deleted
-     * @deprecated deprecated in favor of {@link SelectExtension#deleteAllSelectedItems()}, Retrieve it via {@link #getExtension(Class)}
+     * @deprecated deprecated in favor of {@link SelectExtension#deleteAllSelectedItems()}, Retrieve it via {@link #getExtension(FastAdapter, Class)}
      */
     @Deprecated
     public List<Item> deleteAllSelectedItems() {
@@ -1412,22 +1425,21 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * util function which recursively iterates over all items and subItems of the given adapter.
      * It executes the given `predicate` on every item and will either stop if that function returns true, or continue (if stopOnMatch is false)
      *
-     * @param adapter     the adapter instance
      * @param predicate   the predicate to run on every item, to check for a match or do some changes (e.g. select)
      * @param stopOnMatch defines if we should stop iterating after the first match
      * @return Triple&lt;Boolean, IItem, Integer&gt; The first value is true (it is always not null), the second contains the item and the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
      */
     @NonNull
-    public static <Item extends IItem> Triple<Boolean, Item, Integer> recursive(final FastAdapter<Item> adapter, Predicate<Item> predicate, boolean stopOnMatch) {
-        for (int i = 0; i < adapter.getItemCount(); i++) {
-            Item item = adapter.getItem(i);
+    public Triple<Boolean, Item, Integer> recursive(Predicate<Item> predicate, boolean stopOnMatch) {
+        for (int i = 0; i < getItemCount(); i++) {
+            Item item = getItem(i);
 
-            if (predicate.apply(adapter, item, i) && stopOnMatch) {
+            if (predicate.apply(this, item, i) && stopOnMatch) {
                 return new Triple<>(true, item, i);
             }
 
             if (item instanceof IExpandable) {
-                Triple<Boolean, Item, Integer> res = recursiveSub(adapter, (IExpandable) item, predicate, stopOnMatch);
+                Triple<Boolean, Item, Integer> res = recursiveSub((IExpandable) item, predicate, stopOnMatch);
                 if (res.first && stopOnMatch) {
                     return res;
                 }
@@ -1438,18 +1450,18 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     @SuppressWarnings("unchecked")
-    private static <Item extends IItem> Triple<Boolean, Item, Integer> recursiveSub(final FastAdapter<Item> adapter, IExpandable parent, Predicate<Item> predicate, boolean stopOnMatch) {
+    private Triple<Boolean, Item, Integer> recursiveSub(IExpandable parent, Predicate<Item> predicate, boolean stopOnMatch) {
         //in case it's expanded it can be selected via the normal way
         if (!parent.isExpanded() && parent.getSubItems() != null) {
             for (int ii = 0; ii < parent.getSubItems().size(); ii++) {
                 Item sub = (Item) parent.getSubItems().get(ii);
 
-                if (predicate.apply(adapter, sub, -1) && stopOnMatch) {
+                if (predicate.apply(this, sub, -1) && stopOnMatch) {
                     return new Triple<>(true, sub, null);
                 }
 
                 if (sub instanceof IExpandable) {
-                    Triple<Boolean, Item, Integer> res = recursiveSub(adapter, (IExpandable) sub, predicate, stopOnMatch);
+                    Triple<Boolean, Item, Integer> res = recursiveSub((IExpandable) sub, predicate, stopOnMatch);
                     if (res.first != null && res.first) {
                         return res;
                     }
