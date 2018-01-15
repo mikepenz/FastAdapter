@@ -394,7 +394,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * selects an item and remembers its position in the selections list
      *
      * @param item                   the item to select
-     * @param position               the global position (or < 0 if the item is not displayed)
+     * @param position               the global position (or &lt; 0 if the item is not displayed)
      * @param fireEvent              true if the onClick listener should be called
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
@@ -522,7 +522,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * also takes an iterator to remove items from the map
      *
      * @param item     the item to deselected
-     * @param position the global position (or < 0 if the item is not displayed)
+     * @param position the global position (or &lt; 0 if the item is not displayed)
      * @param entries  the iterator which is used to deselect all
      */
 
