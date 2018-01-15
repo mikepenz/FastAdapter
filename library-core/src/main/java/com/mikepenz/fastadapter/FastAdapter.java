@@ -24,6 +24,7 @@ import com.mikepenz.fastadapter.listeners.TouchEventHook;
 import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter.utils.DefaultTypeInstanceCache;
 import com.mikepenz.fastadapter.utils.EventHookUtil;
+import com.mikepenz.fastadapter.utils.Predicate;
 import com.mikepenz.fastadapter.utils.Triple;
 
 import java.util.ArrayList;
@@ -246,8 +247,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param clazz the extension class, to retrieve its instance
      * @return the found IAdapterExtension or null if it is not found
      */
-    public IAdapterExtension<Item> getExtension(Class clazz) {
-        return mExtensions.get(clazz);
+    @SuppressWarnings("unchecked")
+    public <T extends IAdapterExtension<Item>> T getExtension(Class clazz) {
+        return (T) mExtensions.get(clazz);
     }
 
     /**
@@ -857,7 +859,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * gets the IItem given an identifier, from all registered adapters
      *
      * @param identifier the identifier of the searched item
-     * @return the found Pair&lt;IItem, Integer&gt; (the found item, and it's position if it is currently displayed) or null
+     * @return the found Pair&lt;IItem, Integer&gt; (the found item, and it's global position if it is currently displayed) or null
      */
     @SuppressWarnings("unchecked")
     public Pair<Item, Integer> getItemById(final long identifier) {
@@ -1384,16 +1386,16 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return Triple&lt;Boolean, IItem, Integer&gt; The first value is true (it is always not null), the second contains the item and the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
      */
     @NonNull
-    public static Triple<Boolean, IItem, Integer> recursive(final FastAdapter adapter, Predicate predicate, boolean stopOnMatch) {
+    public static <Item extends IItem> Triple<Boolean, Item, Integer> recursive(final FastAdapter<Item> adapter, Predicate<Item> predicate, boolean stopOnMatch) {
         for (int i = 0; i < adapter.getItemCount(); i++) {
-            IItem item = adapter.getItem(i);
+            Item item = adapter.getItem(i);
 
             if (predicate.apply(adapter, item, i) && stopOnMatch) {
                 return new Triple<>(true, item, i);
             }
 
             if (item instanceof IExpandable) {
-                Triple<Boolean, IItem, Integer> res = recursiveSub(adapter, (IExpandable) item, predicate, stopOnMatch);
+                Triple<Boolean, Item, Integer> res = recursiveSub(adapter, (IExpandable) item, predicate, stopOnMatch);
                 if (res.first && stopOnMatch) {
                     return res;
                 }
@@ -1403,18 +1405,19 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         return new Triple<>(false, null, null);
     }
 
-    private static Triple<Boolean, IItem, Integer> recursiveSub(final FastAdapter adapter, IExpandable parent, Predicate predicate, boolean stopOnMatch) {
+    @SuppressWarnings("unchecked")
+    private static <Item extends IItem> Triple<Boolean, Item, Integer> recursiveSub(final FastAdapter<Item> adapter, IExpandable parent, Predicate<Item> predicate, boolean stopOnMatch) {
         //in case it's expanded it can be selected via the normal way
         if (!parent.isExpanded() && parent.getSubItems() != null) {
             for (int ii = 0; ii < parent.getSubItems().size(); ii++) {
-                IItem sub = (IItem) parent.getSubItems().get(ii);
+                Item sub = (Item) parent.getSubItems().get(ii);
 
                 if (predicate.apply(adapter, sub, -1) && stopOnMatch) {
                     return new Triple<>(true, sub, null);
                 }
 
                 if (sub instanceof IExpandable) {
-                    Triple<Boolean, IItem, Integer> res = recursiveSub(adapter, (IExpandable) sub, predicate, stopOnMatch);
+                    Triple<Boolean, Item, Integer> res = recursiveSub(adapter, (IExpandable) sub, predicate, stopOnMatch);
                     if (res.first != null && res.first) {
                         return res;
                     }
@@ -1422,21 +1425,6 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
             }
         }
         return new Triple<>(false, null, null);
-    }
-
-    /**
-     * Predicate interface to be used with the recursive method.
-     */
-    public interface Predicate {
-        /**
-         * `apply` is called for every single item in the `recursive` method.
-         *
-         * @param adapter  the FastAdapter instance, if
-         * @param item     the item to check
-         * @param position the position of the item, or "-1" if it is a non displayed sub item
-         * @return true if we matched and no longer want to continue (will be ignored if `stopOnMatch` of the recursive function is false)
-         */
-        boolean apply(FastAdapter adapter, IItem item, int position);
     }
 
     /**

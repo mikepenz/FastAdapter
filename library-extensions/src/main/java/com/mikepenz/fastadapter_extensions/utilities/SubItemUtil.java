@@ -9,6 +9,8 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
+import com.mikepenz.fastadapter.select.SelectExtension;
+import com.mikepenz.fastadapter.utils.Predicate;
 import com.mikepenz.fastadapter.utils.Triple;
 
 import java.util.ArrayList;
@@ -29,7 +31,9 @@ public class SubItemUtil {
      *
      * @param adapter the adapter instance
      * @return a set of all selected items and subitems
+     * @deprecated See {@link FastAdapter#getSelectedItems()} ()} ()}
      */
+    @Deprecated
     public static Set<IItem> getSelectedItems(FastAdapter adapter) {
         Set<IItem> selections = new HashSet<>();
         int length = adapter.getItemCount();
@@ -251,11 +255,13 @@ public class SubItemUtil {
      * @param adapter    the adapter instance
      * @param identifier the identifier of the item to select / deselect
      * @param select     the new selected state of the sub items
+     * @deprecated See {@link SelectExtension#selectByIdentifier(long, boolean, boolean)} ()} ()}
      */
-    public static boolean selectItem(final FastAdapter adapter, final long identifier, final boolean select) {
-        Triple<Boolean, IItem, Integer> res = FastAdapter.recursive(adapter, new FastAdapter.Predicate() {
+    @Deprecated
+    public static boolean selectItem(final FastAdapter<IItem> adapter, final long identifier, final boolean select) {
+        Triple<Boolean, IItem, Integer> res = FastAdapter.recursive(adapter, new Predicate<IItem>() {
             @Override
-            public boolean apply(@NonNull FastAdapter adapter, @NonNull IItem item, int position) {
+            public boolean apply(@NonNull FastAdapter<IItem> adapter, @NonNull IItem item, int position) {
                 if (item.getIdentifier() == identifier) {
                     if (position != -1) {
                         if (select) {
@@ -278,9 +284,11 @@ public class SubItemUtil {
      * deselects all items including all subitems
      *
      * @param adapter the adapter instance
+     * @deprecated See {@link SelectExtension#deselect()} ()}
      */
+    @Deprecated
     public static void deselect(final FastAdapter adapter) {
-        FastAdapter.recursive(adapter, new FastAdapter.Predicate() {
+        FastAdapter.recursive(adapter, new Predicate() {
             @Override
             public boolean apply(@NonNull FastAdapter adapter, @NonNull IItem item, int position) {
                 if (position != -1) {
@@ -306,7 +314,9 @@ public class SubItemUtil {
      *
      * @param deleteEmptyHeaders if true, empty headers will be removed from the adapter
      * @return List of items that have been removed from the adapter
+     * @deprecated See {@link SelectExtension#deleteAllSelectedItems()}
      */
+    @Deprecated
     public static List<IItem> deleteSelected(final FastAdapter fastAdapter, final ExpandableExtension expandableExtension, boolean notifyParent, boolean deleteEmptyHeaders) {
         List<IItem> deleted = new ArrayList<>();
 

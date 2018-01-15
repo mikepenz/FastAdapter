@@ -85,7 +85,6 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         //we init our ActionModeHelper
         mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
-        mActionModeHelper.withSupportSubItems(mExpandableExtension);
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things

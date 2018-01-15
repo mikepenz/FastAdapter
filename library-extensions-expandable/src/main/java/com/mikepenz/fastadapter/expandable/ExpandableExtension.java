@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.expandable;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.SparseIntArray;
 import android.view.MotionEvent;
@@ -65,7 +66,6 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
             return;
         }
         ArrayList<String> expandedItems = savedInstanceState.getStringArrayList(BUNDLE_EXPANDED + prefix);
-        ArrayList<String> selectedItems = savedInstanceState.getStringArrayList(BUNDLE_EXPANDED_SELECTIONS + prefix);
         String id;
         for (int i = 0, size = mFastAdapter.getItemCount(); i < size; i++) {
             Item item = mFastAdapter.getItem(i);
@@ -74,9 +74,6 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
                 expand(i);
                 size = mFastAdapter.getItemCount();
             }
-
-            //we also have to restore the selections for subItems
-            AdapterUtil.restoreSubItemSelectionStatesForAlternativeStateManagement(item, selectedItems);
         }
     }
 
@@ -85,7 +82,6 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
         if (savedInstanceState == null) {
             return;
         }
-        ArrayList<String> selections = new ArrayList<>();
         ArrayList<String> expandedItems = new ArrayList<>();
 
         Item item;
@@ -94,20 +90,13 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
             if (item instanceof IExpandable && ((IExpandable) item).isExpanded()) {
                 expandedItems.add(String.valueOf(item.getIdentifier()));
             }
-            if (item.isSelected()) {
-                selections.add(String.valueOf(item.getIdentifier()));
-            }
-            //we also have to find all selections in the sub hirachies
-            AdapterUtil.findSubItemSelections(item, selections);
         }
         //remember the collapsed states
         savedInstanceState.putStringArrayList(BUNDLE_EXPANDED + prefix, expandedItems);
-        //remember the selections
-        savedInstanceState.putStringArrayList(BUNDLE_EXPANDED_SELECTIONS + prefix, selections);
     }
 
     @Override
-    public boolean onClick(View v, int pos, FastAdapter<Item> fastAdapter, Item item) {
+    public boolean onClick(@NonNull View v, int pos, @NonNull FastAdapter<Item> fastAdapter, @NonNull Item item) {
         boolean consumed = false;
         //if this is a expandable item :D (this has to happen after we handled the selection as we refer to the position)
         if (!consumed && item instanceof IExpandable) {
