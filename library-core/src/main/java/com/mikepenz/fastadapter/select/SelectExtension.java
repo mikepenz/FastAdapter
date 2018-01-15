@@ -12,7 +12,7 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.ISelectionListener;
 import com.mikepenz.fastadapter.ISubItem;
-import com.mikepenz.fastadapter.utils.Predicate;
+import com.mikepenz.fastadapter.utils.AdapterPredicate;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -238,9 +238,9 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      */
     public Set<Item> getSelectedItems() {
         final Set<Item> items = new ArraySet<>();
-        mFastAdapter.recursive(new Predicate<Item>() {
+        mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(FastAdapter<Item> adapter, Item item, int position) {
+            public boolean apply(Item item, int position) {
                 if (item.isSelected()) {
                     items.add(item);
                 }
@@ -325,9 +325,9 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
     public void select(final boolean considerSelectableFlag) {
-        mFastAdapter.recursive(new Predicate<Item>() {
+        mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(FastAdapter<Item> adapter, Item item, int position) {
+            public boolean apply(Item item, int position) {
                 select(item, considerSelectableFlag);
                 return false;
             }
@@ -429,9 +429,9 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
     public void selectByIdentifier(final long identifier, final boolean fireEvent, final boolean considerSelectableFlag) {
-        mFastAdapter.recursive(new Predicate<Item>() {
+        mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(FastAdapter<Item> adapter, Item item, int position) {
+            public boolean apply(Item item, int position) {
                 if (item.getIdentifier() == identifier) {
                     select(item, position, fireEvent, considerSelectableFlag);
                     return true;
@@ -447,9 +447,9 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
     public void selectByIdentifiers(final Set<Long> identifiers, final boolean fireEvent, final boolean considerSelectableFlag) {
-        mFastAdapter.recursive(new Predicate<Item>() {
+        mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(FastAdapter<Item> adapter, Item item, int position) {
+            public boolean apply(Item item, int position) {
                 if (identifiers.contains(item.getIdentifier())) {
                     select(item, position, fireEvent, considerSelectableFlag);
                 }
@@ -462,9 +462,9 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * deselects all selections
      */
     public void deselect() {
-        mFastAdapter.recursive(new Predicate<Item>() {
+        mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(FastAdapter<Item> adapter, Item item, int position) {
+            public boolean apply(Item item, int position) {
                 deselect(item);
                 return false;
             }
@@ -547,9 +547,9 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * @param identifier the identifier of the item to select
      */
     public void deselectByIdentifier(final long identifier) {
-        mFastAdapter.recursive(new Predicate<Item>() {
+        mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(FastAdapter<Item> adapter, Item item, int position) {
+            public boolean apply(Item item, int position) {
                 if (item.getIdentifier() == identifier) {
                     deselect(item, position, null);
                     return true;
@@ -563,9 +563,9 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * @param identifiers the set of identifiers to select
      */
     public void deselectByIdentifiers(final Set<Long> identifiers) {
-        mFastAdapter.recursive(new Predicate<Item>() {
+        mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(FastAdapter<Item> adapter, Item item, int position) {
+            public boolean apply(Item item, int position) {
                 if (identifiers.contains(item.getIdentifier())) {
                     deselect(item, position, null);
                 }
@@ -583,9 +583,9 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
         List<Item> deletedItems = new ArrayList<>();
 
         final List<Integer> positions = new ArrayList<>();
-        mFastAdapter.recursive(new Predicate<Item>() {
+        mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(FastAdapter<Item> adapter, Item item, int position) {
+            public boolean apply(Item item, int position) {
                 if (item.isSelected()) {
                     //if it's a subitem remove it from the parent
                     if (item instanceof ISubItem) {

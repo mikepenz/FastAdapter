@@ -10,7 +10,7 @@ import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.fastadapter.select.SelectExtension;
-import com.mikepenz.fastadapter.utils.Predicate;
+import com.mikepenz.fastadapter.utils.AdapterPredicate;
 import com.mikepenz.fastadapter.utils.Triple;
 
 import java.util.ArrayList;
@@ -267,9 +267,9 @@ public class SubItemUtil {
     @Deprecated
     @SuppressWarnings("unchecked")
     public static boolean selectItem(final FastAdapter adapter, final long identifier, final boolean select) {
-        Triple<Boolean, IItem, Integer> res = adapter.recursive(new Predicate() {
+        Triple<Boolean, IItem, Integer> res = adapter.recursive(new AdapterPredicate() {
             @Override
-            public boolean apply(@NonNull FastAdapter adapter, @NonNull IItem item, int position) {
+            public boolean apply(@NonNull IItem item, int position) {
                 if (item.getIdentifier() == identifier) {
                     if (position != -1) {
                         SelectExtension extension = FastAdapter.getExtension(adapter, SelectExtension.class);
@@ -300,9 +300,9 @@ public class SubItemUtil {
     @Deprecated
     @SuppressWarnings("unchecked")
     public static void deselect(final FastAdapter adapter) {
-        adapter.recursive(new Predicate() {
+        adapter.recursive(new AdapterPredicate() {
             @Override
-            public boolean apply(@NonNull FastAdapter adapter, @NonNull IItem item, int position) {
+            public boolean apply(@NonNull IItem item, int position) {
                 if (position != -1) {
                     SelectExtension extension = FastAdapter.getExtension(adapter, SelectExtension.class);
                     if (extension != null) {
