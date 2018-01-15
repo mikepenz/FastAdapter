@@ -1079,14 +1079,18 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     /**
      * @return the selectExtension defined for this FastAdaper
+     * @deprecated deprecated in favor of {@link #getExtension(Class)}
      */
+    @Deprecated
     public SelectExtension<Item> getSelectExtension() {
         return mSelectExtension;
     }
 
     /**
      * @return a set with the global positions of all selected items
+     * @deprecated deprecated in favor of {@link SelectExtension#getSelections()} , Retrieve it via {@link #getExtension(Class)}
      */
+    @Deprecated
     public Set<Integer> getSelections() {
         return mSelectExtension.getSelections();
     }
@@ -1094,7 +1098,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
 
     /**
      * @return a set with the items which are currently selected
+     * @deprecated deprecated in favor of {@link SelectExtension#getSelectedItems()} , Retrieve it via {@link #getExtension(Class)}
      */
+    @Deprecated
     public Set<Item> getSelectedItems() {
         return mSelectExtension.getSelectedItems();
     }
@@ -1103,7 +1109,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * toggles the selection of the item at the given position
      *
      * @param position the global position
+     * @deprecated deprecated in favor of {@link SelectExtension#toggleSelection(int)} , Retrieve it via {@link #getExtension(Class)}
      */
+    @Deprecated
     public void toggleSelection(int position) {
         mSelectExtension.toggleSelection(position);
     }
@@ -1112,7 +1120,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * selects all items at the positions in the iteratable
      *
      * @param positions the global positions to select
+     * @deprecated deprecated in favor of {@link SelectExtension#select(Iterable)}  , Retrieve it via {@link #getExtension(Class)}
      */
+    @Deprecated
     public void select(Iterable<Integer> positions) {
         mSelectExtension.select(positions);
     }
@@ -1121,7 +1131,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * selects an item and remembers its position in the selections list
      *
      * @param position the global position
+     * @deprecated deprecated in favor of {@link SelectExtension#select(int)}, Retrieve it via {@link #getExtension(Class)}
      */
+    @Deprecated
     public void select(int position) {
         mSelectExtension.select(position, false, false);
     }
@@ -1131,7 +1143,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      *
      * @param position  the global position
      * @param fireEvent true if the onClick listener should be called
+     * @deprecated deprecated in favor of {@link SelectExtension#select(int, boolean)} , Retrieve it via {@link #getExtension(Class)}
      */
+    @Deprecated
     public void select(int position, boolean fireEvent) {
         mSelectExtension.select(position, fireEvent, false);
     }
@@ -1142,21 +1156,29 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param position               the global position
      * @param fireEvent              true if the onClick listener should be called
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
+     * @deprecated deprecated in favor of {@link SelectExtension#select(int, boolean, boolean)} , Retrieve it via {@link #getExtension(Class)}
      */
+    @Deprecated
     public void select(int position, boolean fireEvent, boolean considerSelectableFlag) {
         mSelectExtension.select(position, fireEvent, considerSelectableFlag);
     }
 
     /**
      * deselects all selections
+     *
+     * @deprecated deprecated in favor of {@link SelectExtension#deselect()} , Retrieve it via {@link #getExtension(Class)}
      */
+    @Deprecated
     public void deselect() {
         mSelectExtension.deselect();
     }
 
     /**
      * select all items
+     *
+     * @deprecated deprecated in favor of {@link SelectExtension#select()} , Retrieve it via {@link #getExtension(Class)}
      */
+    @Deprecated
     public void select() {
         mSelectExtension.select(false);
     }
@@ -1165,7 +1187,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * select all items
      *
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
+     * @deprecated deprecated in favor of {@link SelectExtension#select(boolean)} , Retrieve it via {@link #getExtension(Class)}
      */
+    @Deprecated
     public void select(boolean considerSelectableFlag) {
         mSelectExtension.select(considerSelectableFlag);
     }
@@ -1174,7 +1198,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * deselects all items at the positions in the iteratable
      *
      * @param positions the global positions to deselect
+     * @deprecated deprecated in favor of {@link SelectExtension#deselect(Iterable)} , Retrieve it via {@link #getExtension(Class)}
      */
+    @Deprecated
     public void deselect(Iterable<Integer> positions) {
         mSelectExtension.deselect(positions);
     }
@@ -1183,9 +1209,11 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * deselects an item and removes its position in the selections list
      *
      * @param position the global position
+     * @deprecated deprecated in favor of {@link SelectExtension#deselect(int)} , Retrieve it via {@link #getExtension(Class)}
      */
+    @Deprecated
     public void deselect(int position) {
-        mSelectExtension.deselect(position, null);
+        mSelectExtension.deselect(position);
     }
 
     /**
@@ -1194,7 +1222,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      *
      * @param position the global position
      * @param entries  the iterator which is used to deselect all
+     * @deprecated deprecated in favor of {@link SelectExtension#deselect(int, Iterator)}, Retrieve it via {@link #getExtension(Class)}
      */
+    @Deprecated
     public void deselect(int position, Iterator<Integer> entries) {
         mSelectExtension.deselect(position, entries);
     }
@@ -1203,7 +1233,9 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * deletes all current selected items
      *
      * @return a list of the IItem elements which were deleted
+     * @deprecated deprecated in favor of {@link SelectExtension#deleteAllSelectedItems()}, Retrieve it via {@link #getExtension(Class)}
      */
+    @Deprecated
     public List<Item> deleteAllSelectedItems() {
         return mSelectExtension.deleteAllSelectedItems();
     }
