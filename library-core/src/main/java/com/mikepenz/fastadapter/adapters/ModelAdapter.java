@@ -351,12 +351,13 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
             getItemFilter().performFiltering(null);
         }
 
-        mItems.setNewList(items);
-        mapPossibleTypes(mItems.getItems());
+        mapPossibleTypes(items);
 
-        if (filter != null && retainFilter) {
+        boolean publishResults = filter != null && retainFilter;
+        if (publishResults) {
             getItemFilter().publishResults(filter, getItemFilter().performFiltering(filter));
         }
+        mItems.setNewList(items, !publishResults);
 
         return this;
     }

@@ -132,8 +132,10 @@ public class DefaultItemListImpl<Item extends IItem> extends DefaultItemList<Ite
     }
 
     @Override
-    public void setNewList(List<Item> items) {
+    public void setNewList(List<Item> items, boolean notify) {
         mItems = new ArrayList<>(items);
-        getFastAdapter().notifyAdapterDataSetChanged();
+        if(notify) {
+            getFastAdapter().notifyAdapterDataSetChanged();
+        }
     }
 }

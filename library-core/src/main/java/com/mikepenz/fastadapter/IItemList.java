@@ -30,7 +30,7 @@ public interface IItemList<Item> {
 
     void set(List<Item> items, int preItemCount, @Nullable IAdapterNotifier adapterNotifier);
 
-    void setNewList(List<Item> items);
+    void setNewList(List<Item> items, boolean notify);
 
     void addAll(int position, List<Item> items, int preItemCount);
 

@@ -80,7 +80,7 @@ public class ComparableItemListImpl<Item extends IItem> extends DefaultItemListI
     public void addAll(List<Item> items, int preItemCount) {
         mItems.addAll(items);
         if (mComparator != null) {
-            Collections.sort(items, mComparator);
+            Collections.sort(mItems, mComparator);
         }
         getFastAdapter().notifyAdapterDataSetChanged();
     }
@@ -89,8 +89,19 @@ public class ComparableItemListImpl<Item extends IItem> extends DefaultItemListI
     public void addAll(int position, List<Item> items, int preItemCount) {
         mItems.addAll(position - preItemCount, items);
         if (mComparator != null) {
-            Collections.sort(items, mComparator);
+            Collections.sort(mItems, mComparator);
         }
         getFastAdapter().notifyAdapterDataSetChanged();
+    }
+
+    @Override
+    public void setNewList(List<Item> items, boolean notify) {
+        mItems = new ArrayList<>(items);
+        if (mComparator != null) {
+            Collections.sort(mItems, mComparator);
+        }
+        if(notify) {
+            getFastAdapter().notifyAdapterDataSetChanged();
+        }
     }
 }
