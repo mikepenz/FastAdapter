@@ -270,7 +270,7 @@ public class SimpleSubExpandableItem extends AbstractExpandableItem<SimpleSubExp
 
 
 ## Articles
-- [RecyclerView Adapter made ease](http://blog.grafixartist.com/recyclerview-adapter-android-made-fast-easy/) (FastAdapter v2.x)
+- [RecyclerView Adapter made easy](http://blog.grafixartist.com/recyclerview-adapter-android-made-fast-easy/) (FastAdapter v2.x)
 
 ## Libs used in sample app:
 Mike Penz:
