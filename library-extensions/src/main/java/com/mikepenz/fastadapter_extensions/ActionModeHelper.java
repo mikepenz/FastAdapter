@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
-import com.mikepenz.fastadapter_extensions.utilities.SubItemUtil;
 
 /**
  * Created by mikepenz on 02.01.16.
@@ -24,7 +23,6 @@ public class ActionModeHelper {
     private ActionMode.Callback mInternalCallback;
     private ActionMode.Callback mCallback;
     private ActionMode mActionMode;
-    private ExpandableExtension mExpandableExtension = null;
 
     private boolean mAutoDeselect = true;
 
@@ -53,8 +51,14 @@ public class ActionModeHelper {
         return this;
     }
 
+    /**
+     * no longer needed, the FastAdapter can handle sub items now on its own
+     *
+     * @param expandableExtension
+     * @return
+     */
+    @Deprecated
     public ActionModeHelper withSupportSubItems(ExpandableExtension expandableExtension) {
-        this.mExpandableExtension = expandableExtension;
         return this;
     }
 
@@ -92,7 +96,7 @@ public class ActionModeHelper {
      */
     public Boolean onClick(AppCompatActivity act, IItem item) {
         //if we are current in CAB mode, and we remove the last selection, we want to finish the actionMode
-        if (mActionMode != null && (mExpandableExtension != null ? SubItemUtil.getSelectedItems(mFastAdapter).size() == 1 : mFastAdapter.getSelections().size() == 1) && item.isSelected()) {
+        if (mActionMode != null && (mFastAdapter.getSelectedItems().size() == 1) && item.isSelected()) {
             mActionMode.finish();
             mFastAdapter.deselect();
             return true;
@@ -101,7 +105,7 @@ public class ActionModeHelper {
         if (mActionMode != null) {
             // calculate the selection count for the action mode
             // because current selection is not reflecting the future state yet!
-            int selected = mExpandableExtension != null ? SubItemUtil.getSelectedItems(mFastAdapter).size() : mFastAdapter.getSelections().size();
+            int selected = mFastAdapter.getSelectedItems().size();
             if (item.isSelected())
                 selected--;
             else if (item.isSelectable())
@@ -141,7 +145,7 @@ public class ActionModeHelper {
      * @return the initialized ActionMode or null if no ActionMode is active after calling this function
      */
     public ActionMode checkActionMode(AppCompatActivity act) {
-        int selected = mExpandableExtension != null ? SubItemUtil.getSelectedItems(mFastAdapter).size() : mFastAdapter.getSelections().size();
+        int selected = mFastAdapter.getSelectedItems().size();
         return checkActionMode(act, selected);
     }
 
@@ -196,12 +200,7 @@ public class ActionModeHelper {
             }
 
             if (!consumed) {
-                if (mExpandableExtension != null) {
-                    SubItemUtil.deleteSelected(mFastAdapter, mExpandableExtension, true, false);
-                }
-                else {
-                    mFastAdapter.deleteAllSelectedItems();
-                }
+                mFastAdapter.deleteAllSelectedItems();
                 //finish the actionMode
                 mode.finish();
             }

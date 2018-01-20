@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
@@ -42,7 +43,7 @@ public class ImageListActivity extends AppCompatActivity {
         //configure our fastAdapter
         mFastItemAdapter.withOnClickListener(new OnClickListener<ImageItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<ImageItem> adapter, ImageItem item, int position) {
+            public boolean onClick(View v, IAdapter<ImageItem> adapter, @NonNull ImageItem item, int position) {
                 Toast.makeText(v.getContext(), item.mName, Toast.LENGTH_SHORT).show();
                 return false;
             }
