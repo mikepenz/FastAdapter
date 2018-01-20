@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.util.ArrayMap;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -30,7 +31,6 @@ import com.mikepenz.fastadapter.utils.Triple;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -68,7 +68,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     // event hooks for the items
     private List<EventHook<Item>> eventHooks;
     // the extensions we support
-    final private Map<Class, IAdapterExtension<Item>> mExtensions = new HashMap<>();
+    final private Map<Class, IAdapterExtension<Item>> mExtensions = new ArrayMap<>();
 
     //
     private SelectExtension<Item> mSelectExtension = new SelectExtension<>();
