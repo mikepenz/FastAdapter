@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,7 +48,7 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
         //configure our fastAdapter
         fastItemAdapter.withOnClickListener(new OnClickListener<RadioButtonSampleItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<RadioButtonSampleItem> adapter, RadioButtonSampleItem item, int position) {
+            public boolean onClick(View v, IAdapter<RadioButtonSampleItem> adapter, @NonNull RadioButtonSampleItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
                 return false;
             }
@@ -55,7 +56,7 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
 
         fastItemAdapter.withOnPreClickListener(new OnClickListener<RadioButtonSampleItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<RadioButtonSampleItem> adapter, RadioButtonSampleItem item, int position) {
+            public boolean onClick(View v, IAdapter<RadioButtonSampleItem> adapter, @NonNull RadioButtonSampleItem item, int position) {
                 // consume otherwise radio/checkbox will be deselected
                 return true;
             }

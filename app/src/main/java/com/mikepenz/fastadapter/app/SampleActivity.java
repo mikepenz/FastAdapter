@@ -21,6 +21,7 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData;
 import com.mikepenz.fastadapter.app.items.SimpleImageItem;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
@@ -43,6 +44,8 @@ public class SampleActivity extends AppCompatActivity {
     private FastAdapter<SimpleImageItem> mFastAdapter;
     //save our FastAdapter
     private ItemAdapter<SimpleImageItem> mItemAdapter;
+    //our `SelectExtension`
+    private SelectExtension<SimpleImageItem> selectExtension;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState) {
@@ -158,10 +161,11 @@ public class SampleActivity extends AppCompatActivity {
         mFastAdapter.withSelectable(true);
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withSelectOnLongClick(false);
+        selectExtension = mFastAdapter.getExtension(SelectExtension.class);
 
         //configure our fastAdapter
         //get our recyclerView and do basic setup
-        mRecyclerView = (RecyclerView) findViewById(R.id.rv);
+        mRecyclerView = findViewById(R.id.rv);
         //mRecyclerView.setLayoutManager(new GridLayoutManager(this, 3));
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setAdapter(mFastAdapter);
@@ -209,7 +213,7 @@ public class SampleActivity extends AppCompatActivity {
                 mItemAdapter.add(firstVisiblePosition + 1, ImageDummyData.getDummyItem());
                 return true;
             case R.id.item_change:
-                for (Integer pos : mFastAdapter.getSelections()) {
+                for (Integer pos : selectExtension.getSelections()) {
                     SimpleImageItem i = mItemAdapter.getAdapterItem(pos);
                     i.withName("CHANGED");
                     i.withDescription("This item was modified");
@@ -223,7 +227,7 @@ public class SampleActivity extends AppCompatActivity {
                 }
                 return true;
             case R.id.item_delete:
-                mFastAdapter.deleteAllSelectedItems();
+                selectExtension.deleteAllSelectedItems();
                 return true;
             case android.R.id.home:
                 onBackPressed();

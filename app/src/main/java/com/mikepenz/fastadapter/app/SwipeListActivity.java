@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -67,7 +68,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         //configure our fastAdapter
         fastItemAdapter.withOnClickListener(new OnClickListener<SwipeableItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<SwipeableItem> adapter, SwipeableItem item, int position) {
+            public boolean onClick(View v, IAdapter<SwipeableItem> adapter, @NonNull SwipeableItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
                 return false;
             }

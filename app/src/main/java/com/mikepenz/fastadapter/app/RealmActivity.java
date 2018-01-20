@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.app;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -54,7 +55,7 @@ public class RealmActivity extends AppCompatActivity {
         //configure our fastAdapter
         mFastItemAdapter.withOnClickListener(new OnClickListener<RealmSampleUserItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<RealmSampleUserItem> adapter, RealmSampleUserItem item, int position) {
+            public boolean onClick(View v, IAdapter<RealmSampleUserItem> adapter, @NonNull RealmSampleUserItem item, int position) {
                 Toast.makeText(v.getContext(), item.getName(), Toast.LENGTH_SHORT).show();
                 return false;
             }

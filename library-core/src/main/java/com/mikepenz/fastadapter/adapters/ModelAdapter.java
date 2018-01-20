@@ -1,17 +1,23 @@
 package com.mikepenz.fastadapter.adapters;
 
+import android.support.annotation.NonNull;
+
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IAdapterNotifier;
+import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IIdDistributor;
 import com.mikepenz.fastadapter.IInterceptor;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.IItemList;
 import com.mikepenz.fastadapter.IModelItem;
+import com.mikepenz.fastadapter.ISubItem;
+import com.mikepenz.fastadapter.utils.AdapterPredicate;
 import com.mikepenz.fastadapter.utils.DefaultItemList;
 import com.mikepenz.fastadapter.utils.DefaultItemListImpl;
+import com.mikepenz.fastadapter.utils.Triple;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -492,5 +498,66 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
     public ModelAdapter<Model, Item> clear() {
         mItems.clear(getFastAdapter().getPreItemCountByOrder(getOrder()));
         return this;
+    }
+
+    /**
+     * remvoes an item by it's identifier
+     *
+     * @param identifier the identifier to search for
+     * @return this
+     */
+    public ModelAdapter<Model, Item> removeByIdentifier(final long identifier) {
+        recursive(new AdapterPredicate<Item>() {
+            @Override
+            public boolean apply(Item item, int position) {
+                if (identifier == item.getIdentifier()) {
+                    //if it's a subitem remove it from the parent
+                    if (item instanceof ISubItem) {
+                        //a sub item which is not in the list can be instantly deleted
+                        IExpandable parent = (IExpandable) ((ISubItem) item).getParent();
+                        //parent should not be null, but check in any case..
+                        if (parent != null) {
+                            parent.getSubItems().remove(item);
+                        }
+                    }
+                    if (position != -1) {
+                        //a normal displayed item can only be deleted afterwards
+                        remove(position);
+                    }
+                }
+                return false;
+            }
+        }, false);
+
+        return this;
+    }
+
+
+    /**
+     * util function which recursively iterates over all items and subItems of the given adapter.
+     * It executes the given `predicate` on every item and will either stop if that function returns true, or continue (if stopOnMatch is false)
+     *
+     * @param predicate   the predicate to run on every item, to check for a match or do some changes (e.g. select)
+     * @param stopOnMatch defines if we should stop iterating after the first match
+     * @return Triple&lt;Boolean, IItem, Integer&gt; The first value is true (it is always not null), the second contains the item and the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
+     */
+    @NonNull
+    public Triple<Boolean, Item, Integer> recursive(AdapterPredicate<Item> predicate, boolean stopOnMatch) {
+        for (int i = 0; i < getAdapterItemCount(); i++) {
+            Item item = getAdapterItem(i);
+
+            if (predicate.apply(item, i) && stopOnMatch) {
+                return new Triple<>(true, item, i);
+            }
+
+            if (item instanceof IExpandable) {
+                Triple<Boolean, Item, Integer> res = FastAdapter.recursiveSub((IExpandable) item, predicate, stopOnMatch);
+                if (res.first && stopOnMatch) {
+                    return res;
+                }
+            }
+        }
+
+        return new Triple<>(false, null, null);
     }
 }
