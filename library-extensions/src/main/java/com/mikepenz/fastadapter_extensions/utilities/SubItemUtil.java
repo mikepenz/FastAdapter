@@ -177,7 +177,7 @@ public class SubItemUtil {
      * @return number of selected items underneath the header
      */
     public static <T extends IItem & IExpandable> int countSelectedSubItems(final FastAdapter adapter, T header) {
-        SelectExtension extension = FastAdapter.getExtension(adapter, SelectExtension.class);
+        SelectExtension extension = (SelectExtension) adapter.getExtension(SelectExtension.class);
         if (extension != null) {
             Set<IItem> selections = extension.getSelectedItems();
             return countSelectedSubItems(selections, header);
@@ -226,7 +226,7 @@ public class SubItemUtil {
         if (header.isExpanded()) {
             for (int i = 0; i < subItems; i++) {
                 if (((IItem) header.getSubItems().get(i)).isSelectable()) {
-                    SelectExtension extension = FastAdapter.getExtension(adapter, SelectExtension.class);
+                    SelectExtension extension = (SelectExtension) adapter.getExtension(SelectExtension.class);
                     if (extension != null) {
                         if (select) {
                             extension.select(position + i + 1);
@@ -272,7 +272,7 @@ public class SubItemUtil {
             public boolean apply(@NonNull IItem item, int position) {
                 if (item.getIdentifier() == identifier) {
                     if (position != -1) {
-                        SelectExtension extension = FastAdapter.getExtension(adapter, SelectExtension.class);
+                        SelectExtension extension = (SelectExtension) adapter.getExtension(SelectExtension.class);
                         if (extension != null) {
                             if (select) {
                                 extension.select(position);
@@ -304,7 +304,7 @@ public class SubItemUtil {
             @Override
             public boolean apply(@NonNull IItem item, int position) {
                 if (position != -1) {
-                    SelectExtension extension = FastAdapter.getExtension(adapter, SelectExtension.class);
+                    SelectExtension extension = (SelectExtension) adapter.getExtension(SelectExtension.class);
                     if (extension != null) {
                         extension.deselect(position);
                     }
@@ -327,11 +327,11 @@ public class SubItemUtil {
      * deletes all selected items from the adapter respecting if the are sub items or not
      * subitems are removed from their parents sublists, main items are directly removed
      *
+     * Alternatively you might consider also looking at: {@link SelectExtension#deleteAllSelectedItems()}
+     *
      * @param deleteEmptyHeaders if true, empty headers will be removed from the adapter
      * @return List of items that have been removed from the adapter
-     * @deprecated See {@link SelectExtension#deleteAllSelectedItems()}
      */
-    @Deprecated
     public static List<IItem> deleteSelected(final FastAdapter fastAdapter, final ExpandableExtension expandableExtension, boolean notifyParent, boolean deleteEmptyHeaders) {
         List<IItem> deleted = new ArrayList<>();
 

@@ -249,20 +249,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Nullable
     @SuppressWarnings("unchecked")
-    private <T extends IAdapterExtension> T getExtension(Class clazz) {
+    public <T extends IAdapterExtension<Item>> T getExtension(Class clazz) {
         return (T) mExtensions.get(clazz);
-    }
-
-    /**
-     * @param fastAdapter the `FastAdapter` to retrieve the extension from
-     * @param clazz       the extension class, to retrieve its instance
-     * @param <T>         the type to auto cast to
-     * @return the found extension or null
-     */
-    @Nullable
-    @SuppressWarnings("unchecked")
-    public static <T extends IAdapterExtension> T getExtension(FastAdapter fastAdapter, Class<T> clazz) {
-        return (T) fastAdapter.getExtension(clazz);
     }
 
     /**
