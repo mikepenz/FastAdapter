@@ -17,5 +17,5 @@ public interface OnClickListener<Item extends IItem> {
      * @param position the global position
      * @return true if the event was consumed, otherwise false
      */
-    boolean onClick(@Nullable View v, @Nullable IAdapter<Item> adapter, Item item, int position);
+    boolean onClick(@Nullable View v, IAdapter<Item> adapter, Item item, int position);
 }

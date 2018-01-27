@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IAdapterNotifier;
 import com.mikepenz.fastadapter.IExpandable;
@@ -509,7 +510,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
     public ModelAdapter<Model, Item> removeByIdentifier(final long identifier) {
         recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 if (identifier == item.getIdentifier()) {
                     //if it's a subitem remove it from the parent
                     if (item instanceof ISubItem) {
@@ -544,14 +545,16 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
     @NonNull
     public Triple<Boolean, Item, Integer> recursive(AdapterPredicate<Item> predicate, boolean stopOnMatch) {
         for (int i = 0; i < getAdapterItemCount(); i++) {
-            Item item = getAdapterItem(i);
+            //retrieve the item + it's adapter
+            FastAdapter.RelativeInfo<Item> relativeInfo = getFastAdapter().getRelativeInfo(i);
+            Item item = relativeInfo.item;
 
-            if (predicate.apply(item, i) && stopOnMatch) {
+            if (predicate.apply(relativeInfo.adapter, i, item, i) && stopOnMatch) {
                 return new Triple<>(true, item, i);
             }
 
             if (item instanceof IExpandable) {
-                Triple<Boolean, Item, Integer> res = FastAdapter.recursiveSub((IExpandable) item, predicate, stopOnMatch);
+                Triple<Boolean, Item, Integer> res = FastAdapter.recursiveSub(relativeInfo.adapter, i, (IExpandable) item, predicate, stopOnMatch);
                 if (res.first && stopOnMatch) {
                     return res;
                 }

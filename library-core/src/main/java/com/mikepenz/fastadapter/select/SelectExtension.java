@@ -1,11 +1,13 @@
 package com.mikepenz.fastadapter.select;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.util.ArraySet;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
@@ -135,7 +137,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
             return;
         }
         long[] selectedItems = savedInstanceState.getLongArray(BUNDLE_SELECTIONS + prefix);
-        if(selectedItems != null) {
+        if (selectedItems != null) {
             for (long id : selectedItems) {
                 selectByIdentifier(id, false, true);
             }
@@ -240,7 +242,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
         final Set<Item> items = new ArraySet<>();
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 if (item.isSelected()) {
                     items.add(item);
                 }
@@ -327,12 +329,28 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     public void select(final boolean considerSelectableFlag) {
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
-                select(item, considerSelectableFlag);
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
+                select(lastParentAdapter, item, -1, false, considerSelectableFlag);
                 return false;
             }
         }, false);
         mFastAdapter.notifyDataSetChanged();
+    }
+
+    /**
+     * select's a provided item, this won't notify the adapter
+     *
+     * @param item                   the item to select
+     * @param considerSelectableFlag true if the select method should not select an item if its not selectable
+     */
+    public void select(Item item, boolean considerSelectableFlag) {
+        if (considerSelectableFlag && !item.isSelectable()) {
+            return;
+        }
+        item.withSetSelected(true);
+        if (mSelectionListener != null) {
+            mSelectionListener.onSelectionChanged(item, true);
+        }
     }
 
     /**
@@ -373,51 +391,36 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
     public void select(int position, boolean fireEvent, boolean considerSelectableFlag) {
-        Item item = mFastAdapter.getItem(position);
-        if (item == null) {
+        FastAdapter.RelativeInfo<Item> relativeInfo = mFastAdapter.getRelativeInfo(position);
+        if (relativeInfo == null) {
             return;
         }
-        select(item, position, fireEvent, considerSelectableFlag);
-    }
-
-    /**
-     * select's a provided item, this won't notify the adapter
-     *
-     * @param item                   the item to select
-     * @param considerSelectableFlag true if the select method should not select an item if its not selectable
-     */
-    public void select(Item item, boolean considerSelectableFlag) {
-        select(item, -1, false, considerSelectableFlag);
+        select(relativeInfo.adapter, relativeInfo.item, position, fireEvent, considerSelectableFlag);
     }
 
     /**
      * selects an item and remembers its position in the selections list
      *
+     * @param adapter                adapter holding this item (or it's parent)
      * @param item                   the item to select
      * @param position               the global position (or &lt; 0 if the item is not displayed)
      * @param fireEvent              true if the onClick listener should be called
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
-    public void select(Item item, int position, boolean fireEvent, boolean considerSelectableFlag) {
+    public void select(IAdapter<Item> adapter, Item item, int position, boolean fireEvent, boolean considerSelectableFlag) {
         if (considerSelectableFlag && !item.isSelectable()) {
             return;
         }
 
         item.withSetSelected(true);
 
-        if (position >= 0) {
-            mFastAdapter.notifyItemChanged(position);
-        }
+        mFastAdapter.notifyItemChanged(position);
 
         if (mSelectionListener != null)
             mSelectionListener.onSelectionChanged(item, true);
 
         if (mFastAdapter.getOnClickListener() != null && fireEvent) {
-            if (position < 0) {
-                mFastAdapter.getOnClickListener().onClick(null, null, item, -1);
-            } else {
-                mFastAdapter.getOnClickListener().onClick(null, mFastAdapter.getAdapter(position), item, position);
-            }
+            mFastAdapter.getOnClickListener().onClick(null, adapter, item, position);
         }
     }
 
@@ -431,9 +434,9 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     public void selectByIdentifier(final long identifier, final boolean fireEvent, final boolean considerSelectableFlag) {
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 if (item.getIdentifier() == identifier) {
-                    select(item, position, fireEvent, considerSelectableFlag);
+                    select(lastParentAdapter, item, position, fireEvent, considerSelectableFlag);
                     return true;
                 }
                 return false;
@@ -449,9 +452,9 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     public void selectByIdentifiers(final Set<Long> identifiers, final boolean fireEvent, final boolean considerSelectableFlag) {
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 if (identifiers.contains(item.getIdentifier())) {
-                    select(item, position, fireEvent, considerSelectableFlag);
+                    select(lastParentAdapter, item, position, fireEvent, considerSelectableFlag);
                 }
                 return false;
             }
@@ -464,7 +467,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     public void deselect() {
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 deselect(item);
                 return false;
             }
@@ -549,7 +552,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     public void deselectByIdentifier(final long identifier) {
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 if (item.getIdentifier() == identifier) {
                     deselect(item, position, null);
                     return true;
@@ -565,7 +568,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     public void deselectByIdentifiers(final Set<Long> identifiers) {
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 if (identifiers.contains(item.getIdentifier())) {
                     deselect(item, position, null);
                 }
@@ -585,14 +588,14 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
         final List<Integer> positions = new ArrayList<>();
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 if (item.isSelected()) {
                     //if it's a subitem remove it from the parent
                     if (item instanceof ISubItem) {
                         //a sub item which is not in the list can be instantly deleted
                         IExpandable parent = (IExpandable) ((ISubItem) item).getParent();
                         //parent should not be null, but check in any case..
-                        if(parent != null) {
+                        if (parent != null) {
                             parent.getSubItems().remove(item);
                         }
                     }

@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 3200
-        versionName '3.2.0'
+        versionCode 3210
+        versionName '3.2.1'
     }
     buildTypes {
         release {
@@ -35,6 +35,7 @@ dependencies {
     implementation  project(':library-core')
     implementation  project(':library')
 
+    implementation  "com.android.support:appcompat-v7:${versions.supportLib}"
     implementation  "com.android.support:recyclerview-v7:${versions.supportLib}"
     implementation  "com.android.support:support-annotations:${versions.supportLib}"
 

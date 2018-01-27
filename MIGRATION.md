@@ -1,5 +1,10 @@
 ### Upgrade Notes
 
+#### v3.2.1
+* `AdapterPredicate` was adjusted to include the `IAdapter<Item> lastParentAdapter`, `int lastParentPosition` to allow more advanced recursive operations on the items
+* removed `select(Item item, int position, boolean fireEvent, boolean considerSelectableFlag)` and replaced with `select(IAdapter<Item> adapter, Item item, int position, boolean fireEvent, boolean considerSelectableFlag)`
+  * this was done to make the `Adapter` `NonNull`
+
 #### v3.0.5
 * The `ItemFilter`s `itemsFiltered` callback method will no longer be called after `onReset` (FIX bug making it impossible to detect when filtering was done)
 
