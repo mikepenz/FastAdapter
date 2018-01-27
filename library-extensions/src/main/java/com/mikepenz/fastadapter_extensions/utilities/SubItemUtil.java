@@ -269,7 +269,7 @@ public class SubItemUtil {
     public static boolean selectItem(final FastAdapter adapter, final long identifier, final boolean select) {
         Triple<Boolean, IItem, Integer> res = adapter.recursive(new AdapterPredicate() {
             @Override
-            public boolean apply(@NonNull IItem item, int position) {
+            public boolean apply(@NonNull IAdapter lastParentAdapter, int lastParentPosition, @NonNull IItem item, int position) {
                 if (item.getIdentifier() == identifier) {
                     if (position != -1) {
                         SelectExtension extension = (SelectExtension) adapter.getExtension(SelectExtension.class);
@@ -302,7 +302,7 @@ public class SubItemUtil {
     public static void deselect(final FastAdapter adapter) {
         adapter.recursive(new AdapterPredicate() {
             @Override
-            public boolean apply(@NonNull IItem item, int position) {
+            public boolean apply(@NonNull IAdapter lastParentAdapter, int lastParentPosition, @NonNull IItem item, int position) {
                 if (position != -1) {
                     SelectExtension extension = (SelectExtension) adapter.getExtension(SelectExtension.class);
                     if (extension != null) {

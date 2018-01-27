@@ -869,7 +869,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         }
         Triple result = recursive(new AdapterPredicate() {
             @Override
-            public boolean apply(@NonNull IItem item, int position) {
+            public boolean apply(@NonNull IAdapter lastParentAdapter, int lastParentPosition, @NonNull IItem item, int position) {
                 return item.getIdentifier() == identifier;
             }
         }, true);
@@ -1420,14 +1420,16 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     @NonNull
     public Triple<Boolean, Item, Integer> recursive(AdapterPredicate<Item> predicate, boolean stopOnMatch) {
         for (int i = 0; i < getItemCount(); i++) {
-            Item item = getItem(i);
+            //retrieve the item + it's adapter
+            RelativeInfo<Item> relativeInfo = getRelativeInfo(i);
+            Item item = relativeInfo.item;
 
-            if (predicate.apply(item, i) && stopOnMatch) {
+            if (predicate.apply(relativeInfo.adapter, i, item, i) && stopOnMatch) {
                 return new Triple<>(true, item, i);
             }
 
             if (item instanceof IExpandable) {
-                Triple<Boolean, Item, Integer> res = FastAdapter.recursiveSub((IExpandable) item, predicate, stopOnMatch);
+                Triple<Boolean, Item, Integer> res = FastAdapter.recursiveSub(relativeInfo.adapter, i, (IExpandable) item, predicate, stopOnMatch);
                 if (res.first && stopOnMatch) {
                     return res;
                 }
@@ -1441,25 +1443,27 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * Util function which recursively iterates over all items of a `IExpandable` parent if and only if it is `expanded` and has `subItems`
      * This is usually only used in
      *
-     * @param parent      the `IExpandableParent` to start from
-     * @param predicate   the predicate to run on every item, to check for a match or do some changes (e.g. select)
-     * @param stopOnMatch defines if we should stop iterating after the first match
-     * @param <Item>      the type of the `Item`
+     * @param lastParentAdapter  the last `IAdapter` managing the last (visible) parent item (that might also be a parent of a parent, ..)
+     * @param lastParentPosition the global position of the last (visible) parent item, holding this sub item (that might also be a parent of a parent, ..)
+     * @param parent             the `IExpandableParent` to start from
+     * @param predicate          the predicate to run on every item, to check for a match or do some changes (e.g. select)
+     * @param stopOnMatch        defines if we should stop iterating after the first match
+     * @param <Item>             the type of the `Item`
      * @return Triple&lt;Boolean, IItem, Integer&gt; The first value is true (it is always not null), the second contains the item and the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
      */
     @SuppressWarnings("unchecked")
-    public static <Item extends IItem> Triple<Boolean, Item, Integer> recursiveSub(IExpandable parent, AdapterPredicate<Item> predicate, boolean stopOnMatch) {
+    public static <Item extends IItem> Triple<Boolean, Item, Integer> recursiveSub(IAdapter<Item> lastParentAdapter, int lastParentPosition, IExpandable parent, AdapterPredicate<Item> predicate, boolean stopOnMatch) {
         //in case it's expanded it can be selected via the normal way
         if (!parent.isExpanded() && parent.getSubItems() != null) {
             for (int ii = 0; ii < parent.getSubItems().size(); ii++) {
                 Item sub = (Item) parent.getSubItems().get(ii);
 
-                if (predicate.apply(sub, -1) && stopOnMatch) {
+                if (predicate.apply(lastParentAdapter, lastParentPosition, sub, -1) && stopOnMatch) {
                     return new Triple<>(true, sub, null);
                 }
 
                 if (sub instanceof IExpandable) {
-                    Triple<Boolean, Item, Integer> res = FastAdapter.recursiveSub((IExpandable) sub, predicate, stopOnMatch);
+                    Triple<Boolean, Item, Integer> res = FastAdapter.recursiveSub(lastParentAdapter, lastParentPosition, (IExpandable) sub, predicate, stopOnMatch);
                     if (res.first) {
                         return res;
                     }

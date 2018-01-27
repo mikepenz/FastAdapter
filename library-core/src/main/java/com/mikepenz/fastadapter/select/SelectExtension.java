@@ -1,11 +1,13 @@
 package com.mikepenz.fastadapter.select;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.util.ArraySet;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
@@ -240,7 +242,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
         final Set<Item> items = new ArraySet<>();
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 if (item.isSelected()) {
                     items.add(item);
                 }
@@ -327,7 +329,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     public void select(final boolean considerSelectableFlag) {
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 select(item, considerSelectableFlag);
                 return false;
             }
@@ -431,7 +433,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     public void selectByIdentifier(final long identifier, final boolean fireEvent, final boolean considerSelectableFlag) {
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 if (item.getIdentifier() == identifier) {
                     select(item, position, fireEvent, considerSelectableFlag);
                     return true;
@@ -449,7 +451,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     public void selectByIdentifiers(final Set<Long> identifiers, final boolean fireEvent, final boolean considerSelectableFlag) {
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 if (identifiers.contains(item.getIdentifier())) {
                     select(item, position, fireEvent, considerSelectableFlag);
                 }
@@ -464,7 +466,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     public void deselect() {
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 deselect(item);
                 return false;
             }
@@ -549,7 +551,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     public void deselectByIdentifier(final long identifier) {
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 if (item.getIdentifier() == identifier) {
                     deselect(item, position, null);
                     return true;
@@ -565,7 +567,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     public void deselectByIdentifiers(final Set<Long> identifiers) {
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 if (identifiers.contains(item.getIdentifier())) {
                     deselect(item, position, null);
                 }
@@ -585,7 +587,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
         final List<Integer> positions = new ArrayList<>();
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
-            public boolean apply(Item item, int position) {
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 if (item.isSelected()) {
                     //if it's a subitem remove it from the parent
                     if (item instanceof ISubItem) {
