@@ -392,7 +392,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      */
     public void select(int position, boolean fireEvent, boolean considerSelectableFlag) {
         FastAdapter.RelativeInfo<Item> relativeInfo = mFastAdapter.getRelativeInfo(position);
-        if (relativeInfo == null) {
+        if (relativeInfo == null || relativeInfo.item == null)  {
             return;
         }
         select(relativeInfo.adapter, relativeInfo.item, position, fireEvent, considerSelectableFlag);
@@ -611,7 +611,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
         //we have to re-fetch the selections array again and again as the position will change after one item is deleted
         for (int i = positions.size() - 1; i >= 0; i--) {
             FastAdapter.RelativeInfo<Item> ri = mFastAdapter.getRelativeInfo(positions.get(i));
-            if (ri.item.isSelected()) { //double verify
+            if (ri.item != null && ri.item.isSelected()) { //double verify
                 if (ri.adapter != null && ri.adapter instanceof IItemAdapter) {
                     ((IItemAdapter) ri.adapter).remove(positions.get(i));
                 }
