@@ -888,7 +888,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return the adapter which is responsible for this position
      */
     public RelativeInfo<Item> getRelativeInfo(int position) {
-        if (position < 0) {
+        if (position < 0 || position >= getItemCount()) {
             return new RelativeInfo<>();
         }
 
