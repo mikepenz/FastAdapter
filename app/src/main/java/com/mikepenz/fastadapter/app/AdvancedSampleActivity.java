@@ -53,7 +53,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     private ItemAdapter<IItem> mItemAdapter;
     private ExpandableExtension<IItem> mExpandableExtension;
 
-    private ActionModeHelper mActionModeHelper;
+    private ActionModeHelper<IItem> mActionModeHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,9 +82,6 @@ public class AdvancedSampleActivity extends AppCompatActivity {
 
         //create our FastAdapter
         mFastAdapter = FastAdapter.with(Arrays.asList(mHeaderAdapter, mItemAdapter), Arrays.<IAdapterExtension<IItem>>asList(mExpandableExtension));
-
-        //we init our ActionModeHelper
-        mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
@@ -120,6 +117,9 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 return actionMode != null;
             }
         });
+
+        //we init our ActionModeHelper
+        mActionModeHelper = new ActionModeHelper<>(mFastAdapter, R.menu.cab, new ActionBarCallBack());
 
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);

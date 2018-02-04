@@ -39,7 +39,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
     //save our FastAdapter
     private FastItemAdapter<IItem> fastItemAdapter;
     private ExpandableExtension<IItem> mExpandableExtension;
-    private ActionModeHelper mActionModeHelper;
+    private ActionModeHelper<IItem> mActionModeHelper;
     private RangeSelectorHelper mRangeSelectorHelper;
     private DragSelectTouchListener mDragSelectTouchListener;
 
@@ -116,15 +116,13 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                 });
 
         // provide a custom title provider that even shows the count of sub items
-        mActionModeHelper = new ActionModeHelper(fastItemAdapter, R.menu.cab, new ActionBarCallBack())
+        mActionModeHelper = new ActionModeHelper<>(fastItemAdapter, R.menu.cab, new ActionBarCallBack())
                 .withTitleProvider(new ActionModeHelper.ActionModeTitleProvider() {
                     @Override
                     public String getTitle(int selected) {
                         return selected + "/" + SubItemUtil.countItems(fastItemAdapter.getItemAdapter(), false);
                     }
-                })
-                // important so that the helper knows, that is should use the SubItemUtil for validating its state
-                .withSupportSubItems(mExpandableExtension);
+                });
 
         // this will take care of selecting range of items via long press on the first and afterwards on the last item
         mRangeSelectorHelper = new RangeSelectorHelper(fastItemAdapter)
