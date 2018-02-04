@@ -3,6 +3,7 @@ package com.mikepenz.fastadapter.expandable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.ArraySet;
 import android.util.SparseIntArray;
 import android.view.MotionEvent;
 import android.view.View;
@@ -15,6 +16,7 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.select.SelectExtension;
+import com.mikepenz.fastadapter.utils.AdapterPredicate;
 import com.mikepenz.fastadapter.utils.AdapterUtil;
 
 import java.util.ArrayList;
@@ -349,53 +351,46 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
      * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
      */
     public void collapse(int position, boolean notifyItemChanged) {
-        Item item = mFastAdapter.getItem(position);
-        if (item != null && item instanceof IExpandable) {
-            IExpandable expandable = (IExpandable) item;
-            //as we now know the item we will collapse we can collapse all subitems
-            //if this item is not already collapsed and has sub items we go on
-            if (expandable.isExpanded() && expandable.getSubItems() != null && expandable.getSubItems().size() > 0) {
-                //first we find out how many items were added in total
-                //also counting subitems
-                int totalAddedItems = expandable.getSubItems().size();
-                for (int i = position + 1; i <= position + totalAddedItems; i++) {
-                    Item tmp = mFastAdapter.getItem(i);
-                    if (tmp instanceof IExpandable) {
-                        IExpandable tmpExpandable = ((IExpandable) tmp);
-                        if (tmpExpandable.getSubItems() != null && tmpExpandable.isExpanded()) {
-                            totalAddedItems = totalAddedItems + tmpExpandable.getSubItems().size();
+        final int[] expandedItemsCount = {0};
+        mFastAdapter.recursive(new AdapterPredicate<Item>() {
+            ArraySet<IItem> allowedParents = new ArraySet<>();
+
+            @Override
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, @NonNull Item item, int position) {
+                //we do not care about non visible items
+                if (position == -1) {
+                    return false;
+                }
+
+                //this is the entrance parent
+                if (allowedParents.size() > 0 && item instanceof ISubItem) {
+                    // Go on until we hit an item with a parent which was not in our expandable hierarchy
+                    IItem parent = ((ISubItem) item).getParent();
+                    if (parent == null || !allowedParents.contains(parent)) {
+                        return true;
+                    }
+                }
+
+                if (item instanceof IExpandable) {
+                    IExpandable expandable = (IExpandable) item;
+                    if (expandable.isExpanded()) {
+                        expandable.withIsExpanded(false);
+
+                        if (expandable.getSubItems() != null) {
+                            expandedItemsCount[0] += expandable.getSubItems().size();
+                            allowedParents.add(item);
                         }
                     }
                 }
 
-                //why... WHY?!
-                for (int i = position + totalAddedItems - 1; i > position; i--) {
-                    Item tmp = mFastAdapter.getItem(i);
-                    if (tmp instanceof IExpandable) {
-                        IExpandable tmpExpandable = ((IExpandable) tmp);
-                        if (tmpExpandable.isExpanded()) {
-                            collapse(i);
-                            if (tmpExpandable.getSubItems() != null) {
-                                i = i - tmpExpandable.getSubItems().size();
-                            }
-                        }
-                    }
-                }
-
-                //we collapse our root element
-                internalCollapse(expandable, position, notifyItemChanged);
+                return false;
             }
-        }
-    }
+        }, position, true);
 
-    private void internalCollapse(IExpandable expandable, int position, boolean notifyItemChanged) {
         IAdapter adapter = mFastAdapter.getAdapter(position);
         if (adapter != null && adapter instanceof IItemAdapter) {
-            ((IItemAdapter) adapter).removeRange(position + 1, expandable.getSubItems().size());
+            ((IItemAdapter) adapter).removeRange(position + 1, expandedItemsCount[0]);
         }
-
-        //remember that this item is now collapsed again
-        expandable.withIsExpanded(false);
 
         //we need to notify to get the correct drawable if there is one showing the current state
         if (notifyItemChanged) {
