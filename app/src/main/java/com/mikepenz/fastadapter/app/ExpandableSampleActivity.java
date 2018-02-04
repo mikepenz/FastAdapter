@@ -62,38 +62,42 @@ public class ExpandableSampleActivity extends AppCompatActivity {
         List<IItem> items = new ArrayList<>();
         AtomicInteger identifier = new AtomicInteger(1);
         for (int i = 1; i <= 100; i++) {
-            if (i % 3 == 0) {
-                SimpleSubExpandableItem parent = new SimpleSubExpandableItem();
-                parent.withName("Test " + i)
-                        .withIdentifier(identifier.getAndIncrement());
-
-                //add subitems so we can showcase the collapsible functionality
-                List<IItem> subItems = new LinkedList<>();
-                for (int ii = 1; ii <= 5; ii++) {
-                    SimpleSubExpandableItem subItem = new SimpleSubExpandableItem();
-                    subItem.withName("-- SubTest " + ii)
-                            .withIdentifier(identifier.getAndIncrement());
-
-                    if (ii % 2 == 0) {
-                        //add sub-sub-items so we can showcase the collapsible functionality
-                        List<IItem> subSubItems = new LinkedList<>();
-                        for (int iii = 1; iii <= 5; iii++) {
-                            SimpleSubExpandableItem subSubItem = new SimpleSubExpandableItem();
-                            subSubItem
-                                    .withName("---- SubSubTest " + iii)
-                                    .withIdentifier(identifier.getAndIncrement());
-                            subSubItems.add(subSubItem);
-                        }
-                        subItem.withSubItems(subSubItems);
-                    }
-
-                    subItems.add(subItem);
-                }
-                parent.withSubItems(subItems);
-                items.add(parent);
-            } else {
+            if (i % 3 != 0) {
                 items.add(new SimpleSubItem().withName("Test " + i).withIdentifier(identifier.getAndIncrement()));
+                continue;
             }
+
+            SimpleSubExpandableItem parent = new SimpleSubExpandableItem();
+            parent.withName("Test " + i).withIdentifier(identifier.getAndIncrement());
+
+            List<IItem> subItems = new LinkedList<>();
+            for (int ii = 1; ii <= 5; ii++) {
+                SimpleSubExpandableItem subItem = new SimpleSubExpandableItem();
+                subItem.withName("-- SubTest " + ii).withIdentifier(identifier.getAndIncrement());
+
+                if (ii % 2 == 0) {
+                    continue;
+                }
+
+                List<IItem> subSubItems = new LinkedList<>();
+                for (int iii = 1; iii <= 3; iii++) {
+                    SimpleSubExpandableItem subSubItem = new SimpleSubExpandableItem();
+                    subSubItem.withName("---- SubSubTest " + iii).withIdentifier(identifier.getAndIncrement());
+
+                    List<IItem> subSubSubItems = new LinkedList<>();
+                    for (int iiii = 1; iiii <= 4; iiii++) {
+                        SimpleSubExpandableItem subSubSubItem = new SimpleSubExpandableItem();
+                        subSubSubItem.withName("---- SubSubSubTest " + iiii).withIdentifier(identifier.getAndIncrement());
+                        subSubSubItems.add(subSubSubItem);
+                    }
+                    subSubItem.withSubItems(subSubSubItems);
+                    subSubItems.add(subSubItem);
+                }
+                subItem.withSubItems(subSubItems);
+                subItems.add(subItem);
+            }
+            parent.withSubItems(subItems);
+            items.add(parent);
         }
         fastItemAdapter.add(items);
 

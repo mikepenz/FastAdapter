@@ -533,7 +533,6 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         return this;
     }
 
-
     /**
      * util function which recursively iterates over all items and subItems of the given adapter.
      * It executes the given `predicate` on every item and will either stop if that function returns true, or continue (if stopOnMatch is false)
@@ -544,17 +543,20 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      */
     @NonNull
     public Triple<Boolean, Item, Integer> recursive(AdapterPredicate<Item> predicate, boolean stopOnMatch) {
+        int preItemCount = getFastAdapter().getPreItemCountByOrder(getOrder());
         for (int i = 0; i < getAdapterItemCount(); i++) {
+            int globalPosition = i + preItemCount;
+
             //retrieve the item + it's adapter
-            FastAdapter.RelativeInfo<Item> relativeInfo = getFastAdapter().getRelativeInfo(i);
+            FastAdapter.RelativeInfo<Item> relativeInfo = getFastAdapter().getRelativeInfo(globalPosition);
             Item item = relativeInfo.item;
 
-            if (predicate.apply(relativeInfo.adapter, i, item, i) && stopOnMatch) {
-                return new Triple<>(true, item, i);
+            if (predicate.apply(relativeInfo.adapter, globalPosition, item, globalPosition) && stopOnMatch) {
+                return new Triple<>(true, item, globalPosition);
             }
 
             if (item instanceof IExpandable) {
-                Triple<Boolean, Item, Integer> res = FastAdapter.recursiveSub(relativeInfo.adapter, i, (IExpandable) item, predicate, stopOnMatch);
+                Triple<Boolean, Item, Integer> res = FastAdapter.recursiveSub(relativeInfo.adapter, globalPosition, (IExpandable) item, predicate, stopOnMatch);
                 if (res.first && stopOnMatch) {
                     return res;
                 }

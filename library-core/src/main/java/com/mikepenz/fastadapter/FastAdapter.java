@@ -249,7 +249,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Nullable
     @SuppressWarnings("unchecked")
-    public <T extends IAdapterExtension<Item>> T getExtension(Class clazz) {
+    public <T extends IAdapterExtension<Item>> T getExtension(Class<? super T> clazz) {
         return (T) mExtensions.get(clazz);
     }
 
@@ -1419,7 +1419,21 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @NonNull
     public Triple<Boolean, Item, Integer> recursive(AdapterPredicate<Item> predicate, boolean stopOnMatch) {
-        for (int i = 0; i < getItemCount(); i++) {
+        return recursive(predicate, 0, stopOnMatch);
+    }
+
+    /**
+     * util function which recursively iterates over all items and subItems of the given adapter.
+     * It executes the given `predicate` on every item and will either stop if that function returns true, or continue (if stopOnMatch is false)
+     *
+     * @param predicate           the predicate to run on every item, to check for a match or do some changes (e.g. select)
+     * @param globalStartPosition the start position at which we star tto recursively iterate over the items. (This will not stop at the end of a sub hierarchy!)
+     * @param stopOnMatch         defines if we should stop iterating after the first match
+     * @return Triple&lt;Boolean, IItem, Integer&gt; The first value is true (it is always not null), the second contains the item and the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
+     */
+    @NonNull
+    public Triple<Boolean, Item, Integer> recursive(AdapterPredicate<Item> predicate, int globalStartPosition, boolean stopOnMatch) {
+        for (int i = globalStartPosition; i < getItemCount(); i++) {
             //retrieve the item + it's adapter
             RelativeInfo<Item> relativeInfo = getRelativeInfo(i);
             Item item = relativeInfo.item;

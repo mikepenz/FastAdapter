@@ -1,1 +1,1 @@
--dontwarn com.mikepenz.fastadapter_extensions.**
+-dontwarn com.mikepenz.fastadapter.commons.utils.**

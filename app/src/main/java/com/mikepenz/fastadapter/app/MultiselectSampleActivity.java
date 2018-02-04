@@ -38,7 +38,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
 
     private UndoHelper mUndoHelper;
 
-    private ActionModeHelper mActionModeHelper;
+    private ActionModeHelper<SimpleItem> mActionModeHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,17 +60,6 @@ public class MultiselectSampleActivity extends AppCompatActivity {
 
         //create our FastAdapter
         mFastAdapter = FastAdapter.with(Arrays.asList(headerAdapter, itemAdapter));
-
-        //
-        mUndoHelper = new UndoHelper(mFastAdapter, new UndoHelper.UndoListener<SimpleItem>() {
-            @Override
-            public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<SimpleItem>> removed) {
-                Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size());
-            }
-        });
-
-        //we init our ActionModeHelper
-        mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
@@ -113,6 +102,17 @@ public class MultiselectSampleActivity extends AppCompatActivity {
                 return actionMode != null;
             }
         });
+
+        //
+        mUndoHelper = new UndoHelper<>(mFastAdapter, new UndoHelper.UndoListener<SimpleItem>() {
+            @Override
+            public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<SimpleItem>> removed) {
+                Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size());
+            }
+        });
+
+        //we init our ActionModeHelper
+        mActionModeHelper = new ActionModeHelper<>(mFastAdapter, R.menu.cab, new ActionBarCallBack());
 
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
