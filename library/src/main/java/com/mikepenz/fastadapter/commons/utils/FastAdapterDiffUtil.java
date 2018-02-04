@@ -4,11 +4,14 @@ import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.util.ListUpdateCallback;
 
+import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ModelAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -23,6 +26,9 @@ public class FastAdapterDiffUtil {
         if (adapter.isUseIdDistributor()) {
             adapter.getIdDistributor().checkIds(items);
         }
+
+        // The FastAdapterDiffUtil does not handle expanded items. Call collapse if possible
+        collapseIfPossible(adapter.getFastAdapter());
 
         //if we have a comparator then sort
         if (adapter.getItemList() instanceof ComparableItemListImpl) {
@@ -51,6 +57,26 @@ public class FastAdapterDiffUtil {
         }
 
         return result;
+    }
+
+    /**
+     * Uses Reflection to collapse all items if this adapter uses expandable items
+     *
+     * @param fastAdapter
+     */
+    private static void collapseIfPossible(FastAdapter fastAdapter) {
+        try {
+            Class c = Class.forName("com.mikepenz.fastadapter.expandable.ExpandableExtension");
+            if (c != null) {
+                IAdapterExtension extension = fastAdapter.getExtension(c);
+                if (extension != null) {
+                    Method method = extension.getClass().getMethod("collapse");
+                    method.invoke(extension);
+                }
+            }
+        } catch (Exception ignored) {
+            //
+        }
     }
 
     public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, DiffUtil.DiffResult result) {
