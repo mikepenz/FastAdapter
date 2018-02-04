@@ -1,5 +1,8 @@
 ### Upgrade Notes
 
+#### v3.2.3
+* The `ActionModeHelper` requires a `FastAdapter` with the `SelectExtension` applied. This is done in current versions via `withSelectable(true)`. Make sure this is called before creating the `ActionModeHelper`.
+
 #### v3.2.1
 * `AdapterPredicate` was adjusted to include the `IAdapter<Item> lastParentAdapter`, `int lastParentPosition` to allow more advanced recursive operations on the items
 * removed `select(Item item, int position, boolean fireEvent, boolean considerSelectableFlag)` and replaced with `select(IAdapter<Item> adapter, Item item, int position, boolean fireEvent, boolean considerSelectableFlag)`
