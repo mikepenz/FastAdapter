@@ -234,7 +234,6 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
         return selections;
     }
 
-
     /**
      * @return a set with all items which are currently selected (includes subitems)
      */
@@ -295,12 +294,9 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
         } else {
             if (!mMultiSelect) {
                 //we have to separately handle deselection here because if we toggle the current item we do not want to deselect this first!
-                Set<Integer> selections = getSelections();
-                for (int pos : selections) {
-                    if (pos != position) {
-                        deselect(pos);
-                    }
-                }
+                Set<Item> selections = getSelectedItems();
+                selections.remove(item);
+                deselectByItems(selections);
             }
 
             //we toggle the state of the view
@@ -392,7 +388,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      */
     public void select(int position, boolean fireEvent, boolean considerSelectableFlag) {
         FastAdapter.RelativeInfo<Item> relativeInfo = mFastAdapter.getRelativeInfo(position);
-        if (relativeInfo == null || relativeInfo.item == null)  {
+        if (relativeInfo == null || relativeInfo.item == null) {
             return;
         }
         select(relativeInfo.adapter, relativeInfo.item, position, fireEvent, considerSelectableFlag);
@@ -547,7 +543,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     /**
      * selects an item by it's identifier
      *
-     * @param identifier the identifier of the item to select
+     * @param identifier the identifier of the item to deselect
      */
     public void deselectByIdentifier(final long identifier) {
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
@@ -563,13 +559,28 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
     }
 
     /**
-     * @param identifiers the set of identifiers to select
+     * @param identifiers the set of identifiers to deselect
      */
     public void deselectByIdentifiers(final Set<Long> identifiers) {
         mFastAdapter.recursive(new AdapterPredicate<Item>() {
             @Override
             public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
                 if (identifiers.contains(item.getIdentifier())) {
+                    deselect(item, position, null);
+                }
+                return false;
+            }
+        }, false);
+    }
+
+    /**
+     * @param items the set of items to deselect. They require a identifier.
+     */
+    public void deselectByItems(final Set<Item> items) {
+        mFastAdapter.recursive(new AdapterPredicate<Item>() {
+            @Override
+            public boolean apply(@NonNull IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position) {
+                if (items.contains(item)) {
                     deselect(item, position, null);
                 }
                 return false;
