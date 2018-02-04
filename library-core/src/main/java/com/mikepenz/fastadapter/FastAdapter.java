@@ -249,7 +249,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     @Nullable
     @SuppressWarnings("unchecked")
-    public <T extends IAdapterExtension<Item>> T getExtension(Class clazz) {
+    public <T extends IAdapterExtension<Item>> T getExtension(Class<? super T> clazz) {
         return (T) mExtensions.get(clazz);
     }
 
