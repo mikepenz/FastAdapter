@@ -28,12 +28,22 @@ public class ActionModeHelper {
 
     private ActionModeTitleProvider mTitleProvider;
 
+	private ActionItemClickedListener actionItemClickedListener = null;
+	
     public ActionModeHelper(FastAdapter fastAdapter, int cabMenu) {
         this.mFastAdapter = fastAdapter;
         this.mCabMenu = cabMenu;
         this.mInternalCallback = new ActionBarCallBack();
     }
 
+	public ActionModeHelper(FastAdapter fastAdapter, int cabMenu, ActionItemClickedListener actionItemClickedListener) {
+        this.mFastAdapter = fastAdapter;
+        this.mCabMenu = cabMenu;
+        this.mInternalCallback = new ActionBarCallBack();
+        this.actionItemClickedListener = actionItemClickedListener;
+    }
+	
+	
     public ActionModeHelper(FastAdapter fastAdapter, int cabMenu, ActionMode.Callback callback) {
         this.mFastAdapter = fastAdapter;
         this.mCabMenu = cabMenu;
@@ -199,6 +209,11 @@ public class ActionModeHelper {
                 consumed = mCallback.onActionItemClicked(mode, item);
             }
 
+			if (!consumed && actionItemClickedListener != null)
+            {
+                consumed = actionItemClickedListener.ActionItemClicked(mode, item);
+            }
+
             if (!consumed) {
                 mFastAdapter.deleteAllSelectedItems();
                 //finish the actionMode
@@ -246,5 +261,9 @@ public class ActionModeHelper {
 
     public interface ActionModeTitleProvider {
         String getTitle(int selected);
+    }
+	
+	public interface ActionItemClickedListener{
+        boolean ActionItemClicked(ActionMode mode, MenuItem item);
     }
 }
