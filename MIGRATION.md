@@ -1,5 +1,8 @@
 ### Upgrade Notes
 
+#### v3.2.4
+* Adjusted the `set(int position, Item item, int preItemCount)` to include the `preItemCount` to corretly notify the adapter about the changed element.
+
 #### v3.2.3
 * The `ActionModeHelper` requires a `FastAdapter` with the `SelectExtension` applied. This is done in current versions via `withSelectable(true)`. Make sure this is called before creating the `ActionModeHelper`.
 
