@@ -455,7 +455,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         if (mUseIdDistributor) {
             getIdDistributor().checkId(item);
         }
-        mItems.set(position - getFastAdapter().getPreItemCount(position), item);
+        mItems.set(position, item, getFastAdapter().getPreItemCount(position));
         mFastAdapter.registerTypeInstance(item);
         return this;
     }
