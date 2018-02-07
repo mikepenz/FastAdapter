@@ -26,7 +26,7 @@ public interface IItemList<Item> {
 
     void addAll(List<Item> items, int preItemCount);
 
-    void set(int position, Item item);
+    void set(int position, Item item, int preItemCount);
 
     void set(List<Item> items, int preItemCount, @Nullable IAdapterNotifier adapterNotifier);
 
