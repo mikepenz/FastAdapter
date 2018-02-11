@@ -177,9 +177,9 @@ fastItemAdapter.withEventHook(new ClickEventHook<SampleItem>() {
 ### 5. Filter 
 ```java
 // Call this in onQueryTextSubmit() & onQueryTextChange() when using SearchView
-fastAdapter.filter("yourSearchTerm");
+itemAdapter.filter("yourSearchTerm");
 
-fastAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<Item>() {
+itemAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<Item>() {
     @Override
     public boolean filter(Item item, CharSequence constraint) {
 	return item.getName().startsWith(String.valueOf(constraint));
