@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 3240
-        versionName '3.2.4'
+        versionCode 3250
+        versionName '3.2.5'
     }
     buildTypes {
         release {
