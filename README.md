@@ -41,29 +41,29 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-implementation 'com.mikepenz:fastadapter:3.2.4@aar'
+implementation 'com.mikepenz:fastadapter:3.2.5'
 implementation  'com.android.support:appcompat-v7:${latestSupportLib}'
 implementation  'com.android.support:recyclerview-v7:${latestSupportLib}'
 ```
 
 The commons package comes with some useful helpers (which are not needed in all cases) This one for example includes the `FastItemAdapter`
 ```gradle
-implementation 'com.mikepenz:fastadapter-commons:3.2.4@aar'
+implementation 'com.mikepenz:fastadapter-commons:3.2.5'
 ```
 
 Expandable support is included and can be added via this
 ```gradle
-implementation 'com.mikepenz:fastadapter-extensions-expandable:3.2.4@aar'
+implementation 'com.mikepenz:fastadapter-extensions-expandable:3.2.5'
 //The tiny Materialize library used for its useful helper classes
-implementation 'com.mikepenz:materialize:${latestVersion}@aar'
+implementation 'com.mikepenz:materialize:${latestVersion}'
 ```
 
 Many helper classes are included in the following dependency. (This functionality also needs the `Expandable` extension
 ```gradle
-implementation 'com.mikepenz:fastadapter-extensions:3.2.4@aar'
+implementation 'com.mikepenz:fastadapter-extensions:3.2.5'
 implementation  'com.android.support:design:${versions.supportLib}'
 //The tiny Materialize library used for its useful helper classes
-implementation 'com.mikepenz:materialize:${latestVersion}@aar'
+implementation 'com.mikepenz:materialize:${latestVersion}'
 ```
 
 ## v3.0.x
@@ -177,9 +177,9 @@ fastItemAdapter.withEventHook(new ClickEventHook<SampleItem>() {
 ### 5. Filter 
 ```java
 // Call this in onQueryTextSubmit() & onQueryTextChange() when using SearchView
-fastAdapter.filter("yourSearchTerm");
+itemAdapter.filter("yourSearchTerm");
 
-fastAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<Item>() {
+itemAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<Item>() {
     @Override
     public boolean filter(Item item, CharSequence constraint) {
 	return item.getName().startsWith(String.valueOf(constraint));

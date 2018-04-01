@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 3240
-        versionName '3.2.4'
+        versionCode 3250
+        versionName '3.2.5'
 
         consumerProguardFiles 'consumer-proguard-rules.pro'
     }
@@ -42,5 +42,5 @@ dependencies {
     implementation  "com.android.support:design:${versions.supportLib}"
     implementation  "com.android.support:support-annotations:${versions.supportLib}"
 
-    implementation  'com.mikepenz:materialize:1.1.2@aar'
+    implementation  'com.mikepenz:materialize:1.1.2'
 }
