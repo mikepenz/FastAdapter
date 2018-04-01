@@ -39,7 +39,7 @@ dependencies {
     implementation  "com.android.support:recyclerview-v7:${versions.supportLib}"
     implementation  "com.android.support:support-annotations:${versions.supportLib}"
 
-    provided "com.google.code.findbugs:jsr305:3.0.2"
+    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
     testImplementation  'junit:junit:4.12'
     testImplementation  'org.mockito:mockito-all:1.10.19'
@@ -50,7 +50,7 @@ dependencies {
     testImplementation  'com.squareup.assertj:assertj-android:1.1.1'
     testImplementation  'com.squareup.assertj:assertj-android-design:1.1.1@aar'
     testImplementation  'com.squareup.assertj:assertj-android-appcompat-v7:1.1.1@aar'
-    testCompile("com.squareup.assertj:assertj-android-support-v4:1.1.1@aar") {
+    testImplementation("com.squareup.assertj:assertj-android-support-v4:1.1.1@aar") {
         exclude group: "com.android.support", module: "support-annotations"
         exclude group: "com.android.support", module: "support-v4"
     }

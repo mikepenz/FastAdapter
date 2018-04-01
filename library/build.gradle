@@ -47,7 +47,7 @@ dependencies {
     testImplementation  'com.squareup.assertj:assertj-android:1.1.1'
     testImplementation  'com.squareup.assertj:assertj-android-design:1.1.1@aar'
     testImplementation  'com.squareup.assertj:assertj-android-appcompat-v7:1.1.1@aar'
-    testCompile("com.squareup.assertj:assertj-android-support-v4:1.1.1@aar") {
+    testImplementation("com.squareup.assertj:assertj-android-support-v4:1.1.1@aar") {
         exclude group: "com.android.support", module: "support-annotations"
         exclude group: "com.android.support", module: "support-v4"
     }
