@@ -20,7 +20,6 @@ public class TestDataGenerator {
 
     @NonNull
     public static TestItem genTestItem(int i) {
-        TestItem testItem = new TestItem().withIdentifier(i);
-        return testItem;
+        return new TestItem(i + "").withIdentifier(i);
     }
 }

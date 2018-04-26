@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -110,7 +111,7 @@ public class StickyHeaderMopubAdsActivity extends AppCompatActivity implements O
     }
 
     @Override
-    public boolean onClick(View v, IAdapter<LetterItem> adapter, LetterItem item, int position) {
+    public boolean onClick(View v, IAdapter<LetterItem> adapter, @NonNull LetterItem item, int position) {
         Toast.makeText(this, "Item pressed " + item.letter + " at position " + position, Toast.LENGTH_SHORT).show();
         return false;
     }

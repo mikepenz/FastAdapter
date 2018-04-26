@@ -4,10 +4,15 @@ import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
 import android.support.v7.util.ListUpdateCallback;
 
+import com.mikepenz.fastadapter.FastAdapter;
+import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ModelAdapter;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.utils.ComparableItemListImpl;
 
+import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -22,33 +27,57 @@ public class FastAdapterDiffUtil {
             adapter.getIdDistributor().checkIds(items);
         }
 
+        // The FastAdapterDiffUtil does not handle expanded items. Call collapse if possible
+        collapseIfPossible(adapter.getFastAdapter());
+
         //if we have a comparator then sort
-        if (adapter.getComparator() != null) {
-            Collections.sort(items, adapter.getComparator());
+        if (adapter.getItemList() instanceof ComparableItemListImpl) {
+            Collections.sort(items, ((ComparableItemListImpl) adapter.getItemList()).getComparator());
         }
 
         //map the types
         adapter.mapPossibleTypes(items);
 
         //remember the old items
-        final List<Item> oldItems = adapter.getAdapterItems();
+        final List<Item> adapterItems = adapter.getAdapterItems();
+        final List<Item> oldItems = new ArrayList<>(adapterItems);
 
+        //pass in the oldItem list copy as we will update the one in the adapter itself
         DiffUtil.DiffResult result = DiffUtil.calculateDiff(new FastAdapterCallback<>(oldItems, items, callback), detectMoves);
 
         //make sure the new items list is not a reference of the already mItems list
-        if (items != oldItems) {
+        if (items != adapterItems) {
             //remove all previous items
-            if (!oldItems.isEmpty()) {
-                oldItems.clear();
+            if (!adapterItems.isEmpty()) {
+                adapterItems.clear();
             }
 
             //add all new items to the list
-            oldItems.addAll(items);
+            adapterItems.addAll(items);
         }
 
         return result;
     }
 
+    /**
+     * Uses Reflection to collapse all items if this adapter uses expandable items
+     *
+     * @param fastAdapter
+     */
+    private static void collapseIfPossible(FastAdapter fastAdapter) {
+        try {
+            Class c = Class.forName("com.mikepenz.fastadapter.expandable.ExpandableExtension");
+            if (c != null) {
+                IAdapterExtension extension = fastAdapter.getExtension(c);
+                if (extension != null) {
+                    Method method = extension.getClass().getMethod("collapse");
+                    method.invoke(extension);
+                }
+            }
+        } catch (Exception ignored) {
+            //
+        }
+    }
 
     public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, DiffUtil.DiffResult result) {
         result.dispatchUpdatesTo(new FastAdapterListUpdateCallback<>(adapter));
@@ -123,12 +152,12 @@ public class FastAdapterDiffUtil {
     private static final class FastAdapterCallback<Item extends IItem> extends DiffUtil.Callback {
 
         private final List<Item> oldItems;
-        private final List<Item> items;
+        private final List<Item> newItems;
         private final DiffCallback<Item> callback;
 
-        FastAdapterCallback(List<Item> oldItems, List<Item> items, DiffCallback<Item> callback) {
+        FastAdapterCallback(List<Item> oldItems, List<Item> newItems, DiffCallback<Item> callback) {
             this.oldItems = oldItems;
-            this.items = items;
+            this.newItems = newItems;
             this.callback = callback;
         }
 
@@ -139,23 +168,23 @@ public class FastAdapterDiffUtil {
 
         @Override
         public int getNewListSize() {
-            return items.size();
+            return newItems.size();
         }
 
         @Override
         public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-            return callback.areItemsTheSame(oldItems.get(oldItemPosition), items.get(newItemPosition));
+            return callback.areItemsTheSame(oldItems.get(oldItemPosition), newItems.get(newItemPosition));
         }
 
         @Override
         public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
-            return callback.areContentsTheSame(oldItems.get(oldItemPosition), items.get(newItemPosition));
+            return callback.areContentsTheSame(oldItems.get(oldItemPosition), newItems.get(newItemPosition));
         }
 
         @Nullable
         @Override
         public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-            Object result = callback.getChangePayload(oldItems.get(oldItemPosition), oldItemPosition, items.get(newItemPosition), newItemPosition);
+            Object result = callback.getChangePayload(oldItems.get(oldItemPosition), oldItemPosition, newItems.get(newItemPosition), newItemPosition);
             return result == null ? super.getChangePayload(oldItemPosition, newItemPosition) : result;
         }
     }

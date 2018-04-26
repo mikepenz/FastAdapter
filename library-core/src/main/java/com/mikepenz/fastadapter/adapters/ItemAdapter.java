@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.adapters;
 
 import com.mikepenz.fastadapter.IInterceptor;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.IItemList;
 
 /**
  * Created by mikepenz on 27.12.15.
@@ -11,6 +12,10 @@ public class ItemAdapter<Item extends IItem> extends ModelAdapter<Item, Item> {
 
     public ItemAdapter() {
         super((IInterceptor<Item, Item>) IInterceptor.DEFAULT);
+    }
+
+    public ItemAdapter(IItemList<Item> itemList) {
+        super(itemList, (IInterceptor<Item, Item>) IInterceptor.DEFAULT);
     }
 
     /**

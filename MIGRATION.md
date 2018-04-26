@@ -1,5 +1,19 @@
 ### Upgrade Notes
 
+#### v3.2.4
+* Adjusted the `set(int position, Item item, int preItemCount)` to include the `preItemCount` to corretly notify the adapter about the changed element.
+
+#### v3.2.3
+* The `ActionModeHelper` requires a `FastAdapter` with the `SelectExtension` applied. This is done in current versions via `withSelectable(true)`. Make sure this is called before creating the `ActionModeHelper`.
+
+#### v3.2.1
+* `AdapterPredicate` was adjusted to include the `IAdapter<Item> lastParentAdapter`, `int lastParentPosition` to allow more advanced recursive operations on the items
+* removed `select(Item item, int position, boolean fireEvent, boolean considerSelectableFlag)` and replaced with `select(IAdapter<Item> adapter, Item item, int position, boolean fireEvent, boolean considerSelectableFlag)`
+  * this was done to make the `Adapter` `NonNull`
+
+#### v3.0.5
+* The `ItemFilter`s `itemsFiltered` callback method will no longer be called after `onReset` (FIX bug making it impossible to detect when filtering was done)
+
 #### v3.0.3
 * Remove the `R.id.fastadapter_item` Tag from the `ViewHolder` in favour of `FastAdapter.getHolderAdapterItem()` as this will make sure we always get the newest reference to our item
 

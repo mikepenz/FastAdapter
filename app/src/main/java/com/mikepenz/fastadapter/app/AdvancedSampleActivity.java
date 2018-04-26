@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.view.LayoutInflaterCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -52,7 +53,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     private ItemAdapter<IItem> mItemAdapter;
     private ExpandableExtension<IItem> mExpandableExtension;
 
-    private ActionModeHelper mActionModeHelper;
+    private ActionModeHelper<IItem> mActionModeHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,10 +83,6 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         //create our FastAdapter
         mFastAdapter = FastAdapter.with(Arrays.asList(mHeaderAdapter, mItemAdapter), Arrays.<IAdapterExtension<IItem>>asList(mExpandableExtension));
 
-        //we init our ActionModeHelper
-        mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
-        mActionModeHelper.withSupportSubItems(mExpandableExtension);
-
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         mFastAdapter.withSelectable(true);
@@ -93,7 +90,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         mFastAdapter.withSelectOnLongClick(true);
         mFastAdapter.withOnPreClickListener(new OnClickListener<IItem>() {
             @Override
-            public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
+            public boolean onClick(View v, IAdapter adapter, @NonNull IItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
                 Boolean res = mActionModeHelper.onClick(item);
                 return res != null ? res : false;
@@ -120,6 +117,9 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 return actionMode != null;
             }
         });
+
+        //we init our ActionModeHelper
+        mActionModeHelper = new ActionModeHelper<>(mFastAdapter, R.menu.cab, new ActionBarCallBack());
 
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);

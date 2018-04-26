@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
@@ -37,7 +38,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
 
     private UndoHelper mUndoHelper;
 
-    private ActionModeHelper mActionModeHelper;
+    private ActionModeHelper<SimpleItem> mActionModeHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,17 +61,6 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         //create our FastAdapter
         mFastAdapter = FastAdapter.with(Arrays.asList(headerAdapter, itemAdapter));
 
-        //
-        mUndoHelper = new UndoHelper(mFastAdapter, new UndoHelper.UndoListener<SimpleItem>() {
-            @Override
-            public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<SimpleItem>> removed) {
-                Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size());
-            }
-        });
-
-        //we init our ActionModeHelper
-        mActionModeHelper = new ActionModeHelper(mFastAdapter, R.menu.cab, new ActionBarCallBack());
-
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         mFastAdapter.setHasStableIds(true);
@@ -85,7 +75,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         });
         mFastAdapter.withOnPreClickListener(new OnClickListener<SimpleItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<SimpleItem> adapter, SimpleItem item, int position) {
+            public boolean onClick(View v, IAdapter<SimpleItem> adapter, @NonNull SimpleItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
                 Boolean res = mActionModeHelper.onClick(item);
                 return res != null ? res : false;
@@ -93,7 +83,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         });
         mFastAdapter.withOnClickListener(new OnClickListener<SimpleItem>() {
             @Override
-            public boolean onClick(View v, IAdapter<SimpleItem> adapter, SimpleItem item, int position) {
+            public boolean onClick(View v, IAdapter<SimpleItem> adapter, @NonNull SimpleItem item, int position) {
                 Toast.makeText(v.getContext(), "SelectedCount: " + mFastAdapter.getSelections().size() + " ItemsCount: " + mFastAdapter.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
                 return false;
             }
@@ -112,6 +102,17 @@ public class MultiselectSampleActivity extends AppCompatActivity {
                 return actionMode != null;
             }
         });
+
+        //
+        mUndoHelper = new UndoHelper<>(mFastAdapter, new UndoHelper.UndoListener<SimpleItem>() {
+            @Override
+            public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<SimpleItem>> removed) {
+                Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size());
+            }
+        });
+
+        //we init our ActionModeHelper
+        mActionModeHelper = new ActionModeHelper<>(mFastAdapter, R.menu.cab, new ActionBarCallBack());
 
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);

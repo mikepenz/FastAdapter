@@ -97,6 +97,9 @@ public class FastAdapterTest {
         assertThat(adapter.getRelativeInfo(40).item).isEqualTo(item);
         assertThat(adapter.getRelativeInfo(40).adapter).isEqualTo(itemAdapter);
         assertThat(adapter.getRelativeInfo(40).position).isEqualTo(40);
+
+        assertThat(adapter.getRelativeInfo(0).position).isEqualTo(0);
+        assertThat(adapter.getRelativeInfo(100).item).isEqualTo(null);
     }
 
     @Test

@@ -8,6 +8,7 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter;
 
 public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScrollListener {
 
+    private boolean enabled = true;
     private int mPreviousTotal = 0;
     private boolean mLoading = true;
     private int mVisibleThreshold = -1;
@@ -104,33 +105,46 @@ public abstract class EndlessRecyclerOnScrollListener extends RecyclerView.OnScr
     @Override
     public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
         super.onScrolled(recyclerView, dx, dy);
-        if (mLayoutManager == null)
-            mLayoutManager = recyclerView.getLayoutManager();
 
-        int footerItemCount = mFooterAdapter != null ? mFooterAdapter.getAdapterItemCount() : 0;
+        if (enabled) {
+            if (mLayoutManager == null)
+                mLayoutManager = recyclerView.getLayoutManager();
 
-        if (mVisibleThreshold == -1)
-            mVisibleThreshold = findLastVisibleItemPosition(recyclerView) - findFirstVisibleItemPosition(recyclerView) - footerItemCount;
+            int footerItemCount = mFooterAdapter != null ? mFooterAdapter.getAdapterItemCount() : 0;
 
-        mVisibleItemCount = recyclerView.getChildCount() - footerItemCount;
-        mTotalItemCount = mLayoutManager.getItemCount() - footerItemCount;
-        mFirstVisibleItem = findFirstVisibleItemPosition(recyclerView);
+            if (mVisibleThreshold == -1)
+                mVisibleThreshold = findLastVisibleItemPosition(recyclerView) - findFirstVisibleItemPosition(recyclerView) - footerItemCount;
 
-        if (mLoading) {
-            if (mTotalItemCount > mPreviousTotal) {
-                mLoading = false;
-                mPreviousTotal = mTotalItemCount;
+            mVisibleItemCount = recyclerView.getChildCount() - footerItemCount;
+            mTotalItemCount = mLayoutManager.getItemCount() - footerItemCount;
+            mFirstVisibleItem = findFirstVisibleItemPosition(recyclerView);
+
+            if (mLoading) {
+                if (mTotalItemCount > mPreviousTotal) {
+                    mLoading = false;
+                    mPreviousTotal = mTotalItemCount;
+                }
+            }
+            if (!mLoading && (mTotalItemCount - mVisibleItemCount)
+                    <= (mFirstVisibleItem + mVisibleThreshold)) {
+
+                mCurrentPage++;
+
+                onLoadMore(mCurrentPage);
+
+                mLoading = true;
             }
         }
-        if (!mLoading && (mTotalItemCount - mVisibleItemCount)
-                <= (mFirstVisibleItem + mVisibleThreshold)) {
+    }
 
-            mCurrentPage++;
+    public EndlessRecyclerOnScrollListener enable() {
+        enabled = true;
+        return this;
+    }
 
-            onLoadMore(mCurrentPage);
-
-            mLoading = true;
-        }
+    public EndlessRecyclerOnScrollListener disable() {
+        enabled = false;
+        return this;
     }
 
     public void resetPageCount(int page) {

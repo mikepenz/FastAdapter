@@ -118,7 +118,8 @@ public class ItemFilter<Model, Item extends IItem> extends Filter {
             mItemAdapter.setInternal((List<Item>) results.values, false, null);
         }
 
-        if (mItemFilterListener != null) {
+        //only fire when we are filtered, not in onreset
+        if (mItemFilterListener != null && mOriginalItems != null) {
             mItemFilterListener.itemsFiltered(constraint, (List<Item>) results.values);
         }
     }

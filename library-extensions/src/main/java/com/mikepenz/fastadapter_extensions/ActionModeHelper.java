@@ -10,13 +10,14 @@ import android.view.MenuItem;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
-import com.mikepenz.fastadapter_extensions.utilities.SubItemUtil;
+import com.mikepenz.fastadapter.select.SelectExtension;
 
 /**
  * Created by mikepenz on 02.01.16.
  */
-public class ActionModeHelper {
-    private FastAdapter mFastAdapter;
+public class ActionModeHelper<Item extends IItem> {
+    private FastAdapter<Item> mFastAdapter;
+    private SelectExtension<Item> mSelectExtension;
 
     @MenuRes
     private int mCabMenu;
@@ -24,37 +25,60 @@ public class ActionModeHelper {
     private ActionMode.Callback mInternalCallback;
     private ActionMode.Callback mCallback;
     private ActionMode mActionMode;
-    private ExpandableExtension mExpandableExtension = null;
 
     private boolean mAutoDeselect = true;
 
     private ActionModeTitleProvider mTitleProvider;
 
-    public ActionModeHelper(FastAdapter fastAdapter, int cabMenu) {
+    private ActionItemClickedListener actionItemClickedListener = null;
+
+    public ActionModeHelper(FastAdapter<Item> fastAdapter, int cabMenu) {
+        this(fastAdapter, cabMenu, (ActionItemClickedListener) null);
+    }
+
+    public ActionModeHelper(FastAdapter<Item> fastAdapter, int cabMenu, ActionItemClickedListener actionItemClickedListener) {
         this.mFastAdapter = fastAdapter;
         this.mCabMenu = cabMenu;
         this.mInternalCallback = new ActionBarCallBack();
+        this.actionItemClickedListener = actionItemClickedListener;
+
+        this.mSelectExtension = fastAdapter.getExtension(SelectExtension.class);
+        if (mSelectExtension == null) {
+            throw new IllegalStateException("The provided FastAdapter requires the `SelectExtension` or `withSelectable(true)`");
+        }
     }
 
-    public ActionModeHelper(FastAdapter fastAdapter, int cabMenu, ActionMode.Callback callback) {
+
+    public ActionModeHelper(FastAdapter<Item> fastAdapter, int cabMenu, ActionMode.Callback callback) {
         this.mFastAdapter = fastAdapter;
         this.mCabMenu = cabMenu;
         this.mCallback = callback;
         this.mInternalCallback = new ActionBarCallBack();
+
+        this.mSelectExtension = fastAdapter.getExtension(SelectExtension.class);
+        if (mSelectExtension == null) {
+            throw new IllegalStateException("The provided FastAdapter requires the `SelectExtension` or `withSelectable(true)`");
+        }
     }
 
-    public ActionModeHelper withTitleProvider(ActionModeTitleProvider titleProvider) {
+    public ActionModeHelper<Item> withTitleProvider(ActionModeTitleProvider titleProvider) {
         this.mTitleProvider = titleProvider;
         return this;
     }
 
-    public ActionModeHelper withAutoDeselect(boolean enabled) {
+    public ActionModeHelper<Item> withAutoDeselect(boolean enabled) {
         this.mAutoDeselect = enabled;
         return this;
     }
 
-    public ActionModeHelper withSupportSubItems(ExpandableExtension expandableExtension) {
-        this.mExpandableExtension = expandableExtension;
+    /**
+     * no longer needed, the FastAdapter can handle sub items now on its own
+     *
+     * @param expandableExtension
+     * @return
+     */
+    @Deprecated
+    public ActionModeHelper<Item> withSupportSubItems(ExpandableExtension expandableExtension) {
         return this;
     }
 
@@ -92,16 +116,16 @@ public class ActionModeHelper {
      */
     public Boolean onClick(AppCompatActivity act, IItem item) {
         //if we are current in CAB mode, and we remove the last selection, we want to finish the actionMode
-        if (mActionMode != null && (mExpandableExtension != null ? SubItemUtil.getSelectedItems(mFastAdapter).size() == 1 : mFastAdapter.getSelections().size() == 1) && item.isSelected()) {
+        if (mActionMode != null && (mSelectExtension.getSelectedItems().size() == 1) && item.isSelected()) {
             mActionMode.finish();
-            mFastAdapter.deselect();
+            mSelectExtension.deselect();
             return true;
         }
 
         if (mActionMode != null) {
             // calculate the selection count for the action mode
             // because current selection is not reflecting the future state yet!
-            int selected = mExpandableExtension != null ? SubItemUtil.getSelectedItems(mFastAdapter).size() : mFastAdapter.getSelections().size();
+            int selected = mSelectExtension.getSelectedItems().size();
             if (item.isSelected())
                 selected--;
             else if (item.isSelectable())
@@ -124,7 +148,7 @@ public class ActionModeHelper {
             //may check if actionMode is already displayed
             mActionMode = act.startSupportActionMode(mInternalCallback);
             //we have to select this on our own as we will consume the event
-            mFastAdapter.select(position);
+            mSelectExtension.select(position);
             // update title
             checkActionMode(act, 1);
             //we consume this event so the normal onClick isn't called anymore
@@ -141,7 +165,7 @@ public class ActionModeHelper {
      * @return the initialized ActionMode or null if no ActionMode is active after calling this function
      */
     public ActionMode checkActionMode(AppCompatActivity act) {
-        int selected = mExpandableExtension != null ? SubItemUtil.getSelectedItems(mFastAdapter).size() : mFastAdapter.getSelections().size();
+        int selected = mSelectExtension.getSelectedItems().size();
         return checkActionMode(act, selected);
     }
 
@@ -195,13 +219,12 @@ public class ActionModeHelper {
                 consumed = mCallback.onActionItemClicked(mode, item);
             }
 
+            if (!consumed && actionItemClickedListener != null) {
+                consumed = actionItemClickedListener.onClick(mode, item);
+            }
+
             if (!consumed) {
-                if (mExpandableExtension != null) {
-                    SubItemUtil.deleteSelected(mFastAdapter, mExpandableExtension, true, false);
-                }
-                else {
-                    mFastAdapter.deleteAllSelectedItems();
-                }
+                mSelectExtension.deleteAllSelectedItems();
                 //finish the actionMode
                 mode.finish();
             }
@@ -227,7 +250,7 @@ public class ActionModeHelper {
 
             //actionMode end. deselect everything
             if (mAutoDeselect)
-                mFastAdapter.deselect();
+                mSelectExtension.deselect();
 
             if (mCallback != null) {
                 //we notify the provided callback
@@ -247,5 +270,9 @@ public class ActionModeHelper {
 
     public interface ActionModeTitleProvider {
         String getTitle(int selected);
+    }
+
+    public interface ActionItemClickedListener {
+        boolean onClick(ActionMode mode, MenuItem item);
     }
 }

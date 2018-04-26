@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.app.items.expandable;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.support.annotation.NonNull;
 import android.support.annotation.StringRes;
 import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -14,8 +15,8 @@ import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem;
 import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
+import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialize.util.UIUtils;
@@ -73,7 +74,7 @@ public class SimpleSubExpandableItem<Parent extends IItem & IExpandable, SubItem
     //we define a clickListener in here so we can directly animate
     final private OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> onClickListener = new OnClickListener<SimpleSubExpandableItem<Parent, SubItem>>() {
         @Override
-        public boolean onClick(View v, IAdapter adapter, SimpleSubExpandableItem item, int position) {
+        public boolean onClick(View v, IAdapter adapter, @NonNull SimpleSubExpandableItem item, int position) {
             if (item.getSubItems() != null) {
                 if (!item.isExpanded()) {
                     ViewCompat.animate(v.findViewById(R.id.material_drawer_icon)).rotation(180).start();
@@ -140,6 +141,12 @@ public class SimpleSubExpandableItem<Parent extends IItem & IExpandable, SubItem
         StringHolder.applyTo(name, viewHolder.name);
         //set the text for the description or hide
         StringHolder.applyToOrHide(description, viewHolder.description);
+
+        if (getSubItems() == null || getSubItems().size() == 0) {
+            viewHolder.icon.setVisibility(View.GONE);
+        } else {
+            viewHolder.icon.setVisibility(View.VISIBLE);
+        }
 
         if (isExpanded()) {
             ViewCompat.setRotation(viewHolder.icon, 0);
