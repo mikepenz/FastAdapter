@@ -195,7 +195,7 @@ public class FastAdapterTest {
 
     @Test
     public void testAddPreviouslyFilledAdapterPropagatesPossibleTypesToParentFastAdapter() {
-        final TestItem testItem = new TestItem();
+        final TestItem testItem = new TestItem("example name");
         itemAdapter.add(testItem);
         adapter = new FastAdapter<>();
         adapter.addAdapter(0, itemAdapter);
