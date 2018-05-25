@@ -186,7 +186,7 @@ itemAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<Item>
     }
 });
 ```
-`filter()` will return true to indicate which items will be removed. Returning false indicates items that will be retained.
+`filter()` should return true for items to be retained and false for items to be removed.
 
 ### 6. Drag and drop
 First, attach `ItemTouchHelper` to RecyclerView.
