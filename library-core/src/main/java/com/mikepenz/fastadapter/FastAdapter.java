@@ -175,9 +175,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
         if (adapters == null) {
             fastAdapter.mAdapters.add((IAdapter<Item>) items());
         } else {
-            for (A adapter : adapters) {
-                fastAdapter.mAdapters.add(adapter);
-            }
+            fastAdapter.mAdapters.addAll((Collection<IAdapter<Item>>) adapters);
         }
         for (int i = 0; i < fastAdapter.mAdapters.size(); i++) {
             fastAdapter.mAdapters.get(i).withFastAdapter(fastAdapter).setOrder(i);
