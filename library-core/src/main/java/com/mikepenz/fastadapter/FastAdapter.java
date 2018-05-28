@@ -202,8 +202,10 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      */
     public <A extends IAdapter<Item>> FastAdapter<Item> addAdapter(int index, A adapter) {
         mAdapters.add(index, adapter);
+        adapter.withFastAdapter(this);
+        adapter.mapPossibleTypes(adapter.getAdapterItems());
         for (int i = 0; i < mAdapters.size(); i++) {
-            mAdapters.get(i).withFastAdapter(this).setOrder(i);
+            mAdapters.get(i).setOrder(i);
         }
         cacheSizes();
         return this;
