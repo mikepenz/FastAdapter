@@ -128,3 +128,13 @@ dependencies {
         resolutionStrategy.force "com.android.support:design:${versions.supportLib}"
     }
 }
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+    dependencies {
+        classpath "io.realm:realm-gradle-plugin:4.1.1"
+    }
+}
