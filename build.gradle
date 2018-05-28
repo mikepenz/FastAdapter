@@ -9,7 +9,7 @@ buildscript {
         ]
 
         versions = [
-                supportLib: "27.1.0"
+                supportLib: "27.1.1"
         ]
     }
 
