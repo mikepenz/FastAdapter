@@ -483,7 +483,7 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
      * deselects all selections
      */
     public void deselect() {
-        SelectExtension<Item> selectExtension = mFastAdapter.getSelectExtension();
+        SelectExtension<Item> selectExtension = mFastAdapter.getExtension(SelectExtension.class);
         if (selectExtension == null) {
             return;
         }
@@ -499,7 +499,7 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
     public void select(boolean considerSelectableFlag) {
-        SelectExtension<Item> selectExtension = mFastAdapter.getSelectExtension();
+        SelectExtension<Item> selectExtension = mFastAdapter.getExtension(SelectExtension.class);
         if (selectExtension == null) {
             return;
         }
