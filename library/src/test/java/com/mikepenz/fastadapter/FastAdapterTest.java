@@ -2,6 +2,8 @@ package com.mikepenz.fastadapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnBindViewHolderListener;
@@ -10,6 +12,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RuntimeEnvironment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -180,11 +183,23 @@ public class FastAdapterTest {
     @Test
     public void withBindViewHolderListener_OnBindViewHolder_Callback() throws Exception {
         OnBindViewHolderListener listener = mock(OnBindViewHolderListener.class);
-        RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(mock(View.class)) {};
+        RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(mock(View.class)) {
+        };
         adapter.withOnBindViewHolderListener(listener);
 
         adapter.onBindViewHolder(holder, 10, new ArrayList());
 
         verify(listener, only()).onBindViewHolder(holder, 10, new ArrayList());
+    }
+
+    @Test
+    public void testAddPreviouslyFilledAdapterPropagatesPossibleTypesToParentFastAdapter() {
+        final TestItem testItem = new TestItem("example name");
+        ItemAdapter<TestItem> itemAdapter = new ItemAdapter<>();
+        itemAdapter.add(testItem);
+        FastAdapter<TestItem> adapter = new FastAdapter<>();
+        adapter.addAdapter(0, itemAdapter);
+        final ViewGroup dummyParent = new FrameLayout(RuntimeEnvironment.application);
+        adapter.onCreateViewHolder(dummyParent, testItem.getType());
     }
 }
