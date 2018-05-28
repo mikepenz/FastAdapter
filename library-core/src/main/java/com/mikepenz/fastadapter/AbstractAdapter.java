@@ -52,7 +52,7 @@ public abstract class AbstractAdapter<Item extends IItem> implements IAdapter<It
      * @param items
      */
     public void mapPossibleTypes(@Nullable Iterable<Item> items) {
-        if (items != null) {
+        if (items != null && mFastAdapter != null) {
             for (Item item : items) {
                 mFastAdapter.registerTypeInstance(item);
             }
