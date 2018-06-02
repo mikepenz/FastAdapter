@@ -29,7 +29,6 @@ import static org.mockito.Mockito.verify;
  */
 @RunWith(RobolectricTestRunner.class)
 public class FastAdapterTest {
-
     private FastAdapter<TestItem> adapter;
     private ItemAdapter<TestItem> itemAdapter;
     private SelectExtension<TestItem> selectExtension;
@@ -55,24 +54,27 @@ public class FastAdapterTest {
 
     @Test
     public void withSelectable() throws Exception {
-        assertThat(adapter.withSelectable(true).isSelectable()).isTrue();
         assertThat(adapter.withSelectable(false).isSelectable()).isFalse();
+        assertThat(adapter.withSelectable(true).isSelectable()).isTrue();
     }
 
     @Test
     public void select() throws Exception {
-        adapter.withSelectable(true);
         itemAdapter.set(TestDataGenerator.genTestItemList(100));
 
-        assertThat(adapter.getSelectedItems().size()).isEqualTo(0);
-        assertThat(adapter.getSelections().size()).isEqualTo(0);
+        SelectExtension<TestItem> selectExtension = adapter.getExtension(SelectExtension.class);
 
-        adapter.select(10);
+        assertThat(selectExtension).isEqualTo(this.selectExtension);
 
-        assertThat(adapter.getSelectedItems().size()).isEqualTo(1);
-        assertThat(adapter.getSelectedItems().iterator().next().getIdentifier()).isEqualTo(10);
-        assertThat(adapter.getSelections().size()).isEqualTo(1);
-        assertThat(adapter.getSelections().iterator().next()).isEqualTo(10);
+        assertThat(selectExtension.getSelectedItems().size()).isEqualTo(0);
+        assertThat(selectExtension.getSelections().size()).isEqualTo(0);
+
+        selectExtension.select(10);
+
+        assertThat(selectExtension.getSelectedItems().size()).isEqualTo(1);
+        assertThat(selectExtension.getSelectedItems().iterator().next().getIdentifier()).isEqualTo(10);
+        assertThat(selectExtension.getSelections().size()).isEqualTo(1);
+        assertThat(selectExtension.getSelections().iterator().next()).isEqualTo(10);
     }
 
     @Test
@@ -202,7 +204,7 @@ public class FastAdapterTest {
         final TestItem testItem = new TestItem("example name");
         ItemAdapter<TestItem> itemAdapter = new ItemAdapter<>();
         itemAdapter.add(testItem);
-        adapter = new FastAdapter<>();
+        FastAdapter<TestItem> adapter = new FastAdapter<>();
         adapter.addAdapter(0, itemAdapter);
         final ViewGroup dummyParent = new FrameLayout(RuntimeEnvironment.application);
         adapter.onCreateViewHolder(dummyParent, testItem.getType());
