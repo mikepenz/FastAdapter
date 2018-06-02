@@ -9,7 +9,6 @@ import android.widget.TextView;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.select.SelectExtension;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -181,11 +180,6 @@ public class UndoHelper<Item extends IItem> {
                 for (int i = mHistory.items.size() - 1; i >= 0; i--) {
                     FastAdapter.RelativeInfo<Item> relativeInfo = mHistory.items.get(i);
                     if (relativeInfo.adapter instanceof IItemAdapter) {
-                        // The ActionMode does not deselect automatically, because
-                        // items were removed before the ActionMode calls deselect
-                        SelectExtension<Item> extension = mAdapter.getExtension(SelectExtension.class);
-                        if (extension != null)
-                            extension.deselect();
                         ((IItemAdapter) relativeInfo.adapter).remove(relativeInfo.position);
                     }
                 }
