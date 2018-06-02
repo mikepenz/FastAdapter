@@ -401,7 +401,12 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
         if (mUseIdDistributor) {
             getIdDistributor().checkIds(items);
         }
-        mItems.addAll(items, getFastAdapter().getPreItemCountByOrder(getOrder()));
+        FastAdapter<Item> fastAdapter = getFastAdapter();
+        if (fastAdapter != null) {
+            mItems.addAll(items, fastAdapter.getPreItemCountByOrder(getOrder()));
+        } else {
+            mItems.addAll(items, 0);
+        }
         mapPossibleTypes(items);
         return this;
     }

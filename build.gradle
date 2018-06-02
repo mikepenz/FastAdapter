@@ -9,7 +9,7 @@ buildscript {
         ]
 
         versions = [
-                supportLib: "27.1.0"
+                supportLib: "27.1.1"
         ]
     }
 
@@ -18,13 +18,15 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.1.0'
+        classpath 'com.android.tools.build:gradle:3.1.2'
         classpath 'com.novoda:bintray-release:0.8.1'
-        classpath "io.realm:realm-gradle-plugin:4.1.1"
     }
 }
 
 allprojects {
+    group "com.mikepenz"
+    version "3.2.6"
+
     repositories {
         google()
         jcenter()
