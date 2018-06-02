@@ -28,13 +28,13 @@ public class TestItem extends AbstractItem<TestItem, TestItem.ViewHolder> {
     }
 
     @Override
-    public View createView(final Context ctx, @Nullable final ViewGroup parent) {
-        return new FrameLayout(ctx);
+    public int getType() {
+        return -1;
     }
 
     @Override
-    public int getType() {
-        return -1;
+    public View createView(final Context ctx, @Nullable final ViewGroup parent) {
+        return new FrameLayout(ctx);
     }
 
     @Override

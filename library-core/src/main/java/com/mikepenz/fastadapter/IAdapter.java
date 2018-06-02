@@ -2,6 +2,8 @@ package com.mikepenz.fastadapter;
 
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 /**
  * Created by mikepenz on 27.12.15.
  */
@@ -18,6 +20,13 @@ public interface IAdapter<Item extends IItem> {
      *
      */
     IAdapter<Item> withFastAdapter(FastAdapter<Item> fastAdapter);
+
+    /**
+     * internal mapper to remember and add possible types for the RecyclerView
+     *
+     * @param items
+     */
+    void mapPossibleTypes(@Nullable Iterable<Item> items);
 
     /**
      * returs the position of this Adapter in the FastAdapter
