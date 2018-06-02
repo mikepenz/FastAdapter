@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
+import com.mikepenz.fastadapter.select.SelectExtension;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,6 +31,28 @@ public class UndoHelper<Item extends IItem> {
     private History mHistory = null;
     private Snackbar mSnackBar = null;
     private String mSnackbarActionText = "";
+    private boolean mAlreadyCommitted;
+
+    private Snackbar.Callback mSnackbarCallback = new Snackbar.Callback() {
+        @Override
+        public void onShown(Snackbar sb) {
+            super.onShown(sb);
+            // Reset the flag when a new Snackbar shows up
+            mAlreadyCommitted = false;
+        }
+
+        @Override
+        public void onDismissed(Snackbar transientBottomBar, int event) {
+            super.onDismissed(transientBottomBar, event);
+
+            // If the undo button was clicked (DISMISS_EVENT_ACTION) or
+            // if a commit was already executed, skip it
+            if ((event == Snackbar.Callback.DISMISS_EVENT_ACTION) || mAlreadyCommitted)
+                return;
+
+            notifyCommit();
+        }
+    };
 
     /**
      * Constructor to create the UndoHelper
@@ -53,33 +76,8 @@ public class UndoHelper<Item extends IItem> {
         mSnackBar = snackBar;
         mSnackbarActionText = actionText;
 
-        mSnackBar.addCallback(new Snackbar.Callback() {
-            @Override
-            public void onDismissed(Snackbar snackbar, int event) {
-                super.onDismissed(snackbar, event);
-
-                switch (event) {
-                    case Snackbar.Callback.DISMISS_EVENT_ACTION:
-                        //we can ignore it
-                        break;
-                    case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
-                        notifyCommit();
-                        break;
-                    case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
-                        notifyCommit();
-                        break;
-                    case Snackbar.Callback.DISMISS_EVENT_SWIPE:
-                        notifyCommit();
-                        break;
-                }
-            }
-
-            @Override
-            public void onShown(Snackbar snackbar) {
-                super.onShown(snackbar);
-                doChange();
-            }
-        }).setAction(actionText, new View.OnClickListener() {
+        mSnackBar.addCallback(mSnackbarCallback)
+                .setAction(actionText, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 undoChange();
@@ -124,6 +122,10 @@ public class UndoHelper<Item extends IItem> {
      */
     public Snackbar remove(final View view, final String text, final String actionText, @Snackbar.Duration int duration, final Set<Integer> positions) {
         if (mHistory != null) {
+            // Set a flag, if remove was called before the Snackbar
+            // executed the commit -> Snackbar does not commit the new
+            // inserted history
+            mAlreadyCommitted = true;
             notifyCommit();
         }
 
@@ -140,35 +142,9 @@ public class UndoHelper<Item extends IItem> {
         });
 
         mHistory = history;
+        doChange(); // Do not execute when Snackbar shows up, instead change immediately
 
-        mSnackBar = Snackbar.make(view, text, duration)
-                .addCallback(new Snackbar.Callback() {
-                    @Override
-                    public void onDismissed(Snackbar snackbar, int event) {
-                        super.onDismissed(snackbar, event);
-
-                        switch (event) {
-                            case Snackbar.Callback.DISMISS_EVENT_ACTION:
-                                //we can ignore it
-                                break;
-                            case Snackbar.Callback.DISMISS_EVENT_TIMEOUT:
-                                notifyCommit();
-                                break;
-                            case Snackbar.Callback.DISMISS_EVENT_CONSECUTIVE:
-                                notifyCommit();
-                                break;
-                            case Snackbar.Callback.DISMISS_EVENT_SWIPE:
-                                notifyCommit();
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void onShown(Snackbar snackbar) {
-                        super.onShown(snackbar);
-                        doChange();
-                    }
-                });
+        mSnackBar = Snackbar.make(view, text, duration).addCallback(mSnackbarCallback);
         mSnackBar.setAction(actionText, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -205,6 +181,11 @@ public class UndoHelper<Item extends IItem> {
                 for (int i = mHistory.items.size() - 1; i >= 0; i--) {
                     FastAdapter.RelativeInfo<Item> relativeInfo = mHistory.items.get(i);
                     if (relativeInfo.adapter instanceof IItemAdapter) {
+                        // The ActionMode does not deselect automatically, because
+                        // items were removed before the ActionMode calls deselect
+                        SelectExtension<Item> extension = mAdapter.getExtension(SelectExtension.class);
+                        if (extension != null)
+                            extension.deselect();
                         ((IItemAdapter) relativeInfo.adapter).remove(relativeInfo.position);
                     }
                 }
