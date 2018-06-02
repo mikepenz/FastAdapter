@@ -16,6 +16,7 @@ public abstract class AbstractAdapter<Item extends IItem> implements IAdapter<It
      */
     public AbstractAdapter<Item> withFastAdapter(FastAdapter<Item> fastAdapter) {
         this.mFastAdapter = fastAdapter;
+        mapPossibleTypes(getAdapterItems());
         return this;
     }
 
