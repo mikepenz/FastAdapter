@@ -51,7 +51,7 @@ afterEvaluate { project ->
 }
 
 bintray {
-    dryRun = true
+    dryRun = false
     publish = true
     user = project.hasProperty('bintray.user') ? project.property('bintray.user') : System.getenv('BINTRAY_USER')
     key = project.hasProperty('bintray.apikey') ? project.property('bintray.apikey') : System.getenv('BINTRAY_API_KEY')
@@ -69,6 +69,8 @@ bintray {
         licenses = ["Apache-2.0"]
         publish = true
         version {
+            name = VERSION_NAME
+
             mavenCentralSync {
                 sync = false
                 user = getRepositoryUsername() //OSS user token
