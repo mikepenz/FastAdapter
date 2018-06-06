@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-def releaseVersion = release.versionName
+version release.versionName
 
 android {
     compileSdkVersion setup.compileSdk
@@ -55,7 +55,7 @@ if (project.hasProperty('pushall') || project.hasProperty('librarycommonsonly'))
             release(MavenPublication) {
                 groupId 'com.mikepenz'
                 artifactId 'fastadapter-commons'
-                version releaseVersion
+                version this.version
                 artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
             }
         }

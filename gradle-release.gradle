@@ -60,16 +60,21 @@ bintray {
 
     publications('release')
     configurations = ['archives']
+
     pkg {
+        publish = true
+
         repo = "maven"
         // it is the name that appears in bintray when logged
         name = POM_ARTIFACT_ID
         websiteUrl = POM_URL
         vcsUrl = POM_SCM_URL
+        publicDownloadNumbers = true
         licenses = ["Apache-2.0"]
-        publish = true
         version {
             name = VERSION_NAME
+            vcsTag = VERSION_NAME
+            released = new Date()
 
             mavenCentralSync {
                 sync = false
