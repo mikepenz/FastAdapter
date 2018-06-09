@@ -1,6 +1,11 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
+        release = [
+                versionName: "3.2.7",
+                versionCode: 3270
+        ]
+
         setup = [
                 compileSdk: 27,
                 buildTools: "27.0.3",
@@ -19,13 +24,13 @@ buildscript {
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.1.2'
-        classpath 'com.novoda:bintray-release:0.8.1'
+        classpath 'com.github.dcendents:android-maven-gradle-plugin:2.0'
+        classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
 
 allprojects {
     group "com.mikepenz"
-    version "3.2.6"
 
     repositories {
         google()
