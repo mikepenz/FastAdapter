@@ -1,6 +1,6 @@
 apply plugin: 'com.android.library'
 
-group "com.mikepenz"
+version release.versionName
 
 android {
     compileSdkVersion setup.compileSdk
@@ -9,8 +9,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 3260
-        versionName '3.2.6'
+        versionCode release.versionCode
+        versionName release.versionName
     }
     buildTypes {
         release {
@@ -23,12 +23,6 @@ android {
     lintOptions {
         abortOnError false
     }
-}
-
-if (project.hasProperty('pushall') || project.hasProperty('libraryextensionexpandablemonly')) {
-    apply from: '../gradle-mvn-push.gradle'
-    apply plugin: 'com.novoda.bintray-release'
-    apply from: '../gradle-jcenter-push.gradle'
 }
 
 dependencies {
@@ -56,6 +50,24 @@ dependencies {
     }
 }
 
+if (project.hasProperty('pushall') || project.hasProperty('libraryextensiononly')) {
+    afterEvaluate { project ->
+        apply from: '../gradle-release.gradle'
+
+        publishing {
+            publications {
+                release(MavenPublication) {
+                    groupId 'com.mikepenz'
+                    artifactId 'fastadapter-extensions-expandable'
+                    version this.version
+                    artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+                    artifact androidSourcesJar
+                    artifact androidJavadocsJar
+                }
+            }
+        }
+    }
+}
 
 tasks.withType(Test) {
     testLogging {
