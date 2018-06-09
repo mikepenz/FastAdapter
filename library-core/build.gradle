@@ -37,15 +37,19 @@ dependencies {
 }
 
 if (project.hasProperty('pushall') || project.hasProperty('librarycoreonly')) {
-    apply from: '../gradle-release.gradle'
+    afterEvaluate { project ->
+        apply from: '../gradle-release.gradle'
 
-    publishing {
-        publications {
-            release(MavenPublication) {
-                groupId 'com.mikepenz'
-                artifactId 'fastadapter'
-                version this.version
-                artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+        publishing {
+            publications {
+                release(MavenPublication) {
+                    groupId 'com.mikepenz'
+                    artifactId 'fastadapter'
+                    version this.version
+                    artifact("$buildDir/outputs/aar/${project.getName()}-release.aar")
+                    artifact androidSourcesJar
+                    artifact androidJavadocsJar
+                }
             }
         }
     }
