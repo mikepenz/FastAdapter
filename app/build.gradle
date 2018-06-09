@@ -13,8 +13,8 @@ android {
     defaultConfig {
         minSdkVersion setup.minSdk
         targetSdkVersion setup.targetSdk
-        versionCode 3260
-        versionName '3.2.6'
+        versionCode 3270
+        versionName '3.2.7'
 
         setProperty("archivesBaseName", "FastAdapter-v$versionName-c$versionCode")
     }
