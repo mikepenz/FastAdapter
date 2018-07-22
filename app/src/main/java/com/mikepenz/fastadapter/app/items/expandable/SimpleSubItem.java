@@ -3,20 +3,20 @@ package com.mikepenz.fastadapter.app.items.expandable;
 import android.content.Context;
 import android.graphics.Color;
 import android.support.annotation.StringRes;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.mikepenz.fastadapter.IClickable;
-import com.mikepenz.fastadapter_extensions.drag.IDraggable;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem;
 import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
+import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem;
+import com.mikepenz.fastadapter_extensions.drag.IDraggable;
 import com.mikepenz.materialdrawer.holder.StringHolder;
-import com.mikepenz.materialize.util.UIUtils;
 
 import java.util.List;
 
@@ -100,7 +100,8 @@ public class SimpleSubItem<Parent extends IItem & IExpandable & ISubItem & IClic
         Context ctx = viewHolder.itemView.getContext();
 
         //set the background for the item
-        UIUtils.setBackground(viewHolder.view, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true));
+        viewHolder.view.clearAnimation();
+        ViewCompat.setBackground(viewHolder.view, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true));
         //set the text for the name
         StringHolder.applyTo(name, viewHolder.name);
         //set the text for the description or hide

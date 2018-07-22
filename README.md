@@ -1,4 +1,4 @@
-# FastAdapter  [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.mikepenz/fastadapter/badge.svg?style=flat)](https://maven-badges.herokuapp.com/maven-central/com.mikepenz/fastadapter) [![Join the chat at https://gitter.im/mikepenz/fastadapter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mikepenz/fastadapter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# FastAdapter  [![Download](https://api.bintray.com/packages/mikepenz/maven/com.mikepenz%3Afastadapter/images/download.svg?version=3.2.7) ](https://bintray.com/mikepenz/maven/com.mikepenz%3Afastadapter/3.2.7/link) [![Join the chat at https://gitter.im/mikepenz/fastadapter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mikepenz/fastadapter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 > The RecyclerView is one of the most used widgets in the Android world, and with it you have to implement an Adapter which provides the items for the view. Most use cases require the same base logic, but require you to write everything again and again.
 
@@ -41,26 +41,26 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-implementation 'com.mikepenz:fastadapter:3.2.7'
+implementation 'com.mikepenz:fastadapter:3.2.8'
 implementation  'com.android.support:appcompat-v7:${latestSupportLib}'
 implementation  'com.android.support:recyclerview-v7:${latestSupportLib}'
 ```
 
 The commons package comes with some useful helpers (which are not needed in all cases) This one for example includes the `FastItemAdapter`
 ```gradle
-implementation 'com.mikepenz:fastadapter-commons:3.2.7'
+implementation 'com.mikepenz:fastadapter-commons:3.2.8'
 ```
 
 Expandable support is included and can be added via this
 ```gradle
-implementation 'com.mikepenz:fastadapter-extensions-expandable:3.2.7'
+implementation 'com.mikepenz:fastadapter-extensions-expandable:3.2.8'
 //The tiny Materialize library used for its useful helper classes
 implementation 'com.mikepenz:materialize:${latestVersion}'
 ```
 
 Many helper classes are included in the following dependency. (This functionality also needs the `Expandable` extension
 ```gradle
-implementation 'com.mikepenz:fastadapter-extensions:3.2.7'
+implementation 'com.mikepenz:fastadapter-extensions:3.2.8'
 implementation  'com.android.support:design:${versions.supportLib}'
 //The tiny Materialize library used for its useful helper classes
 implementation 'com.mikepenz:materialize:${latestVersion}'

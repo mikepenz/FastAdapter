@@ -81,6 +81,8 @@ public class SimpleImageItem extends AbstractItem<SimpleImageItem, SimpleImageIt
 
         //set the background for the item
         int color = UIUtils.getThemeColor(ctx, R.attr.colorPrimary);
+
+        viewHolder.view.clearAnimation();
         viewHolder.view.setForeground(FastAdapterUIUtils.getSelectablePressedBackground(ctx, FastAdapterUIUtils.adjustAlpha(color, 100), 50, true));
 
         //load glide
