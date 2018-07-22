@@ -48,7 +48,7 @@ dependencies {
     }
 }
 
-if (project.hasProperty('pushall') || project.hasProperty('libraryextensiononly')) {
+if (project.hasProperty('pushall') || project.hasProperty('libraryextensionexpandablemonly')) {
     apply from: '../gradle-release.gradle'
 }
 
