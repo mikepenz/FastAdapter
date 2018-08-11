@@ -1,6 +1,6 @@
 package com.mikepenz.fastadapter.utils;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import com.mikepenz.fastadapter.IItem;
 

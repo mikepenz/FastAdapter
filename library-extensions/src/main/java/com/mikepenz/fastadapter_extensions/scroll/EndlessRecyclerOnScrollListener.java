@@ -1,7 +1,7 @@
 package com.mikepenz.fastadapter_extensions.scroll;
 
-import android.support.v7.widget.OrientationHelper;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.OrientationHelper;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import com.mikepenz.fastadapter.adapters.ItemAdapter;

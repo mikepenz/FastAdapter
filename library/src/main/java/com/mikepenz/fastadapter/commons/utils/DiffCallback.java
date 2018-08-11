@@ -1,7 +1,7 @@
 package com.mikepenz.fastadapter.commons.utils;
 
-import android.support.annotation.Nullable;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * DiffCallback used to efficiently update the items inside the list with the new DiffUtils
@@ -23,7 +23,7 @@ public interface DiffCallback<Item> {
      * DiffUtil uses this method to check equality instead of {@link Object#equals(Object)}
      * so that you can change its behavior depending on your UI.
      * For example, if you are using DiffUtil with a
-     * {@link android.support.v7.widget.RecyclerView.Adapter RecyclerView.Adapter}, you should
+     * {@link RecyclerView.Adapter RecyclerView.Adapter}, you should
      * return whether the items' visual representations are the same.
      * This method is called only if #areItemsTheSame(Item, Item) returns
      * {@code true} for these items.
@@ -40,7 +40,7 @@ public interface DiffCallback<Item> {
      * calls this method to get a payload about the change.
      * For example, if you are using DiffUtil with {@link RecyclerView}, you can return the
      * particular field that changed in the item and your
-     * {@link android.support.v7.widget.RecyclerView.ItemAnimator ItemAnimator} can use that
+     * {@link RecyclerView.ItemAnimator ItemAnimator} can use that
      * information to run the correct animation.
      * Default implementation returns {@code null}.
      *
