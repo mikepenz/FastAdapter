@@ -1,8 +1,8 @@
 package com.mikepenz.fastadapter.select;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.util.ArraySet;
+import androidx.annotation.NonNull;
+import androidx.collection.ArraySet;
 import android.view.MotionEvent;
 import android.view.View;
 

@@ -1,6 +1,6 @@
 package com.mikepenz.fastadapter.utils;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /**
  * a helper class to provide a triple class, to store 3 values and return them from a method

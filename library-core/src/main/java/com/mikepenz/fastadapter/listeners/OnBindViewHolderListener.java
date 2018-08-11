@@ -1,6 +1,6 @@
 package com.mikepenz.fastadapter.listeners;
 
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 

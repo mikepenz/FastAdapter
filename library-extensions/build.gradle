@@ -30,11 +30,11 @@ dependencies {
     implementation  project(':library')
     implementation  project(':library-extensions-expandable')
 
-    implementation  "com.android.support:recyclerview-v7:${versions.supportLib}"
-    implementation  "com.android.support:design:${versions.supportLib}"
-    implementation  "com.android.support:support-annotations:${versions.supportLib}"
+    implementation "androidx.recyclerview:recyclerview:${versions.androidX}"
+    implementation "com.google.android.material:material:${versions.androidX}"
+    implementation "androidx.annotation:annotation:${versions.androidX}"
 
-    implementation  'com.mikepenz:materialize:1.1.2'
+    implementation  'com.mikepenz:materialize:1.2.0-rc01'
 }
 
 if (project.hasProperty('pushall') || project.hasProperty('libraryextensiononly')) {

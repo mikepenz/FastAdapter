@@ -1,6 +1,6 @@
-package android.support.v7.widget;
+package androidx.recyclerview.widget;
 
-import android.support.v7.widget.RecyclerView.LayoutManager;
+import androidx.recyclerview.widget.RecyclerView.LayoutManager;
 
 /**
  * Why the class name? Because it guarantees zero naming conflicts!

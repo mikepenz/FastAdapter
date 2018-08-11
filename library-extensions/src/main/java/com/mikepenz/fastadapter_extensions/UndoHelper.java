@@ -1,8 +1,8 @@
 package com.mikepenz.fastadapter_extensions;
 
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 import android.widget.TextView;
 
@@ -102,7 +102,7 @@ public class UndoHelper<Item extends IItem> {
         }
 
         View snackbarView = mSnackBar.getView();
-        TextView snackbarText = (TextView) snackbarView.findViewById(android.support.design.R.id.snackbar_text);
+        TextView snackbarText = (TextView) snackbarView.findViewById(com.google.android.material.R.id.snackbar_text);
 
         return remove(snackbarView, snackbarText.getText().toString(), mSnackbarActionText, mSnackBar.getDuration(), positions);
     }

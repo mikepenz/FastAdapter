@@ -1,6 +1,6 @@
 package com.mikepenz.fastadapter_extensions.utilities;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
