@@ -3,12 +3,12 @@ android:
   components:
     - tools
     - platform-tools
-    - build-tools-28.0.0
+    - build-tools-28.0.2
     - android-28
     - sys-img-armeabi-v7a-android-18
 before_install:
     - yes | sdkmanager "platforms;android-28"
-    - yes | sdkmanager "build-tools;28.0.0"
+    - yes | sdkmanager "build-tools;28.0.2"
 jdk:
     - oraclejdk8
 script:
