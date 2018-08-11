@@ -61,7 +61,7 @@ implementation 'com.mikepenz:materialize:${latestVersion}'
 Many helper classes are included in the following dependency. (This functionality also needs the `Expandable` extension
 ```gradle
 implementation 'com.mikepenz:fastadapter-extensions:3.2.8'
-implementation  'com.android.support:design:${versions.supportLib}'
+implementation  'com.android.support:design:${versions.androidX}'
 //The tiny Materialize library used for its useful helper classes
 implementation 'com.mikepenz:materialize:${latestVersion}'
 ```

@@ -1,10 +1,9 @@
 package com.mikepenz.fastadapter_extensions.drag;
 
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.View;
 
-import com.mikepenz.fastadapter_extensions.drag.IDraggable;
 import com.mikepenz.fastadapter.IItem;
 
 /**

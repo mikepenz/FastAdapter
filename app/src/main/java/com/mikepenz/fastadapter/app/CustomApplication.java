@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter.app;
 
-import android.app.Application;
-
+import androidx.multidex.MultiDexApplication;
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
 
@@ -9,7 +8,7 @@ import io.realm.RealmConfiguration;
  * Created by mikepenz on 04.07.16.
  */
 
-public class CustomApplication extends Application {
+public class CustomApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();

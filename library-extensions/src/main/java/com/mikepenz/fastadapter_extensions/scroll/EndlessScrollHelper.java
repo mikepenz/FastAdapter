@@ -1,8 +1,5 @@
 package com.mikepenz.fastadapter_extensions.scroll;
 
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.LayoutManager;
 import android.view.View;
 
 import com.mikepenz.fastadapter.IInterceptor;
@@ -15,7 +12,12 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-import static android.support.v7.widget.com_mikepenz_fastadapter_extensions_scroll.postOnRecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.LayoutManager;
+
+import static androidx.recyclerview.widget.com_mikepenz_fastadapter_extensions_scroll.postOnRecyclerView;
+
 
 /**
  * This is an extension of {@link EndlessRecyclerOnScrollListener}, providing a more powerful API

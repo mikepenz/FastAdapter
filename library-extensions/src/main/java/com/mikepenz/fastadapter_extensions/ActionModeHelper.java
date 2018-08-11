@@ -1,9 +1,9 @@
 package com.mikepenz.fastadapter_extensions;
 
 
-import android.support.annotation.MenuRes;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.view.ActionMode;
+import androidx.annotation.MenuRes;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuItem;
 

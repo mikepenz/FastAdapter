@@ -1,9 +1,9 @@
 package com.mikepenz.fastadapter.expandable;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.util.ArraySet;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.collection.ArraySet;
 import android.util.SparseIntArray;
 import android.view.MotionEvent;
 import android.view.View;

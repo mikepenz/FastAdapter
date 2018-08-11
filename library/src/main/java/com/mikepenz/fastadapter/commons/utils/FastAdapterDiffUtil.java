@@ -1,8 +1,8 @@
 package com.mikepenz.fastadapter.commons.utils;
 
-import android.support.annotation.Nullable;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.util.ListUpdateCallback;
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.DiffUtil;
+import androidx.recyclerview.widget.ListUpdateCallback;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
@@ -23,11 +23,11 @@ import java.util.List;
 public class FastAdapterDiffUtil {
 
     /**
-     * This method will compute a {@link android.support.v7.util.DiffUtil.DiffResult} based on the given adapter, and the list of new items.
+     * This method will compute a {@link androidx.recyclerview.widget.DiffUtil.DiffResult} based on the given adapter, and the list of new items.
      * <p>
      * It automatically collapses all expandables (if enabled) as they are not supported by the diff util,
      * pre sort the items based on the comparator if available,
-     * map the new item types for the FastAdapter then calculates the {@link android.support.v7.util.DiffUtil.DiffResult} using the {@link DiffUtil}.
+     * map the new item types for the FastAdapter then calculates the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} using the {@link DiffUtil}.
      * <p>
      * As the last step it will replace the items inside the adapter with the new set of items provided.
      *
@@ -38,7 +38,7 @@ public class FastAdapterDiffUtil {
      * @param <A>         The adapter type, whereas A extends {@link ModelAdapter}
      * @param <Model>     The model type we work with
      * @param <Item>      The item type kept in the adapter
-     * @return the {@link android.support.v7.util.DiffUtil.DiffResult} computed.
+     * @return the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} computed.
      */
     public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
         if (adapter.isUseIdDistributor()) {
@@ -98,10 +98,10 @@ public class FastAdapterDiffUtil {
     }
 
     /**
-     * Dispatches a {@link android.support.v7.util.DiffUtil.DiffResult} to the given Adapter.
+     * Dispatches a {@link androidx.recyclerview.widget.DiffUtil.DiffResult} to the given Adapter.
      *
      * @param adapter the adapter to dispatch the updates to
-     * @param result  the computed {@link android.support.v7.util.DiffUtil.DiffResult}
+     * @param result  the computed {@link androidx.recyclerview.widget.DiffUtil.DiffResult}
      * @return the adapter to allow chaining
      */
     public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, DiffUtil.DiffResult result) {
@@ -112,7 +112,7 @@ public class FastAdapterDiffUtil {
     /**
      * convenient function for {@link #calculateDiff(ModelAdapter, List, DiffCallback, boolean)}
      *
-     * @return the {@link android.support.v7.util.DiffUtil.DiffResult} computed.
+     * @return the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} computed.
      */
     public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
         return calculateDiff(adapter, items, callback, true);
@@ -121,7 +121,7 @@ public class FastAdapterDiffUtil {
     /**
      * convenient function for {@link #calculateDiff(ModelAdapter, List, DiffCallback, boolean)}
      *
-     * @return the {@link android.support.v7.util.DiffUtil.DiffResult} computed.
+     * @return the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} computed.
      */
     public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final boolean detectMoves) {
         return calculateDiff(adapter, items, new DiffCallbackImpl<Item>(), detectMoves);
@@ -130,14 +130,14 @@ public class FastAdapterDiffUtil {
     /**
      * convenient function for {@link #calculateDiff(ModelAdapter, List, DiffCallback, boolean)}
      *
-     * @return the {@link android.support.v7.util.DiffUtil.DiffResult} computed.
+     * @return the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} computed.
      */
     public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items) {
         return calculateDiff(adapter, items, new DiffCallbackImpl<Item>(), true);
     }
 
     /**
-     * Calculates a {@link android.support.v7.util.DiffUtil.DiffResult} given the adapter and the items, and will directly dispatch them to the adapter.
+     * Calculates a {@link androidx.recyclerview.widget.DiffUtil.DiffResult} given the adapter and the items, and will directly dispatch them to the adapter.
      *
      * @param adapter     the adapter containing the current items.
      * @param items       the new set of items we want to put into the adapter
@@ -183,7 +183,7 @@ public class FastAdapterDiffUtil {
     /**
      * convenient function for {@link #calculateDiff(ModelAdapter, List, DiffCallback, boolean)}
      *
-     * @return the {@link android.support.v7.util.DiffUtil.DiffResult} computed.
+     * @return the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} computed.
      */
     public static <A extends FastItemAdapter<Item>, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
         return calculateDiff(adapter.getItemAdapter(), items, callback);
@@ -192,7 +192,7 @@ public class FastAdapterDiffUtil {
     /**
      * convenient function for {@link #calculateDiff(ModelAdapter, List, DiffCallback, boolean)}
      *
-     * @return the {@link android.support.v7.util.DiffUtil.DiffResult} computed.
+     * @return the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} computed.
      */
     public static <A extends FastItemAdapter<Item>, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final boolean detectMoves) {
         return calculateDiff(adapter.getItemAdapter(), items, detectMoves);
@@ -201,7 +201,7 @@ public class FastAdapterDiffUtil {
     /**
      * convenient function for {@link #calculateDiff(ModelAdapter, List, DiffCallback, boolean)}
      *
-     * @return the {@link android.support.v7.util.DiffUtil.DiffResult} computed.
+     * @return the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} computed.
      */
     public static <A extends FastItemAdapter<Item>, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items) {
         return calculateDiff(adapter.getItemAdapter(), items);
@@ -258,7 +258,7 @@ public class FastAdapterDiffUtil {
     }
 
     /**
-     * Convenient implementation for the {@link android.support.v7.util.DiffUtil.Callback} to simplify difference calculation using {@link FastAdapter} items.
+     * Convenient implementation for the {@link androidx.recyclerview.widget.DiffUtil.Callback} to simplify difference calculation using {@link FastAdapter} items.
      *
      * @param <Item> the item type in the adapter
      */
