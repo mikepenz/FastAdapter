@@ -1,6 +1,5 @@
 package com.mikepenz.fastadapter.listeners;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 
 import com.mikepenz.fastadapter.FastAdapter;
@@ -8,6 +7,8 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.R;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
     /**
@@ -42,7 +43,7 @@ public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
      */
     @Override
     public void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
-        IItem item = (IItem) viewHolder.itemView.getTag(R.id.fastadapter_item);
+        IItem item = FastAdapter.getHolderAdapterItemTag(viewHolder);
         if (item != null) {
             item.unbindView(viewHolder);
             if (viewHolder instanceof FastAdapter.ViewHolder) {
@@ -85,7 +86,7 @@ public class OnBindViewHolderListenerImpl implements OnBindViewHolderListener {
      */
     @Override
     public void onViewDetachedFromWindow(RecyclerView.ViewHolder viewHolder, int position) {
-        IItem item = FastAdapter.getHolderAdapterItem(viewHolder, position);
+        IItem item = FastAdapter.getHolderAdapterItemTag(viewHolder);
         if (item != null) {
             item.detachFromWindow(viewHolder);
             if (viewHolder instanceof FastAdapter.ViewHolder) {
