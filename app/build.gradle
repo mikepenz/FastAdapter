@@ -73,7 +73,7 @@ dependencies {
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
-    implementation('com.mikepenz:materialdrawer:6.0.7@aar') {
+    implementation('com.mikepenz:materialdrawer:6.1.0-rc01') {
         transitive = true
         exclude group: "com.mikepenz"
     }
@@ -82,7 +82,7 @@ dependencies {
     implementation 'com.mikepenz:itemanimators:1.1.0-rc01'
     //used to generate the Open Source section
     //https://github.com/mikepenz/AboutLibraries
-    implementation('com.mikepenz:aboutlibraries:6.0.9@aar') {
+    implementation('com.mikepenz:aboutlibraries:6.2.0-rc01') {
         transitive = true
         exclude group: "com.mikepenz"
     }
@@ -127,7 +127,7 @@ dependencies {
     configurations.all {
         resolutionStrategy.force "com.mikepenz:materialize:1.2.0-rc01"
         resolutionStrategy.force "com.mikepenz:iconics-core:3.1.0-rc01"
-        resolutionStrategy.force "com.mikepenz:aboutlibraries:6.0.9"
+        resolutionStrategy.force "com.mikepenz:aboutlibraries:6.2.0-rc01"
         resolutionStrategy.force "androidx.appcompat:appcompat:${versions.androidX}"
         resolutionStrategy.force "androidx.recyclerview:recyclerview:${versions.androidX}"
         resolutionStrategy.force "androidx.cardview:cardview:${versions.androidX}"
