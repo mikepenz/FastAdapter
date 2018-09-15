@@ -1410,6 +1410,23 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
+     * convenient helper method to get the Item from a holder via the defined tag
+     *
+     * @param holder the ViewHolder for which we want to retrieve the item
+     * @return the Item found for the given position and that ViewHolder
+     */
+    @SuppressWarnings("unchecked")
+    public static <Item extends IItem> Item getHolderAdapterItemTag(@Nullable RecyclerView.ViewHolder holder) {
+        if (holder != null) {
+            Object item = holder.itemView.getTag(com.mikepenz.fastadapter.R.id.fastadapter_item);
+            if (item instanceof FastAdapter) {
+                return (Item) item;
+            }
+        }
+        return null;
+    }
+
+    /**
      * util function which recursively iterates over all items and subItems of the given adapter.
      * It executes the given `predicate` on every item and will either stop if that function returns true, or continue (if stopOnMatch is false)
      *
