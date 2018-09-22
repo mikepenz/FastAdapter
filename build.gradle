@@ -14,7 +14,7 @@ buildscript {
         ]
 
         versions = [
-                androidX: '1.0.0-rc02'
+                androidX: '1.0.0'
         ]
     }
 

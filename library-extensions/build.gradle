@@ -34,7 +34,7 @@ dependencies {
     implementation "com.google.android.material:material:${versions.androidX}"
     implementation "androidx.annotation:annotation:${versions.androidX}"
 
-    implementation  'com.mikepenz:materialize:1.2.0-rc01'
+    implementation  'com.mikepenz:materialize:1.2.0'
 }
 
 if (project.hasProperty('pushall') || project.hasProperty('libraryextensiononly')) {
