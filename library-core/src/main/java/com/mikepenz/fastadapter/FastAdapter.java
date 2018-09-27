@@ -1420,7 +1420,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     public static <Item extends IItem> Item getHolderAdapterItemTag(@Nullable RecyclerView.ViewHolder holder) {
         if (holder != null) {
             Object item = holder.itemView.getTag(com.mikepenz.fastadapter.R.id.fastadapter_item);
-            if (item instanceof FastAdapter) {
+            if (item instanceof IItem) {
                 return (Item) item;
             }
         }

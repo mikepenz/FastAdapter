@@ -41,26 +41,26 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-implementation 'com.mikepenz:fastadapter:3.3.0'
+implementation 'com.mikepenz:fastadapter:3.3.1'
 implementation "androidx.appcompat:appcompat:${androidX}"
 implementation "androidx.recyclerview:recyclerview:${androidX}"
 ```
 
 The commons package comes with some useful helpers (which are not needed in all cases) This one for example includes the `FastItemAdapter`
 ```gradle
-implementation 'com.mikepenz:fastadapter-commons:3.3.0'
+implementation 'com.mikepenz:fastadapter-commons:3.3.1'
 ```
 
 Expandable support is included and can be added via this
 ```gradle
-implementation 'com.mikepenz:fastadapter-extensions-expandable:3.3.0'
+implementation 'com.mikepenz:fastadapter-extensions-expandable:3.3.1'
 //The tiny Materialize library used for its useful helper classes
 implementation 'com.mikepenz:materialize:${latestVersion}' // at least 1.2.0
 ```
 
 Many helper classes are included in the following dependency. (This functionality also needs the `Expandable` extension
 ```gradle
-implementation 'com.mikepenz:fastadapter-extensions:3.3.0'
+implementation 'com.mikepenz:fastadapter-extensions:3.3.1'
 implementation "com.google.android.material:material:${androidX}"
 //The tiny Materialize library used for its useful helper classes
 implementation 'com.mikepenz:materialize:${latestVersion}' // at least 1.2.0

@@ -2,8 +2,8 @@
 buildscript {
     ext {
         release = [
-                versionName: "3.3.0",
-                versionCode: 3300
+                versionName: "3.3.1",
+                versionCode: 3301
         ]
 
         setup = [
@@ -23,7 +23,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha11'
+        classpath 'com.android.tools.build:gradle:3.3.0-alpha12'
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
