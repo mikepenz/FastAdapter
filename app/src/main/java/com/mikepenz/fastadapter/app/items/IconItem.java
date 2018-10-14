@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.app.items;
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.TextView;
 
@@ -21,7 +22,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class IconItem<T extends IItem & IExpandable> extends AbstractItem<IconItem.ViewHolder> implements ISubItem<IconItem, T> {
+public class IconItem<T extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<IconItem<T>, T>> extends AbstractItem<IconItem.ViewHolder> implements ISubItem<T> {
 
     public IIcon mIcon;
     private T mParent;
@@ -43,9 +44,8 @@ public class IconItem<T extends IItem & IExpandable> extends AbstractItem<IconIt
     }
 
     @Override
-    public IconItem withParent(T parent) {
+    public void setParent(T parent) {
         mParent = parent;
-        return this;
     }
 
     /**

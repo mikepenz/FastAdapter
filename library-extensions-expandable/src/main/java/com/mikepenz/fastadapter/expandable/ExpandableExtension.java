@@ -28,7 +28,7 @@ import java.util.List;
  * Created by mikepenz on 04/06/2017.
  */
 
-public class ExpandableExtension<Item extends IItem<? extends RecyclerView.ViewHolder>> implements IAdapterExtension<Item> {
+public class ExpandableExtension<Item extends IItem<? extends RecyclerView.ViewHolder> & ISubItem<?>> implements IAdapterExtension<Item> {
     protected static final String BUNDLE_EXPANDED = "bundle_expanded";
     protected static final String BUNDLE_EXPANDED_SELECTIONS = "bundle_expanded_selections";
 
