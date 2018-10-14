@@ -14,13 +14,15 @@ import java.util.Set;
 
 import javax.annotation.Nullable;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import static java.util.Arrays.asList;
 
 /**
  * ItemFilter which extends the Filter api provided by Android
  * This calls automatically all required methods, just overwrite the filterItems method
  */
-public class ItemFilter<Model, Item extends IItem> extends Filter {
+public class ItemFilter<Model, Item extends IItem<? extends RecyclerView.ViewHolder>> extends Filter {
     private List<Item> mOriginalItems;
     private CharSequence mConstraint;
     private ModelAdapter<?, Item> mItemAdapter;

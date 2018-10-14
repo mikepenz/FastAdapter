@@ -3,6 +3,8 @@ package com.mikepenz.fastadapter.select;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.collection.ArraySet;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -27,7 +29,7 @@ import javax.annotation.Nullable;
  * Created by mikepenz on 04/06/2017.
  */
 
-public class SelectExtension<Item extends IItem> implements IAdapterExtension<Item> {
+public class SelectExtension<Item extends IItem<? extends RecyclerView.ViewHolder>> implements IAdapterExtension<Item> {
     protected static final String BUNDLE_SELECTIONS = "bundle_selections";
 
     //
@@ -300,7 +302,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
             }
 
             //we toggle the state of the view
-            item.withSetSelected(!selected);
+            item.setSelected(!selected);
             view.setSelected(!selected);
 
             //notify that the selection changed
@@ -343,7 +345,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
         if (considerSelectableFlag && !item.isSelectable()) {
             return;
         }
-        item.withSetSelected(true);
+        item.setSelected(true);
         if (mSelectionListener != null) {
             mSelectionListener.onSelectionChanged(item, true);
         }
@@ -408,7 +410,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
             return;
         }
 
-        item.withSetSelected(true);
+        item.setSelected(true);
 
         mFastAdapter.notifyItemChanged(position);
 
@@ -526,7 +528,7 @@ public class SelectExtension<Item extends IItem> implements IAdapterExtension<It
      */
 
     public void deselect(Item item, int position, @Nullable Iterator<Integer> entries) {
-        item.withSetSelected(false);
+        item.setSelected(false);
         if (entries != null) {
             entries.remove();
         }

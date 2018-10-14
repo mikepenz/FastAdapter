@@ -9,7 +9,7 @@ import com.mikepenz.fastadapter.items.ModelAbstractItem;
 
 import java.util.List;
 
-public abstract class ModelAbstractExpandableItem<Model, Parent extends ModelAbstractItem<Model, Parent, VH> & IExpandable & ISubItem, VH extends RecyclerView.ViewHolder, SubItem extends IItem & ISubItem> extends ModelAbstractItem<Model, Parent, VH> implements IExpandable<ModelAbstractExpandableItem, SubItem>, ISubItem<ModelAbstractExpandableItem, Parent> {
+public abstract class ModelAbstractExpandableItem<Model, Parent extends ModelAbstractItem<Model, VH> & IExpandable & ISubItem, VH extends RecyclerView.ViewHolder, SubItem extends IItem & ISubItem> extends ModelAbstractItem<Model, VH> implements IExpandable<ModelAbstractExpandableItem, SubItem>, ISubItem<ModelAbstractExpandableItem, Parent> {
 
     private List<SubItem> mSubItems;
     private Parent mParent;

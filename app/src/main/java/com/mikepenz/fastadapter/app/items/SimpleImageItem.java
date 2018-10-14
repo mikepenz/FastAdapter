@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class SimpleImageItem extends AbstractItem<SimpleImageItem, SimpleImageItem.ViewHolder> {
+public class SimpleImageItem extends AbstractItem<SimpleImageItem.ViewHolder> {
 
     private String mImageUrl;
     private String mName;
@@ -68,7 +68,7 @@ public class SimpleImageItem extends AbstractItem<SimpleImageItem, SimpleImageIt
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(SimpleImageItem.ViewHolder viewHolder, List<Object> payloads) {
+    public void bindView(SimpleImageItem.ViewHolder viewHolder, List<?> payloads) {
         super.bindView(viewHolder, payloads);
 
         //get the context

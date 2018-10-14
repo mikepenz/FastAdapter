@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class RadioButtonSampleItem extends AbstractItem<RadioButtonSampleItem, RadioButtonSampleItem.ViewHolder> {
+public class RadioButtonSampleItem extends AbstractItem<RadioButtonSampleItem.ViewHolder> {
 
     public String header;
     public StringHolder name;
@@ -79,7 +79,7 @@ public class RadioButtonSampleItem extends AbstractItem<RadioButtonSampleItem, R
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
+    public void bindView(ViewHolder viewHolder, List<?> payloads) {
         super.bindView(viewHolder, payloads);
 
         viewHolder.radioButton.setChecked(isSelected());

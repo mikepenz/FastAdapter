@@ -6,8 +6,9 @@ import android.view.View;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
 
-//listeners
-public interface OnTouchListener<Item extends IItem> {
+import androidx.recyclerview.widget.RecyclerView;
+
+public interface OnTouchListener<Item extends IItem<? extends RecyclerView.ViewHolder>> {
     /**
      * the onTouch event of a specific item inside the RecyclerView
      *

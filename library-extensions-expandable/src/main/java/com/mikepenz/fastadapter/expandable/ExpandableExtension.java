@@ -4,6 +4,8 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.collection.ArraySet;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.SparseIntArray;
 import android.view.MotionEvent;
 import android.view.View;
@@ -26,7 +28,7 @@ import java.util.List;
  * Created by mikepenz on 04/06/2017.
  */
 
-public class ExpandableExtension<Item extends IItem> implements IAdapterExtension<Item> {
+public class ExpandableExtension<Item extends IItem<? extends RecyclerView.ViewHolder>> implements IAdapterExtension<Item> {
     protected static final String BUNDLE_EXPANDED = "bundle_expanded";
     protected static final String BUNDLE_EXPANDED_SELECTIONS = "bundle_expanded_selections";
 
@@ -508,5 +510,4 @@ public class ExpandableExtension<Item extends IItem> implements IAdapterExtensio
         }
         mFastAdapter.notifyDataSetChanged();
     }
-
 }

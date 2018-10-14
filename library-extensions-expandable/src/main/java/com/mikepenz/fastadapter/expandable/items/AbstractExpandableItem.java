@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public abstract class AbstractExpandableItem<Parent extends IItem & IExpandable & ISubItem & IClickable, VH extends RecyclerView.ViewHolder, SubItem extends IItem & ISubItem> extends AbstractItem<Parent, VH> implements IExpandable<AbstractExpandableItem, SubItem>, ISubItem<AbstractExpandableItem, Parent> {
+public abstract class AbstractExpandableItem<Parent extends IItem & IExpandable & ISubItem & IClickable, VH extends RecyclerView.ViewHolder, SubItem extends IItem & ISubItem> extends AbstractItem<VH> implements IExpandable<AbstractExpandableItem, SubItem>, ISubItem<AbstractExpandableItem, Parent> {
     private List<SubItem> mSubItems;
     private Parent mParent;
     private boolean mExpanded = false;

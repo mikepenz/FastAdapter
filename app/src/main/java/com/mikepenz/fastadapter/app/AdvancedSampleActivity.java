@@ -48,12 +48,12 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     private static final String[] headers = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     //save our FastAdapter
-    private FastAdapter<IItem> mFastAdapter;
+    private FastAdapter<IItem<? extends RecyclerView.ViewHolder>> mFastAdapter;
     private ItemAdapter<SimpleItem> mHeaderAdapter;
-    private ItemAdapter<IItem> mItemAdapter;
-    private ExpandableExtension<IItem> mExpandableExtension;
+    private ItemAdapter<IItem<? extends RecyclerView.ViewHolder>> mItemAdapter;
+    private ExpandableExtension<IItem<? extends RecyclerView.ViewHolder>> mExpandableExtension;
 
-    private ActionModeHelper<IItem> mActionModeHelper;
+    private ActionModeHelper<IItem<? extends RecyclerView.ViewHolder>> mActionModeHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,9 +153,9 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     }
 
     private void setItems() {
-        SimpleItem sampleItem = new SimpleItem().withName("Header")
-                .withSelectable(false)
-                .withIdentifier(1);
+        SimpleItem sampleItem = new SimpleItem().withName("Header");
+        sampleItem.setSelectable(false);
+        sampleItem.setIdentifier(1);
         mHeaderAdapter.add(sampleItem);
         //fill with some sample data
         AtomicInteger id = new AtomicInteger(1);

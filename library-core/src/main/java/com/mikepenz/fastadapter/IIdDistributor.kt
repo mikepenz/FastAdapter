@@ -7,17 +7,17 @@ import com.mikepenz.fastadapter.utils.DefaultIdDistributorImpl
  */
 interface IIdDistributor<Identifiable : IIdentifyable> {
 
-    fun checkIds(items: List<Identifiable>): List<Identifiable>
+    fun checkIds(identifiables: List<Identifiable>): List<Identifiable>
 
-    fun checkIds(vararg items: Identifiable): Array<out Identifiable>
+    fun checkIds(vararg identifiables: Identifiable): Array<out Identifiable>
 
-    fun checkId(item: Identifiable): Identifiable
+    fun checkId(identifiable: Identifiable): Identifiable
 
-    fun nextId(item: Identifiable): Long
+    fun nextId(identifiable: Identifiable): Long
 
     companion object {
 
         val DEFAULT: IIdDistributor<out IIdentifyable> =
-            DefaultIdDistributorImpl<IIdentifyable>()
+            DefaultIdDistributorImpl()
     }
 }

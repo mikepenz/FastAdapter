@@ -5,7 +5,9 @@ import android.view.View;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
 
-public interface OnLongClickListener<Item extends IItem> {
+import androidx.recyclerview.widget.RecyclerView;
+
+public interface OnLongClickListener<Item extends IItem<? extends RecyclerView.ViewHolder>> {
     /**
      * the onLongClick event of a specific item inside the RecyclerView
      *

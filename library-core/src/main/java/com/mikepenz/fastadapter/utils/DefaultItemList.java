@@ -4,11 +4,13 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemList;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * The default item list
  */
 
-public abstract class DefaultItemList<Item extends IItem> implements IItemList<Item> {
+public abstract class DefaultItemList<Item extends IItem<? extends RecyclerView.ViewHolder>> implements IItemList<Item> {
 
     private FastAdapter<Item> fastAdapter;
 

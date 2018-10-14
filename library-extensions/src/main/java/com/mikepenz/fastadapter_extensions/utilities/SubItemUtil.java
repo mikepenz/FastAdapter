@@ -242,7 +242,7 @@ public class SubItemUtil {
         } else {
             for (int i = 0; i < subItems; i++) {
                 if (((IItem) header.getSubItems().get(i)).isSelectable()) {
-                    ((IItem) header.getSubItems().get(i)).withSetSelected(select);
+                    ((IItem) header.getSubItems().get(i)).setSelected(select);
                 }
                 if (header.getSubItems().get(i) instanceof IExpandable)
                     selectAllSubItems(adapter, header, select, notifyParent, payload);
@@ -281,7 +281,7 @@ public class SubItemUtil {
                             }
                         }
                     } else {
-                        item.withSetSelected(select);
+                        item.setSelected(select);
                     }
                     return true;
                 }
@@ -309,7 +309,7 @@ public class SubItemUtil {
                         extension.deselect(position);
                     }
                 } else {
-                    item.withSetSelected(false);
+                    item.setSelected(false);
                 }
                 return true;
             }

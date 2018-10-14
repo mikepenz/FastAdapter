@@ -10,7 +10,7 @@ import com.mikepenz.fastadapter.utils.EventHookUtil;
 /**
  * default implementation of the OnCreateViewHolderListener
  */
-public class OnCreateViewHolderListenerImpl<Item extends IItem> implements OnCreateViewHolderListener<Item> {
+public class OnCreateViewHolderListenerImpl<Item extends IItem<? extends RecyclerView.ViewHolder>> implements OnCreateViewHolderListener<Item> {
     /**
      * is called inside the onCreateViewHolder method and creates the viewHolder based on the provided viewTyp
      *

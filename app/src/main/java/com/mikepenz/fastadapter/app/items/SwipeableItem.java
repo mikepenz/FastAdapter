@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Mattias on 2016-02-15.
  */
-public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.ViewHolder> implements ISwipeable<SwipeableItem, IItem>, IDraggable<SwipeableItem, IItem> {
+public class SwipeableItem extends AbstractItem<SwipeableItem.ViewHolder> implements ISwipeable<SwipeableItem, IItem>, IDraggable<SwipeableItem, IItem> {
 
     public StringHolder name;
     public StringHolder description;
@@ -113,7 +113,7 @@ public class SwipeableItem extends AbstractItem<SwipeableItem, SwipeableItem.Vie
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
+    public void bindView(ViewHolder viewHolder, List<?> payloads) {
         super.bindView(viewHolder, payloads);
 
         //set the text for the name

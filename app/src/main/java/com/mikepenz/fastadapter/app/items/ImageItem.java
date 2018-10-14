@@ -30,7 +30,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
+public class ImageItem extends AbstractItem<ImageItem.ViewHolder> {
 
     public String mImageUrl;
     public String mName;
@@ -83,7 +83,7 @@ public class ImageItem extends AbstractItem<ImageItem, ImageItem.ViewHolder> {
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
+    public void bindView(ViewHolder viewHolder, List<?> payloads) {
         super.bindView(viewHolder, payloads);
 
         //get the context

@@ -37,9 +37,9 @@ import java.util.List;
 
 public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastItemAdapter<IItem> fastItemAdapter;
-    private ExpandableExtension<IItem> mExpandableExtension;
-    private ActionModeHelper<IItem> mActionModeHelper;
+    private FastItemAdapter<IItem<? extends RecyclerView.ViewHolder>> fastItemAdapter;
+    private ExpandableExtension<IItem<? extends RecyclerView.ViewHolder>> mExpandableExtension;
+    private ActionModeHelper<IItem<? extends RecyclerView.ViewHolder>> mActionModeHelper;
     private RangeSelectorHelper mRangeSelectorHelper;
     private DragSelectTouchListener mDragSelectTouchListener;
 

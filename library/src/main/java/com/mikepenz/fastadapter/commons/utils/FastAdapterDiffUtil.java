@@ -3,6 +3,7 @@ package com.mikepenz.fastadapter.commons.utils;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.ListUpdateCallback;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
@@ -40,7 +41,7 @@ public class FastAdapterDiffUtil {
      * @param <Item>      The item type kept in the adapter
      * @return the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} computed.
      */
-    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem<? extends RecyclerView.ViewHolder>> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
         if (adapter.isUseIdDistributor()) {
             adapter.getIdDistributor().checkIds(items);
         }
@@ -104,7 +105,7 @@ public class FastAdapterDiffUtil {
      * @param result  the computed {@link androidx.recyclerview.widget.DiffUtil.DiffResult}
      * @return the adapter to allow chaining
      */
-    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, DiffUtil.DiffResult result) {
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem<? extends RecyclerView.ViewHolder>> A set(final A adapter, DiffUtil.DiffResult result) {
         result.dispatchUpdatesTo(new FastAdapterListUpdateCallback<>(adapter));
         return adapter;
     }
@@ -114,7 +115,7 @@ public class FastAdapterDiffUtil {
      *
      * @return the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} computed.
      */
-    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem<? extends RecyclerView.ViewHolder>> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
         return calculateDiff(adapter, items, callback, true);
     }
 
@@ -123,7 +124,7 @@ public class FastAdapterDiffUtil {
      *
      * @return the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} computed.
      */
-    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final boolean detectMoves) {
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem<? extends RecyclerView.ViewHolder>> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final boolean detectMoves) {
         return calculateDiff(adapter, items, new DiffCallbackImpl<Item>(), detectMoves);
     }
 
@@ -132,7 +133,7 @@ public class FastAdapterDiffUtil {
      *
      * @return the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} computed.
      */
-    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items) {
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem<? extends RecyclerView.ViewHolder>> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items) {
         return calculateDiff(adapter, items, new DiffCallbackImpl<Item>(), true);
     }
 
@@ -148,7 +149,7 @@ public class FastAdapterDiffUtil {
      * @param <Item>      The item type kept in the adapter
      * @return the adapter to allow chaining
      */
-    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem<? extends RecyclerView.ViewHolder>> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
         DiffUtil.DiffResult result = calculateDiff(adapter, items, callback, detectMoves);
         return set(adapter, result);
     }
@@ -158,7 +159,7 @@ public class FastAdapterDiffUtil {
      *
      * @return the adapter to allow chaining
      */
-    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem<? extends RecyclerView.ViewHolder>> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
         return set(adapter, items, callback, true);
     }
 
@@ -167,7 +168,7 @@ public class FastAdapterDiffUtil {
      *
      * @return the adapter to allow chaining
      */
-    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, final List<Item> items, final boolean detectMoves) {
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem<? extends RecyclerView.ViewHolder>> A set(final A adapter, final List<Item> items, final boolean detectMoves) {
         return set(adapter, items, new DiffCallbackImpl<Item>(), detectMoves);
     }
 
@@ -176,7 +177,7 @@ public class FastAdapterDiffUtil {
      *
      * @return the adapter to allow chaining
      */
-    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem> A set(final A adapter, final List<Item> items) {
+    public static <A extends ModelAdapter<Model, Item>, Model, Item extends IItem<? extends RecyclerView.ViewHolder>> A set(final A adapter, final List<Item> items) {
         return set(adapter, items, new DiffCallbackImpl<Item>());
     }
 
@@ -185,7 +186,7 @@ public class FastAdapterDiffUtil {
      *
      * @return the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} computed.
      */
-    public static <A extends FastItemAdapter<Item>, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
+    public static <A extends FastItemAdapter<Item>, Item extends IItem<? extends RecyclerView.ViewHolder>> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
         return calculateDiff(adapter.getItemAdapter(), items, callback);
     }
 
@@ -194,7 +195,7 @@ public class FastAdapterDiffUtil {
      *
      * @return the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} computed.
      */
-    public static <A extends FastItemAdapter<Item>, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final boolean detectMoves) {
+    public static <A extends FastItemAdapter<Item>, Item extends IItem<? extends RecyclerView.ViewHolder>> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items, final boolean detectMoves) {
         return calculateDiff(adapter.getItemAdapter(), items, detectMoves);
     }
 
@@ -203,7 +204,7 @@ public class FastAdapterDiffUtil {
      *
      * @return the {@link androidx.recyclerview.widget.DiffUtil.DiffResult} computed.
      */
-    public static <A extends FastItemAdapter<Item>, Item extends IItem> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items) {
+    public static <A extends FastItemAdapter<Item>, Item extends IItem<? extends RecyclerView.ViewHolder>> DiffUtil.DiffResult calculateDiff(final A adapter, final List<Item> items) {
         return calculateDiff(adapter.getItemAdapter(), items);
     }
 
@@ -212,7 +213,7 @@ public class FastAdapterDiffUtil {
      *
      * @return the adapter to allow chaining
      */
-    public static <A extends FastItemAdapter<Item>, Item extends IItem> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
+    public static <A extends FastItemAdapter<Item>, Item extends IItem<? extends RecyclerView.ViewHolder>> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback, final boolean detectMoves) {
         set(adapter.getItemAdapter(), items, callback, detectMoves);
         return adapter;
     }
@@ -222,7 +223,7 @@ public class FastAdapterDiffUtil {
      *
      * @return the adapter to allow chaining
      */
-    public static <A extends FastItemAdapter<Item>, Item extends IItem> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
+    public static <A extends FastItemAdapter<Item>, Item extends IItem<? extends RecyclerView.ViewHolder>> A set(final A adapter, final List<Item> items, final DiffCallback<Item> callback) {
         set(adapter.getItemAdapter(), items, callback);
         return adapter;
     }
@@ -232,7 +233,7 @@ public class FastAdapterDiffUtil {
      *
      * @return the adapter to allow chaining
      */
-    public static <A extends FastItemAdapter<Item>, Item extends IItem> A set(final A adapter, final List<Item> items, final boolean detectMoves) {
+    public static <A extends FastItemAdapter<Item>, Item extends IItem<? extends RecyclerView.ViewHolder>> A set(final A adapter, final List<Item> items, final boolean detectMoves) {
         set(adapter.getItemAdapter(), items, detectMoves);
         return adapter;
     }
@@ -243,7 +244,7 @@ public class FastAdapterDiffUtil {
      * @return the adapter to allow chaining
      */
 
-    public static <A extends FastItemAdapter<Item>, Item extends IItem> A set(final A adapter, final List<Item> items) {
+    public static <A extends FastItemAdapter<Item>, Item extends IItem<? extends RecyclerView.ViewHolder>> A set(final A adapter, final List<Item> items) {
         return set(adapter, items, new DiffCallbackImpl<Item>());
     }
 
@@ -252,7 +253,7 @@ public class FastAdapterDiffUtil {
      *
      * @return the adapter to allow chaining
      */
-    public static <A extends FastItemAdapter<Item>, Item extends IItem> A set(final A adapter, DiffUtil.DiffResult result) {
+    public static <A extends FastItemAdapter<Item>, Item extends IItem<? extends RecyclerView.ViewHolder>> A set(final A adapter, DiffUtil.DiffResult result) {
         set(adapter.getItemAdapter(), result);
         return adapter;
     }
@@ -262,7 +263,7 @@ public class FastAdapterDiffUtil {
      *
      * @param <Item> the item type in the adapter
      */
-    private static final class FastAdapterCallback<Item extends IItem> extends DiffUtil.Callback {
+    private static final class FastAdapterCallback<Item extends IItem<? extends RecyclerView.ViewHolder>> extends DiffUtil.Callback {
 
         private final List<Item> oldItems;
         private final List<Item> newItems;
@@ -305,7 +306,7 @@ public class FastAdapterDiffUtil {
     /**
      * Default implementation of the {@link ListUpdateCallback} to apply changes to the adapter and notify about the changes.
      */
-    private static final class FastAdapterListUpdateCallback<A extends ModelAdapter<Model, Item>, Model, Item extends IItem> implements ListUpdateCallback {
+    private static final class FastAdapterListUpdateCallback<A extends ModelAdapter<Model, Item>, Model, Item extends IItem<? extends RecyclerView.ViewHolder>> implements ListUpdateCallback {
 
         private final A adapter;
 

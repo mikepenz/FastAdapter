@@ -4,10 +4,12 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * Created by mikepenz on 30.12.15.
  */
-public interface IItemAdapter<Model, Item extends IItem> extends IAdapter<Item> {
+public interface IItemAdapter<Model, Item extends IItem<? extends RecyclerView.ViewHolder>> extends IAdapter<Item> {
 
     /**
      * set a new list of items and apply it to the existing list (clear - add) for this adapter

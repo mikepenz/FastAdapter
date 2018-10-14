@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.adapters;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mikepenz.fastadapter.AbstractAdapter;
 import com.mikepenz.fastadapter.FastAdapter;
@@ -31,7 +32,7 @@ import static java.util.Arrays.asList;
  * Created by mikepenz on 27.12.15.
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  */
-public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Item> implements IItemAdapter<Model, Item> {
+public class ModelAdapter<Model, Item extends IItem<? extends RecyclerView.ViewHolder>> extends AbstractAdapter<Item> implements IItemAdapter<Model, Item> {
     //the items handled and managed by this item
     private final IItemList<Item> mItems;
 
@@ -64,7 +65,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
      *
      * @return a new ItemAdapter
      */
-    public static <Model, Item extends IItem> ModelAdapter<Model, Item> models(IInterceptor<Model, Item> interceptor) {
+    public static <Model, Item extends IItem<? extends RecyclerView.ViewHolder>> ModelAdapter<Model, Item> models(IInterceptor<Model, Item> interceptor) {
         return new ModelAdapter<>(interceptor);
     }
 

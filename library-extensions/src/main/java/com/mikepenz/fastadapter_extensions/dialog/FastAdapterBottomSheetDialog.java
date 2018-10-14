@@ -19,7 +19,7 @@ import java.util.List;
  * Created by fabianterhorst on 04.07.16.
  */
 
-public class FastAdapterBottomSheetDialog<Item extends IItem> extends BottomSheetDialog {
+public class FastAdapterBottomSheetDialog<Item extends IItem<? extends RecyclerView.ViewHolder>> extends BottomSheetDialog {
 
     private RecyclerView mRecyclerView;
 

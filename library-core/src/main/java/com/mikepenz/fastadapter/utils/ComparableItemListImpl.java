@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.utils;
 
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mikepenz.fastadapter.IItem;
 
@@ -13,7 +14,7 @@ import java.util.List;
  * The default item list implementation
  */
 
-public class ComparableItemListImpl<Item extends IItem> extends DefaultItemListImpl<Item> {
+public class ComparableItemListImpl<Item extends IItem<? extends RecyclerView.ViewHolder>> extends DefaultItemListImpl<Item> {
 
     private Comparator<Item> mComparator;
 

@@ -7,12 +7,14 @@ import com.mikepenz.fastadapter.adapters.ItemFilter;
 
 import java.util.List;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import static com.mikepenz.fastadapter.adapters.ItemAdapter.items;
 
 /**
  * Created by mikepenz on 18.01.16.
  */
-public class FastItemAdapter<Item extends IItem> extends FastAdapter<Item> {
+public class FastItemAdapter<Item extends IItem<? extends RecyclerView.ViewHolder>> extends FastAdapter<Item> {
     private ItemAdapter<Item> itemAdapter;
 
     /**

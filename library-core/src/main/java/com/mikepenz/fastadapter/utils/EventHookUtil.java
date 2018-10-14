@@ -27,7 +27,7 @@ public class EventHookUtil {
      *
      * @param viewHolder the viewHolder of the item
      */
-    public static <Item extends IItem> void bind(RecyclerView.ViewHolder viewHolder, @Nullable final List<EventHook<Item>> eventHooks) {
+    public static <Item extends IItem<? extends RecyclerView.ViewHolder>> void bind(RecyclerView.ViewHolder viewHolder, @Nullable final List<EventHook<Item>> eventHooks) {
         if (eventHooks == null) {
             return;
         }
@@ -53,7 +53,7 @@ public class EventHookUtil {
      * @param viewHolder the viewHolder containing this view
      * @param view       the view to attach to
      */
-    public static <Item extends IItem> void attachToView(final EventHook<Item> event, final RecyclerView.ViewHolder viewHolder, View view) {
+    public static <Item extends IItem<? extends RecyclerView.ViewHolder>> void attachToView(final EventHook<Item> event, final RecyclerView.ViewHolder viewHolder, View view) {
         if (event instanceof ClickEventHook) {
             view.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class IconItem<T extends IItem & IExpandable> extends AbstractItem<IconItem<T>, IconItem.ViewHolder> implements ISubItem<IconItem, T> {
+public class IconItem<T extends IItem & IExpandable> extends AbstractItem<IconItem.ViewHolder> implements ISubItem<IconItem, T> {
 
     public IIcon mIcon;
     private T mParent;
@@ -74,7 +74,7 @@ public class IconItem<T extends IItem & IExpandable> extends AbstractItem<IconIt
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
+    public void bindView(ViewHolder viewHolder, List<?> payloads) {
         super.bindView(viewHolder, payloads);
 
         //define our data for the view

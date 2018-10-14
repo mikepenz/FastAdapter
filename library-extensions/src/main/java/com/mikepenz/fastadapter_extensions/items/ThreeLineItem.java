@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by fabianterhorst on 30.03.16.
  */
-public class ThreeLineItem extends AbstractItem<ThreeLineItem, ThreeLineItem.ViewHolder> {
+public class ThreeLineItem extends AbstractItem<ThreeLineItem.ViewHolder> {
 
     private StringHolder mName, mDescription;
 
@@ -109,7 +109,7 @@ public class ThreeLineItem extends AbstractItem<ThreeLineItem, ThreeLineItem.Vie
 
 
     @Override
-    public void bindView(ViewHolder holder, List<Object> payloads) {
+    public void bindView(ViewHolder holder, List<?> payloads) {
         super.bindView(holder, payloads);
         if (isEnabled()) {
             holder.itemView.setBackgroundResource(FastAdapterUIUtils.getSelectableBackground(holder.itemView.getContext()));

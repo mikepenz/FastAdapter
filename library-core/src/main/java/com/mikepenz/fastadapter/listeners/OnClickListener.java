@@ -7,7 +7,9 @@ import com.mikepenz.fastadapter.IItem;
 
 import javax.annotation.Nullable;
 
-public interface OnClickListener<Item extends IItem> {
+import androidx.recyclerview.widget.RecyclerView;
+
+public interface OnClickListener<Item extends IItem<? extends RecyclerView.ViewHolder>> {
     /**
      * the onClick event of a specific item inside the RecyclerView
      *

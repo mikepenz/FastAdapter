@@ -159,7 +159,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
      * @return
      * @see #withNewItemsDeliveredTo(IItemAdapter, IInterceptor, OnNewItemsListener) withNewItemsDeliveredTo(IItemAdapter, IInterceptor, OnNewItemsListener)
      */
-    public <Item extends IItem> EndlessScrollHelper<Model> withNewItemsDeliveredTo(@NonNull IItemAdapter<?, Item> itemAdapter, @NonNull IInterceptor<Model, Item> itemFactory) {
+    public <Item extends IItem<? extends RecyclerView.ViewHolder>> EndlessScrollHelper<Model> withNewItemsDeliveredTo(@NonNull IItemAdapter<?, Item> itemAdapter, @NonNull IInterceptor<Model, Item> itemFactory) {
         mOnNewItemsListener = new DeliverToIItemAdapter<>(itemAdapter, itemFactory);
         return this;
     }
@@ -187,7 +187,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
      * @param <Item>
      * @return
      */
-    public <Item extends IItem> EndlessScrollHelper<Model> withNewItemsDeliveredTo(@NonNull IItemAdapter<?, Item> itemAdapter, @NonNull IInterceptor<Model, Item> itemFactory, @NonNull OnNewItemsListener<Model> extraOnNewItemsListener) {
+    public <Item extends IItem<? extends RecyclerView.ViewHolder>> EndlessScrollHelper<Model> withNewItemsDeliveredTo(@NonNull IItemAdapter<?, Item> itemAdapter, @NonNull IInterceptor<Model, Item> itemFactory, @NonNull OnNewItemsListener<Model> extraOnNewItemsListener) {
         mOnNewItemsListener = new DeliverToIItemAdapter2<>(itemAdapter, itemFactory, extraOnNewItemsListener);
         return this;
     }
@@ -311,7 +311,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
     //-----------------------------------------
     //-----------------------------------------
 
-    private static class DeliverToIItemAdapter<Model, Item extends IItem> implements OnNewItemsListener<Model> {
+    private static class DeliverToIItemAdapter<Model, Item extends IItem<? extends RecyclerView.ViewHolder>> implements OnNewItemsListener<Model> {
         @NonNull
         private final IItemAdapter<?, Item> mItemAdapter;
         @NonNull
@@ -347,7 +347,7 @@ public class EndlessScrollHelper<Model> extends EndlessRecyclerOnScrollListener 
         }
     }
 
-    private static class DeliverToIItemAdapter2<Model, Item extends IItem> extends DeliverToIItemAdapter<Model, Item> {
+    private static class DeliverToIItemAdapter2<Model, Item extends IItem<? extends RecyclerView.ViewHolder>> extends DeliverToIItemAdapter<Model, Item> {
         @NonNull
         private final OnNewItemsListener<Model> mExtraOnNewItemsListener;
 

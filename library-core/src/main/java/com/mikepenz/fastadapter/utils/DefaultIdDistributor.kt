@@ -9,19 +9,19 @@ import com.mikepenz.fastadapter.IIdentifyable
 abstract class DefaultIdDistributor<Identifiable : IIdentifyable> : IIdDistributor<Identifiable> {
 
     /**
-     * set an unique identifier for all items which do not have one set already
+     * set an unique identifier for all identifiables which do not have one set already
      *
-     * @param items
+     * @param identifiables
      * @return
      */
-    override fun checkIds(items: List<Identifiable>): List<Identifiable> {
+    override fun checkIds(identifiables: List<Identifiable>): List<Identifiable> {
         var i = 0
-        val size = items.size
+        val size = identifiables.size
         while (i < size) {
-            checkId(items[i])
+            checkId(identifiables[i])
             i++
         }
-        return items
+        return identifiables
     }
 
     /**
@@ -30,23 +30,23 @@ abstract class DefaultIdDistributor<Identifiable : IIdentifyable> : IIdDistribut
      * @param items
      * @return
      */
-    override fun checkIds(vararg items: Identifiable): Array<out Identifiable> {
-        for (item in items) {
-            checkId(item)
+    override fun checkIds(vararg identifiables: Identifiable): Array<out Identifiable> {
+        for (identifiable in identifiables) {
+            checkId(identifiable)
         }
-        return items
+        return identifiables
     }
 
     /**
-     * set an unique identifier for the item which do not have one set already
+     * set an unique identifier for the identifiable which do not have one set already
      *
-     * @param item
+     * @param identifiable
      * @return
      */
-    override fun checkId(item: Identifiable): Identifiable {
-        if (item.identifier == -1L) {
-            item.identifier = nextId(item)
+    override fun checkId(identifiable: Identifiable): Identifiable {
+        if (identifiable.identifier == -1L) {
+            identifiable.identifier = nextId(identifiable)
         }
-        return item
+        return identifiable
     }
 }

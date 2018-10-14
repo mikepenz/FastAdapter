@@ -6,7 +6,7 @@ import android.view.ViewGroup;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 
-public interface OnCreateViewHolderListener<Item extends IItem> {
+public interface OnCreateViewHolderListener<Item extends IItem<? extends RecyclerView.ViewHolder>> {
     /**
      * is called inside the onCreateViewHolder method and creates the viewHolder based on the provided viewTyp
      *

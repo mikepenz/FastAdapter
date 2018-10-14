@@ -11,7 +11,7 @@ import com.mikepenz.library_extensions.R;
 import java.util.List;
 
 
-public class ProgressItem extends AbstractItem<ProgressItem, ProgressItem.ViewHolder> {
+public class ProgressItem extends AbstractItem<ProgressItem.ViewHolder> {
 
     @Override
     public int getType() {
@@ -24,7 +24,7 @@ public class ProgressItem extends AbstractItem<ProgressItem, ProgressItem.ViewHo
     }
 
     @Override
-    public void bindView(ViewHolder holder, List<Object> payloads) {
+    public void bindView(ViewHolder holder, List<?> payloads) {
         super.bindView(holder, payloads);
         if (isEnabled()) {
             holder.itemView.setBackgroundResource(FastAdapterUIUtils.getSelectableBackground(holder.itemView.getContext()));

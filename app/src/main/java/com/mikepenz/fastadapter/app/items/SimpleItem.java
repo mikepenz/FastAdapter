@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> implements IDraggable<SimpleItem, IItem> {
+public class SimpleItem extends AbstractItem<SimpleItem.ViewHolder> implements IDraggable<SimpleItem, IItem> {
 
     public String header;
     public StringHolder name;

@@ -8,11 +8,13 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * Created by mikepenz on 04/06/2017.
  */
 
-public interface IAdapterExtension<Item extends IItem> {
+public interface IAdapterExtension<Item extends IItem<? extends RecyclerView.ViewHolder>> {
     IAdapterExtension<Item> init(FastAdapter<Item> fastAdapter);
 
     void withSavedInstanceState(@Nullable Bundle savedInstanceState, String prefix);

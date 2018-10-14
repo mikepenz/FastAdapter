@@ -53,7 +53,7 @@ import static com.mikepenz.fastadapter.adapters.ItemAdapter.items;
  *
  * @param <Item> Defines the type of items this `FastAdapter` manages (in case of multiple different types, use `IItem`)
  */
-public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class FastAdapter<Item extends IItem<? extends RecyclerView.ViewHolder>> extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     private static final String TAG = "FastAdapter";
 
     // we remember all adapters
@@ -146,7 +146,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return a new FastAdapter
      */
     @SuppressWarnings("unchecked")
-    public static <Item extends IItem, A extends IAdapter> FastAdapter<Item> with(A adapter) {
+    public static <Item extends IItem<? extends RecyclerView.ViewHolder>, A extends IAdapter> FastAdapter<Item> with(A adapter) {
         FastAdapter<Item> fastAdapter = new FastAdapter<>();
         fastAdapter.addAdapter(0, adapter);
         return fastAdapter;
@@ -159,7 +159,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @param adapters the adapters which this FastAdapter should use
      * @return a new FastAdapter
      */
-    public static <Item extends IItem, A extends IAdapter> FastAdapter<Item> with(@Nullable Collection<A> adapters) {
+    public static <Item extends IItem<? extends RecyclerView.ViewHolder>, A extends IAdapter> FastAdapter<Item> with(@Nullable Collection<A> adapters) {
         return with(adapters, null);
     }
 
@@ -171,7 +171,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return a new FastAdapter
      */
     @SuppressWarnings("unchecked")
-    public static <Item extends IItem, A extends IAdapter> FastAdapter<Item> with(@Nullable Collection<A> adapters, @Nullable Collection<IAdapterExtension<Item>> extensions) {
+    public static <Item extends IItem<? extends RecyclerView.ViewHolder>, A extends IAdapter> FastAdapter<Item> with(@Nullable Collection<A> adapters, @Nullable Collection<IAdapterExtension<Item>> extensions) {
         FastAdapter<Item> fastAdapter = new FastAdapter<>();
         if (adapters == null) {
             fastAdapter.mAdapters.add((IAdapter<Item>) items());
@@ -1484,7 +1484,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
      * @return Triple&lt;Boolean, IItem, Integer&gt; The first value is true (it is always not null), the second contains the item and the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
      */
     @SuppressWarnings("unchecked")
-    public static <Item extends IItem> Triple<Boolean, Item, Integer> recursiveSub(IAdapter<Item> lastParentAdapter, int lastParentPosition, IExpandable parent, AdapterPredicate<Item> predicate, boolean stopOnMatch) {
+    public static <Item extends IItem<? extends RecyclerView.ViewHolder>> Triple<Boolean, Item, Integer> recursiveSub(IAdapter<Item> lastParentAdapter, int lastParentPosition, IExpandable parent, AdapterPredicate<Item> predicate, boolean stopOnMatch) {
         //in case it's expanded it can be selected via the normal way
         if (!parent.isExpanded() && parent.getSubItems() != null) {
             for (int ii = 0; ii < parent.getSubItems().size(); ii++) {
@@ -1508,7 +1508,7 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     /**
      * an internal class to return the IItem and relativePosition and its adapter at once. used to save one iteration inside the getInternalItem method
      */
-    public static class RelativeInfo<Item extends IItem> {
+    public static class RelativeInfo<Item extends IItem<? extends RecyclerView.ViewHolder>> {
         public IAdapter<Item> adapter = null;
         public Item item = null;
         public int position = -1;

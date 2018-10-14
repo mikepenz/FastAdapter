@@ -4,6 +4,8 @@ package com.mikepenz.fastadapter_extensions;
 import androidx.annotation.MenuRes;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -15,7 +17,7 @@ import com.mikepenz.fastadapter.select.SelectExtension;
 /**
  * Created by mikepenz on 02.01.16.
  */
-public class ActionModeHelper<Item extends IItem> {
+public class ActionModeHelper<Item extends IItem<? extends RecyclerView.ViewHolder>> {
     private FastAdapter<Item> mFastAdapter;
     private SelectExtension<Item> mSelectExtension;
 

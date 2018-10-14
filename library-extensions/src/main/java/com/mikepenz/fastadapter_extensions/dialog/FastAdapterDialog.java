@@ -17,7 +17,7 @@ import com.mikepenz.fastadapter.listeners.OnTouchListener;
 
 import java.util.List;
 
-public class FastAdapterDialog<Item extends IItem> extends AlertDialog {
+public class FastAdapterDialog<Item extends IItem<? extends RecyclerView.ViewHolder>> extends AlertDialog {
 
     private RecyclerView mRecyclerView;
 

@@ -27,7 +27,7 @@ public class HeaderSelectionItem<T extends IItem & IExpandable, S extends IItem 
     }
 
     @Override
-    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
+    public void bindView(ViewHolder viewHolder, List<?> payloads) {
         super.bindView(viewHolder, payloads);
 
         //get the context

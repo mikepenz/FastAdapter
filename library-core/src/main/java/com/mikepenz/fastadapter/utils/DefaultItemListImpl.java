@@ -8,11 +8,13 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * The default item list implementation
  */
 
-public class DefaultItemListImpl<Item extends IItem> extends DefaultItemList<Item> {
+public class DefaultItemListImpl<Item extends IItem<? extends RecyclerView.ViewHolder>> extends DefaultItemList<Item> {
 
     protected List<Item> mItems;
 

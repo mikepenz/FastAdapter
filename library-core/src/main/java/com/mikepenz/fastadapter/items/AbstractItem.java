@@ -9,9 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mikepenz.fastadapter.IClickable;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.listeners.OnClickListener;
 
 import java.util.Collections;
 import java.util.List;
@@ -20,7 +18,7 @@ import java.util.List;
  * Created by mikepenz on 14.07.15.
  * Implements the general methods of the IItem interface to speed up development.
  */
-public abstract class AbstractItem<Item extends IItem & IClickable, VH extends RecyclerView.ViewHolder> implements IItem<Item, VH>, IClickable<Item> {
+public abstract class AbstractItem<VH extends RecyclerView.ViewHolder> implements IItem<VH> {
 
     // the identifier for this item
     protected long mIdentifier = -1;
@@ -33,18 +31,6 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
     @Override
     public void setIdentifier(long identifier) {
         this.mIdentifier = identifier;
-    }
-
-    /**
-     * set the identifier of this item
-     *
-     * @param identifier
-     * @return
-     */
-    @Deprecated
-    public Item withIdentifier(long identifier) {
-        setIdentifier(identifier);
-        return (Item) this;
     }
 
     /**
@@ -62,11 +48,10 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
      * set the tag of this item
      *
      * @param object
-     * @return
      */
-    public Item withTag(Object object) {
+    @Override
+    public void setTag(Object object) {
         this.mTag = object;
-        return (Item) this;
     }
 
     /**
@@ -84,11 +69,10 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
      * set if this item is enabled
      *
      * @param enabled true if this item is enabled
-     * @return
      */
-    public Item withEnabled(boolean enabled) {
+    @Override
+    public void setEnabled(boolean enabled) {
         this.mEnabled = enabled;
-        return (Item) this;
     }
 
     /**
@@ -106,12 +90,10 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
      * set if this item is selected
      *
      * @param selected true if this item is selected
-     * @return
      */
     @Override
-    public Item withSetSelected(boolean selected) {
+    public void setSelected(boolean selected) {
         this.mSelected = selected;
-        return (Item) this;
     }
 
     /**
@@ -132,9 +114,8 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
      * @return
      */
     @Override
-    public Item withSelectable(boolean selectable) {
+    public void setSelectable(boolean selectable) {
         this.mSelectable = selectable;
-        return (Item) this;
     }
 
     /**
@@ -145,52 +126,6 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
         return mSelectable;
     }
 
-    //this listener is called before any processing is done within the fastAdapter (comes before the FastAdapter item pre click listener)
-    protected OnClickListener<Item> mOnItemPreClickListener;
-
-    /**
-     * provide a listener which is called before any processing is done within the adapter
-     * return true if you want to consume the event
-     *
-     * @param onItemPreClickListener the listener
-     * @return this
-     */
-    @Override
-    public Item withOnItemPreClickListener(OnClickListener<Item> onItemPreClickListener) {
-        mOnItemPreClickListener = onItemPreClickListener;
-        return (Item) this;
-    }
-
-    /**
-     * @return the on PRE item click listener
-     */
-    public OnClickListener<Item> getOnPreItemClickListener() {
-        return mOnItemPreClickListener;
-    }
-
-    //listener called after the operations were done on click (comes before the FastAdapter item click listener)
-    protected OnClickListener<Item> mOnItemClickListener;
-
-    /**
-     * provide a listener which is called before the click listener is called within the adapter
-     * return true if you want to consume the event
-     *
-     * @param onItemClickListener the listener
-     * @return this
-     */
-    @Override
-    public Item withOnItemClickListener(OnClickListener<Item> onItemClickListener) {
-        mOnItemClickListener = onItemClickListener;
-        return (Item) this;
-    }
-
-    /**
-     * @return the OnItemClickListener
-     */
-    public OnClickListener<Item> getOnItemClickListener() {
-        return mOnItemClickListener;
-    }
-
     /**
      * Binds the data of this item to the given holder
      *
@@ -199,7 +134,7 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
      */
     @Override
     @CallSuper
-    public void bindView(final VH holder, List<Object> payloads) {
+    public void bindView(final VH holder, List<?> payloads) {
         //set the selected state of this item. force this otherwise it may is missed when implementing an item
         holder.itemView.setSelected(isSelected());
     }
@@ -334,7 +269,7 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AbstractItem<?, ?> that = (AbstractItem<?, ?>) o;
+        AbstractItem<?> that = (AbstractItem<?>) o;
         return getIdentifier() == that.getIdentifier();
     }
 

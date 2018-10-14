@@ -2,10 +2,12 @@ package com.mikepenz.fastadapter;
 
 import javax.annotation.Nullable;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * Created by mikepenz on 27.12.15.
  */
-public abstract class AbstractAdapter<Item extends IItem> implements IAdapter<Item> {
+public abstract class AbstractAdapter<Item extends IItem<? extends RecyclerView.ViewHolder>> implements IAdapter<Item> {
     //keep a reference to the FastAdapter which contains the base logic
     protected FastAdapter<Item> mFastAdapter;
 

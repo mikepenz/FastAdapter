@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * Created by fabianterhorst on 30.03.16.
  */
-public class SingleLineItem extends AbstractItem<SingleLineItem, SingleLineItem.ViewHolder> {
+public class SingleLineItem extends AbstractItem<SingleLineItem.ViewHolder> {
 
     private StringHolder mName;
 
@@ -104,7 +104,7 @@ public class SingleLineItem extends AbstractItem<SingleLineItem, SingleLineItem.
     }
 
     @Override
-    public void bindView(ViewHolder holder, List<Object> payloads) {
+    public void bindView(ViewHolder holder, List<?> payloads) {
         super.bindView(holder, payloads);
         if (isEnabled()) {
             holder.itemView.setBackgroundResource(FastAdapterUIUtils.getSelectableBackground(holder.itemView.getContext()));

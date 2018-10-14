@@ -2,6 +2,8 @@ package com.mikepenz.fastadapter_extensions;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.android.material.snackbar.Snackbar;
 import android.view.View;
 import android.widget.TextView;
@@ -22,7 +24,7 @@ import static java.util.Arrays.asList;
 /**
  * Created by mikepenz on 04.01.16.
  */
-public class UndoHelper<Item extends IItem> {
+public class UndoHelper<Item extends IItem<? extends RecyclerView.ViewHolder>> {
     private static final int ACTION_REMOVE = 2;
 
     private FastAdapter<Item> mAdapter;
@@ -205,7 +207,7 @@ public class UndoHelper<Item extends IItem> {
         mHistory = null;
     }
 
-    public interface UndoListener<Item extends IItem> {
+    public interface UndoListener<Item extends IItem<? extends RecyclerView.ViewHolder>> {
         void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<Item>> removed);
     }
 
