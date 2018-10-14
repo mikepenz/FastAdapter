@@ -51,7 +51,7 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
         final ItemAdapter itemAdapter = new ItemAdapter();
 
         //create our FastAdapter
-        fastAdapter = FastAdapter.with(Arrays.asList(headerAdapter, itemAdapter));
+        fastAdapter = FastAdapter.Companion.with(Arrays.asList(headerAdapter, itemAdapter));
         fastAdapter.withSelectable(true);
 
 

@@ -70,7 +70,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         itemAdapter = items();
 
         //create our FastAdapter which will manage everything
-        fastAdapter = FastAdapter.with(itemAdapter);
+        fastAdapter = FastAdapter.Companion.with(itemAdapter);
         fastAdapter.withSelectable(true);
 
         //configure our fastAdapter

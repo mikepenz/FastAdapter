@@ -1,14 +1,14 @@
-package com.mikepenz.fastadapter.utils;
+package com.mikepenz.fastadapter.utils
 
-import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.IAdapter
+import com.mikepenz.fastadapter.IItem
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * AdapterPredicate interface to be used with the recursive method.
  */
-public interface AdapterPredicate<Item extends IItem<? extends RecyclerView.ViewHolder>> {
+interface AdapterPredicate<Item : IItem<out RecyclerView.ViewHolder>> {
     /**
      * `apply` is called for every single item in the `recursive` method.
      *
@@ -18,5 +18,10 @@ public interface AdapterPredicate<Item extends IItem<? extends RecyclerView.View
      * @param position           the global position of the item, or "-1" if it is a non displayed sub item
      * @return true if we matched and no longer want to continue (will be ignored if `stopOnMatch` of the recursive function is false)
      */
-    boolean apply(IAdapter<Item> lastParentAdapter, int lastParentPosition, Item item, int position);
+    fun apply(
+        lastParentAdapter: IAdapter<Item>,
+        lastParentPosition: Int,
+        item: Item,
+        position: Int
+    ): Boolean
 }

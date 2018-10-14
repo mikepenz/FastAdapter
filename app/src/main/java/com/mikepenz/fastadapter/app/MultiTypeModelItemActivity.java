@@ -57,7 +57,7 @@ public class MultiTypeModelItemActivity extends AppCompatActivity {
         });
 
         //create our FastAdapter which will manage everything
-        fastAdapter = FastAdapter.with(Arrays.asList(itemAdapter));
+        fastAdapter = FastAdapter.Companion.with(Arrays.asList(itemAdapter));
         fastAdapter.withSelectable(true);
 
         //get our recyclerView and do basic setup

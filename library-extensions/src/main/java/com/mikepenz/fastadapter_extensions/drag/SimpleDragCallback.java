@@ -68,7 +68,7 @@ public class SimpleDragCallback extends ItemTouchHelper.SimpleCallback {
     @Override
     public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
         // remember the from/to positions
-        IItem item = FastAdapter.getHolderAdapterItem(viewHolder);
+        IItem item = FastAdapter.Companion.getHolderAdapterItem(viewHolder);
         if (item instanceof IDraggable) {
             if (((IDraggable) item).isDraggable()) {
                 if (mFrom == RecyclerView.NO_POSITION) {
@@ -97,7 +97,7 @@ public class SimpleDragCallback extends ItemTouchHelper.SimpleCallback {
 
     @Override
     public int getDragDirs(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-        IItem item = FastAdapter.getHolderAdapterItem(viewHolder);
+        IItem item = FastAdapter.Companion.getHolderAdapterItem(viewHolder);
         if (item instanceof IDraggable) {
             if (((IDraggable) item).isDraggable()) {
                 return super.getDragDirs(recyclerView, viewHolder);

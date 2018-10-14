@@ -34,7 +34,7 @@ public class ExpandableFastAdapterTest {
     public void setUp() throws Exception {
         itemAdapter = new ItemAdapter<>();
         expandableExtension = new ExpandableExtension<>();
-        adapter = FastAdapter.with(itemAdapter);
+        adapter = FastAdapter.Companion.with(itemAdapter);
         adapter.addExtension(expandableExtension);
         //adapter.withPositionBasedStateManagement(true);
     }
@@ -94,9 +94,9 @@ public class ExpandableFastAdapterTest {
         TestItem item = items.get(40);
         itemAdapter.set(items);
 
-        assertThat(adapter.getRelativeInfo(40).item).isEqualTo(item);
-        assertThat(adapter.getRelativeInfo(40).adapter).isEqualTo(itemAdapter);
-        assertThat(adapter.getRelativeInfo(40).position).isEqualTo(40);
+        assertThat(adapter.getRelativeInfo(40).getItem()).isEqualTo(item);
+        assertThat(adapter.getRelativeInfo(40).getAdapter()).isEqualTo(itemAdapter);
+        assertThat(adapter.getRelativeInfo(40).getPosition()).isEqualTo(40);
     }
 
     @Test

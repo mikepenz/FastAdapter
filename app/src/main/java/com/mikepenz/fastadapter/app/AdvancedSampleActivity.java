@@ -81,7 +81,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         mExpandableExtension = new ExpandableExtension<>();
 
         //create our FastAdapter
-        mFastAdapter = FastAdapter.with(Arrays.asList(mHeaderAdapter, mItemAdapter), Arrays.<IAdapterExtension<IItem>>asList(mExpandableExtension));
+        mFastAdapter = FastAdapter.Companion.with(Arrays.asList(mHeaderAdapter, mItemAdapter), Arrays.<IAdapterExtension<IItem>>asList(mExpandableExtension));
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things

@@ -555,14 +555,14 @@ public class ModelAdapter<Model, Item extends IItem<? extends RecyclerView.ViewH
 
             //retrieve the item + it's adapter
             FastAdapter.RelativeInfo<Item> relativeInfo = getFastAdapter().getRelativeInfo(globalPosition);
-            Item item = relativeInfo.item;
+            Item item = relativeInfo.getItem();
 
-            if (predicate.apply(relativeInfo.adapter, globalPosition, item, globalPosition) && stopOnMatch) {
+            if (predicate.apply(relativeInfo.getAdapter(), globalPosition, item, globalPosition) && stopOnMatch) {
                 return new Triple<>(true, item, globalPosition);
             }
 
             if (item instanceof IExpandable) {
-                Triple<Boolean, Item, Integer> res = FastAdapter.recursiveSub(relativeInfo.adapter, globalPosition, (IExpandable) item, predicate, stopOnMatch);
+                Triple<Boolean, Item, Integer> res = FastAdapter.Companion.recursiveSub(relativeInfo.getAdapter(), globalPosition, (IExpandable) item, predicate, stopOnMatch);
                 if (res.getFirst() && stopOnMatch) {
                     return res;
                 }

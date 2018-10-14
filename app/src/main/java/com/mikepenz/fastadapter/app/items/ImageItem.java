@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.utils.EventHookUtil;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.mikepenz.iconics.view.IconicsImageView;

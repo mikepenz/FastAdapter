@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion setup.compileSdk
@@ -25,6 +26,8 @@ android {
 
 dependencies {
     implementation project(':library-core')
+
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
 
     implementation "androidx.appcompat:appcompat:${versions.androidX}"
     implementation "androidx.recyclerview:recyclerview:${versions.androidX}"

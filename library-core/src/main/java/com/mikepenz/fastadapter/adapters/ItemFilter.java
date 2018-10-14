@@ -6,6 +6,7 @@ import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.listeners.ItemFilterListener;
+import com.mikepenz.fastadapter.select.SelectExtension;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -143,7 +144,11 @@ public class ItemFilter<Model, Item extends IItem<? extends RecyclerView.ViewHol
             }
             return selections;
         } else {
-            return mItemAdapter.getFastAdapter().getSelections();
+            SelectExtension<Item> selectExtension = mItemAdapter.getFastAdapter().getExtension(SelectExtension.class);
+            if (selectExtension == null) {
+                return new HashSet<>();
+            }
+            return selectExtension.getSelections();
         }
     }
 
@@ -163,7 +168,11 @@ public class ItemFilter<Model, Item extends IItem<? extends RecyclerView.ViewHol
             }
             return selections;
         } else {
-            return mItemAdapter.getFastAdapter().getSelectedItems();
+            SelectExtension<Item> selectExtension = mItemAdapter.getFastAdapter().getExtension(SelectExtension.class);
+            if (selectExtension == null) {
+                return new HashSet<>();
+            }
+            return selectExtension.getSelectedItems();
         }
     }
 

@@ -84,7 +84,7 @@ public class SortActivity extends AppCompatActivity {
         //create our FastAdapter which will manage everything
         itemListImpl = new ComparableItemListImpl<>(getComparator());
         itemAdapter = new ItemAdapter<>(itemListImpl);
-        fastAdapter = FastAdapter.with(itemAdapter);
+        fastAdapter = FastAdapter.Companion.with(itemAdapter);
         fastAdapter.withSelectable(true);
 
         //configure our fastAdapter

@@ -26,7 +26,7 @@ public class FastAdapterDiffUtilTest {
     @Before
     public void setUp() throws Exception {
         itemAdapter = new ItemAdapter<>();
-        adapter = FastAdapter.with(itemAdapter);
+        adapter = FastAdapter.Companion.with(itemAdapter);
     }
 
     @Test

@@ -152,7 +152,7 @@ public class SelectExtension<Item extends IItem<? extends RecyclerView.ViewHolde
             return;
         }
 
-        Set<Item> selections = mFastAdapter.getSelectedItems();
+        Set<Item> selections = getSelectedItems();
         long[] selectionsArray = new long[selections.size()];
         int i = 0;
         for (Item item : selections) {
@@ -390,10 +390,10 @@ public class SelectExtension<Item extends IItem<? extends RecyclerView.ViewHolde
      */
     public void select(int position, boolean fireEvent, boolean considerSelectableFlag) {
         FastAdapter.RelativeInfo<Item> relativeInfo = mFastAdapter.getRelativeInfo(position);
-        if (relativeInfo == null || relativeInfo.item == null) {
+        if (relativeInfo == null || relativeInfo.getItem() == null) {
             return;
         }
-        select(relativeInfo.adapter, relativeInfo.item, position, fireEvent, considerSelectableFlag);
+        select(relativeInfo.getAdapter(), relativeInfo.getItem(), position, fireEvent, considerSelectableFlag);
     }
 
     /**
@@ -624,9 +624,9 @@ public class SelectExtension<Item extends IItem<? extends RecyclerView.ViewHolde
         //we have to re-fetch the selections array again and again as the position will change after one item is deleted
         for (int i = positions.size() - 1; i >= 0; i--) {
             FastAdapter.RelativeInfo<Item> ri = mFastAdapter.getRelativeInfo(positions.get(i));
-            if (ri.item != null && ri.item.isSelected()) { //double verify
-                if (ri.adapter != null && ri.adapter instanceof IItemAdapter) {
-                    ((IItemAdapter) ri.adapter).remove(positions.get(i));
+            if (ri.getItem() != null && ri.getItem().isSelected()) { //double verify
+                if (ri.getAdapter() != null && ri.getAdapter() instanceof IItemAdapter) {
+                    ((IItemAdapter) ri.getAdapter()).remove(positions.get(i));
                 }
             }
         }

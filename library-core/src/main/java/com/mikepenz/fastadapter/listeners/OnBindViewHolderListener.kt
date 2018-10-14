@@ -1,10 +1,8 @@
-package com.mikepenz.fastadapter.listeners;
+package com.mikepenz.fastadapter.listeners
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView
 
-import java.util.List;
-
-public interface OnBindViewHolderListener {
+interface OnBindViewHolderListener {
     /**
      * is called in onBindViewHolder to bind the data on the ViewHolder
      *
@@ -12,7 +10,7 @@ public interface OnBindViewHolderListener {
      * @param position   the position of this viewHolder
      * @param payloads   the payloads provided by the adapter
      */
-    void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position, List<Object> payloads);
+    fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int, payloads: List<*>)
 
     /**
      * is called in onViewRecycled to unbind the data on the ViewHolder
@@ -20,7 +18,7 @@ public interface OnBindViewHolderListener {
      * @param viewHolder the viewHolder for the type at this position
      * @param position   the position of this viewHolder
      */
-    void unBindViewHolder(RecyclerView.ViewHolder viewHolder, int position);
+    fun unBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int)
 
     /**
      * is called in onViewAttachedToWindow when the view is detached from the window
@@ -28,7 +26,7 @@ public interface OnBindViewHolderListener {
      * @param viewHolder the viewHolder for the type at this position
      * @param position   the position of this viewHolder
      */
-    void onViewAttachedToWindow(RecyclerView.ViewHolder viewHolder, int position);
+    fun onViewAttachedToWindow(viewHolder: RecyclerView.ViewHolder, position: Int)
 
     /**
      * is called in onViewDetachedFromWindow when the view is detached from the window
@@ -36,7 +34,7 @@ public interface OnBindViewHolderListener {
      * @param viewHolder the viewHolder for the type at this position
      * @param position   the position of this viewHolder
      */
-    void onViewDetachedFromWindow(RecyclerView.ViewHolder viewHolder, int position);
+    fun onViewDetachedFromWindow(viewHolder: RecyclerView.ViewHolder, position: Int)
 
     /**
      * is called when the ViewHolder is in a transient state. return true if you want to reuse
@@ -45,5 +43,5 @@ public interface OnBindViewHolderListener {
      * @param viewHolder the viewHolder for the view which failed to recycle
      * @return true if we want to recycle anyways (false - it get's destroyed)
      */
-    boolean onFailedToRecycleView(RecyclerView.ViewHolder viewHolder, int position);
+    fun onFailedToRecycleView(viewHolder: RecyclerView.ViewHolder, position: Int): Boolean
 }

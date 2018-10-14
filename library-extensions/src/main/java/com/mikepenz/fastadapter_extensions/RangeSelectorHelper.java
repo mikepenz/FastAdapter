@@ -5,23 +5,26 @@ import android.os.Bundle;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter_extensions.utilities.SubItemUtil;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by Michael on 15.09.2016.
  */
-public class RangeSelectorHelper {
+public class RangeSelectorHelper<Item extends IItem<? extends RecyclerView.ViewHolder>> {
 
     protected static final String BUNDLE_LAST_LONG_PRESS = "bundle_last_long_press";
 
-    private FastItemAdapter mFastAdapter;
+    private FastItemAdapter<Item> mFastAdapter;
     private ActionModeHelper mActionModeHelper;
     private boolean mSupportSubItems = false;
     private Object mPayload = null;
 
     private Integer mLastLongPressIndex;
 
-    public RangeSelectorHelper(FastItemAdapter adapter) {
+    public RangeSelectorHelper(FastItemAdapter<Item> adapter) {
         mFastAdapter = adapter;
     }
 
@@ -88,7 +91,7 @@ public class RangeSelectorHelper {
      * will take care to save the long pressed index
      * or to select all items in the range between the current long pressed item and the last long pressed item
      *
-     * @param index the index of the long pressed item
+     * @param index      the index of the long pressed item
      * @param selectItem true, if the item at the index should be selected, false if this was already done outside of this helper or is not desired
      * @return true, if the long press was handled
      */
@@ -98,8 +101,12 @@ public class RangeSelectorHelper {
             if (mFastAdapter.getAdapterItem(index).isSelectable()) {
                 mLastLongPressIndex = index;
                 // we select this item as well
-                if (selectItem)
-                    mFastAdapter.select(index);
+                if (selectItem) {
+                    SelectExtension<Item> selectExtension = mFastAdapter.getExtension(SelectExtension.class);
+                    if (selectExtension != null) {
+                        selectExtension.select(index);
+                    }
+                }
                 if (mActionModeHelper != null)
                     mActionModeHelper.checkActionMode(null); // works with null as well, as the ActionMode is active for sure!
                 return true;
@@ -116,8 +123,8 @@ public class RangeSelectorHelper {
     /**
      * selects all items in a range, from and to indizes are inclusive
      *
-     * @param from the from index
-     * @param to the to index
+     * @param from   the from index
+     * @param to     the to index
      * @param select true, if the provided range should be selected, false otherwise
      */
     public <T extends IItem & IExpandable> void selectRange(int from, int to, boolean select) {
@@ -127,9 +134,9 @@ public class RangeSelectorHelper {
     /**
      * selects all items in a range, from and to indizes are inclusive
      *
-     * @param from the from index
-     * @param to the to index
-     * @param select true, if the provided range should be selected, false otherwise
+     * @param from        the from index
+     * @param to          the to index
+     * @param select      true, if the provided range should be selected, false otherwise
      * @param skipHeaders true, if you do not want to process headers, false otherwise
      */
     public <T extends IItem & IExpandable> void selectRange(int from, int to, boolean select, boolean skipHeaders) {
@@ -143,15 +150,18 @@ public class RangeSelectorHelper {
         for (int i = from; i <= to; i++) {
             item = mFastAdapter.getAdapterItem(i);
             if (item.isSelectable()) {
-                if (select) {
-                    mFastAdapter.select(i);
-                } else {
-                    mFastAdapter.deselect(i);
+                SelectExtension<Item> selectExtension = mFastAdapter.getExtension(SelectExtension.class);
+                if (selectExtension != null) {
+                    if (select) {
+                        selectExtension.select(i);
+                    } else {
+                        selectExtension.deselect(i);
+                    }
                 }
             }
             if (mSupportSubItems && !skipHeaders) {
                 // if a group is collapsed, select all sub items
-                if (item instanceof IExpandable && !((IExpandable)item).isExpanded()) {
+                if (item instanceof IExpandable && !((IExpandable) item).isExpanded()) {
                     SubItemUtil.selectAllSubItems(mFastAdapter, (T) mFastAdapter.getAdapterItem(i), select, true, mPayload);
                 }
             }

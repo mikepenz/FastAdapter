@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
+import com.mikepenz.fastadapter.select.SelectExtension;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -138,7 +139,7 @@ public class UndoHelper<Item extends IItem<? extends RecyclerView.ViewHolder>> {
         Collections.sort(history.items, new Comparator<FastAdapter.RelativeInfo<Item>>() {
             @Override
             public int compare(FastAdapter.RelativeInfo<Item> lhs, FastAdapter.RelativeInfo<Item> rhs) {
-                return Integer.valueOf(lhs.position).compareTo(rhs.position);
+                return Integer.valueOf(lhs.getPosition()).compareTo(rhs.getPosition());
             }
         });
 
@@ -167,7 +168,7 @@ public class UndoHelper<Item extends IItem<? extends RecyclerView.ViewHolder>> {
                     }
                 });
                 for (FastAdapter.RelativeInfo<Item> relativeInfo : mHistory.items) {
-                    positions.add(relativeInfo.position);
+                    positions.add(relativeInfo.getPosition());
                 }
 
                 mUndoListener.commitRemove(positions, mHistory.items);
@@ -181,8 +182,8 @@ public class UndoHelper<Item extends IItem<? extends RecyclerView.ViewHolder>> {
             if (mHistory.action == ACTION_REMOVE) {
                 for (int i = mHistory.items.size() - 1; i >= 0; i--) {
                     FastAdapter.RelativeInfo<Item> relativeInfo = mHistory.items.get(i);
-                    if (relativeInfo.adapter instanceof IItemAdapter) {
-                        ((IItemAdapter) relativeInfo.adapter).remove(relativeInfo.position);
+                    if (relativeInfo.getAdapter() instanceof IItemAdapter) {
+                        ((IItemAdapter) relativeInfo.getAdapter()).remove(relativeInfo.getPosition());
                     }
                 }
             }
@@ -194,11 +195,14 @@ public class UndoHelper<Item extends IItem<? extends RecyclerView.ViewHolder>> {
             if (mHistory.action == ACTION_REMOVE) {
                 for (int i = 0, size = mHistory.items.size(); i < size; i++) {
                     FastAdapter.RelativeInfo<Item> relativeInfo = mHistory.items.get(i);
-                    if (relativeInfo.adapter instanceof IItemAdapter) {
-                        IItemAdapter<?, Item> adapter = (IItemAdapter<?, Item>) relativeInfo.adapter;
-                        adapter.addInternal(relativeInfo.position, asList(relativeInfo.item));
-                        if (relativeInfo.item.isSelected()) {
-                            mAdapter.select(relativeInfo.position);
+                    if (relativeInfo.getAdapter() instanceof IItemAdapter) {
+                        IItemAdapter<?, Item> adapter = (IItemAdapter<?, Item>) relativeInfo.getAdapter();
+                        adapter.addInternal(relativeInfo.getPosition(), asList(relativeInfo.getItem()));
+                        if (relativeInfo.getItem().isSelected()) {
+                            SelectExtension<Item> selectExtension = mAdapter.getExtension(SelectExtension.class);
+                            if (selectExtension != null) {
+                                selectExtension.select(relativeInfo.getPosition());
+                            }
                         }
                     }
                 }
