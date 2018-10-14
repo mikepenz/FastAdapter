@@ -10,10 +10,12 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -25,8 +27,8 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class ExpandableSampleActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastItemAdapter<IItem> fastItemAdapter;
-    private ExpandableExtension<IItem> expandableExtension;
+    private FastItemAdapter<SimpleSubExpandableItem> fastItemAdapter;
+    private ExpandableExtension<SimpleSubExpandableItem> expandableExtension;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +49,9 @@ public class ExpandableSampleActivity extends AppCompatActivity {
 
         //create our FastAdapter
         fastItemAdapter = new FastItemAdapter<>();
-        fastItemAdapter.withSelectable(true);
+        SelectExtension selectExtension = new SelectExtension<>();
+        fastItemAdapter.addExtension(selectExtension);
+        selectExtension.withSelectable(true);
         expandableExtension = new ExpandableExtension<>();
         //expandableExtension.withOnlyOneExpandedItem(true);
         fastItemAdapter.addExtension(expandableExtension);

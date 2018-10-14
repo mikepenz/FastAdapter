@@ -31,6 +31,7 @@ import androidx.core.util.Pair
 import androidx.recyclerview.widget.RecyclerView
 
 import com.mikepenz.fastadapter.adapters.ItemAdapter.items
+import com.mikepenz.fastadapter.select.SelectExtension
 
 /**
  * The `FastAdapter` class is the core managing class of the `FastAdapter` library, it handles all `IAdapter` implementations, keeps track of the item types which can be displayed
@@ -127,7 +128,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     val viewClickListener: ClickEventHook<Item> = object : ClickEventHook<Item>() {
         override fun onClick(v: View, pos: Int, fastAdapter: FastAdapter<Item>, item: Item) {
             val adapter = fastAdapter.getAdapter(pos)
-            if (adapter != null && item != null && item.isEnabled) {
+            if (adapter != null && item.isEnabled) {
                 var consumed = false
                 if (item is IClickable<*> && (item as IClickable<*>).onPreItemClickListener != null) {
                     consumed = (item as IClickable<Item>).onPreItemClickListener.onClick(
@@ -181,7 +182,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         ): Boolean {
             var consumed = false
             val adapter = fastAdapter.getAdapter(pos)
-            if (adapter != null && item != null && item.isEnabled) {
+            if (adapter != null && item.isEnabled) {
                 if (fastAdapter.onPreLongClickListener != null) {
                     consumed =
                             fastAdapter.onPreLongClickListener!!.onLongClick(v, adapter, item, pos)

@@ -2,9 +2,11 @@ package com.mikepenz.fastadapter.app.items.expandable;
 
 import android.content.Context;
 import android.graphics.Color;
+
 import androidx.annotation.StringRes;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,7 +25,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SimpleSubItem<Parent extends IItem & IExpandable & ISubItem & IClickable> extends AbstractExpandableItem<Parent, SimpleSubItem.ViewHolder, SimpleSubItem<Parent>> implements IDraggable<SimpleSubItem, IItem> {
+public class SimpleSubItem<Parent extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<Parent, SimpleSubItem<Parent>>> extends AbstractExpandableItem<Parent, SimpleSubItem<Parent>, SimpleSubItem.ViewHolder> implements IDraggable<SimpleSubItem, IItem>, ISubItem<Parent> {
 
     public String header;
     public StringHolder name;

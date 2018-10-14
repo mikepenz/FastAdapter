@@ -22,9 +22,11 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.ISelectionListener;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.app.items.CheckBoxSampleItem;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.listeners.OnLongClickListener;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.fastadapter_extensions.UndoHelper;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
@@ -43,6 +45,8 @@ public class MultiselectSampleActivity extends AppCompatActivity {
     private UndoHelper mUndoHelper;
 
     private ActionModeHelper<SimpleItem> mActionModeHelper;
+
+    private SelectExtension<SimpleItem> selectExtension = new SelectExtension<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,16 +72,17 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         mFastAdapter.setHasStableIds(true);
-        mFastAdapter.withSelectable(true);
-        mFastAdapter.withMultiSelect(true);
-        mFastAdapter.withSelectOnLongClick(true);
-        mFastAdapter.withSelectionListener(new ISelectionListener<SimpleItem>() {
+        mFastAdapter.addExtension(selectExtension);
+        selectExtension.withSelectable(true);
+        selectExtension.withMultiSelect(true);
+        selectExtension.withSelectOnLongClick(true);
+        selectExtension.withSelectionListener(new ISelectionListener<SimpleItem>() {
             @Override
             public void onSelectionChanged(SimpleItem item, boolean selected) {
-                Log.i("FastAdapter", "SelectedCount: " + mFastAdapter.getSelections().size() + " ItemsCount: " + mFastAdapter.getSelectedItems().size());
+                Log.i("FastAdapter", "SelectedCount: " + selectExtension.getSelections().size() + " ItemsCount: " + selectExtension.getSelectedItems().size());
             }
         });
-        mFastAdapter.withOnPreClickListener(new OnClickListener<SimpleItem>() {
+        mFastAdapter.setOnPreClickListener(new OnClickListener<SimpleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<SimpleItem> adapter, @NonNull SimpleItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
@@ -85,14 +90,14 @@ public class MultiselectSampleActivity extends AppCompatActivity {
                 return res != null ? res : false;
             }
         });
-        mFastAdapter.withOnClickListener(new OnClickListener<SimpleItem>() {
+        mFastAdapter.setOnClickListener(new OnClickListener<SimpleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<SimpleItem> adapter, @NonNull SimpleItem item, int position) {
-                Toast.makeText(v.getContext(), "SelectedCount: " + mFastAdapter.getSelections().size() + " ItemsCount: " + mFastAdapter.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(), "SelectedCount: " + selectExtension.getSelections().size() + " ItemsCount: " + selectExtension.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
-        mFastAdapter.withOnPreLongClickListener(new OnLongClickListener<SimpleItem>() {
+        mFastAdapter.setOnPreLongClickListener(new OnLongClickListener<SimpleItem>() {
             @Override
             public boolean onLongClick(View v, IAdapter<SimpleItem> adapter, SimpleItem item, int position) {
                 ActionMode actionMode = mActionModeHelper.onLongClick(MultiselectSampleActivity.this, position);
@@ -178,7 +183,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-            mUndoHelper.remove(findViewById(android.R.id.content), "Item removed", "Undo", Snackbar.LENGTH_LONG, mFastAdapter.getSelections());
+            mUndoHelper.remove(findViewById(android.R.id.content), "Item removed", "Undo", Snackbar.LENGTH_LONG, selectExtension.getSelections());
             //as we no longer have a selection so the actionMode can be finished
             mode.finish();
             //we consume the event

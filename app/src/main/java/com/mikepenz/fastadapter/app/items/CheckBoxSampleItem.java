@@ -11,6 +11,7 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;
@@ -131,7 +132,10 @@ public class CheckBoxSampleItem extends AbstractItem<CheckBoxSampleItem.ViewHold
 
         @Override
         public void onClick(View v, int position, FastAdapter<CheckBoxSampleItem> fastAdapter, CheckBoxSampleItem item) {
-            fastAdapter.toggleSelection(position);
+            SelectExtension<CheckBoxSampleItem> selectExtension = fastAdapter.getExtension(SelectExtension.class);
+            if (selectExtension != null) {
+                selectExtension.toggleSelection(position);
+            }
         }
     }
 }

@@ -28,13 +28,13 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class SimpleSubExpandableItem<Parent extends IItem & IExpandable, SubItem extends IItem & ISubItem> extends AbstractExpandableItem<SimpleSubExpandableItem<Parent, SubItem>, SimpleSubExpandableItem.ViewHolder, SubItem> {
+public class SimpleSubExpandableItem<Parent extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<Parent, SubItem>, SubItem extends IItem<? extends RecyclerView.ViewHolder> & ISubItem<Parent>> extends AbstractExpandableItem<Parent, SubItem, SimpleSubExpandableItem.ViewHolder> {
 
     public String header;
     public StringHolder name;
     public StringHolder description;
 
-    private OnClickListener<SimpleSubExpandableItem> mOnClickListener;
+    private OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> mOnClickListener;
 
     public SimpleSubExpandableItem<Parent, SubItem> withHeader(String header) {
         this.header = header;
@@ -61,11 +61,11 @@ public class SimpleSubExpandableItem<Parent extends IItem & IExpandable, SubItem
         return this;
     }
 
-    public OnClickListener<SimpleSubExpandableItem> getOnClickListener() {
+    public OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> getOnClickListener() {
         return mOnClickListener;
     }
 
-    public SimpleSubExpandableItem<Parent, SubItem> withOnClickListener(OnClickListener<SimpleSubExpandableItem> mOnClickListener) {
+    public SimpleSubExpandableItem<Parent, SubItem> withOnClickListener(OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> mOnClickListener) {
         this.mOnClickListener = mOnClickListener;
         return this;
     }

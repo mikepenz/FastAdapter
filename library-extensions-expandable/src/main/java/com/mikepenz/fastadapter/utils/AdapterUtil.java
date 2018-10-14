@@ -22,7 +22,7 @@ public class AdapterUtil {
      */
     public static <Item extends IItem<? extends RecyclerView.ViewHolder> & ISubItem<?>> void restoreSubItemSelectionStatesForAlternativeStateManagement(Item item, List<String> selectedItems) {
         if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
-            List<Item> subItems = ((IExpandable<Item, ?>) item).getSubItems();
+            List<Item> subItems = ((IExpandable<?, Item>) item).getSubItems();
             for (int i = 0, size = subItems.size(); i < size; i++) {
                 Item subItem = subItems.get(i);
                 String id = String.valueOf(subItem.getIdentifier());
@@ -42,7 +42,7 @@ public class AdapterUtil {
      */
     public static <Item extends IItem<? extends RecyclerView.ViewHolder> & ISubItem<?>> void findSubItemSelections(Item item, List<String> selections) {
         if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
-            List<Item> subItems = ((IExpandable<Item, ?>) item).getSubItems();
+            List<Item> subItems = ((IExpandable<?, Item>) item).getSubItems();
             for (int i = 0, size = subItems.size(); i < size; i++) {
                 Item subItem = subItems.get(i);
                 String id = String.valueOf(subItem.getIdentifier());
@@ -79,7 +79,7 @@ public class AdapterUtil {
      */
     public static <Item extends IItem<? extends RecyclerView.ViewHolder> & ISubItem<?>> void addAllSubItems(Item item, List<Item> items) {
         if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
-            List<Item> subItems = ((IExpandable<Item, ?>) item).getSubItems();
+            List<Item> subItems = ((IExpandable<?, Item>) item).getSubItems();
             Item subItem;
             for (int i = 0, size = subItems.size(); i < size; i++) {
                 subItem = subItems.get(i);

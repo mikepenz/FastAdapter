@@ -6,9 +6,9 @@ import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.items.AbstractItem
 
-abstract class AbstractExpandableItem<SubItem, Parent, VH : RecyclerView.ViewHolder> :
+abstract class AbstractExpandableItem<Parent, SubItem, VH : RecyclerView.ViewHolder> :
     AbstractItem<VH>(),
-    IExpandable<SubItem, Parent> where Parent : IItem<out RecyclerView.ViewHolder>, Parent : IExpandable<SubItem, Parent>, SubItem : IItem<out RecyclerView.ViewHolder>, SubItem : ISubItem<Parent> {
+    IExpandable<Parent, SubItem> where Parent : IItem<out RecyclerView.ViewHolder>, Parent : IExpandable<Parent, SubItem>, SubItem : IItem<out RecyclerView.ViewHolder>, SubItem : ISubItem<Parent> {
     override var isExpanded: Boolean = false
     var parent: Parent? = null
     private var _subItems: List<SubItem>? = null

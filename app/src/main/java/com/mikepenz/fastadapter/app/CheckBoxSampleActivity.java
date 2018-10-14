@@ -1,12 +1,14 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
@@ -16,6 +18,7 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.items.CheckBoxSampleItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
@@ -27,6 +30,8 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
 
     //save our FastAdapter
     private FastItemAdapter<CheckBoxSampleItem> fastItemAdapter;
+
+    private SelectExtension<CheckBoxSampleItem> selectExtension = new SelectExtension<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +49,11 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = new FastItemAdapter<>();
-        fastItemAdapter.withSelectable(true);
+        fastItemAdapter.addExtension(selectExtension);
+        selectExtension.withSelectable(true);
 
         //configure our fastAdapter
-        fastItemAdapter.withOnClickListener(new OnClickListener<CheckBoxSampleItem>() {
+        fastItemAdapter.setOnClickListener(new OnClickListener<CheckBoxSampleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<CheckBoxSampleItem> adapter, @NonNull CheckBoxSampleItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
@@ -55,7 +61,7 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
             }
         });
 
-        fastItemAdapter.withOnPreClickListener(new OnClickListener<CheckBoxSampleItem>() {
+        fastItemAdapter.setOnPreClickListener(new OnClickListener<CheckBoxSampleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<CheckBoxSampleItem> adapter, @NonNull CheckBoxSampleItem item, int position) {
                 // consume otherwise radio/checkbox will be deselected
@@ -104,7 +110,7 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
         //handle the click on the back arrow click
         switch (item.getItemId()) {
             case android.R.id.home:
-                Toast.makeText(getApplicationContext(), "selections = " + fastItemAdapter.getSelections(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "selections = " + selectExtension.getSelections(), Toast.LENGTH_LONG).show();
                 onBackPressed();
                 return true;
 
@@ -112,5 +118,4 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
-
 }

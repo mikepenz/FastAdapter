@@ -53,7 +53,7 @@ public class RealmActivity extends AppCompatActivity {
         mFastItemAdapter = new FastItemAdapter<>();
 
         //configure our fastAdapter
-        mFastItemAdapter.withOnClickListener(new OnClickListener<RealmSampleUserItem>() {
+        mFastItemAdapter.setOnClickListener(new OnClickListener<RealmSampleUserItem>() {
             @Override
             public boolean onClick(View v, IAdapter<RealmSampleUserItem> adapter, @NonNull RealmSampleUserItem item, int position) {
                 Toast.makeText(v.getContext(), item.getName(), Toast.LENGTH_SHORT).show();

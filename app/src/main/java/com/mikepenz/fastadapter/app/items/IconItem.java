@@ -22,7 +22,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class IconItem<T extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<IconItem<T>, T>> extends AbstractItem<IconItem.ViewHolder> implements ISubItem<T> {
+public class IconItem<T extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<T, IconItem<T>>> extends AbstractItem<IconItem.ViewHolder> implements ISubItem<T> {
 
     public IIcon mIcon;
     private T mParent;

@@ -22,6 +22,7 @@ import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
@@ -63,6 +64,8 @@ public class SortActivity extends AppCompatActivity {
     private ItemAdapter<SimpleItem> itemAdapter;
     private ComparableItemListImpl<SimpleItem> itemListImpl;
 
+    private SelectExtension<SimpleItem> selectExtension = new SelectExtension<>();
+
     @SortingStrategy
     private int sortingStrategy;
 
@@ -85,10 +88,11 @@ public class SortActivity extends AppCompatActivity {
         itemListImpl = new ComparableItemListImpl<>(getComparator());
         itemAdapter = new ItemAdapter<>(itemListImpl);
         fastAdapter = FastAdapter.Companion.with(itemAdapter);
-        fastAdapter.withSelectable(true);
+        fastAdapter.addExtension(selectExtension);
+        selectExtension.withSelectable(true);
 
         //configure our fastAdapter
-        fastAdapter.withOnClickListener(new OnClickListener<SimpleItem>() {
+        fastAdapter.setOnClickListener(new OnClickListener<SimpleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<SimpleItem> adapter,
                                    @NonNull SimpleItem item, int position) {
@@ -174,7 +178,7 @@ public class SortActivity extends AppCompatActivity {
                 return true;
             case android.R.id.home:
                 Toast.makeText(getApplicationContext(), "selections = " +
-                        fastAdapter.getSelections(), Toast.LENGTH_LONG).show();
+                        selectExtension.getSelections(), Toast.LENGTH_LONG).show();
                 onBackPressed();
                 return true;
             default:

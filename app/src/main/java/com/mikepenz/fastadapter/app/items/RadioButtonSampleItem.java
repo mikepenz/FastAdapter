@@ -11,6 +11,7 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;
@@ -133,13 +134,15 @@ public class RadioButtonSampleItem extends AbstractItem<RadioButtonSampleItem.Vi
         @Override
         public void onClick(View v, int position, FastAdapter<RadioButtonSampleItem> fastAdapter, RadioButtonSampleItem item) {
             if (!item.isSelected()) {
-                Set<Integer> selections = fastAdapter.getSelections();
+                SelectExtension<RadioButtonSampleItem> selectExtension = fastAdapter.getExtension(SelectExtension.class);
+                if (selectExtension == null) return;
+                Set<Integer> selections = selectExtension.getSelections();
                 if (!selections.isEmpty()) {
                     int selectedPosition = selections.iterator().next();
-                    fastAdapter.deselect();
+                    selectExtension.deselect();
                     fastAdapter.notifyItemChanged(selectedPosition);
                 }
-                fastAdapter.select(position);
+                selectExtension.select(position);
             }
         }
     }

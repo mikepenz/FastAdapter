@@ -15,6 +15,7 @@ import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.app.items.RadioButtonSampleItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
 
     //save our FastAdapter
     private FastItemAdapter<RadioButtonSampleItem> fastItemAdapter;
+
+    private SelectExtension<RadioButtonSampleItem> selectExtension = new SelectExtension<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,10 +46,11 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = new FastItemAdapter<>();
-        fastItemAdapter.withSelectable(true);
+        fastItemAdapter.addExtension(selectExtension);
+        selectExtension.withSelectable(true);
 
         //configure our fastAdapter
-        fastItemAdapter.withOnClickListener(new OnClickListener<RadioButtonSampleItem>() {
+        fastItemAdapter.setOnClickListener(new OnClickListener<RadioButtonSampleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<RadioButtonSampleItem> adapter, @NonNull RadioButtonSampleItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
@@ -54,7 +58,7 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
             }
         });
 
-        fastItemAdapter.withOnPreClickListener(new OnClickListener<RadioButtonSampleItem>() {
+        fastItemAdapter.setOnPreClickListener(new OnClickListener<RadioButtonSampleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<RadioButtonSampleItem> adapter, @NonNull RadioButtonSampleItem item, int position) {
                 // consume otherwise radio/checkbox will be deselected
@@ -76,7 +80,9 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
         for (String s : ALPHABET) {
             int count = new Random().nextInt(20);
             for (int i = 1; i <= count; i++) {
-                items.add(new RadioButtonSampleItem().withName(s + " Test " + x).withIdentifier(100 + x));
+                RadioButtonSampleItem item = new RadioButtonSampleItem().withName(s + " Test " + x);
+                item.setIdentifier(100 + x);
+                items.add(item);
                 x++;
             }
         }
@@ -102,7 +108,7 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
         //handle the click on the back arrow click
         switch (item.getItemId()) {
             case android.R.id.home:
-                Toast.makeText(getApplicationContext(), "selections = " + fastItemAdapter.getSelections(), Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "selections = " + selectExtension.getSelections(), Toast.LENGTH_LONG).show();
                 onBackPressed();
                 return true;
 

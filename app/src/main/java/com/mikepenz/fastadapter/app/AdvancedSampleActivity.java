@@ -48,10 +48,10 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     private static final String[] headers = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     //save our FastAdapter
-    private FastAdapter<IItem<? extends RecyclerView.ViewHolder>> mFastAdapter;
+    private FastAdapter mFastAdapter;
     private ItemAdapter<SimpleItem> mHeaderAdapter;
-    private ItemAdapter<IItem<? extends RecyclerView.ViewHolder>> mItemAdapter;
-    private ExpandableExtension<IItem<? extends RecyclerView.ViewHolder>> mExpandableExtension;
+    private ItemAdapter mItemAdapter;
+    private ExpandableExtension mExpandableExtension;
 
     private ActionModeHelper<IItem<? extends RecyclerView.ViewHolder>> mActionModeHelper;
 
@@ -88,16 +88,16 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         mFastAdapter.withSelectable(true);
         mFastAdapter.withMultiSelect(true);
         mFastAdapter.withSelectOnLongClick(true);
-        mFastAdapter.withOnPreClickListener(new OnClickListener<IItem>() {
+        mFastAdapter.setOnPreClickListener(new OnClickListener<IItem>() {
             @Override
-            public boolean onClick(View v, IAdapter adapter, @NonNull IItem item, int position) {
+            public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
                 Boolean res = mActionModeHelper.onClick(item);
                 return res != null ? res : false;
             }
         });
 
-        mFastAdapter.withOnPreLongClickListener(new OnLongClickListener<IItem>() {
+        mFastAdapter.setOnPreLongClickListener(new OnLongClickListener<IItem>() {
             @Override
             public boolean onLongClick(View v, IAdapter adapter, IItem item, int position) {
                 //we do not want expandable items to be selected
