@@ -262,7 +262,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     fun <A : IAdapter<Item>> addAdapter(index: Int, adapter: A): FastAdapter<Item> {
         mAdapters.add(index, adapter)
-        adapter.withFastAdapter(this)
+        adapter.fastAdapter = this
         adapter.mapPossibleTypes(adapter.adapterItems)
         for (i in mAdapters.indices) {
             mAdapters[i].order = i
@@ -954,7 +954,8 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      *
      * @param <Item>
     </Item> */
-    abstract class ViewHolder<Item : IItem<out RecyclerView.ViewHolder>>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    abstract class ViewHolder<Item : IItem<out RecyclerView.ViewHolder>>(itemView: View) :
+        RecyclerView.ViewHolder(itemView) {
 
         /**
          * binds the data of this item onto the viewHolder
@@ -1042,7 +1043,10 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                 }
             }
             for (i in fastAdapter.mAdapters.indices) {
-                fastAdapter.mAdapters[i].withFastAdapter(fastAdapter).order = i
+                fastAdapter.mAdapters[i].apply {
+                    this.fastAdapter = fastAdapter
+                    this.order = i
+                }
             }
             fastAdapter.cacheSizes()
 
@@ -1141,7 +1145,8 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                             lastParentPosition,
                             sub,
                             -1
-                        ) && stopOnMatch) {
+                        ) && stopOnMatch
+                    ) {
                         return Triple(true, sub, null)
                     }
 

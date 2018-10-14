@@ -12,8 +12,8 @@ abstract class ModelAbstractExpandableItem<Model, Parent, SubItem, VH : Recycler
     IExpandable<Parent, SubItem> where Parent : IItem<out RecyclerView.ViewHolder>, Parent : IExpandable<Parent, SubItem>, SubItem : IItem<out RecyclerView.ViewHolder>, SubItem : ISubItem<Parent> {
     override var isExpanded: Boolean = false
     var parent: Parent? = null
-    private var _subItems: List<SubItem>? = null
-    override var subItems: List<SubItem>?
+    private var _subItems: MutableList<SubItem>? = null
+    override var subItems: MutableList<SubItem>?
         set(value) {
             _subItems = value
         }

@@ -1,50 +1,46 @@
-package com.mikepenz.fastadapter;
+package com.mikepenz.fastadapter
 
-import java.util.List;
-
-import javax.annotation.Nullable;
-
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created by mikepenz on 30.12.15.
  */
-public interface IItemAdapter<Model, Item extends IItem<? extends RecyclerView.ViewHolder>> extends IAdapter<Item> {
+interface IItemAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>> : IAdapter<Item> {
 
     /**
      * set a new list of items and apply it to the existing list (clear - add) for this adapter
      *
      * @param items
      */
-    IItemAdapter<Model, Item> set(List<Model> items);
+    fun set(items: List<Model>): IItemAdapter<Model, Item>
 
     /**
      * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
      *
      * @param items
      */
-    IItemAdapter<Model, Item> setNewList(List<Model> items);
+    fun setNewList(items: List<Model>): IItemAdapter<Model, Item>
 
     /**
      * add an array of items to the end of the existing items
      *
      * @param items
      */
-    IItemAdapter<Model, Item> add(Model... items);
+    fun add(vararg items: Model): IItemAdapter<Model, Item>
 
     /**
      * add a list of items to the end of the existing items
      *
      * @param items
      */
-    IItemAdapter<Model, Item> add(List<Model> items);
+    fun add(items: List<Model>): IItemAdapter<Model, Item>
 
     /**
      * add a list of items to the end of the existing items
      *
      * @param items
      */
-    IItemAdapter<Model, Item> addInternal(List<Item> items);
+    fun addInternal(items: List<Item>): IItemAdapter<Model, Item>
 
     /**
      * add an array of items at the given position within the existing items
@@ -52,7 +48,7 @@ public interface IItemAdapter<Model, Item extends IItem<? extends RecyclerView.V
      * @param position the global position
      * @param items
      */
-    IItemAdapter<Model, Item> add(int position, Model... items);
+    fun add(position: Int, vararg items: Model): IItemAdapter<Model, Item>
 
     /**
      * add a list of items at the given position within the existing items
@@ -60,7 +56,7 @@ public interface IItemAdapter<Model, Item extends IItem<? extends RecyclerView.V
      * @param position the global position
      * @param items
      */
-    IItemAdapter<Model, Item> add(int position, List<Model> items);
+    fun add(position: Int, items: List<Model>): IItemAdapter<Model, Item>
 
     /**
      * add a list of items at the given position within the existing items
@@ -68,7 +64,7 @@ public interface IItemAdapter<Model, Item extends IItem<? extends RecyclerView.V
      * @param position the global position
      * @param items
      */
-    IItemAdapter<Model, Item> addInternal(int position, List<Item> items);
+    fun addInternal(position: Int, items: List<Item>): IItemAdapter<Model, Item>
 
     /**
      * sets an item at the given position, overwriting the previous item
@@ -76,7 +72,7 @@ public interface IItemAdapter<Model, Item extends IItem<? extends RecyclerView.V
      * @param position the global position
      * @param item
      */
-    IItemAdapter<Model, Item> set(int position, Model item);
+    operator fun set(position: Int, item: Model): IItemAdapter<Model, Item>
 
     /**
      * sets an item at the given position, overwriting the previous item
@@ -84,14 +80,14 @@ public interface IItemAdapter<Model, Item extends IItem<? extends RecyclerView.V
      * @param position the global position
      * @param item
      */
-    IItemAdapter<Model, Item> setInternal(int position, Item item);
+    fun setInternal(position: Int, item: Item): IItemAdapter<Model, Item>
 
     /**
      * removes an item at the given position within the existing icons
      *
      * @param position the global position
      */
-    IItemAdapter<Model, Item> remove(int position);
+    fun remove(position: Int): IItemAdapter<Model, Item>
 
     /**
      * removes a range of items starting with the given position within the existing icons
@@ -99,22 +95,22 @@ public interface IItemAdapter<Model, Item extends IItem<? extends RecyclerView.V
      * @param position  the global position
      * @param itemCount
      */
-    IItemAdapter<Model, Item> removeRange(int position, int itemCount);
+    fun removeRange(position: Int, itemCount: Int): IItemAdapter<Model, Item>
 
     /**
      * removes all items of this adapter
      */
-    IItemAdapter<Model, Item> clear();
+    fun clear(): IItemAdapter<Model, Item>
 
     /**
      * the interface used to filter the list inside the ItemFilter
      */
-    interface Predicate<Item extends IItem> {
+    interface Predicate<Item : IItem<*>> {
         /**
          * @param item       the item which is checked if it should get filtered
          * @param constraint the string constraint used to filter items away
          * @return true if it should stay. false if it should get filtered away
          */
-        boolean filter(Item item, @Nullable CharSequence constraint);
+        fun filter(item: Item, constraint: CharSequence?): Boolean
     }
 }
