@@ -986,7 +986,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     }
 
     companion object {
-        private val TAG = "FastAdapter"
+        private const val TAG = "FastAdapter"
 
         private fun floorIndex(sparseArray: SparseArray<*>, key: Int): Int {
             var index = sparseArray.indexOfKey(key)
@@ -1162,31 +1162,3 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         }
     }
 }
-/**
- * re-selects all elements stored in the savedInstanceState
- * IMPORTANT! Call this method only after all items where added to the adapters again. Otherwise it may select wrong items!
- *
- * @param savedInstanceState If the activity is being re-initialized after
- * previously being shut down then this Bundle contains the data it most
- * recently supplied in Note: Otherwise it is null.
- * @return this
- */
-/**
- * add the values to the bundle for saveInstanceState
- *
- * @param savedInstanceState If the activity is being re-initialized after
- * previously being shut down then this Bundle contains the data it most
- * recently supplied in Note: Otherwise it is null.
- * @return the passed bundle with the newly added data
- */
-/**
- * wraps notifyItemChanged
- *
- * @param position the global position
- */
-/**
- * wraps notifyItemRangeChanged
- *
- * @param position  the global position
- * @param itemCount the count of items changed
- */
