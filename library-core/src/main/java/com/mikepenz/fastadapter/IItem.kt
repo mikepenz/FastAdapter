@@ -15,7 +15,7 @@ interface IItem<VH : RecyclerView.ViewHolder> : IIdentifyable {
     /**
      * a Tag of the Item
      */
-    var tag: Any
+    var tag: Any?
 
     /**
      * If the item is enabled
@@ -75,7 +75,7 @@ interface IItem<VH : RecyclerView.ViewHolder> : IIdentifyable {
      * @param holder
      * @param payloads
      */
-    fun bindView(holder: VH, payloads: List<Any>)
+    fun bindView(holder: VH, payloads: List<*>)
 
     /**
      * View needs to release resources when its recycled

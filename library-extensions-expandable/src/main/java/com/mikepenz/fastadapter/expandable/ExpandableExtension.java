@@ -376,7 +376,7 @@ public class ExpandableExtension<Item extends IItem<? extends RecyclerView.ViewH
                 if (item instanceof IExpandable) {
                     IExpandable expandable = (IExpandable) item;
                     if (expandable.isExpanded()) {
-                        expandable.withIsExpanded(false);
+                        expandable.setExpanded(false);
 
                         if (expandable.getSubItems() != null) {
                             expandedItemsCount[0] += expandable.getSubItems().size();
@@ -447,7 +447,7 @@ public class ExpandableExtension<Item extends IItem<? extends RecyclerView.ViewH
                 }
 
                 //remember that this item is now opened (not collapsed)
-                expandable.withIsExpanded(true);
+                expandable.setExpanded(true);
 
                 //we need to notify to get the correct drawable if there is one showing the current state
                 if (notifyItemChanged) {

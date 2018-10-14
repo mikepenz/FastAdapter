@@ -10,5 +10,5 @@ interface ISubItem<Parent> where Parent: IItem<out RecyclerView.ViewHolder>, Par
      * Use this to get the parent of this sub item
      * the parent should also contain this sub item in its sub items list
      */
-    var parent: Parent
+    var parent: Parent?
 }

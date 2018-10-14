@@ -14,7 +14,7 @@ interface IExpandable<SubItem, Parent> where Parent : IItem<out RecyclerView.Vie
     /**
      * The list of subItems
      */
-    var subItems: List<SubItem>
+    var subItems: List<SubItem>?
 
     /**
      * True if the item should auto expand on click, false if you want to disable this
