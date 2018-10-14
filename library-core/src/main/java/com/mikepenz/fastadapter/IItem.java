@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by mikepenz on 03.02.15.
  */
-public interface IItem<T, VH extends RecyclerView.ViewHolder> extends IIdentifyable<T> {
+public interface IItem<T, VH extends RecyclerView.ViewHolder> extends IIdentifyable {
 
     /**
      * return a Tag of the Item

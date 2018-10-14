@@ -42,6 +42,11 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
     @PrimaryKey
     protected long mIdentifier = -1;
 
+    @Override
+    public void setIdentifier(long identifier) {
+        this.mIdentifier = identifier;
+    }
+
     /**
      * set the identifier of this item
      *

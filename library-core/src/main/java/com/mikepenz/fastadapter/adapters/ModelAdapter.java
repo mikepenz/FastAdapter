@@ -133,7 +133,7 @@ public class ModelAdapter<Model, Item extends IItem> extends AbstractAdapter<Ite
 
     public IIdDistributor<Item> getIdDistributor() {
         if (mIdDistributor == null) {
-            return (IIdDistributor<Item>) IIdDistributor.DEFAULT;
+            return (IIdDistributor<Item>) IIdDistributor.Companion.getDEFAULT();
         }
         return mIdDistributor;
     }

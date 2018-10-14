@@ -29,10 +29,21 @@ public abstract class AbstractItem<Item extends IItem & IClickable, VH extends R
      * set the identifier of this item
      *
      * @param identifier
+     */
+    @Override
+    public void setIdentifier(long identifier) {
+        this.mIdentifier = identifier;
+    }
+
+    /**
+     * set the identifier of this item
+     *
+     * @param identifier
      * @return
      */
+    @Deprecated
     public Item withIdentifier(long identifier) {
-        this.mIdentifier = identifier;
+        setIdentifier(identifier);
         return (Item) this;
     }
 

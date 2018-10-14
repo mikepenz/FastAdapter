@@ -8,13 +8,14 @@ buildscript {
 
         setup = [
                 compileSdk: 28,
-                buildTools: "28.0.2",
+                buildTools: "28.0.3",
                 minSdk    : 14,
                 targetSdk : 28
         ]
 
         versions = [
-                androidX: '1.0.0'
+                androidX: '1.0.0',
+                kotlin: '1.2.71'
         ]
     }
 
@@ -23,7 +24,8 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha12'
+        classpath 'com.android.tools.build:gradle:3.3.0-alpha13'
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
     }
