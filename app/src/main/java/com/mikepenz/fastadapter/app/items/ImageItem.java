@@ -22,6 +22,7 @@ import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.mikepenz.iconics.view.IconicsImageView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -196,7 +197,9 @@ public class ImageItem extends AbstractItem<ImageItem.ViewHolder> {
         @Override
         public List<View> onBindMany(@NonNull RecyclerView.ViewHolder viewHolder) {
             if (viewHolder instanceof ImageItem.ViewHolder) {
-                return EventHookUtil.toList(((ViewHolder) viewHolder).imageLovedContainer);
+                List<View> views = new ArrayList<>();
+                views.add(((ViewHolder) viewHolder).imageLovedContainer);
+                return views;
             }
             return super.onBindMany(viewHolder);
         }

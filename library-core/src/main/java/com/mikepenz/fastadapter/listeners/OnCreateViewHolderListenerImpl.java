@@ -31,7 +31,7 @@ public class OnCreateViewHolderListenerImpl<Item extends IItem<? extends Recycle
      */
     @Override
     public RecyclerView.ViewHolder onPostCreateViewHolder(FastAdapter<Item> fastAdapter, RecyclerView.ViewHolder viewHolder) {
-        EventHookUtil.bind(viewHolder, fastAdapter.getEventHooks());
+        EventHookUtil.INSTANCE.bind(viewHolder, fastAdapter.getEventHooks());
         return viewHolder;
     }
 }

@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class CheckBoxSampleItem extends AbstractItem<CheckBoxSampleItem, CheckBoxSampleItem.ViewHolder> {
+public class CheckBoxSampleItem extends AbstractItem<CheckBoxSampleItem.ViewHolder> {
 
     public String header;
     public StringHolder name;

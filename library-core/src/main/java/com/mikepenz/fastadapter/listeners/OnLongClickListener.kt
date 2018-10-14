@@ -1,13 +1,13 @@
-package com.mikepenz.fastadapter.listeners;
+package com.mikepenz.fastadapter.listeners
 
-import android.view.View;
+import android.view.View
 
-import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.IAdapter
+import com.mikepenz.fastadapter.IItem
 
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView
 
-public interface OnLongClickListener<Item extends IItem<? extends RecyclerView.ViewHolder>> {
+interface OnLongClickListener<Item : IItem<out RecyclerView.ViewHolder>> {
     /**
      * the onLongClick event of a specific item inside the RecyclerView
      *
@@ -17,5 +17,5 @@ public interface OnLongClickListener<Item extends IItem<? extends RecyclerView.V
      * @param position the global position
      * @return return true if the event was consumed, otherwise false
      */
-    boolean onLongClick(View v, IAdapter<Item> adapter, Item item, int position);
+    fun onLongClick(v: View, adapter: IAdapter<Item>, item: Item, position: Int): Boolean
 }

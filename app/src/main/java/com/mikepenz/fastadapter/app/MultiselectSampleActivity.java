@@ -1,13 +1,17 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
+
 import com.google.android.material.snackbar.Snackbar;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -121,18 +125,17 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         rv.setAdapter(mFastAdapter);
 
         //fill with some sample data
-        SimpleItem SimpleItem = new SimpleItem();
-        SimpleItem
-                .withName("Header")
-                .withIdentifier(1)
-                .withSelectable(false);
-        headerAdapter.add(SimpleItem);
+        SimpleItem simpleItem = new SimpleItem();
+        simpleItem
+                .withName("Header");
+        simpleItem.setIdentifier(2);
+        simpleItem.setSelectable(false);
+        headerAdapter.add(simpleItem);
         List<SimpleItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
             SimpleItem item = new SimpleItem();
-            item
-                    .withName("Test " + i).
-                    withIdentifier(100 + i);
+            item.withName("Test " + i);
+            item.setIdentifier(100 + i);
             items.add(item);
         }
         itemAdapter.add(items);

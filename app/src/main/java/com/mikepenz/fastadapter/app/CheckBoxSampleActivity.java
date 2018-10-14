@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.items.CheckBoxSampleItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
@@ -64,7 +65,7 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
         fastItemAdapter.withEventHook(new CheckBoxSampleItem.CheckBoxClickEvent());
 
         //get our recyclerView and do basic setup
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView recyclerView = findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(fastItemAdapter);
@@ -75,7 +76,9 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
         for (String s : ALPHABET) {
             int count = new Random().nextInt(20);
             for (int i = 1; i <= count; i++) {
-                items.add(new CheckBoxSampleItem().withName(s + " Test " + x).withIdentifier(100 + x));
+                CheckBoxSampleItem item = new CheckBoxSampleItem().withName(s + " Test " + x);
+                item.setIdentifier(100 + x);
+                items.add(item);
                 x++;
             }
         }

@@ -12,7 +12,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LetterItem extends AbstractItem<LetterItem, LetterItem.ViewHolder> {
+public class LetterItem extends AbstractItem<LetterItem.ViewHolder> {
 
     public String letter;
 

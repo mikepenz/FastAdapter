@@ -18,7 +18,7 @@ import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 
-public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampleUserItem, RealmSampleUserItem.ViewHolder> {
+public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampleUserItem.ViewHolder> {
 
     private String name;
 
@@ -76,9 +76,8 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
      * @param object
      * @return this
      */
-    public RealmSampleUserItem withTag(Object object) {
+    public void setTag(Object object) {
         this.mTag = object;
-        return this;
     }
 
     /**
@@ -99,9 +98,8 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
      * @param enabled true if this item is enabled
      * @return this
      */
-    public RealmSampleUserItem withEnabled(boolean enabled) {
+    public void setEnabled(boolean enabled) {
         this.mEnabled = enabled;
-        return this;
     }
 
     /**
@@ -123,9 +121,8 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
      * @return this
      */
     @Override
-    public RealmSampleUserItem withSetSelected(boolean selected) {
+    public void setSelected(boolean selected) {
         this.mSelected = selected;
-        return this;
     }
 
     /**
@@ -147,9 +144,8 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
      * @return this
      */
     @Override
-    public RealmSampleUserItem withSelectable(boolean selectable) {
+    public void setSelectable(boolean selectable) {
         this.mSelectable = selectable;
-        return this;
     }
 
     /**
@@ -286,7 +282,7 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        AbstractItem<?, ?> that = (AbstractItem<?, ?>) o;
+        AbstractItem<?> that = (AbstractItem<?>) o;
         return mIdentifier == that.getIdentifier();
     }
 

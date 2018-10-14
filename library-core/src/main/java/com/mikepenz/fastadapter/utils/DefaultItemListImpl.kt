@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
  * The default item list implementation
  */
 
-open class DefaultItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> constructor(
+open class DefaultItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> @JvmOverloads constructor(
     protected var mItems: MutableList<Item> = ArrayList()
 ) : DefaultItemList<Item>() {
 

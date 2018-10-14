@@ -563,7 +563,7 @@ public class ModelAdapter<Model, Item extends IItem<? extends RecyclerView.ViewH
 
             if (item instanceof IExpandable) {
                 Triple<Boolean, Item, Integer> res = FastAdapter.recursiveSub(relativeInfo.adapter, globalPosition, (IExpandable) item, predicate, stopOnMatch);
-                if (res.first && stopOnMatch) {
+                if (res.getFirst() && stopOnMatch) {
                     return res;
                 }
             }

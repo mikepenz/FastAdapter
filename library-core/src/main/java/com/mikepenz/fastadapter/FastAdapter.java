@@ -22,6 +22,7 @@ import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter.utils.AdapterPredicate;
 import com.mikepenz.fastadapter.utils.DefaultTypeInstanceCache;
 import com.mikepenz.fastadapter.utils.EventHookUtil;
+import com.mikepenz.fastadapter.utils.EventHookUtilKt;
 import com.mikepenz.fastadapter.utils.Triple;
 
 import java.util.ArrayList;
@@ -688,13 +689,13 @@ public class FastAdapter<Item extends IItem<? extends RecyclerView.ViewHolder>> 
 
         if (mAttachDefaultListeners) {
             //handle click behavior
-            EventHookUtil.attachToView(fastAdapterViewClickListener, holder, holder.itemView);
+            EventHookUtilKt.attachToView(fastAdapterViewClickListener, holder, holder.itemView);
 
             //handle long click behavior
-            EventHookUtil.attachToView(fastAdapterViewLongClickListener, holder, holder.itemView);
+            EventHookUtilKt.attachToView(fastAdapterViewLongClickListener, holder, holder.itemView);
 
             //handle touch behavior
-            EventHookUtil.attachToView(fastAdapterViewTouchListener, holder, holder.itemView);
+            EventHookUtilKt.attachToView(fastAdapterViewTouchListener, holder, holder.itemView);
         }
 
         return mOnCreateViewHolderListener.onPostCreateViewHolder(this, holder);
@@ -874,10 +875,10 @@ public class FastAdapter<Item extends IItem<? extends RecyclerView.ViewHolder>> 
                 return item.getIdentifier() == identifier;
             }
         }, true);
-        if (result.second == null) {
+        if (result.getSecond() == null) {
             return null;
         } else {
-            return new Pair(result.second, result.third);
+            return new Pair(result.getSecond(), result.getThird());
         }
     }
 
@@ -1462,7 +1463,7 @@ public class FastAdapter<Item extends IItem<? extends RecyclerView.ViewHolder>> 
 
             if (item instanceof IExpandable) {
                 Triple<Boolean, Item, Integer> res = FastAdapter.recursiveSub(relativeInfo.adapter, i, (IExpandable) item, predicate, stopOnMatch);
-                if (res.first && stopOnMatch) {
+                if (res.getFirst() && stopOnMatch) {
                     return res;
                 }
             }
@@ -1496,7 +1497,7 @@ public class FastAdapter<Item extends IItem<? extends RecyclerView.ViewHolder>> 
 
                 if (sub instanceof IExpandable) {
                     Triple<Boolean, Item, Integer> res = FastAdapter.recursiveSub(lastParentAdapter, lastParentPosition, (IExpandable) sub, predicate, stopOnMatch);
-                    if (res.first) {
+                    if (res.getFirst()) {
                         return res;
                     }
                 }

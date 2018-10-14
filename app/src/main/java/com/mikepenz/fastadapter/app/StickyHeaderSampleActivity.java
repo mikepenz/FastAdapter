@@ -60,7 +60,7 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
         fastAdapter.setHasStableIds(true);
 
         //get our recyclerView and do basic setup
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView rv = findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
         rv.setAdapter(stickyHeaderAdapter.wrap(fastAdapter));
@@ -70,10 +70,14 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
         rv.addItemDecoration(decoration);
 
         //fill with some sample data
-        headerAdapter.add(new SimpleItem().withName("Header").withIdentifier(1));
+        SimpleItem item = new SimpleItem().withName("Header");
+        item.setIdentifier(1);
+        headerAdapter.add(item);
         List<IItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
-            items.add(new SimpleItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(100 + i));
+            SimpleItem simpleItem = new SimpleItem().withName("Test " + i).withHeader(headers[i / 5]);
+            simpleItem.setIdentifier(100 + i);
+            items.add(simpleItem);
         }
         itemAdapter.add(items);
 
