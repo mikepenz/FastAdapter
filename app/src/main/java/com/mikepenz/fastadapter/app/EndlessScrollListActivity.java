@@ -219,7 +219,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
     }
 
     @Override
-    public void itemsFiltered(@Nullable CharSequence constraint, @Nullable List<IItem<? extends RecyclerView.ViewHolder>> results) {
+    public void itemsFiltered(@Nullable CharSequence constraint, @Nullable List<? extends IItem<? extends RecyclerView.ViewHolder>> results) {
         endlessRecyclerOnScrollListener.disable();
         Toast.makeText(EndlessScrollListActivity.this, "filtered items count: " + fastItemAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
     }

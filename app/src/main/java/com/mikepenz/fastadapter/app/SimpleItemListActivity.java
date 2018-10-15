@@ -201,7 +201,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
     }
 
     @Override
-    public void itemsFiltered(@Nullable CharSequence constraint, @Nullable List<SimpleItem> results) {
+    public void itemsFiltered(@Nullable CharSequence constraint, @Nullable List<? extends SimpleItem> results) {
         Toast.makeText(SimpleItemListActivity.this, "filtered items count: " + itemAdapter.getAdapterItemCount(), Toast.LENGTH_SHORT).show();
     }
 
