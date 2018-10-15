@@ -661,7 +661,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return the viewType for this position
      */
     override fun getItemViewType(position: Int): Int {
-        return getItem(position)!!.type
+        return getItem(position)?.type ?: super.getItemViewType(position)
     }
 
     /**
@@ -671,7 +671,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return the itemId for this position
      */
     override fun getItemId(position: Int): Long {
-        return getItem(position)!!.identifier
+        return getItem(position)?.identifier ?: super.getItemId(position)
     }
 
     /**
@@ -907,21 +907,23 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             //retrieve the item + it's adapter
             val relativeInfo = getRelativeInfo(i)
             val item = relativeInfo.item
-
-            if (predicate.apply(relativeInfo.adapter!!, i, item!!, i) && stopOnMatch) {
-                return Triple(true, item, i)
-            }
-
-            if (item is IExpandable<*, *, *>) {
-                val res = FastAdapter.recursiveSub(
-                    relativeInfo.adapter!!,
-                    i,
-                    (item as IExpandable<*, *, *>?)!!,
-                    predicate,
-                    stopOnMatch
-                )
-                if (res.first && stopOnMatch) {
-                    return res
+            if (item != null) {
+                relativeInfo.adapter?.let { adapter ->
+                    if (predicate.apply(adapter, i, item, i) && stopOnMatch) {
+                        return Triple(true, item, i)
+                    }
+                    (item as? IExpandable<*, *, *>?)?.let { expandableItem ->
+                        val res = FastAdapter.recursiveSub(
+                            adapter,
+                            i,
+                            expandableItem,
+                            predicate,
+                            stopOnMatch
+                        )
+                        if (res.first && stopOnMatch) {
+                            return res
+                        }
+                    }
                 }
             }
         }
@@ -1066,7 +1068,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                 if (tag is FastAdapter<*>) {
                     val pos = tag.getHolderAdapterPosition(holder)
                     if (pos != RecyclerView.NO_POSITION) {
-                        return tag.getItem(pos) as Item?
+                        return tag.getItem(pos) as? Item?
                     }
                 }
             }
@@ -1089,7 +1091,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                 val tag =
                     holder.itemView.getTag(com.mikepenz.fastadapter.R.id.fastadapter_item_adapter)
                 if (tag is FastAdapter<*>) {
-                    return tag.getItem(position) as Item?
+                    return tag.getItem(position) as? Item?
                 }
             }
             return null
@@ -1106,7 +1108,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             if (holder != null) {
                 val item = holder.itemView.getTag(com.mikepenz.fastadapter.R.id.fastadapter_item)
                 if (item is IItem<*>) {
-                    return item as Item
+                    return item as? Item?
                 }
             }
             return null
@@ -1133,20 +1135,19 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             stopOnMatch: Boolean
         ): Triple<Boolean, Item, Int> {
             //in case it's expanded it can be selected via the normal way
-            if (!parent.isExpanded && parent.subItems != null) {
-                for (ii in 0 until parent.subItems!!.size) {
-                    val sub = parent.subItems!![ii] as Item
-
-                    if (predicate.apply(
-                            lastParentAdapter,
-                            lastParentPosition,
-                            sub,
-                            -1
-                        ) && stopOnMatch
-                    ) {
-                        return Triple(true, sub, null)
+            if (!parent.isExpanded) {
+                parent.subItems?.forEach { sub ->
+                    (sub as? Item?)?.let { subItem ->
+                        if (predicate.apply(
+                                lastParentAdapter,
+                                lastParentPosition,
+                                subItem,
+                                -1
+                            ) && stopOnMatch
+                        ) {
+                            return Triple(true, sub, null)
+                        }
                     }
-
                     if (sub is IExpandable<*, *, *>) {
                         val res = FastAdapter.recursiveSub(
                             lastParentAdapter,
