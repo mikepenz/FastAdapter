@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Created by fabianterhorst on 29.03.16.
  */
-public class TestDataGenerator {
+public class ExpandableTestDataGenerator {
     public static List<ExpandableTestItem> genTestItemList(int size) {
         List<ExpandableTestItem> list = new ArrayList<>();
         for (int i = 0; i < size; i++) {
