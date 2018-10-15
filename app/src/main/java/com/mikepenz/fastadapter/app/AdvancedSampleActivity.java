@@ -52,7 +52,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     private static final String[] headers = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     //save our FastAdapter
-    private FastAdapter mFastAdapter;
+    private FastAdapter<IItem<? extends RecyclerView.ViewHolder>> mFastAdapter;
     private ItemAdapter<SimpleItem> mHeaderAdapter;
     private ItemAdapter mItemAdapter;
 
@@ -92,18 +92,18 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         selectExtension.setSelectable(true);
         selectExtension.setMultiSelect(true);
         selectExtension.setSelectOnLongClick(true);
-        mFastAdapter.setOnPreClickListener(new OnClickListener<IItem>() {
+        mFastAdapter.setOnPreClickListener(new OnClickListener<IItem<? extends RecyclerView.ViewHolder>>() {
             @Override
-            public boolean onClick(View v, IAdapter adapter, IItem item, int position) {
+            public boolean onClick(View v, IAdapter<IItem<? extends RecyclerView.ViewHolder>> adapter, IItem<? extends RecyclerView.ViewHolder> item, int position) {
                 //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
                 Boolean res = mActionModeHelper.onClick(item);
                 return res != null ? res : false;
             }
         });
 
-        mFastAdapter.setOnPreLongClickListener(new OnLongClickListener<IItem>() {
+        mFastAdapter.setOnPreLongClickListener(new OnLongClickListener<IItem<? extends RecyclerView.ViewHolder>>() {
             @Override
-            public boolean onLongClick(View v, IAdapter adapter, IItem item, int position) {
+            public boolean onLongClick(View v, IAdapter<IItem<? extends RecyclerView.ViewHolder>> adapter, IItem<? extends RecyclerView.ViewHolder> item, int position) {
                 //we do not want expandable items to be selected
                 if (item instanceof IExpandable) {
                     if (((IExpandable) item).getSubItems() != null) {
@@ -165,7 +165,8 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         AtomicInteger id = new AtomicInteger(1);
         List<IItem> items = new ArrayList<>();
         int size = 25;
-        for (int i = 1; i <= size; i++) {
+        //TODO: fixme
+        /*for (int i = 1; i <= size; i++) {
             if (i % 6 == 0) {
                 SimpleSubExpandableItem<SimpleSubExpandableItem, SimpleSubExpandableItem> expandableItem = new SimpleSubExpandableItem<>();
                 expandableItem.withName("Test " + id.get())
@@ -197,7 +198,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 simpleSubItem.setIdentifier(id.getAndIncrement());
                 items.add(simpleSubItem);
             }
-        }
+        }*/
         mItemAdapter.set(items);
     }
 
