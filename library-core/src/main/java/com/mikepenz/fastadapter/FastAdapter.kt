@@ -125,39 +125,28 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     //before calling the global adapter onClick listener call the item specific onClickListener
     //call the normal click listener after selection was handlded
     val viewClickListener: ClickEventHook<Item> = object : ClickEventHook<Item>() {
-        override fun onClick(v: View, pos: Int, fastAdapter: FastAdapter<Item>, item: Item) {
-            val adapter = fastAdapter.getAdapter(pos)
+        override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<Item>, item: Item) {
+            val adapter = fastAdapter.getAdapter(position)
             if (adapter != null && item.isEnabled) {
-                var consumed = false
-                if (item is IClickable<*> && (item as IClickable<*>).onPreItemClickListener != null) {
-                    consumed = (item as IClickable<Item>).onPreItemClickListener.onClick(
+                if ((item as? IClickable<Item>?)?.onPreItemClickListener?.onClick(
                         v,
                         adapter,
                         item,
-                        pos
-                    )
-                }
-                if (!consumed && fastAdapter.onPreClickListener != null) {
-                    consumed = fastAdapter.onPreClickListener!!.onClick(v, adapter, item, pos)
-                }
+                        position
+                    ) == true
+                ) return
+                if (fastAdapter.onPreClickListener?.onClick(v, adapter, item, position) == true) return
                 for (ext in fastAdapter.mExtensions.values) {
-                    if (!consumed) {
-                        consumed = ext.onClick(v, pos, fastAdapter, item)
-                    } else {
-                        break
-                    }
+                    if (ext.onClick(v, position, fastAdapter, item)) return
                 }
-                if (!consumed && item is IClickable<*> && (item as IClickable<*>).onItemClickListener != null) {
-                    consumed = (item as IClickable<Item>).onItemClickListener.onClick(
+                if ((item as? IClickable<Item>?)?.onItemClickListener?.onClick(
                         v,
                         adapter,
                         item,
-                        pos
-                    )
-                }
-                if (!consumed && fastAdapter.onClickListener != null) {
-                    fastAdapter.onClickListener!!.onClick(v, adapter, item, pos)
-                }
+                        position
+                    ) == true
+                ) return
+                if (fastAdapter.onClickListener?.onClick(v, adapter, item, position) == true) return
             }
         }
     }
@@ -182,10 +171,8 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             var consumed = false
             val adapter = fastAdapter.getAdapter(pos)
             if (adapter != null && item.isEnabled) {
-                if (fastAdapter.onPreLongClickListener != null) {
-                    consumed =
-                            fastAdapter.onPreLongClickListener!!.onLongClick(v, adapter, item, pos)
-                }
+                consumed = fastAdapter.onPreLongClickListener?.onLongClick(v, adapter, item, pos) ?:
+                        false
                 for (ext in fastAdapter.mExtensions.values) {
                     if (!consumed) {
                         consumed = ext.onLongClick(v, pos, fastAdapter, item)
@@ -193,8 +180,13 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                         break
                     }
                 }
-                if (!consumed && fastAdapter.onLongClickListener != null) {
-                    consumed = fastAdapter.onLongClickListener!!.onLongClick(v, adapter, item, pos)
+                if (!consumed) {
+                    consumed = fastAdapter.onLongClickListener?.onLongClick(
+                        v,
+                        adapter,
+                        item,
+                        pos
+                    ) ?: false
                 }
             }
             return consumed
