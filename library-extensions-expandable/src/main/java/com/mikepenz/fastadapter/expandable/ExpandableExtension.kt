@@ -55,8 +55,10 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
             val size = fastAdapter.itemCount
             while (i < size) {
                 item = fastAdapter.getItem(i)
-                if (item is IExpandable<*, *, *> && (item as IExpandable<*, *, *>).isExpanded) {
-                    expandedItems.put(i, (item as IExpandable<*, *, *>).subItems!!.size)
+                if ((item as? IExpandable<*, *, *>?)?.isExpanded == true) {
+                    (item as? IExpandable<*, *, *>?)?.subItems?.size?.let { subItemCount ->
+                        expandedItems.put(i, subItemCount)
+                    }
                 }
                 i++
             }
@@ -100,11 +102,12 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
         var i = 0
         var size = fastAdapter.itemCount
         while (i < size) {
-            val item = fastAdapter.getItem(i)
-            id = item!!.identifier.toString()
-            if (expandedItems != null && expandedItems.contains(id)) {
-                expand(i)
-                size = fastAdapter.itemCount
+            fastAdapter.getItem(i)?.let { item ->
+                id = item.identifier.toString()
+                if (expandedItems != null && expandedItems.contains(id)) {
+                    expand(i)
+                    size = fastAdapter.itemCount
+                }
             }
             i++
         }
@@ -121,7 +124,7 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
         val size = fastAdapter.itemCount
         while (i < size) {
             item = fastAdapter.getItem(i)
-            if (item is IExpandable<*, *, *> && (item as IExpandable<*, *, *>).isExpanded) {
+            if ((item as? IExpandable<*, *, *>?)?.isExpanded == true) {
                 expandedItems.add(item.identifier.toString())
             }
             i++
@@ -134,14 +137,14 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
         val consumed = false
         //if this is a expandable item :D (this has to happen after we handled the selection as we refer to the position)
         if (!consumed && item is IExpandable<*, *, *>) {
-            if ((item as IExpandable<*, *, *>).isAutoExpanding && (item as IExpandable<*, *, *>).subItems != null) {
+            if ((item as? IExpandable<*, *, *>)?.isAutoExpanding == true && (item as? IExpandable<*, *, *>?)?.subItems != null) {
                 toggleExpandable(pos)
             }
         }
 
         //if there should be only one expanded item we want to collapse all the others but the current one (this has to happen after we handled the selection as we refer to the position)
         if (!consumed && isOnlyOneExpandedItem && item is IExpandable<*, *, *>) {
-            if ((item as IExpandable<*, *, *>).subItems != null && (item as IExpandable<*, *, *>).subItems!!.size > 0) {
+            if (((item as? IExpandable<*, *, *>?)?.subItems?.size ?: 0) > 0) {
                 val expandedItems = getExpandedItemsSameLevel(pos)
                 for (i in expandedItems.indices.reversed()) {
                     if (expandedItems[i] != pos) {
@@ -187,7 +190,7 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
     override fun notifyAdapterItemRangeChanged(position: Int, itemCount: Int, payload: Any?) {
         for (i in position until position + itemCount) {
             val item = fastAdapter.getItem(position)
-            if (item is IExpandable<*, *, *> && (item as IExpandable<*, *, *>).isExpanded) {
+            if ((item as? IExpandable<*, *, *>?)?.isExpanded == true) {
                 collapse(position)
             }
         }
@@ -218,7 +221,7 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
             if (adapter != null && adapter is IItemAdapter<*, *>) {
                 (adapter as? IItemAdapter<*, *>)?.removeRange(position + 1, previousCount)
                 expandable?.subItems?.let { subItems ->
-                    (adapter as? IItemAdapter<IItem<out RecyclerView.ViewHolder>, *>)?.add(
+                    (adapter as? IItemAdapter<IItem<out RecyclerView.ViewHolder>, *>?)?.add(
                         position + 1,
                         subItems
                     )
@@ -246,8 +249,8 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
             //if it is a SubItem and has a parent, only return the expanded items on the same level
             val expandedItems: IntArray
             val expandedItemsList = ArrayList<Int>()
-            for (subItem in parent.subItems!!) {
-                if (subItem is IExpandable<*, *, *> && (subItem as IExpandable<*, *, *>).isExpanded && subItem !== item) {
+            parent.subItems?.forEach { subItem ->
+                if ((subItem as? IExpandable<*, *, *>)?.isExpanded == true && subItem !== item) {
                     expandedItemsList.add(fastAdapter.getPosition(subItem as Item))
                 }
             }
@@ -275,9 +278,9 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
             if (currItem is ISubItem<*, *>) {
                 val parent = (currItem as ISubItem<*, *>).parent
                 if (parent is IExpandable<*, *, *> && parent.isExpanded) {
-                    i += parent.subItems!!.size
+                    i += parent.subItems?.size ?: 0
                     if (parent !== item)
-                        expandedItemsList.add(fastAdapter.getPosition((parent as Item?)!!))
+                        expandedItemsList.add(fastAdapter.getPosition((parent as Item)))
                 }
             }
             i++
@@ -286,7 +289,9 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
         val expandedItemsListLength = expandedItemsList.size
         expandedItems = IntArray(expandedItemsListLength)
         for (i in 0 until expandedItemsListLength) {
-            expandedItems[i] = expandedItemsList.valueAt(i)!!
+            expandedItemsList.valueAt(i)?.let { value ->
+                expandedItems[i] = value
+            }
         }
         return expandedItems
     }
@@ -298,7 +303,7 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
      */
     fun toggleExpandable(position: Int) {
         val item = fastAdapter.getItem(position)
-        if (item is IExpandable<*, *, *> && (item as IExpandable<*, *, *>).isExpanded) {
+        if ((item as? IExpandable<*, *, *>)?.isExpanded == true) {
             collapse(position)
         } else {
             expand(position)
@@ -356,7 +361,7 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
                         expandable.isExpanded = false
 
                         if (expandable.subItems != null) {
-                            expandedItemsCount[0] += expandable.subItems!!.size
+                            expandedItemsCount[0] += expandable.subItems?.size ?: 0
                             allowedParents.add(item)
                         }
                     }
@@ -367,9 +372,7 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
         }, position, true)
 
         val adapter = fastAdapter.getAdapter(position)
-        if (adapter != null && adapter is IItemAdapter<*, *>) {
-            (adapter as IItemAdapter<*, *>).removeRange(position + 1, expandedItemsCount[0])
-        }
+        (adapter as? IItemAdapter<*, *>?)?.removeRange(position + 1, expandedItemsCount[0])
 
         //we need to notify to get the correct drawable if there is one showing the current state
         if (notifyItemChanged) {
