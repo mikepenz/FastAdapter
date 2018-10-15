@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter;
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 
 import com.mikepenz.fastadapter.items.AbstractItem;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * Created by fabianterhorst on 29.03.16.
  */
-public class TestItem extends AbstractItem<TestItem, TestItem.ViewHolder> implements IExpandable<TestItem, TestItem>, ISubItem<TestItem, TestItem> {
+public class TestItem extends AbstractItem<TestItem.ViewHolder> implements IExpandable<TestItem, TestItem, TestItem.ViewHolder>, ISubItem<TestItem, TestItem.ViewHolder> {
 
     private List<TestItem> mSubItems;
     private TestItem mParent;
@@ -32,9 +33,8 @@ public class TestItem extends AbstractItem<TestItem, TestItem.ViewHolder> implem
     }
 
     @Override
-    public TestItem withIsExpanded(boolean expanded) {
+    public void setExpanded(boolean expanded) {
         mExpanded = expanded;
-        return this;
     }
 
     @Override
@@ -47,9 +47,9 @@ public class TestItem extends AbstractItem<TestItem, TestItem.ViewHolder> implem
         return true;
     }
 
-    public TestItem withSubItems(List<TestItem> subItems) {
+    @Override
+    public void setSubItems(List<TestItem> subItems) {
         this.mSubItems = subItems;
-        return this;
     }
 
     @Override
@@ -58,9 +58,8 @@ public class TestItem extends AbstractItem<TestItem, TestItem.ViewHolder> implem
     }
 
     @Override
-    public TestItem withParent(TestItem parent) {
+    public void setParent(TestItem parent) {
         this.mParent = parent;
-        return this;
     }
 
     @Override

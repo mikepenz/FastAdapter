@@ -1,18 +1,20 @@
 package com.mikepenz.fastadapter;
 
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.fastadapter.listeners.OnBindViewHolderListener;
+import com.mikepenz.fastadapter.select.SelectExtension;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
+import org.robolectric.RobolectricTestRunner;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,18 +26,21 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Shubham Chaudhary on 17/03/16
  */
-@RunWith(RobolectricGradleTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 public class ExpandableFastAdapterTest {
     private FastAdapter<TestItem> adapter;
     private ItemAdapter<TestItem> itemAdapter;
     private ExpandableExtension<TestItem> expandableExtension;
+    private SelectExtension<TestItem> selectExtension;
 
     @Before
     public void setUp() throws Exception {
         itemAdapter = new ItemAdapter<>();
-        expandableExtension = new ExpandableExtension<>();
-        adapter = FastAdapter.Companion.with(itemAdapter);
+        adapter = FastAdapter.with(itemAdapter);
+        expandableExtension = new ExpandableExtension<>(adapter);
+        selectExtension = new SelectExtension<>(adapter);
         adapter.addExtension(expandableExtension);
+        adapter.addExtension(selectExtension);
         //adapter.withPositionBasedStateManagement(true);
     }
 
@@ -45,30 +50,19 @@ public class ExpandableFastAdapterTest {
     }
 
     @Test
-    public void constructor_Default_IsSelectable() throws Exception {
-        assertThat(adapter.isSelectable()).isFalse();    //default
-    }
-
-    @Test
-    public void withSelectable() throws Exception {
-        assertThat(adapter.withSelectable(true).isSelectable()).isTrue();
-        assertThat(adapter.withSelectable(false).isSelectable()).isFalse();
-    }
-
-    @Test
     public void select() throws Exception {
-        adapter.withSelectable(true);
+        selectExtension.setSelectable(true);
         itemAdapter.set(TestDataGenerator.genTestItemList(100));
 
-        assertThat(adapter.getSelectedItems().size()).isEqualTo(0);
-        assertThat(adapter.getSelections().size()).isEqualTo(0);
+        assertThat(selectExtension.getSelectedItems().size()).isEqualTo(0);
+        assertThat(selectExtension.getSelections().size()).isEqualTo(0);
 
-        adapter.select(10);
+        selectExtension.select(10);
 
-        assertThat(adapter.getSelectedItems().size()).isEqualTo(1);
-        assertThat(adapter.getSelectedItems().iterator().next().getIdentifier()).isEqualTo(10);
-        assertThat(adapter.getSelections().size()).isEqualTo(1);
-        assertThat(adapter.getSelections().iterator().next()).isEqualTo(10);
+        assertThat(selectExtension.getSelectedItems().size()).isEqualTo(1);
+        assertThat(selectExtension.getSelectedItems().iterator().next().getIdentifier()).isEqualTo(10);
+        assertThat(selectExtension.getSelections().size()).isEqualTo(1);
+        assertThat(selectExtension.getSelections().iterator().next()).isEqualTo(10);
     }
 
     @Test
@@ -191,11 +185,12 @@ public class ExpandableFastAdapterTest {
     @Test
     public void withBindViewHolderListener_OnBindViewHolder_Callback() throws Exception {
         OnBindViewHolderListener listener = mock(OnBindViewHolderListener.class);
-        RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(mock(View.class)) {};
-        adapter.withOnBindViewHolderListener(listener);
+        RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(mock(View.class)) {
+        };
+        adapter.setOnBindViewHolderListener(listener);
 
-        adapter.onBindViewHolder(holder, 10, new ArrayList());
+        adapter.onBindViewHolder(holder, 10, Collections.emptyList());
 
-        verify(listener, only()).onBindViewHolder(holder, 10, new ArrayList());
+        verify(listener, only()).onBindViewHolder(holder, 10, Collections.emptyList());
     }
 }

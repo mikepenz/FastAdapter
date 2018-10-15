@@ -23,7 +23,7 @@ public class TestDataGenerator {
         for (int i = 0; i < size; i++) {
             TestItem testItem = genTestItem(i);
             if (levels > 0) {
-                testItem.withSubItems(genTestItemWithSubItemsList(size, levels - 1));
+                testItem.setSubItems(genTestItemWithSubItemsList(size, levels - 1));
             }
             list.add(testItem);
         }
@@ -32,7 +32,8 @@ public class TestDataGenerator {
 
     @NonNull
     public static TestItem genTestItem(int i) {
-        TestItem testItem = new TestItem().withIdentifier(i);
+        TestItem testItem = new TestItem();
+        testItem.setIdentifier(i);
         return testItem;
     }
 }

@@ -26,8 +26,8 @@ import java.util.ArrayList
  * Created by mikepenz on 04/06/2017.
  */
 
-class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
-    IAdapterExtension<Item> where Item : ISubItem<*, *> {
+class ExpandableExtension<Item : IItem<*>>(private val fastAdapter: FastAdapter<Item>) :
+    IAdapterExtension<Item> {
 
     // only one expanded section
     /**
@@ -349,7 +349,7 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
                 //this is the entrance parent
                 if (allowedParents.size > 0) {
                     // Go on until we hit an item with a parent which was not in our expandable hierarchy
-                    val parent = item.parent
+                    val parent = (item as? ISubItem<*, *>)?.parent
                     if (parent == null || !allowedParents.contains(parent)) {
                         return true
                     }
@@ -404,7 +404,7 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
     fun expand(position: Int, notifyItemChanged: Boolean = false) {
         val item = fastAdapter.getItem(position)
         if (item != null && item is IExpandable<*, *, *>) {
-            val expandable = item as? IExpandable<*, Item, *>?
+            val expandable = item as? IExpandable<*, ISubItem<*, *>, *>?
             //if this item is not already expanded and has sub items we go on
             if (expandable != null && !expandable.isExpanded && expandable.subItems?.isNotEmpty() == true) {
                 val adapter = fastAdapter.getAdapter(position)
@@ -412,7 +412,7 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
                     expandable.subItems?.let { subItems ->
                         (adapter as IItemAdapter<*, Item>).addInternal(
                             position + 1,
-                            subItems
+                            subItems as List<Item>
                         )
                     }
                 }
@@ -457,14 +457,12 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
      */
     fun deselect() {
         val selectExtension =
-            fastAdapter.getExtension<SelectExtension<Item>>(SelectExtension::class.java)
+            fastAdapter.getExtension<SelectExtension<Item>>(SelectExtension::class.java) as? SelectExtension<ISubItem<*, *>>?
                     ?: return
-        fastAdapter.let { fastAdapter ->
-            for (item in AdapterUtil.getAllItems(fastAdapter)) {
-                selectExtension.deselect(item)
-            }
-            fastAdapter.notifyDataSetChanged()
+        for (item in AdapterUtil.getAllItems(fastAdapter as FastAdapter<ISubItem<*, *>>)) {
+            selectExtension.deselect(item)
         }
+        fastAdapter.notifyDataSetChanged()
     }
 
     /**
@@ -474,9 +472,9 @@ class ExpandableExtension<Item>(private val fastAdapter: FastAdapter<Item>) :
      */
     fun select(considerSelectableFlag: Boolean) {
         val selectExtension =
-            fastAdapter.getExtension<SelectExtension<Item>>(SelectExtension::class.java)
+            fastAdapter.getExtension<SelectExtension<Item>>(SelectExtension::class.java) as? SelectExtension<ISubItem<*, *>>?
                     ?: return
-        for (item in AdapterUtil.getAllItems(fastAdapter)) {
+        for (item in AdapterUtil.getAllItems(fastAdapter as FastAdapter<ISubItem<*, *>>)) {
             selectExtension.select(item, considerSelectableFlag)
         }
         fastAdapter.notifyDataSetChanged()
