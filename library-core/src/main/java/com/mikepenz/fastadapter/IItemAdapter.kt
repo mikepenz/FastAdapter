@@ -105,7 +105,7 @@ interface IItemAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>> : IAdap
     /**
      * the interface used to filter the list inside the ItemFilter
      */
-    interface Predicate<Item : IItem<*>> {
+    interface Predicate<Item : IItem<out RecyclerView.ViewHolder>> {
         /**
          * @param item       the item which is checked if it should get filtered
          * @param constraint the string constraint used to filter items away
