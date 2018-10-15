@@ -309,7 +309,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         val extension = ExtensionsFactories.create(
             this,
             clazz as Class<out IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>
-        ) as T
+        ) as? T? ?: return null
         mExtensions[clazz] = extension
         return extension
     }
