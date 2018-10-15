@@ -11,8 +11,6 @@ import androidx.recyclerview.widget.RecyclerView
  */
 
 interface IAdapterExtension<Item : IItem<out RecyclerView.ViewHolder>> {
-    fun init(fastAdapter: FastAdapter<Item>): IAdapterExtension<Item>
-
     fun withSavedInstanceState(savedInstanceState: Bundle?, prefix: String)
 
     fun saveInstanceState(savedInstanceState: Bundle?, prefix: String)

@@ -290,7 +290,6 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             throw IllegalStateException("The given extension was already registered with this FastAdapter instance")
         }
         mExtensions[extension.javaClass] = extension
-        extension.init(this)
         return this
     }
 

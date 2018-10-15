@@ -240,7 +240,7 @@ public class ActionModeHelper<Item extends IItem<? extends RecyclerView.ViewHold
             //as we are now in the actionMode a single click is fine for multiSelection
             SelectExtension<Item> selectExtension = mFastAdapter.getExtension(SelectExtension.class);
             if (selectExtension != null) {
-                selectExtension.withSelectOnLongClick(false);
+                selectExtension.setSelectOnLongClick(false);
             }
 
             return mCallback == null || mCallback.onCreateActionMode(mode, menu);
@@ -253,7 +253,7 @@ public class ActionModeHelper<Item extends IItem<? extends RecyclerView.ViewHold
             //after we are done with the actionMode we fallback to longClick for multiselect
             SelectExtension<Item> selectExtension = mFastAdapter.getExtension(SelectExtension.class);
             if (selectExtension != null) {
-                selectExtension.withSelectOnLongClick(true);
+                selectExtension.setSelectOnLongClick(true);
             }
 
             //actionMode end. deselect everything
