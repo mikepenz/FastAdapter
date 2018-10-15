@@ -12,7 +12,7 @@ before_install:
 jdk:
     - oraclejdk8
 script:
-    - ./gradlew clean test --stacktrace
+    - ./gradlew clean test
 branches:
   except:
     - gh-pages
