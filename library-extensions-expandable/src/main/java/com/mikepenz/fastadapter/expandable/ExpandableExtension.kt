@@ -55,9 +55,11 @@ class ExpandableExtension<Item : IItem<*>>(private val fastAdapter: FastAdapter<
             val size = fastAdapter.itemCount
             while (i < size) {
                 item = fastAdapter.getItem(i)
-                if ((item as? IExpandable<*, *, *>?)?.isExpanded == true) {
-                    (item as? IExpandable<*, *, *>?)?.subItems?.size?.let { subItemCount ->
-                        expandedItems.put(i, subItemCount)
+                (item as? IExpandable<*, *, *>?)?.let { expandableItem ->
+                    if (expandableItem.isExpanded) {
+                        expandableItem.subItems?.size?.let { subItemCount ->
+                            expandedItems.put(i, subItemCount)
+                        }
                     }
                 }
                 i++
@@ -78,7 +80,7 @@ class ExpandableExtension<Item : IItem<*>>(private val fastAdapter: FastAdapter<
                 val size = fastAdapter.itemCount
                 while (i < size) {
                     item = fastAdapter.getItem(i)
-                    if (item is IExpandable<*, *, *> && (item as IExpandable<*, *, *>).isExpanded) {
+                    if ((item as? IExpandable<*, *, *>?)?.isExpanded == true) {
                         expandedItemsList.add(i)
                     }
                     i++
@@ -134,26 +136,24 @@ class ExpandableExtension<Item : IItem<*>>(private val fastAdapter: FastAdapter<
     }
 
     override fun onClick(v: View, pos: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean {
-        val consumed = false
         //if this is a expandable item :D (this has to happen after we handled the selection as we refer to the position)
-        if (!consumed && item is IExpandable<*, *, *>) {
-            if ((item as? IExpandable<*, *, *>)?.isAutoExpanding == true && (item as? IExpandable<*, *, *>?)?.subItems != null) {
+        (item as? IExpandable<*, *, *>?)?.let { expandableItem ->
+            if (expandableItem.isAutoExpanding && expandableItem.subItems != null) {
                 toggleExpandable(pos)
             }
-        }
-
-        //if there should be only one expanded item we want to collapse all the others but the current one (this has to happen after we handled the selection as we refer to the position)
-        if (!consumed && isOnlyOneExpandedItem && item is IExpandable<*, *, *>) {
-            if (((item as? IExpandable<*, *, *>?)?.subItems?.size ?: 0) > 0) {
-                val expandedItems = getExpandedItemsSameLevel(pos)
-                for (i in expandedItems.indices.reversed()) {
-                    if (expandedItems[i] != pos) {
-                        collapse(expandedItems[i], true)
+            //if there should be only one expanded item we want to collapse all the others but the current one (this has to happen after we handled the selection as we refer to the position)
+            if (isOnlyOneExpandedItem) {
+                if (expandableItem.subItems?.isNotEmpty() == true) {
+                    val expandedItems = getExpandedItemsSameLevel(pos)
+                    for (i in expandedItems.indices.reversed()) {
+                        if (expandedItems[i] != pos) {
+                            collapse(expandedItems[i], true)
+                        }
                     }
                 }
             }
         }
-        return consumed
+        return false
     }
 
     override fun onLongClick(
