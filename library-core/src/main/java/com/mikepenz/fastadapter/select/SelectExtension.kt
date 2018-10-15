@@ -524,9 +524,9 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
             ): Boolean {
                 if (item.isSelected) {
                     //if it's a subitem remove it from the parent
-                    if (item is ISubItem<*>) {
+                    if (item is ISubItem<*, *>) {
                         //a sub item which is not in the list can be instantly deleted
-                        val parent = (item as ISubItem<*>).parent as IExpandable<*, *>?
+                        val parent = (item as ISubItem<*, *>).parent
                         //parent should not be null, but check in any case..
                         if (parent != null) {
                             parent.subItems!!.remove(item)

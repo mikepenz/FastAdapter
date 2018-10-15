@@ -919,11 +919,11 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                 return Triple(true, item, i)
             }
 
-            if (item is IExpandable<*, *>) {
+            if (item is IExpandable<*, *, *>) {
                 val res = FastAdapter.recursiveSub(
                     relativeInfo.adapter!!,
                     i,
-                    (item as IExpandable<*, *>?)!!,
+                    (item as IExpandable<*, *, *>?)!!,
                     predicate,
                     stopOnMatch
                 )
@@ -1128,7 +1128,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         fun <Item : IItem<out RecyclerView.ViewHolder>> recursiveSub(
             lastParentAdapter: IAdapter<Item>,
             lastParentPosition: Int,
-            parent: IExpandable<*, *>,
+            parent: IExpandable<*, *, *>,
             predicate: AdapterPredicate<Item>,
             stopOnMatch: Boolean
         ): Triple<Boolean, Item, Int> {
@@ -1147,11 +1147,11 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                         return Triple(true, sub, null)
                     }
 
-                    if (sub is IExpandable<*, *>) {
+                    if (sub is IExpandable<*, *, *>) {
                         val res = FastAdapter.recursiveSub(
                             lastParentAdapter,
                             lastParentPosition,
-                            sub as IExpandable<*, *>,
+                            sub as IExpandable<*, *, *>,
                             predicate,
                             stopOnMatch
                         )

@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import com.mikepenz.fastadapter.IClickable;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;
@@ -25,7 +24,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SimpleSubItem<Parent extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<Parent, SimpleSubItem<Parent>>> extends AbstractExpandableItem<Parent, SimpleSubItem<Parent>, SimpleSubItem.ViewHolder> implements IDraggable<SimpleSubItem, IItem>, ISubItem<Parent> {
+public class SimpleSubItem<Parent extends IExpandable<Parent, SimpleSubItem<Parent>, SimpleSubItem.ViewHolder>> extends AbstractExpandableItem<Parent, SimpleSubItem<Parent>, SimpleSubItem.ViewHolder> implements IDraggable<SimpleSubItem, IItem>, ISubItem<Parent, SimpleSubItem.ViewHolder> {
 
     public String header;
     public StringHolder name;

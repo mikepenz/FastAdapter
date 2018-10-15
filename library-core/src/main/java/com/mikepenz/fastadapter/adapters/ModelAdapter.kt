@@ -470,9 +470,9 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
             ): Boolean {
                 if (identifier == item.identifier) {
                     //if it's a subitem remove it from the parent
-                    if (item is ISubItem<*>) {
+                    if (item is ISubItem<*, *>) {
                         //a sub item which is not in the list can be instantly deleted
-                        val parent = (item as ISubItem<*>).parent as IExpandable<*, *>?
+                        val parent = (item as ISubItem<*, *>).parent
                         //parent should not be null, but check in any case..
                         if (parent != null) {
                             parent.subItems?.remove(item)
@@ -520,11 +520,11 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
                 return Triple(true, item, globalPosition)
             }
 
-            if (item is IExpandable<*, *>) {
+            if (item is IExpandable<*, *, *>) {
                 val res = FastAdapter.recursiveSub(
                     relativeInfo.adapter!!,
                     globalPosition,
-                    (item as IExpandable<*, *>?)!!,
+                    (item as IExpandable<*, *, *>?)!!,
                     predicate,
                     stopOnMatch
                 )

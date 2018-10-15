@@ -2,15 +2,18 @@ package com.mikepenz.fastadapter.app.items.expandable;
 
 import android.content.Context;
 import android.graphics.Color;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.StringRes;
 import androidx.core.view.ViewCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.IClickable;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;
@@ -28,7 +31,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class SimpleSubExpandableItem<Parent extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<Parent, SubItem>, SubItem extends IItem<? extends RecyclerView.ViewHolder> & ISubItem<Parent>> extends AbstractExpandableItem<Parent, SubItem, SimpleSubExpandableItem.ViewHolder> {
+public class SimpleSubExpandableItem<Parent extends IExpandable<Parent, SubItem, SimpleSubExpandableItem.ViewHolder>, SubItem extends ISubItem<Parent, SimpleSubExpandableItem.ViewHolder>> extends AbstractExpandableItem<Parent, SubItem, SimpleSubExpandableItem.ViewHolder> implements IClickable<SimpleSubExpandableItem<Parent, SubItem>> {
 
     public String header;
     public StringHolder name;
@@ -61,13 +64,9 @@ public class SimpleSubExpandableItem<Parent extends IItem<? extends RecyclerView
         return this;
     }
 
-    public OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> getOnClickListener() {
-        return mOnClickListener;
-    }
-
-    public SimpleSubExpandableItem<Parent, SubItem> withOnClickListener(OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> mOnClickListener) {
-        this.mOnClickListener = mOnClickListener;
-        return this;
+    @Override
+    public void setOnItemClickListener(OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> onClickListener) {
+        mOnClickListener = onClickListener;
     }
 
     //we define a clickListener in here so we can directly animate
@@ -94,6 +93,16 @@ public class SimpleSubExpandableItem<Parent extends IItem<? extends RecyclerView
     @Override
     public OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> getOnItemClickListener() {
         return onClickListener;
+    }
+
+    @Override
+    public OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> getOnPreItemClickListener() {
+        return null;
+    }
+
+    @Override
+    public void setOnPreItemClickListener(OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> onClickListener) {
+
     }
 
     @Override

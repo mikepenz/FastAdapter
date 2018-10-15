@@ -4,8 +4,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapterExtension
 import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.extensions.ExtensionFactory
-import com.mikepenz.fastadapter.items.SubItem
 
 class ExpandableExtensionFactory: ExtensionFactory<IItem<out RecyclerView.ViewHolder>> {
 
@@ -15,7 +15,7 @@ class ExpandableExtensionFactory: ExtensionFactory<IItem<out RecyclerView.ViewHo
         fastAdapter: FastAdapter<IItem<out RecyclerView.ViewHolder>>,
         clazz: Class<IAdapterExtension<IItem<out RecyclerView.ViewHolder>>>
     ): IAdapterExtension<IItem<out RecyclerView.ViewHolder>>? {
-        (fastAdapter as? FastAdapter<SubItem<*, *>>?)?.let { subItemAdapter ->
+        (fastAdapter as? FastAdapter<ISubItem<*, *>>?)?.let { subItemAdapter ->
             return ExpandableExtension(subItemAdapter) as IAdapterExtension<IItem<out RecyclerView.ViewHolder>>
         }
         return null

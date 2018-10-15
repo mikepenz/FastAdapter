@@ -5,7 +5,8 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * Created by mikepenz on 30.12.15.
  */
-interface IExpandable<Parent, SubItem> where Parent : IItem<out RecyclerView.ViewHolder>, Parent : IExpandable<Parent, *>, SubItem : IItem<out RecyclerView.ViewHolder>, SubItem : ISubItem<Parent> {
+interface IExpandable<Parent, SubItem, VH : RecyclerView.ViewHolder> :
+    IItem<VH> where Parent : IExpandable<Parent, *, VH>, SubItem : ISubItem<Parent, out RecyclerView.ViewHolder> {
     /**
      * True if expanded (opened)
      */
