@@ -6,14 +6,13 @@ import com.mikepenz.fastadapter.IAdapterExtension
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.extensions.ExtensionFactory
 
-class SelectExtensionFactory: ExtensionFactory<IItem<out RecyclerView.ViewHolder>> {
+class SelectExtensionFactory: ExtensionFactory {
 
     override val clazz = SelectExtension::class.java
 
     override fun create(
-        fastAdapter: FastAdapter<IItem<out RecyclerView.ViewHolder>>,
-        clazz: Class<IAdapterExtension<IItem<out RecyclerView.ViewHolder>>>
-    ): IAdapterExtension<IItem<out RecyclerView.ViewHolder>>? {
+        fastAdapter: FastAdapter<out IItem<out RecyclerView.ViewHolder>>
+    ): IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>? {
         return SelectExtension(fastAdapter)
     }
 }

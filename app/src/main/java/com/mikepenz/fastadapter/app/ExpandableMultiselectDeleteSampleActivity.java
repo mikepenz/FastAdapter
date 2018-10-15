@@ -18,12 +18,14 @@ import com.mikepenz.aboutlibraries.util.UIUtils;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISelectionListener;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.items.HeaderSelectionItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.listeners.OnLongClickListener;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.fastadapter_extensions.RangeSelectorHelper;
 import com.mikepenz.fastadapter_extensions.utilities.SubItemUtil;
@@ -38,7 +40,7 @@ import java.util.List;
 public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity {
     //save our FastAdapter
     private FastItemAdapter<IItem<? extends RecyclerView.ViewHolder>> fastItemAdapter;
-    private ExpandableExtension<IItem<? extends RecyclerView.ViewHolder>> mExpandableExtension;
+    private ExpandableExtension<ISubItem<?, ? extends RecyclerView.ViewHolder>> mExpandableExtension;
     private ActionModeHelper<IItem<? extends RecyclerView.ViewHolder>> mActionModeHelper;
     private RangeSelectorHelper mRangeSelectorHelper;
     private DragSelectTouchListener mDragSelectTouchListener;
@@ -53,10 +55,10 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
         setContentView(R.layout.activity_sample);
 
         // get RecyclerView
-        final RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        final RecyclerView rv = findViewById(R.id.rv);
 
         // Handle Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.sample_collapsible);
 
@@ -65,16 +67,16 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
 
         //create our FastAdapter
         fastItemAdapter = new FastItemAdapter<>();
-        mExpandableExtension = new ExpandableExtension<>();
+        mExpandableExtension = fastItemAdapter.getOrCreateExtension(ExpandableExtension.class);
+        SelectExtension selectExtension = fastItemAdapter.getOrCreateExtension(SelectExtension.class);
+        selectExtension.setSelectable(true);
+        selectExtension.setMultiSelect(true);
+        selectExtension.setSelectOnLongClick(true);
 
         fastItemAdapter
-                .addExtension(mExpandableExtension)
-                .withSelectable(true)
-                .withMultiSelect(true)
-                .withSelectOnLongClick(true)
-                .withOnPreClickListener(new OnClickListener<IItem>() {
+                .setOnPreClickListener(new OnClickListener<IItem<? extends RecyclerView.ViewHolder>>() {
                     @Override
-                    public boolean onClick(View v, IAdapter<IItem> adapter, @NonNull IItem item, int position) {
+                    public boolean onClick(View v, IAdapter<IItem<? extends RecyclerView.ViewHolder>> adapter, @NonNull IItem<? extends RecyclerView.ViewHolder> item, int position) {
                         //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
                         Boolean res = mActionModeHelper.onClick(ExpandableMultiselectDeleteSampleActivity.this, item);
                         // in this example, we want to consume a click, if the ActionModeHelper will remove the ActionMode
@@ -83,10 +85,10 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                             return true;
                         return res != null ? res : false;
                     }
-                })
-                .withOnClickListener(new OnClickListener<IItem>() {
+                });
+        fastItemAdapter.setOnClickListener(new OnClickListener<IItem<? extends RecyclerView.ViewHolder>>() {
                     @Override
-                    public boolean onClick(View v, IAdapter<IItem> adapter, @NonNull IItem item, int position) {
+                    public boolean onClick(View v, IAdapter<IItem<? extends RecyclerView.ViewHolder>> adapter, @NonNull IItem<? extends RecyclerView.ViewHolder> item, int position) {
                         // check if the actionMode consumes the click. This returns true, if it does, false if not
                         if (!mActionModeHelper.isActive())
                             Toast.makeText(ExpandableMultiselectDeleteSampleActivity.this, ((SimpleSubItem) item).name + " clicked!", Toast.LENGTH_SHORT).show();
@@ -95,12 +97,12 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                         mRangeSelectorHelper.onClick();
                         return false;
                     }
-                })
-                .withOnPreLongClickListener(new OnLongClickListener<IItem>() {
+                });
+        fastItemAdapter.setOnPreLongClickListener(new OnLongClickListener<IItem<? extends RecyclerView.ViewHolder>>() {
                     @Override
-                    public boolean onLongClick(View v, IAdapter<IItem> adapter, IItem item, int position) {
+                    public boolean onLongClick(View v, IAdapter<IItem<? extends RecyclerView.ViewHolder>> adapter, IItem<? extends RecyclerView.ViewHolder> item, int position) {
                         boolean actionModeWasActive = mActionModeHelper.isActive();
-                        ActionMode actionMode = mActionModeHelper.onLongClick((AppCompatActivity) ExpandableMultiselectDeleteSampleActivity.this, position);
+                        ActionMode actionMode = mActionModeHelper.onLongClick(ExpandableMultiselectDeleteSampleActivity.this, position);
                         mRangeSelectorHelper.onLongClick(position);
                         if (actionMode != null) {
                             //we want color our CAB
@@ -191,7 +193,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
         fastItemAdapter.add(items);
         mExpandableExtension.expand();
 
-        fastItemAdapter.withSelectionListener(new ISelectionListener() {
+        selectExtension.setSelectionListener(new ISelectionListener() {
             @Override
             public void onSelectionChanged(IItem item, boolean selected) {
                 if (item instanceof SimpleSubItem) {

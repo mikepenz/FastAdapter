@@ -64,7 +64,7 @@ public class SortActivity extends AppCompatActivity {
     private ItemAdapter<SimpleItem> itemAdapter;
     private ComparableItemListImpl<SimpleItem> itemListImpl;
 
-    private SelectExtension<SimpleItem> selectExtension = new SelectExtension<>();
+    private SelectExtension<SimpleItem> selectExtension;
 
     @SortingStrategy
     private int sortingStrategy;
@@ -88,8 +88,9 @@ public class SortActivity extends AppCompatActivity {
         itemListImpl = new ComparableItemListImpl<>(getComparator());
         itemAdapter = new ItemAdapter<>(itemListImpl);
         fastAdapter = FastAdapter.Companion.with(itemAdapter);
+        selectExtension = new SelectExtension<>(fastAdapter);
         fastAdapter.addExtension(selectExtension);
-        selectExtension.withSelectable(true);
+        selectExtension.setSelectable(true);
 
         //configure our fastAdapter
         fastAdapter.setOnClickListener(new OnClickListener<SimpleItem>() {

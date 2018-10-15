@@ -41,7 +41,7 @@ public class ImageListActivity extends AppCompatActivity {
         mFastItemAdapter = new FastItemAdapter<>();
 
         //configure our fastAdapter
-        mFastItemAdapter.withOnClickListener(new OnClickListener<ImageItem>() {
+        mFastItemAdapter.setOnClickListener(new OnClickListener<ImageItem>() {
             @Override
             public boolean onClick(View v, IAdapter<ImageItem> adapter, @NonNull ImageItem item, int position) {
                 Toast.makeText(v.getContext(), item.mName, Toast.LENGTH_SHORT).show();

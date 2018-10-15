@@ -7,14 +7,13 @@ import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.extensions.ExtensionFactory
 
-class ExpandableExtensionFactory: ExtensionFactory<IItem<out RecyclerView.ViewHolder>> {
+class ExpandableExtensionFactory: ExtensionFactory {
 
     override val clazz = ExpandableExtension::class.java
 
     override fun create(
-        fastAdapter: FastAdapter<IItem<out RecyclerView.ViewHolder>>,
-        clazz: Class<IAdapterExtension<IItem<out RecyclerView.ViewHolder>>>
-    ): IAdapterExtension<IItem<out RecyclerView.ViewHolder>>? {
+        fastAdapter: FastAdapter<out IItem<out RecyclerView.ViewHolder>>
+    ): IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>? {
         (fastAdapter as? FastAdapter<ISubItem<*, *>>?)?.let { subItemAdapter ->
             return ExpandableExtension(subItemAdapter) as IAdapterExtension<IItem<out RecyclerView.ViewHolder>>
         }

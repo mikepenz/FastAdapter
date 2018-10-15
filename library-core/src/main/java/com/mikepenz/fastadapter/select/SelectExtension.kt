@@ -36,10 +36,10 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
      * 1.) direct selection via the view "selected" state, we also make sure we do not animate here so no notifyItemChanged is called if we repeatly press the same item
      * 2.) we select the items via a notifyItemChanged. this will allow custom selected logics within your views (isSelected() - do something...) and it will also animate the change via the provided itemAnimator. because of the animation of the itemAnimator the selection will have a small delay (time of animating)
      */
-    private var selectWithItemUpdate = false
+    var selectWithItemUpdate = false
     // if we want multiSelect enabled
     // Enable this if you want multiSelection possible in the list
-    private var multiSelect = false
+    var multiSelect = false
     // if we want the multiSelect only on longClick
     // Disable this if you want the selection on a single tap
     var selectOnLongClick = false

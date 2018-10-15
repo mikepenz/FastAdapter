@@ -15,6 +15,7 @@ import com.mikepenz.fastadapter.app.model.IconModel;
 import com.mikepenz.fastadapter.app.model.ModelIconItem;
 import com.mikepenz.fastadapter.app.model.RightIconModel;
 import com.mikepenz.fastadapter.app.model.RightModelIconItem;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
@@ -37,7 +38,7 @@ public class MultiTypeModelItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sample);
 
         // Handle Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.sample_multi_model_item);
 
@@ -58,7 +59,8 @@ public class MultiTypeModelItemActivity extends AppCompatActivity {
 
         //create our FastAdapter which will manage everything
         fastAdapter = FastAdapter.Companion.with(Arrays.asList(itemAdapter));
-        fastAdapter.withSelectable(true);
+        SelectExtension selectExtension = (SelectExtension) fastAdapter.getOrCreateExtension(SelectExtension.class);
+        selectExtension.setSelectable(true);
 
         //get our recyclerView and do basic setup
         RecyclerView rv = (RecyclerView) findViewById(R.id.rv);

@@ -28,7 +28,7 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
     //save our FastAdapter
     private FastItemAdapter<RadioButtonSampleItem> fastItemAdapter;
 
-    private SelectExtension<RadioButtonSampleItem> selectExtension = new SelectExtension<>();
+    private SelectExtension<RadioButtonSampleItem> selectExtension;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +46,9 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = new FastItemAdapter<>();
+        selectExtension = new SelectExtension<>(fastItemAdapter);
         fastItemAdapter.addExtension(selectExtension);
-        selectExtension.withSelectable(true);
+        selectExtension.setSelectable(true);
 
         //configure our fastAdapter
         fastItemAdapter.setOnClickListener(new OnClickListener<RadioButtonSampleItem>() {

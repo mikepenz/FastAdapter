@@ -31,7 +31,7 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
     //save our FastAdapter
     private FastItemAdapter<CheckBoxSampleItem> fastItemAdapter;
 
-    private SelectExtension<CheckBoxSampleItem> selectExtension = new SelectExtension<>();
+    private SelectExtension<CheckBoxSampleItem> selectExtension;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +49,9 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = new FastItemAdapter<>();
+        selectExtension = new SelectExtension<>(fastItemAdapter);
         fastItemAdapter.addExtension(selectExtension);
-        selectExtension.withSelectable(true);
+        selectExtension.setSelectable(true);
 
         //configure our fastAdapter
         fastItemAdapter.setOnClickListener(new OnClickListener<CheckBoxSampleItem>() {

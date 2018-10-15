@@ -46,7 +46,7 @@ public class MultiselectSampleActivity extends AppCompatActivity {
 
     private ActionModeHelper<SimpleItem> mActionModeHelper;
 
-    private SelectExtension<SimpleItem> selectExtension = new SelectExtension<>();
+    private SelectExtension<SimpleItem> selectExtension;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +72,11 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         mFastAdapter.setHasStableIds(true);
-        mFastAdapter.addExtension(selectExtension);
-        selectExtension.withSelectable(true);
-        selectExtension.withMultiSelect(true);
-        selectExtension.withSelectOnLongClick(true);
-        selectExtension.withSelectionListener(new ISelectionListener<SimpleItem>() {
+        selectExtension = mFastAdapter.getOrCreateExtension(SelectExtension.class);
+        selectExtension.setSelectable(true);
+        selectExtension.setMultiSelect(true);
+        selectExtension.setSelectOnLongClick(true);
+        selectExtension.setSelectionListener(new ISelectionListener<SimpleItem>() {
             @Override
             public void onSelectionChanged(SimpleItem item, boolean selected) {
                 Log.i("FastAdapter", "SelectedCount: " + selectExtension.getSelections().size() + " ItemsCount: " + selectExtension.getSelectedItems().size());

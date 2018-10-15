@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.core.view.LayoutInflaterCompat;
 import androidx.appcompat.app.AppCompatActivity;
@@ -9,6 +10,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
@@ -26,6 +29,7 @@ import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.listeners.OnLongClickListener;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter_extensions.ActionModeHelper;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -51,7 +55,6 @@ public class AdvancedSampleActivity extends AppCompatActivity {
     private FastAdapter mFastAdapter;
     private ItemAdapter<SimpleItem> mHeaderAdapter;
     private ItemAdapter mItemAdapter;
-    private ExpandableExtension mExpandableExtension;
 
     private ActionModeHelper<IItem<? extends RecyclerView.ViewHolder>> mActionModeHelper;
 
@@ -65,7 +68,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sample);
 
         // Handle Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.sample_advanced);
 
@@ -78,16 +81,17 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         StickyHeaderAdapter<IItem> stickyHeaderAdapter = new StickyHeaderAdapter<>();
 
         //we also want the expandable feature
-        mExpandableExtension = new ExpandableExtension<>();
 
         //create our FastAdapter
-        mFastAdapter = FastAdapter.Companion.with(Arrays.asList(mHeaderAdapter, mItemAdapter), Arrays.<IAdapterExtension<IItem>>asList(mExpandableExtension));
+        mFastAdapter = FastAdapter.Companion.with(Arrays.asList(mHeaderAdapter, mItemAdapter));
+        mFastAdapter.getOrCreateExtension(ExpandableExtension.class);
+        SelectExtension<?> selectExtension = (SelectExtension<?>) mFastAdapter.getOrCreateExtension(SelectExtension.class);
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
-        mFastAdapter.withSelectable(true);
-        mFastAdapter.withMultiSelect(true);
-        mFastAdapter.withSelectOnLongClick(true);
+        selectExtension.setSelectable(true);
+        selectExtension.setMultiSelect(true);
+        selectExtension.setSelectOnLongClick(true);
         mFastAdapter.setOnPreClickListener(new OnClickListener<IItem>() {
             @Override
             public boolean onClick(View v, IAdapter adapter, IItem item, int position) {

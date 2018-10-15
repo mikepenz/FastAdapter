@@ -30,6 +30,7 @@ import androidx.collection.ArrayMap
 import androidx.core.util.Pair
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
+import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 
 /**
  * The `FastAdapter` class is the core managing class of the `FastAdapter` library, it handles all `IAdapter` implementations, keeps track of the item types which can be displayed
@@ -299,6 +300,18 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     fun <T : IAdapterExtension<Item>> getExtension(clazz: Class<in T>): T? {
         return mExtensions[clazz] as T
+    }
+
+    fun <T : IAdapterExtension<Item>> getOrCreateExtension(clazz: Class<in T>): T? {
+        if (mExtensions.containsKey(clazz)) {
+            return mExtensions[clazz] as T
+        }
+        val extension = ExtensionsFactories.create(
+            this,
+            clazz as Class<out IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>
+        ) as T
+        mExtensions[clazz] = extension
+        return extension
     }
 
     /**
