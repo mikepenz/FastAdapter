@@ -50,7 +50,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
 
     // we remember all adapters
     //priority queue...
-    private val mAdapters = ArrayList<IAdapter<Item>>()
+    private val adapters = ArrayList<IAdapter<Item>>()
     // we remember all possible types so we can create a new view efficiently
     /**
      * @return the current type instance cache
@@ -64,9 +64,9 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     var typeInstanceCache: ITypeInstanceCache<Item> = DefaultTypeInstanceCache()
     // cache the sizes of the different adapters so we can access the items more performant
-    private val mAdapterSizes = SparseArray<IAdapter<Item>>()
+    private val adapterSizes = SparseArray<IAdapter<Item>>()
     // the total size
-    private var mGlobalSize = 0
+    private var globalSize = 0
 
     /**
      * The eventHooks handled by this FastAdapter
@@ -74,7 +74,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     var eventHooks: MutableList<EventHook<Item>>? = null
         private set
     // the extensions we support
-    private val mExtensions = ArrayMap<Class<*>, IAdapterExtension<Item>>()
+    private val extensionsCache = ArrayMap<Class<*>, IAdapterExtension<Item>>()
 
     //
     //-------------------------
@@ -109,7 +109,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return the AdapterExtensions we provided
      */
     val extensions: Collection<IAdapterExtension<Item>>
-        get() = mExtensions.values
+        get() = extensionsCache.values
 
     /**
      * the ClickEventHook to hook onto the itemView of a viewholder
@@ -147,7 +147,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                         position
                     ) == true
                 ) return
-                for (ext in fastAdapter.mExtensions.values) {
+                for (ext in fastAdapter.extensionsCache.values) {
                     if (ext.onClick(v, position, fastAdapter, item)) return
                 }
                 if ((item as? IClickable<Item>?)?.onItemClickListener?.onClick(
@@ -188,7 +188,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                         position
                     ) == true
                 ) return true
-                for (ext in fastAdapter.mExtensions.values) {
+                for (ext in fastAdapter.extensionsCache.values) {
                     if (ext.onLongClick(v, position, fastAdapter, item)) return true
                 }
                 if (fastAdapter.onLongClickListener?.onLongClick(
@@ -219,7 +219,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             fastAdapter: FastAdapter<Item>,
             item: Item
         ): Boolean {
-            for (ext in fastAdapter.mExtensions.values) {
+            for (ext in fastAdapter.extensionsCache.values) {
                 if (ext.onTouch(v, event, position, fastAdapter, item)) return true
             }
             if (fastAdapter.onTouchListener != null) {
@@ -254,11 +254,11 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return this
      */
     fun <A : IAdapter<Item>> addAdapter(index: Int, adapter: A): FastAdapter<Item> {
-        mAdapters.add(index, adapter)
+        adapters.add(index, adapter)
         adapter.fastAdapter = this
         adapter.mapPossibleTypes(adapter.adapterItems)
-        for (i in mAdapters.indices) {
-            mAdapters[i].order = i
+        for (i in adapters.indices) {
+            adapters[i].order = i
         }
         cacheSizes()
         return this
@@ -271,9 +271,9 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return the IAdapter if found
      */
     fun adapter(order: Int): IAdapter<Item>? {
-        return if (mAdapters.size <= order) {
+        return if (adapters.size <= order) {
             null
-        } else mAdapters[order]
+        } else adapters[order]
     }
 
     /**
@@ -281,10 +281,10 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return
      */
     fun <E : IAdapterExtension<Item>> addExtension(extension: E): FastAdapter<Item> {
-        if (mExtensions.containsKey(extension.javaClass)) {
+        if (extensionsCache.containsKey(extension.javaClass)) {
             throw IllegalStateException("The given extension was already registered with this FastAdapter instance")
         }
-        mExtensions[extension.javaClass] = extension
+        extensionsCache[extension.javaClass] = extension
         return this
     }
 
@@ -293,18 +293,18 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return the found IAdapterExtension or null if it is not found
      */
     fun <T : IAdapterExtension<Item>> getExtension(clazz: Class<in T>): T? {
-        return mExtensions[clazz] as T
+        return extensionsCache[clazz] as T
     }
 
     fun <T : IAdapterExtension<Item>> getOrCreateExtension(clazz: Class<in T>): T? {
-        if (mExtensions.containsKey(clazz)) {
-            return mExtensions[clazz] as T
+        if (extensionsCache.containsKey(clazz)) {
+            return extensionsCache[clazz] as T
         }
         val extension = ExtensionsFactories.create(
             this,
             clazz as Class<out IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>
         ) as? T? ?: return null
-        mExtensions[clazz] = extension
+        extensionsCache[clazz] = extension
         return extension
     }
 
@@ -353,7 +353,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         savedInstanceState: Bundle?,
         prefix: String = ""
     ): FastAdapter<Item> {
-        for (ext in mExtensions.values) {
+        for (ext in extensionsCache.values) {
             ext.withSavedInstanceState(savedInstanceState, prefix)
         }
 
@@ -557,7 +557,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     fun getPosition(identifier: Long): Int {
         var position = 0
-        for (adapter in mAdapters) {
+        for (adapter in adapters) {
             if (adapter.order < 0) {
                 continue
             }
@@ -580,12 +580,12 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     fun getItem(position: Int): Item? {
         //if we are out of range just return null
-        if (position < 0 || position >= mGlobalSize) {
+        if (position < 0 || position >= globalSize) {
             return null
         }
         //now get the adapter which is responsible for the given position
-        val index = floorIndex(mAdapterSizes, position)
-        return mAdapterSizes.valueAt(index).getAdapterItem(position - mAdapterSizes.keyAt(index))
+        val index = floorIndex(adapterSizes, position)
+        return adapterSizes.valueAt(index).getAdapterItem(position - adapterSizes.keyAt(index))
     }
 
     /**
@@ -628,11 +628,11 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         }
 
         val relativeInfo = RelativeInfo<Item>()
-        val index = floorIndex(mAdapterSizes, position)
+        val index = floorIndex(adapterSizes, position)
         if (index != -1) {
-            relativeInfo.item = mAdapterSizes.valueAt(index)
-                .getAdapterItem(position - mAdapterSizes.keyAt(index))
-            relativeInfo.adapter = mAdapterSizes.valueAt(index)
+            relativeInfo.item = adapterSizes.valueAt(index)
+                .getAdapterItem(position - adapterSizes.keyAt(index))
+            relativeInfo.adapter = adapterSizes.valueAt(index)
             relativeInfo.position = position
         }
         return relativeInfo
@@ -646,12 +646,12 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     fun getAdapter(position: Int): IAdapter<Item>? {
         //if we are out of range just return null
-        if (position < 0 || position >= mGlobalSize) {
+        if (position < 0 || position >= globalSize) {
             return null
         }
         if (verboseLoggingEnabled) Log.v(TAG, "getAdapter")
         //now get the adapter which is responsible for the given position
-        return mAdapterSizes.valueAt(floorIndex(mAdapterSizes, position))
+        return adapterSizes.valueAt(floorIndex(adapterSizes, position))
     }
 
     /**
@@ -680,7 +680,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return the global count
      */
     override fun getItemCount(): Int {
-        return mGlobalSize
+        return globalSize
     }
 
     /**
@@ -691,15 +691,15 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     fun getPreItemCountByOrder(order: Int): Int {
         //if we are empty just return 0 count
-        if (mGlobalSize == 0) {
+        if (globalSize == 0) {
             return 0
         }
 
         var size = 0
 
         //count the number of items before the adapter with the given order
-        for (i in 0 until Math.min(order, mAdapters.size)) {
-            size += mAdapters[i].adapterItemCount
+        for (i in 0 until Math.min(order, adapters.size)) {
+            size += adapters[i].adapterItemCount
         }
 
         //get the count of items which are before this order
@@ -715,9 +715,9 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     fun getPreItemCount(position: Int): Int {
         //if we are empty just return 0 count
-        return if (mGlobalSize == 0) {
+        return if (globalSize == 0) {
             0
-        } else mAdapterSizes.keyAt(floorIndex(mAdapterSizes, position))
+        } else adapterSizes.keyAt(floorIndex(adapterSizes, position))
 
         //get the count of items which are before this order
     }
@@ -734,7 +734,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     @JvmOverloads
     fun saveInstanceState(savedInstanceState: Bundle?, prefix: String = ""): Bundle? {
         // handle our extensions
-        for (ext in mExtensions.values) {
+        for (ext in extensionsCache.values) {
             ext.saveInstanceState(savedInstanceState, prefix)
         }
         return savedInstanceState
@@ -744,22 +744,22 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * we cache the sizes of our adapters so get accesses are faster
      */
     protected fun cacheSizes() {
-        mAdapterSizes.clear()
+        adapterSizes.clear()
         var size = 0
 
-        for (adapter in mAdapters) {
+        for (adapter in adapters) {
             if (adapter.adapterItemCount > 0) {
-                mAdapterSizes.append(size, adapter)
+                adapterSizes.append(size, adapter)
                 size = size + adapter.adapterItemCount
             }
         }
 
         //we also have to add this for the first adapter otherwise the floorIndex method will return the wrong value
-        if (size == 0 && mAdapters.size > 0) {
-            mAdapterSizes.append(0, mAdapters[0])
+        if (size == 0 && adapters.size > 0) {
+            adapterSizes.append(0, adapters[0])
         }
 
-        mGlobalSize = size
+        globalSize = size
     }
 
     //-------------------------
@@ -773,7 +773,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     fun notifyAdapterDataSetChanged() {
         // handle our extensions
-        for (ext in mExtensions.values) {
+        for (ext in extensionsCache.values) {
             ext.notifyAdapterDataSetChanged()
         }
         cacheSizes()
@@ -797,7 +797,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     fun notifyAdapterItemRangeInserted(position: Int, itemCount: Int) {
         // handle our extensions
-        for (ext in mExtensions.values) {
+        for (ext in extensionsCache.values) {
             ext.notifyAdapterItemRangeInserted(position, itemCount)
         }
         cacheSizes()
@@ -821,7 +821,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     fun notifyAdapterItemRangeRemoved(position: Int, itemCount: Int) {
         // handle our extensions
-        for (ext in mExtensions.values) {
+        for (ext in extensionsCache.values) {
             ext.notifyAdapterItemRangeRemoved(position, itemCount)
         }
 
@@ -837,7 +837,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     fun notifyAdapterItemMoved(fromPosition: Int, toPosition: Int) {
         // handle our extensions
-        for (ext in mExtensions.values) {
+        for (ext in extensionsCache.values) {
             ext.notifyAdapterItemMoved(fromPosition, toPosition)
         }
         notifyItemMoved(fromPosition, toPosition)
@@ -864,7 +864,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     @JvmOverloads
     fun notifyAdapterItemRangeChanged(position: Int, itemCount: Int, payload: Any? = null) {
         // handle our extensions
-        for (ext in mExtensions.values) {
+        for (ext in extensionsCache.values) {
             ext.notifyAdapterItemRangeChanged(position, itemCount, payload)
         }
         if (payload == null) {
@@ -1030,15 +1030,15 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         ): FastAdapter<Item> {
             val fastAdapter = FastAdapter<Item>()
             if (adapters == null) {
-                fastAdapter.mAdapters.add(items<IItem<out RecyclerView.ViewHolder>>() as IAdapter<Item>)
+                fastAdapter.adapters.add(items<IItem<out RecyclerView.ViewHolder>>() as IAdapter<Item>)
             } else {
                 val adapters = adapters as Collection<IAdapter<Item>>?
                 if (adapters != null) {
-                    fastAdapter.mAdapters.addAll(adapters)
+                    fastAdapter.adapters.addAll(adapters)
                 }
             }
-            for (i in fastAdapter.mAdapters.indices) {
-                fastAdapter.mAdapters[i].apply {
+            for (i in fastAdapter.adapters.indices) {
+                fastAdapter.adapters[i].apply {
                     this.fastAdapter = fastAdapter
                     this.order = i
                 }
