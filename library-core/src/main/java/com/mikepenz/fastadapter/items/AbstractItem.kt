@@ -49,7 +49,7 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
      * @param payloads
      */
     @CallSuper
-    override fun bindView(holder: VH, payloads: List<*>) {
+    override fun bindView(holder: VH, payloads: MutableList<Any>) {
         //set the selected state of this item. force this otherwise it may is missed when implementing an item
         holder.itemView.isSelected = isSelected
     }
@@ -114,7 +114,7 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
         val viewHolder = getViewHolder(createView(ctx, null))
 
         //as we already know the type of our ViewHolder cast it to our type
-        bindView(viewHolder, Collections.EMPTY_LIST)
+        bindView(viewHolder, Collections.emptyList())
 
         //return the bound view
         return viewHolder.itemView
@@ -131,7 +131,7 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
         val viewHolder = getViewHolder(createView(ctx, parent))
 
         //as we already know the type of our ViewHolder cast it to our type
-        bindView(viewHolder, Collections.EMPTY_LIST)
+        bindView(viewHolder, Collections.emptyList())
         //return the bound and generatedView
         return viewHolder.itemView
     }

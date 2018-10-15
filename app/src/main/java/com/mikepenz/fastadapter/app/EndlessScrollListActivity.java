@@ -4,7 +4,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -17,15 +16,18 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.mikepenz.fastadapter.IAdapter;
+import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.listeners.ItemFilterListener;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
 import com.mikepenz.fastadapter_extensions.items.ProgressItem;
@@ -38,13 +40,15 @@ import com.mikepenz.materialize.MaterializeBuilder;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
+
 import static com.mikepenz.fastadapter.adapters.ItemAdapter.items;
 
-public class EndlessScrollListActivity extends AppCompatActivity implements ItemTouchCallback, ItemFilterListener<SimpleItem> {
+public class EndlessScrollListActivity extends AppCompatActivity implements ItemTouchCallback, ItemFilterListener<IItem<? extends RecyclerView.ViewHolder>> {
 
     //save our FastAdapter
-    private FastItemAdapter<SimpleItem> fastItemAdapter;
-    private ItemAdapter footerAdapter;
+    private FastItemAdapter<IItem<? extends RecyclerView.ViewHolder>> fastItemAdapter;
+    private ItemAdapter<IItem<? extends RecyclerView.ViewHolder>> footerAdapter;
 
     //drag & drop
     private SimpleDragCallback touchCallback;
@@ -60,7 +64,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         setContentView(R.layout.activity_sample);
 
         // Handle Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -69,35 +73,43 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = new FastItemAdapter<>();
-        fastItemAdapter.withSelectable(true);
+        SelectExtension<IItem<? extends RecyclerView.ViewHolder>> selectExtension = fastItemAdapter.getOrCreateExtension(SelectExtension.class);
+        if (selectExtension != null) {
+            selectExtension.setSelectable(true);
+        }
 
         //create our FooterAdapter which will manage the progress items
         footerAdapter = items();
         fastItemAdapter.addAdapter(1, footerAdapter);
 
         //configure our fastAdapter
-        fastItemAdapter.withOnClickListener(new OnClickListener<SimpleItem>() {
+        fastItemAdapter.setOnClickListener(new OnClickListener<IItem<? extends RecyclerView.ViewHolder>>() {
             @Override
-            public boolean onClick(View v, IAdapter<SimpleItem> adapter, @NonNull SimpleItem item, int position) {
-                Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
+            public boolean onClick(View v, IAdapter<IItem<? extends RecyclerView.ViewHolder>> adapter, @NonNull IItem<? extends RecyclerView.ViewHolder> item, int position) {
+                if (item instanceof SimpleItem) {
+                    Toast.makeText(v.getContext(), ((SimpleItem) item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
+                }
                 return false;
             }
         });
 
         //configure the itemAdapter
-        fastItemAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<SimpleItem>() {
+        fastItemAdapter.getItemFilter().setFilterPredicate(new IItemAdapter.Predicate<IItem<? extends RecyclerView.ViewHolder>>() {
             @Override
-            public boolean filter(SimpleItem item, CharSequence constraint) {
+            public boolean filter(IItem<? extends RecyclerView.ViewHolder> item, CharSequence constraint) {
                 //return true if we should filter it out
                 //return false to keep it
-                return item.name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
+                if (item instanceof SimpleItem) {
+                    return ((SimpleItem) item).name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
+                }
+                return false;
             }
         });
 
-        fastItemAdapter.getItemFilter().withItemFilterListener(this);
+        fastItemAdapter.getItemFilter().setItemFilterListener(this);
 
         //get our recyclerView and do basic setup
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView recyclerView = findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(fastItemAdapter);
@@ -105,7 +117,9 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
             @Override
             public void onLoadMore(final int currentPage) {
                 footerAdapter.clear();
-                footerAdapter.add(new ProgressItem().withEnabled(false));
+                ProgressItem progressItem = new ProgressItem();
+                progressItem.setEnabled(false);
+                footerAdapter.add(progressItem);
                 //simulate networking (2 seconds)
                 Handler handler = new Handler();
                 handler.postDelayed(new Runnable() {
@@ -205,7 +219,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
     }
 
     @Override
-    public void itemsFiltered(@Nullable CharSequence constraint, @Nullable List<SimpleItem> results) {
+    public void itemsFiltered(@Nullable CharSequence constraint, @Nullable List<IItem<? extends RecyclerView.ViewHolder>> results) {
         endlessRecyclerOnScrollListener.disable();
         Toast.makeText(EndlessScrollListActivity.this, "filtered items count: " + fastItemAdapter.getItemCount(), Toast.LENGTH_SHORT).show();
     }

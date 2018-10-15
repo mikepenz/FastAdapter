@@ -16,10 +16,10 @@ class OnBindViewHolderListenerImpl<Item: IItem<out RecyclerView.ViewHolder>> : O
      * @param position   the position of this viewHolder
      * @param payloads   the payloads provided by the adapter
      */
-    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int, payloads: List<*>) {
+    override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
         val tag = viewHolder.itemView.getTag(R.id.fastadapter_item_adapter)
         if (tag is FastAdapter<*>) {
-            val item = tag.getItem(position) as? IItem<RecyclerView.ViewHolder>
+            val item = tag.getItem(position) as? IItem<RecyclerView.ViewHolder>?
             if (item != null) {
                 item.bindView(viewHolder, payloads)
                 if (viewHolder is FastAdapter.ViewHolder<*>) {

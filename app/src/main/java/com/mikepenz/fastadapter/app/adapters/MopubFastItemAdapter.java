@@ -11,11 +11,11 @@ import com.mopub.nativeads.MoPubRecyclerAdapter;
  * Created by mikepenz on 28.06.16.
  */
 
-public class MopubFastItemAdapter<Item extends IItem> extends FastItemAdapter<Item> {
+public class MopubFastItemAdapter<Item extends IItem<? extends RecyclerView.ViewHolder>> extends FastItemAdapter<Item> {
     private MoPubRecyclerAdapter mMoPubAdAdapter;
 
     public MopubFastItemAdapter() {
-        withLegacyBindViewMode(true);
+        setLegacyBindViewMode(true);
     }
 
     public MopubFastItemAdapter withMoPubAdAdapter(MoPubRecyclerAdapter moPubAdAdapter) {

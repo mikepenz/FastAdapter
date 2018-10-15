@@ -113,7 +113,7 @@ public class TwoLineItem extends AbstractItem<TwoLineItem.ViewHolder> {
     }
 
     @Override
-    public void bindView(ViewHolder holder, List<?> payloads) {
+    public void bindView(ViewHolder holder, List<Object> payloads) {
         super.bindView(holder, payloads);
         if (isEnabled()) {
             holder.itemView.setBackgroundResource(FastAdapterUIUtils.getSelectableBackground(holder.itemView.getContext()));

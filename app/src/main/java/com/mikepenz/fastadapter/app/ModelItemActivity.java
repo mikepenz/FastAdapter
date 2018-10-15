@@ -15,6 +15,7 @@ import com.mikepenz.fastadapter.adapters.ModelAdapter;
 import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.model.IconModel;
 import com.mikepenz.fastadapter.app.model.ModelIconItem;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.typeface.ITypeface;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
@@ -30,7 +31,7 @@ import java.util.List;
 
 public class ModelItemActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastAdapter fastAdapter;
+    private FastAdapter<ModelIconItem> fastAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +40,7 @@ public class ModelItemActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sample);
 
         // Handle Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.sample_model_item);
 
@@ -57,10 +58,12 @@ public class ModelItemActivity extends AppCompatActivity {
 
         //create our FastAdapter which will manage everything
         fastAdapter = FastAdapter.Companion.with(Arrays.asList(itemAdapter));
-        fastAdapter.withSelectable(true);
+        SelectExtension<ModelIconItem> selectExtension = new SelectExtension<>(fastAdapter);
+        selectExtension.setSelectable(true);
+        fastAdapter.addExtension(selectExtension);
 
         //get our recyclerView and do basic setup
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView rv = findViewById(R.id.rv);
 
         //init our gridLayoutManager and configure RV
         rv.setAdapter(fastScrollIndicatorAdapter.wrap(fastAdapter));

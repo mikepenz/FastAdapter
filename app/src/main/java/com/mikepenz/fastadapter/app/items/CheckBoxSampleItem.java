@@ -79,7 +79,7 @@ public class CheckBoxSampleItem extends AbstractItem<CheckBoxSampleItem.ViewHold
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder, List<?> payloads) {
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
 
         viewHolder.checkBox.setChecked(isSelected());

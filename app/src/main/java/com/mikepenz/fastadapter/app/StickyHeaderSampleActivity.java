@@ -14,6 +14,8 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
+import com.mikepenz.fastadapter.app.model.ModelIconItem;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.materialize.MaterializeBuilder;
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration;
 
@@ -29,7 +31,7 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
     private static final String[] headers = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     //save our FastAdapter
-    private FastAdapter fastAdapter;
+    private FastAdapter<SimpleItem> fastAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,7 +40,7 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sample);
 
         // Handle Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.sample_sticky_header);
 
@@ -47,12 +49,14 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
 
         //create our adapters
         final StickyHeaderAdapter stickyHeaderAdapter = new StickyHeaderAdapter();
-        final ItemAdapter headerAdapter = new ItemAdapter();
-        final ItemAdapter itemAdapter = new ItemAdapter();
+        final ItemAdapter<SimpleItem> headerAdapter = new ItemAdapter<>();
+        final ItemAdapter<SimpleItem> itemAdapter = new ItemAdapter<>();
 
         //create our FastAdapter
         fastAdapter = FastAdapter.Companion.with(Arrays.asList(headerAdapter, itemAdapter));
-        fastAdapter.withSelectable(true);
+        SelectExtension<SimpleItem> selectExtension = new SelectExtension<>(fastAdapter);
+        selectExtension.setSelectable(true);
+        fastAdapter.addExtension(selectExtension);
 
 
         //configure our fastAdapter
@@ -73,7 +77,7 @@ public class StickyHeaderSampleActivity extends AppCompatActivity {
         SimpleItem item = new SimpleItem().withName("Header");
         item.setIdentifier(1);
         headerAdapter.add(item);
-        List<IItem> items = new ArrayList<>();
+        List<SimpleItem> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
             SimpleItem simpleItem = new SimpleItem().withName("Test " + i).withHeader(headers[i / 5]);
             simpleItem.setIdentifier(100 + i);

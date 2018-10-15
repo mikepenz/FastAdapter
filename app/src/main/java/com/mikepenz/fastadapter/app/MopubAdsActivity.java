@@ -46,7 +46,7 @@ public class MopubAdsActivity extends AppCompatActivity implements OnClickListen
         setSupportActionBar(toolbar);
 
         mAdapter = new MopubFastItemAdapter<>();
-        mAdapter.withOnClickListener(this);
+        mAdapter.setOnClickListener(this);
 
         for (int i = 65; i <= 90; i++) {
             mAdapter.add(new LetterItem(String.valueOf((char) i)));

@@ -17,9 +17,9 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class ModelIconItem extends ModelAbstractItem<com.mikepenz.fastadapter.app.model.IconModel, ModelIconItem.ViewHolder> {
+public class ModelIconItem extends ModelAbstractItem<IconModel, ModelIconItem.ViewHolder> {
 
-    public ModelIconItem(com.mikepenz.fastadapter.app.model.IconModel icon) {
+    public ModelIconItem(IconModel icon) {
         super(icon);
     }
 
@@ -49,7 +49,7 @@ public class ModelIconItem extends ModelAbstractItem<com.mikepenz.fastadapter.ap
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder, List<?> payloads) {
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
 
         //define our data for the view

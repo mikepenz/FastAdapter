@@ -21,7 +21,7 @@ public class LetterItem extends AbstractItem<LetterItem.ViewHolder> {
     }
 
     @Override
-    public void bindView(ViewHolder viewHolder, List<?> payloads) {
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
         viewHolder.text.setText(letter);
     }

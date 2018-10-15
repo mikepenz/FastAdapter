@@ -80,7 +80,7 @@ public class RadioButtonSampleItem extends AbstractItem<RadioButtonSampleItem.Vi
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder, List<?> payloads) {
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
 
         viewHolder.radioButton.setChecked(isSelected());

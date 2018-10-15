@@ -75,7 +75,7 @@ interface IItem<VH : RecyclerView.ViewHolder> : IIdentifyable {
      * @param holder
      * @param payloads
      */
-    fun bindView(holder: VH, payloads: List<*>)
+    fun bindView(holder: VH, payloads: MutableList<Any>)
 
     /**
      * View needs to release resources when its recycled

@@ -66,7 +66,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         fastItemAdapter = new FastItemAdapter<>();
 
         //configure our fastAdapter
-        fastItemAdapter.withOnClickListener(new OnClickListener<SwipeableItem>() {
+        fastItemAdapter.setOnClickListener(new OnClickListener<SwipeableItem>() {
             @Override
             public boolean onClick(View v, IAdapter<SwipeableItem> adapter, @NonNull SwipeableItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
@@ -75,7 +75,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         });
 
         //configure the itemAdapter
-        fastItemAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<SwipeableItem>() {
+        fastItemAdapter.getItemFilter().setFilterPredicate(new IItemAdapter.Predicate<SwipeableItem>() {
             @Override
             public boolean filter(SwipeableItem item, CharSequence constraint) {
                 //return true if we should filter it out
@@ -85,7 +85,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         });
 
         //get our recyclerView and do basic setup
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView recyclerView = findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(fastItemAdapter);
@@ -96,7 +96,8 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         for (String s : ALPHABET) {
             int count = new Random().nextInt(20);
             for (int i = 1; i <= count; i++) {
-                SwipeableItem swipeableItem = new SwipeableItem().withName(s + " Test " + x).withIdentifier(100 + x);
+                SwipeableItem swipeableItem = new SwipeableItem().withName(s + " Test " + x);
+                swipeableItem.setIdentifier(100 + x);
                 swipeableItem.withIsSwipeable(i % 5 != 0);
                 swipeableItem.withIsDraggable(i % 5 != 0);
                 items.add(swipeableItem);

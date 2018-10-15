@@ -27,6 +27,7 @@ import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter.listeners.ItemFilterListener;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
 import com.mikepenz.fastadapter_extensions.utilities.DragDropUtil;
@@ -71,10 +72,11 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
 
         //create our FastAdapter which will manage everything
         fastAdapter = FastAdapter.Companion.with(itemAdapter);
-        fastAdapter.withSelectable(true);
+        SelectExtension<SimpleItem> selectExtension = fastAdapter.getOrCreateExtension(SelectExtension.class);
+        selectExtension.setSelectable(true);
 
         //configure our fastAdapter
-        fastAdapter.withOnClickListener(new OnClickListener<SimpleItem>() {
+        fastAdapter.setOnClickListener(new OnClickListener<SimpleItem>() {
             @Override
             public boolean onClick(View v, IAdapter<SimpleItem> adapter, @NonNull SimpleItem item, int position) {
                 Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
@@ -83,7 +85,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         });
 
         //configure the itemAdapter
-        itemAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<SimpleItem>() {
+        itemAdapter.getItemFilter().setFilterPredicate(new IItemAdapter.Predicate<SimpleItem>() {
             @Override
             public boolean filter(SimpleItem item, CharSequence constraint) {
                 //return true if we should filter it out
@@ -92,10 +94,10 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
             }
         });
 
-        itemAdapter.getItemFilter().withItemFilterListener(this);
+        itemAdapter.getItemFilter().setItemFilterListener(this);
 
         //get our recyclerView and do basic setup
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView recyclerView = findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(fastScrollIndicatorAdapter.wrap(fastAdapter));
@@ -111,7 +113,8 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         for (String s : ALPHABET) {
             int count = new Random().nextInt(20);
             for (int i = 1; i <= count; i++) {
-                SimpleItem item = new SimpleItem().withName(s + " Test " + x).withIdentifier(100 + x);
+                SimpleItem item = new SimpleItem().withName(s + " Test " + x);
+                item.setIdentifier(100 + x);
                 items.add(item);
                 x++;
             }

@@ -2,7 +2,9 @@ package com.mikepenz.fastadapter.app.items;
 
 import android.content.Context;
 import android.graphics.Color;
+
 import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
@@ -17,7 +19,7 @@ import java.util.List;
  * Created by flisar on 21.09.2016.
  */
 
-public class HeaderSelectionItem<T extends IItem & IExpandable, S extends IItem & ISubItem> extends SimpleSubExpandableItem<T, S> {
+public class HeaderSelectionItem<T extends IExpandable<T, S, SimpleSubExpandableItem.ViewHolder>, S extends ISubItem<T, SimpleSubExpandableItem.ViewHolder>> extends SimpleSubExpandableItem<T, S> {
 
     private ISubSelectionProvider mSubSelectionProvider;
 
@@ -27,7 +29,7 @@ public class HeaderSelectionItem<T extends IItem & IExpandable, S extends IItem 
     }
 
     @Override
-    public void bindView(ViewHolder viewHolder, List<?> payloads) {
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
 
         //get the context

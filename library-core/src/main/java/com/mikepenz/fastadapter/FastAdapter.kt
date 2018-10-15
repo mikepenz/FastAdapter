@@ -463,21 +463,14 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             //set the R.id.fastadapter_item_adapter tag to the adapter so we always have the proper bound adapter available
             holder.itemView.setTag(R.id.fastadapter_item_adapter, this)
             //now we bind the item to this viewHolder
-            onBindViewHolderListener.onBindViewHolder(holder, position, Collections.EMPTY_LIST)
+            onBindViewHolderListener.onBindViewHolder(holder, position, Collections.emptyList())
         }
     }
 
-    /**
-     * Binds the data to the created ViewHolder and sets the listeners to the holder.itemView
-     *
-     * @param holder   the viewHolder we bind the data on
-     * @param position the global position
-     * @param payloads the payloads for the bindViewHolder event containing data which allows to improve view animating
-     */
     override fun onBindViewHolder(
         holder: RecyclerView.ViewHolder,
         position: Int,
-        payloads: List<*>
+        payloads: MutableList<Any>
     ) {
         //we do not want the binding to happen twice (the legacyBindViewMode
         if (!legacyBindViewMode) {
@@ -970,7 +963,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         /**
          * binds the data of this item onto the viewHolder
          */
-        abstract fun bindView(item: Item, payloads: List<*>)
+        abstract fun bindView(item: Item, payloads: MutableList<Any>)
 
         /**
          * View needs to release resources when its recycled

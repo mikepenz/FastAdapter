@@ -78,7 +78,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         //create our adapters
         mHeaderAdapter = items();
         mItemAdapter = items();
-        StickyHeaderAdapter<IItem> stickyHeaderAdapter = new StickyHeaderAdapter<>();
+        StickyHeaderAdapter<IItem<RecyclerView.ViewHolder>> stickyHeaderAdapter = new StickyHeaderAdapter<>();
 
         //we also want the expandable feature
 
@@ -126,7 +126,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         mActionModeHelper = new ActionModeHelper<>(mFastAdapter, R.menu.cab, new ActionBarCallBack());
 
         //get our recyclerView and do basic setup
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView rv = findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new DefaultItemAnimator());
         rv.setAdapter(stickyHeaderAdapter.wrap(mFastAdapter));
@@ -170,30 +170,32 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 SimpleSubExpandableItem<SimpleSubExpandableItem, SimpleSubExpandableItem> expandableItem = new SimpleSubExpandableItem<>();
                 expandableItem.withName("Test " + id.get())
                         .withHeader(headers[i / 5])
-                        .withIdentifier(id.getAndIncrement());
+                        .setIdentifier(id.getAndIncrement());
                 List<SimpleSubExpandableItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 3; ii++) {
                     SimpleSubExpandableItem<SimpleSubExpandableItem, SimpleSubItem> subItem = new SimpleSubExpandableItem<>();
                     subItem.withName("-- SubTest " + id.get())
                             .withHeader(headers[i / 5])
-                            .withIdentifier(id.getAndIncrement());
+                            .setIdentifier(id.getAndIncrement());
 
                     List<SimpleSubItem> subSubItems = new LinkedList<>();
                     for (int iii = 1; iii <= 3; iii++) {
                         SimpleSubItem subSubItem = new SimpleSubItem();
                         subSubItem.withName("---- SubSubTest " + id.get())
                                 .withHeader(headers[i / 5])
-                                .withIdentifier(id.getAndIncrement());
+                                .setIdentifier(id.getAndIncrement());
                         subSubItems.add(subSubItem);
                     }
-                    subItem.withSubItems(subSubItems);
+                    subItem.setSubItems(subSubItems);
 
                     subItems.add(subItem);
                 }
-                expandableItem.withSubItems(subItems);
+                expandableItem.setSubItems(subItems);
                 items.add(expandableItem);
             } else {
-                items.add(new SimpleSubItem().withName("Test " + id.get()).withHeader(headers[i / 5]).withIdentifier(id.getAndIncrement()));
+                SimpleSubItem simpleSubItem = new SimpleSubItem().withName("Test " + id.get()).withHeader(headers[i / 5]);
+                simpleSubItem.setIdentifier(id.getAndIncrement());
+                items.add(simpleSubItem);
             }
         }
         mItemAdapter.set(items);

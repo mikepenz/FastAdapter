@@ -63,7 +63,7 @@ public class MultiTypeModelItemActivity extends AppCompatActivity {
         selectExtension.setSelectable(true);
 
         //get our recyclerView and do basic setup
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView rv = findViewById(R.id.rv);
 
         //init our gridLayoutManager and configure RV
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);

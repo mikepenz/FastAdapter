@@ -40,7 +40,7 @@ import java.util.List;
 public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity {
     //save our FastAdapter
     private FastItemAdapter<IItem<? extends RecyclerView.ViewHolder>> fastItemAdapter;
-    private ExpandableExtension<ISubItem<?, ? extends RecyclerView.ViewHolder>> mExpandableExtension;
+    private ExpandableExtension mExpandableExtension;
     private ActionModeHelper<IItem<? extends RecyclerView.ViewHolder>> mActionModeHelper;
     private RangeSelectorHelper mRangeSelectorHelper;
     private DragSelectTouchListener mDragSelectTouchListener;
@@ -151,7 +151,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
         rv.setAdapter(fastItemAdapter);
 
         //fill with some sample data
-        List<IItem> items = new ArrayList<>();
+        List<IItem<? extends RecyclerView.ViewHolder>> items = new ArrayList<>();
         for (int i = 0; i < 20; i++) {
             if (i % 2 == 0) {
                 final HeaderSelectionItem expandableItem = new HeaderSelectionItem();
@@ -164,7 +164,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                         })
                         .withName("Test " + (i + 1))
                         .withDescription("ID: " + (i + 1))
-                        .withIdentifier(i + 1);
+                        .setIdentifier(i + 1);
                 //.withIsExpanded(true) don't use this in such a setup, use adapter.expand() to expand all items instead
 
                 //add subitems so we can showcase the collapsible functionality
@@ -174,11 +174,11 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                     sampleItem
                             .withName("-- Test " + (i + 1) + "." + ii)
                             .withDescription("ID: " + ((i + 1) * 100 + ii))
-                            .withIdentifier((i + 1) * 100 + ii);
+                            .setIdentifier((i + 1) * 100 + ii);
                     subItems.add(sampleItem);
 
                 }
-                expandableItem.withSubItems(subItems);
+                expandableItem.setSubItems(subItems);
 
                 items.add(expandableItem);
             } else {
@@ -186,7 +186,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
                 sampleItem
                         .withName("Test " + (i + 1))
                         .withDescription("ID: " + (i + 1))
-                        .withIdentifier(i + 1);
+                        .setIdentifier(i + 1);
                 items.add(sampleItem);
             }
         }

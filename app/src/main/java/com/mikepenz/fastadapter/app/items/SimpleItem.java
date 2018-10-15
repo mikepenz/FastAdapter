@@ -57,6 +57,11 @@ public class SimpleItem extends AbstractItem<SimpleItem.ViewHolder> implements I
         return this;
     }
 
+    public SimpleItem withIdentifier(long identifier) {
+        setIdentifier(identifier);
+        return this;
+    }
+
     @Override
     public boolean isDraggable() {
         return mIsDraggable;
@@ -110,7 +115,7 @@ public class SimpleItem extends AbstractItem<SimpleItem.ViewHolder> implements I
         }
 
         @Override
-        public void bindView(@NonNull SimpleItem item, @NonNull List<?> payloads) {
+        public void bindView(@NonNull SimpleItem item, @NonNull List<Object> payloads) {
             //get the context
             Context ctx = itemView.getContext();
 

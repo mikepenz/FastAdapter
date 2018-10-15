@@ -27,7 +27,7 @@ import java.util.List;
 
 public class IconGridActivity extends AppCompatActivity {
     //save our FastAdapter
-    private FastItemAdapter fastItemAdapter;
+    private FastItemAdapter<IItem<? extends RecyclerView.ViewHolder>> fastItemAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +40,7 @@ public class IconGridActivity extends AppCompatActivity {
         setContentView(R.layout.activity_sample);
 
         // Handle Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         getSupportActionBar().setTitle(R.string.sample_icon_grid);
 
@@ -48,14 +48,14 @@ public class IconGridActivity extends AppCompatActivity {
         new MaterializeBuilder().withActivity(this).build();
 
         //create our FastAdapter which will manage everything
-        fastItemAdapter = new FastItemAdapter();
+        fastItemAdapter = new FastItemAdapter<>();
 
         //we want to have expandables
-        ExpandableExtension expandableExtension = new ExpandableExtension();
+        ExpandableExtension expandableExtension = new ExpandableExtension(fastItemAdapter);
         fastItemAdapter.addExtension(expandableExtension);
 
         //get our recyclerView and do basic setup
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView rv = findViewById(R.id.rv);
 
         //init our gridLayoutManager and configure RV
         GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 3);
@@ -88,21 +88,21 @@ public class IconGridActivity extends AppCompatActivity {
 
         //add all icons of all registered Fonts to the list
         int count = 0;
-        ArrayList<SimpleSubExpandableItem> items = new ArrayList<>(Iconics.getRegisteredFonts(this).size());
+        ArrayList<IItem<? extends RecyclerView.ViewHolder>> items = new ArrayList<>(Iconics.getRegisteredFonts(this).size());
         for (ITypeface font : mFonts) {
             //we set the identifier from the count here, as I need a stable ID in the sample to showcase the state restore
             SimpleSubExpandableItem expandableItem = new SimpleSubExpandableItem();
             expandableItem
                     .withName(font.getFontName())
-                    .withIdentifier(count);
+                    .setIdentifier(count);
 
-            ArrayList<IItem> icons = new ArrayList<>();
+            ArrayList<IconItem> icons = new ArrayList<>();
             for (String icon : font.getIcons()) {
                 IconItem iconItem = new IconItem();
                 iconItem.withIcon(font.getIcon(icon));
                 icons.add(iconItem);
             }
-            expandableItem.withSubItems(icons);
+            expandableItem.setSubItems(icons);
 
             items.add(expandableItem);
             count++;

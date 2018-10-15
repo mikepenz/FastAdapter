@@ -62,7 +62,7 @@ public class RealmActivity extends AppCompatActivity {
         });
 
         //get our recyclerView and do basic setup
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView rv = findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new AlphaInAnimator());
         rv.setAdapter(mFastItemAdapter);

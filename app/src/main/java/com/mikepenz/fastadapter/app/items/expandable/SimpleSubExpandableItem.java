@@ -137,7 +137,7 @@ public class SimpleSubExpandableItem<Parent extends IExpandable<Parent, SubItem,
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder, List<?> payloads) {
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
 
         //get the context
@@ -181,7 +181,7 @@ public class SimpleSubExpandableItem<Parent extends IExpandable<Parent, SubItem,
     /**
      * our ViewHolder
      */
-    protected static class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         public final View view;
         @BindView(R.id.material_drawer_name)
         public

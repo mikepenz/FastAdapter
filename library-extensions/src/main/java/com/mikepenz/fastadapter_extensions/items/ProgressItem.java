@@ -24,7 +24,7 @@ public class ProgressItem extends AbstractItem<ProgressItem.ViewHolder> {
     }
 
     @Override
-    public void bindView(ViewHolder holder, List<?> payloads) {
+    public void bindView(ViewHolder holder, List<Object> payloads) {
         super.bindView(holder, payloads);
         if (isEnabled()) {
             holder.itemView.setBackgroundResource(FastAdapterUIUtils.getSelectableBackground(holder.itemView.getContext()));
@@ -47,7 +47,7 @@ public class ProgressItem extends AbstractItem<ProgressItem.ViewHolder> {
 
         public ViewHolder(View view) {
             super(view);
-            progressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+            progressBar = view.findViewById(R.id.progress_bar);
         }
     }
 }

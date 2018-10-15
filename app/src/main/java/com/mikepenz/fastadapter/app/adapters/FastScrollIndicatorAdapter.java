@@ -17,7 +17,7 @@ import java.util.List;
  * This is a FastAdapter adapter implementation for the awesome Sticky-Headers lib by timehop
  * https://github.com/timehop/sticky-headers-recyclerview
  */
-public class FastScrollIndicatorAdapter<Item extends IItem> extends RecyclerView.Adapter implements INameableAdapter, ICustomAdapter {
+public class FastScrollIndicatorAdapter<Item extends IItem<RecyclerView.ViewHolder>> extends RecyclerView.Adapter implements INameableAdapter, ICustomAdapter {
     @Override
     public Character getCharacterForElement(int position) {
         IItem item = getItem(position);

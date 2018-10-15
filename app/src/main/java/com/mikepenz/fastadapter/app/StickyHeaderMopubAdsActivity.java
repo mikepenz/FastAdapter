@@ -37,7 +37,7 @@ import butterknife.ButterKnife;
 
 public class StickyHeaderMopubAdsActivity extends AppCompatActivity implements OnClickListener<LetterItem> {
 
-    private MopubFastItemAdapter<IItem> mAdapter;
+    private MopubFastItemAdapter<IItem<? extends RecyclerView.ViewHolder>> mAdapter;
     private static final String[] headers = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
     @BindView(R.id.toolbar)
@@ -75,7 +75,7 @@ public class StickyHeaderMopubAdsActivity extends AppCompatActivity implements O
         adapter.registerAdRenderer(new MoPubStaticNativeAdRenderer(viewBinder));
         adapter.loadAds("76a3fefaced247959582d2d2df6f4757");
 
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         //provide the mopub adapter
         mAdapter.withMoPubAdAdapter(adapter);
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
@@ -87,9 +87,11 @@ public class StickyHeaderMopubAdsActivity extends AppCompatActivity implements O
         mRecyclerView.addItemDecoration(decoration);
 
         //fill with some sample data
-        List<IItem> items = new ArrayList<>();
+        List<IItem<? extends RecyclerView.ViewHolder>> items = new ArrayList<>();
         for (int i = 1; i <= 100; i++) {
-            items.add(new SimpleItem().withName("Test " + i).withHeader(headers[i / 5]).withIdentifier(100 + i));
+            SimpleItem simpleItem = new SimpleItem().withName("Test " + i).withHeader(headers[i / 5]);
+            simpleItem.setIdentifier(100 + i);
+            items.add(simpleItem);
         }
         mAdapter.add(items);
 

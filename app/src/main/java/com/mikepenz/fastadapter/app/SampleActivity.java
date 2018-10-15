@@ -158,10 +158,10 @@ public class SampleActivity extends AppCompatActivity {
 
         //create our FastAdapter which will manage everything
         mFastAdapter = FastAdapter.Companion.with(Arrays.asList(mItemAdapter));
-        mFastAdapter.withSelectable(true);
-        mFastAdapter.withMultiSelect(true);
-        mFastAdapter.withSelectOnLongClick(false);
         selectExtension = mFastAdapter.getExtension(SelectExtension.class);
+        selectExtension.setSelectable(true);
+        selectExtension.setMultiSelect(true);
+        selectExtension.setSelectOnLongClick(false);
 
         //configure our fastAdapter
         //get our recyclerView and do basic setup

@@ -15,6 +15,8 @@ import com.mikepenz.library_extensions.R;
 import com.mikepenz.materialize.holder.ImageHolder;
 import com.mikepenz.materialize.holder.StringHolder;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 /**
@@ -104,7 +106,7 @@ public class SingleLineItem extends AbstractItem<SingleLineItem.ViewHolder> {
     }
 
     @Override
-    public void bindView(ViewHolder holder, List<?> payloads) {
+    public void bindView(ViewHolder holder, List<Object> payloads) {
         super.bindView(holder, payloads);
         if (isEnabled()) {
             holder.itemView.setBackgroundResource(FastAdapterUIUtils.getSelectableBackground(holder.itemView.getContext()));

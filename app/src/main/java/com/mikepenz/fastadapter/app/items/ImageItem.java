@@ -57,6 +57,11 @@ public class ImageItem extends AbstractItem<ImageItem.ViewHolder> {
         return this;
     }
 
+    public ImageItem withIdentifier(long identifier) {
+        setIdentifier(identifier);
+        return this;
+    }
+
     /**
      * defines the type defining this item. must be unique. preferably an id
      *
@@ -83,7 +88,7 @@ public class ImageItem extends AbstractItem<ImageItem.ViewHolder> {
      * @param viewHolder the viewHolder of this item
      */
     @Override
-    public void bindView(ViewHolder viewHolder, List<?> payloads) {
+    public void bindView(ViewHolder viewHolder, List<Object> payloads) {
         super.bindView(viewHolder, payloads);
 
         //get the context
