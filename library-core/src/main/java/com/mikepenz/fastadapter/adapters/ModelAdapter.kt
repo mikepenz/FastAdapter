@@ -100,7 +100,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
     /**
      * @return the items within this adapter
      */
-    override val adapterItems: List<Item>
+    override val adapterItems: MutableList<Item>
         get() = itemList.items
 
     constructor(interceptor: IInterceptor<Model, Item>) : this(
@@ -258,7 +258,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
 
         //reset the filter
         if (resetFilter && itemFilter.constraint != null) {
-            itemFilter.performFiltering(null)
+            itemFilter.resetFilter()
         }
 
         for (ext in fastAdapter!!.extensions) {
@@ -302,14 +302,16 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
         var filter: CharSequence? = null
         if (itemFilter.constraint != null) {
             filter = itemFilter.constraint
-            itemFilter.performFiltering(null)
+            itemFilter.resetFilter()
         }
 
         mapPossibleTypes(items)
 
         val publishResults = filter != null && retainFilter
-        if (publishResults) {
-            itemFilter.publishResults(filter, itemFilter.performFiltering(filter))
+        if (retainFilter) {
+            filter?.let { filterText ->
+                itemFilter.filterItems(filterText)
+            }
         }
         itemList.setNewList(items, !publishResults)
 

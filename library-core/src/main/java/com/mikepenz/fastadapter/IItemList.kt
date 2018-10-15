@@ -10,7 +10,7 @@ interface IItemList<Item: IItem<out RecyclerView.ViewHolder>> {
 
     val isEmpty: Boolean
 
-    val items: List<Item>
+    val items: MutableList<Item>
 
     fun getAdapterPosition(identifier: Long): Int
 
