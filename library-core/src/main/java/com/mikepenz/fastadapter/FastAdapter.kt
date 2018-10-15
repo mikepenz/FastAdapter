@@ -712,7 +712,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
 
         //count the number of items before the adapter with the given order
         for (i in 0 until Math.min(order, mAdapters.size)) {
-            size = size + mAdapters[i].adapterItemCount
+            size += mAdapters[i].adapterItemCount
         }
 
         //get the count of items which are before this order

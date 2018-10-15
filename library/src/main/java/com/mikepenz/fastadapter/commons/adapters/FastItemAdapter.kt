@@ -60,7 +60,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      * @return this
      */
     fun withUseIdDistributor(useIdDistributor: Boolean): FastItemAdapter<Item> {
-        itemAdapter.withUseIdDistributor(useIdDistributor)
+        itemAdapter.isUseIdDistributor = useIdDistributor
         return this
     }
 

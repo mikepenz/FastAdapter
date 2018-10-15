@@ -50,19 +50,16 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
 
     var idDistributor: IIdDistributor<Item> = IIdDistributor.DEFAULT as IIdDistributor<Item>
 
-    //defines if the DefaultIdDistributor is used to set ID's to all added items
     /**
-     * @return if we use the idDistributor with this adapter
+     * Defines if the DefaultIdDistributor is used to provide an ID to all added items which do not yet define an id
      */
     var isUseIdDistributor = true
-        private set
 
     //filters the items
     /**
-     * @return the filter used to filter items
+     * allows you to define your own Filter implementation instead of the default `ItemFilter`
      */
-    var itemFilter = ItemFilter<Model, Item>(this)
-        private set
+    var itemFilter = ItemFilter(this)
 
     /**
      * the ModelAdapter does not keep a list of input model's to get retrieve them a `reverseInterceptor` is required
@@ -106,8 +103,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
     constructor(interceptor: IInterceptor<Model, Item>) : this(
         DefaultItemListImpl<Item>(),
         interceptor
-    ) {
-    }
+    )
 
     /**
      * Generates a `Item` based on it's `Model` using the interceptor
@@ -134,28 +130,6 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
             items.add(item)
         }
         return items
-    }
-
-    /**
-     * defines if the DefaultIdDistributor is used to provide an ID to all added items which do not yet define an id
-     *
-     * @param useIdDistributor false if the DefaultIdDistributor shouldn't be used
-     * @return this
-     */
-    fun withUseIdDistributor(useIdDistributor: Boolean): ModelAdapter<Model, Item> {
-        this.isUseIdDistributor = useIdDistributor
-        return this
-    }
-
-    /**
-     * allows you to define your own Filter implementation instead of the default `ItemFilter`
-     *
-     * @param itemFilter the filter to use
-     * @return this
-     */
-    fun withItemFilter(itemFilter: ItemFilter<Model, Item>): ModelAdapter<Model, Item> {
-        this.itemFilter = itemFilter
-        return this
     }
 
     /**
@@ -194,7 +168,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @return the global position
      */
     override fun getGlobalPosition(position: Int): Int {
-        return position + fastAdapter!!.getPreItemCountByOrder(order)
+        return position + (fastAdapter?.getPreItemCountByOrder(order) ?: 0)
     }
 
     /**
@@ -261,15 +235,15 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
             itemFilter.resetFilter()
         }
 
-        for (ext in fastAdapter!!.extensions) {
-            ext[items] = resetFilter
+        fastAdapter?.extensions?.forEach { extension ->
+            extension[items] = resetFilter
         }
 
         //map the types
         mapPossibleTypes(items)
 
         //forward set
-        val itemsBeforeThisAdapter = fastAdapter!!.getPreItemCountByOrder(order)
+        val itemsBeforeThisAdapter = fastAdapter?.getPreItemCountByOrder(order) ?: 0
         itemList[items, itemsBeforeThisAdapter] = adapterNotifier
 
         return this
@@ -322,7 +296,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * forces to remap all possible types for the RecyclerView
      */
     fun remapMappedTypes() {
-        fastAdapter!!.clearTypeInstance()
+        fastAdapter?.clearTypeInstance()
         mapPossibleTypes(itemList.items)
     }
 
@@ -387,7 +361,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
             idDistributor.checkIds(items)
         }
         if (items.isNotEmpty()) {
-            itemList.addAll(position, items, fastAdapter!!.getPreItemCountByOrder(order))
+            itemList.addAll(position, items, fastAdapter?.getPreItemCountByOrder(order) ?: 0)
             mapPossibleTypes(items)
         }
         return this
@@ -399,17 +373,17 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @param position the global position
      * @param element  the item to set
      */
-    override fun set(position: Int, element: Model): ModelAdapter<Model, Item> {
-        val item = intercept(element) ?: return this
-        return setInternal(position, item)
+    override fun set(position: Int, item: Model): ModelAdapter<Model, Item> {
+        val interceptedItem = intercept(item) ?: return this
+        return setInternal(position, interceptedItem)
     }
 
     override fun setInternal(position: Int, item: Item): ModelAdapter<Model, Item> {
         if (isUseIdDistributor) {
             idDistributor.checkId(item)
         }
-        itemList[position, item] = fastAdapter!!.getPreItemCount(position)
-        fastAdapter!!.registerTypeInstance(item)
+        itemList[position, item] = fastAdapter?.getPreItemCount(position) ?: 0
+        fastAdapter?.registerTypeInstance(item)
         return this
     }
 
@@ -421,7 +395,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @return this
      */
     fun move(fromPosition: Int, toPosition: Int): ModelAdapter<Model, Item> {
-        itemList.move(fromPosition, toPosition, fastAdapter!!.getPreItemCount(fromPosition))
+        itemList.move(fromPosition, toPosition, fastAdapter?.getPreItemCount(fromPosition) ?: 0)
         return this
     }
 
@@ -431,7 +405,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @param position the global position
      */
     override fun remove(position: Int): ModelAdapter<Model, Item> {
-        itemList.remove(position, fastAdapter!!.getPreItemCount(position))
+        itemList.remove(position, fastAdapter?.getPreItemCount(position) ?: 0)
         return this
     }
 
@@ -442,7 +416,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @param itemCount the count of items which were removed
      */
     override fun removeRange(position: Int, itemCount: Int): ModelAdapter<Model, Item> {
-        itemList.removeRange(position, itemCount, fastAdapter!!.getPreItemCount(position))
+        itemList.removeRange(position, itemCount, fastAdapter?.getPreItemCount(position) ?: 0)
         return this
     }
 
@@ -450,7 +424,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * removes all items of this adapter
      */
     override fun clear(): ModelAdapter<Model, Item> {
-        itemList.clear(fastAdapter!!.getPreItemCountByOrder(order))
+        itemList.clear(fastAdapter?.getPreItemCountByOrder(order) ?: 0)
         return this
     }
 
@@ -502,34 +476,40 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
         predicate: AdapterPredicate<Item>,
         stopOnMatch: Boolean
     ): Triple<Boolean, Item, Int> {
-        val preItemCount = fastAdapter!!.getPreItemCountByOrder(order)
-        for (i in 0 until adapterItemCount) {
-            val globalPosition = i + preItemCount
+        fastAdapter?.let { fastAdapter ->
+            val preItemCount = fastAdapter.getPreItemCountByOrder(order)
+            for (i in 0 until adapterItemCount) {
+                val globalPosition = i + preItemCount
 
-            //retrieve the item + it's adapter
-            val relativeInfo = fastAdapter!!.getRelativeInfo(globalPosition)
-            val item = relativeInfo.item
-
-            if (predicate.apply(
-                    relativeInfo.adapter!!,
-                    globalPosition,
-                    item!!,
-                    globalPosition
-                ) && stopOnMatch
-            ) {
-                return Triple(true, item, globalPosition)
-            }
-
-            if (item is IExpandable<*, *, *>) {
-                val res = FastAdapter.recursiveSub(
-                    relativeInfo.adapter!!,
-                    globalPosition,
-                    (item as IExpandable<*, *, *>?)!!,
-                    predicate,
-                    stopOnMatch
-                )
-                if (res.first && stopOnMatch) {
-                    return res
+                //retrieve the item + it's adapter
+                val relativeInfo = fastAdapter.getRelativeInfo(globalPosition)
+                val item = relativeInfo.item
+                if (item != null) {
+                    relativeInfo.adapter?.let { adapter ->
+                        if (predicate.apply(
+                                adapter,
+                                globalPosition,
+                                item,
+                                globalPosition
+                            ) && stopOnMatch
+                        ) {
+                            return Triple(true, item, globalPosition)
+                        }
+                    }
+                    (item as? IExpandable<*, *, *>?)?.let { expandableItem ->
+                        relativeInfo.adapter?.let { adapter ->
+                            val res = FastAdapter.recursiveSub(
+                                adapter,
+                                globalPosition,
+                                expandableItem,
+                                predicate,
+                                stopOnMatch
+                            )
+                            if (res.first && stopOnMatch) {
+                                return res
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -544,6 +524,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
          *
          * @return a new ItemAdapter
          */
+        @JvmStatic
         fun <Model, Item : IItem<out RecyclerView.ViewHolder>> models(interceptor: IInterceptor<Model, Item>): ModelAdapter<Model, Item> {
             return ModelAdapter(interceptor)
         }

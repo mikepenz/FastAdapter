@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
  */
 class ItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : ModelAdapter<Item, Item> {
 
-    constructor() : super(IInterceptor.DEFAULT as IInterceptor<Item, Item>) {}
+    constructor() : super(IInterceptor.DEFAULT as IInterceptor<Item, Item>)
 
     constructor(itemList: IItemList<Item>) : super(
         itemList,
