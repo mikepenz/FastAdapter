@@ -37,7 +37,7 @@ public class FastAdapterTest {
     public void setUp() throws Exception {
         itemAdapter = new ItemAdapter<>();
         adapter = FastAdapter.Companion.with(itemAdapter);
-        selectExtension = new SelectExtension<>();
+        selectExtension = new SelectExtension<>(adapter);
         adapter.addExtension(selectExtension);
         //adapter.withPositionBasedStateManagement(true);
     }
@@ -49,13 +49,15 @@ public class FastAdapterTest {
 
     @Test
     public void constructor_Default_IsSelectable() throws Exception {
-        assertThat(adapter.isSelectable()).isFalse();    //default
+        assertThat(selectExtension.isSelectable()).isFalse();    //default
     }
 
     @Test
     public void withSelectable() throws Exception {
-        assertThat(adapter.withSelectable(false).isSelectable()).isFalse();
-        assertThat(adapter.withSelectable(true).isSelectable()).isTrue();
+        selectExtension.setSelectable(false);
+        assertThat(selectExtension.isSelectable()).isFalse();
+        selectExtension.setSelectable(true);
+        assertThat(selectExtension.isSelectable()).isTrue();
     }
 
     @Test
@@ -192,7 +194,7 @@ public class FastAdapterTest {
         OnBindViewHolderListener listener = mock(OnBindViewHolderListener.class);
         RecyclerView.ViewHolder holder = new RecyclerView.ViewHolder(mock(View.class)) {
         };
-        adapter.withOnBindViewHolderListener(listener);
+        adapter.setOnBindViewHolderListener(listener);
 
         adapter.onBindViewHolder(holder, 10, new ArrayList<>());
 

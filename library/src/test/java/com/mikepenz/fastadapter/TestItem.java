@@ -14,7 +14,7 @@ import java.util.Objects;
 /**
  * Created by fabianterhorst on 29.03.16.
  */
-public class TestItem extends AbstractItem<TestItem, TestItem.ViewHolder> {
+public class TestItem extends AbstractItem<TestItem.ViewHolder> {
 
     private String name;
 
