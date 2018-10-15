@@ -51,7 +51,7 @@ public class ExpandableSampleActivity extends AppCompatActivity {
         fastItemAdapter = new FastItemAdapter<>();
         SelectExtension selectExtension = new SelectExtension<>();
         fastItemAdapter.addExtension(selectExtension);
-        selectExtension.withSelectable(true);
+        selectExtension.setSelectable(true);
         expandableExtension = new ExpandableExtension<>();
         //expandableExtension.withOnlyOneExpandedItem(true);
         fastItemAdapter.addExtension(expandableExtension);

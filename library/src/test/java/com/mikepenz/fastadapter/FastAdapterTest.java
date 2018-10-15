@@ -36,7 +36,7 @@ public class FastAdapterTest {
     @Before
     public void setUp() throws Exception {
         itemAdapter = new ItemAdapter<>();
-        adapter = FastAdapter.Companion.with(itemAdapter);
+        adapter = FastAdapter.with(itemAdapter);
         selectExtension = new SelectExtension<>(adapter);
         adapter.addExtension(selectExtension);
         //adapter.withPositionBasedStateManagement(true);

@@ -1015,6 +1015,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
          * @param adapter the adapters which this FastAdapter should use
          * @return a new FastAdapter
          */
+        @JvmStatic
         fun <Item : IItem<out RecyclerView.ViewHolder>, A : IAdapter<Item>> with(adapter: A): FastAdapter<Item> {
             val fastAdapter = FastAdapter<Item>()
             fastAdapter.addAdapter(0, adapter)
@@ -1028,6 +1029,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
          * @param adapters the adapters which this FastAdapter should use
          * @return a new FastAdapter
          */
+        @JvmStatic
         fun <Item : IItem<out RecyclerView.ViewHolder>, A : IAdapter<*>> with(adapters: Collection<A>?): FastAdapter<Item> {
             return with(adapters, null)
         }
@@ -1039,6 +1041,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
          * @param adapters the adapters which this FastAdapter should use
          * @return a new FastAdapter
          */
+        @JvmStatic
         fun <Item : IItem<out RecyclerView.ViewHolder>, A : IAdapter<*>> with(
             adapters: Collection<A>?,
             extensions: Collection<IAdapterExtension<Item>>?
@@ -1075,6 +1078,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
          * @param holder the ViewHolder for which we want to retrieve the item
          * @return the Item found for this ViewHolder
          */
+        @JvmStatic
         fun <Item : IItem<*>> getHolderAdapterItem(holder: RecyclerView.ViewHolder?): Item? {
             if (holder != null) {
                 val tag =
@@ -1096,6 +1100,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
          * @param position the position for which we want to retrieve the item
          * @return the Item found for the given position and that ViewHolder
          */
+        @JvmStatic
         fun <Item : IItem<*>> getHolderAdapterItem(
             holder: RecyclerView.ViewHolder?,
             position: Int
@@ -1116,6 +1121,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
          * @param holder the ViewHolder for which we want to retrieve the item
          * @return the Item found for the given position and that ViewHolder
          */
+        @JvmStatic
         fun <Item : IItem<*>> getHolderAdapterItemTag(holder: RecyclerView.ViewHolder?): Item? {
             if (holder != null) {
                 val item = holder.itemView.getTag(com.mikepenz.fastadapter.R.id.fastadapter_item)
@@ -1138,6 +1144,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
          * @param <Item>             the type of the `Item`
          * @return Triple&lt;Boolean, IItem, Integer&gt; The first value is true (it is always not null), the second contains the item and the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
         </Item> */
+        @JvmStatic
         fun <Item : IItem<out RecyclerView.ViewHolder>> recursiveSub(
             lastParentAdapter: IAdapter<Item>,
             lastParentPosition: Int,
