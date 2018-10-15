@@ -34,7 +34,6 @@ dependencies {
     implementation "androidx.appcompat:appcompat:${versions.androidX}"
     implementation "androidx.recyclerview:recyclerview:${versions.androidX}"
     implementation "androidx.annotation:annotation:${versions.androidX}"
-    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 }
 
 if (project.hasProperty('pushall') || project.hasProperty('librarycoreonly')) {

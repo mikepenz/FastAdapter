@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter;
 
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import android.view.View;
 
@@ -12,7 +13,6 @@ import com.mikepenz.fastadapter.select.SelectExtension;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
 
 import java.util.Collections;
 import java.util.List;
@@ -26,7 +26,7 @@ import static org.mockito.Mockito.verify;
 /**
  * @author Shubham Chaudhary on 17/03/16
  */
-@RunWith(RobolectricTestRunner.class)
+@RunWith(AndroidJUnit4.class)
 public class ExpandableFastAdapterTest {
     private FastAdapter<ExpandableTestItem> adapter;
     private ItemAdapter<ExpandableTestItem> itemAdapter;

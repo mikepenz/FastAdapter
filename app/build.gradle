@@ -125,6 +125,8 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
     implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
 
+    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+
     configurations.all {
         resolutionStrategy.force "com.mikepenz:materialize:1.2.0-rc01"
         resolutionStrategy.force "com.mikepenz:iconics-core:3.1.0-rc01"
