@@ -29,9 +29,7 @@ import java.util.LinkedList
 import androidx.collection.ArrayMap
 import androidx.core.util.Pair
 import androidx.recyclerview.widget.RecyclerView
-
-import com.mikepenz.fastadapter.adapters.ItemAdapter.items
-import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
 
 /**
  * The `FastAdapter` class is the core managing class of the `FastAdapter` library, it handles all `IAdapter` implementations, keeps track of the item types which can be displayed

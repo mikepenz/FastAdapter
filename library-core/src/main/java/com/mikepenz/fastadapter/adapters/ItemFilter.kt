@@ -1,6 +1,5 @@
 package com.mikepenz.fastadapter.adapters
 
-import android.content.ClipData
 import android.widget.Filter
 
 import com.mikepenz.fastadapter.IItem
@@ -43,14 +42,10 @@ class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private val m
                 val selections = HashSet<Int>()
                 mItemAdapter.fastAdapter?.getPreItemCountByOrder(mItemAdapter.order)
                     ?.let { adapterOffset ->
-                        var i = 0
-                        val size = originalItems.size
-                        while (i < size) {
-                            val item = originalItems[i]
+                        originalItems.forEachIndexed { index, item ->
                             if (item.isSelected) {
-                                selections.add(i + adapterOffset)
+                                selections.add(index + adapterOffset)
                             }
-                            i++
                         }
                     }
                 return selections
@@ -68,14 +63,10 @@ class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private val m
         get() {
             return originalItems?.let { originalItems ->
                 val selections = HashSet<Item>()
-                var i = 0
-                val size = originalItems.size
-                while (i < size) {
-                    val item = originalItems[i]
+                originalItems.forEach { item ->
                     if (item.isSelected) {
                         selections.add(item)
                     }
-                    i++
                 }
                 return@let selections
             }
@@ -156,7 +147,7 @@ class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private val m
      * @param item the item which is searched for
      * @return the relative position
      */
-    fun getAdapterPosition(item: ClipData.Item): Int {
+    fun getAdapterPosition(item: Item): Int {
         return getAdapterPosition(item.identifier)
     }
 
@@ -167,17 +158,12 @@ class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private val m
      * @return the relative position
      */
     fun getAdapterPosition(identifier: Long): Int {
-        return originalItems?.let { originalItems ->
-            var i = 0
-            val size = originalItems.size
-            while (i < size) {
-                if (originalItems[i].identifier == identifier) {
-                    return@let i
-                }
-                i++
+        originalItems?.forEachIndexed { index, item ->
+            if (item.identifier == identifier) {
+                return index
             }
-            return@let -1
-        } ?: return -1
+        }
+        return -1
     }
 
     /**

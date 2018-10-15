@@ -7,8 +7,7 @@ import com.mikepenz.fastadapter.adapters.ItemFilter
 
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IAdapter
-
-import com.mikepenz.fastadapter.adapters.ItemAdapter.items
+import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
 
 /**
  * Created by mikepenz on 18.01.16.

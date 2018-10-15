@@ -15,7 +15,7 @@ open class DefaultItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> @JvmOv
     protected var mItems: MutableList<Item> = ArrayList()
 ) : DefaultItemList<Item>() {
 
-    override val items: List<Item>
+    override val items: MutableList<Item>
         get() = mItems
 
     override val isEmpty: Boolean
