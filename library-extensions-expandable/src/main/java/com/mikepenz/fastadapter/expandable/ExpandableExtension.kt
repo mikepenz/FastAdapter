@@ -26,7 +26,7 @@ import java.util.ArrayList
  * Created by mikepenz on 04/06/2017.
  */
 
-class ExpandableExtension<Item : IItem<*>>(private val fastAdapter: FastAdapter<Item>) :
+class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fastAdapter: FastAdapter<Item>) :
     IAdapterExtension<Item> {
 
     // only one expanded section
