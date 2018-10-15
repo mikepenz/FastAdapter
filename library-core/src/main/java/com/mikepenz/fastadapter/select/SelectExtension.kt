@@ -76,7 +76,7 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>> : IAdapterExten
     val selectedItems: MutableSet<Item>
         get() {
             val items = ArraySet<Item>()
-            mFastAdapter!!.recursive(object : AdapterPredicate<Item> {
+            mFastAdapter?.recursive(object : AdapterPredicate<Item> {
                 override fun apply(
                     lastParentAdapter: IAdapter<Item>,
                     lastParentPosition: Int,
