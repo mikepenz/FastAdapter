@@ -158,9 +158,9 @@ public class SimpleSubExpandableItem<Parent extends IExpandable<Parent, SubItem,
         }
 
         if (isExpanded()) {
-            ViewCompat.setRotation(viewHolder.icon, 0);
+            viewHolder.icon.setRotation(0);
         } else {
-            ViewCompat.setRotation(viewHolder.icon, 180);
+            viewHolder.icon.setRotation(180);
         }
     }
 
