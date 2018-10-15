@@ -67,10 +67,10 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
             }
         });
 
-        fastItemAdapter.withEventHook(new RadioButtonSampleItem.RadioButtonClickEvent());
+        fastItemAdapter.addEventHook(new RadioButtonSampleItem.RadioButtonClickEvent());
 
         //get our recyclerView and do basic setup
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView recyclerView = findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setItemAnimator(new DefaultItemAnimator());
         recyclerView.setAdapter(fastItemAdapter);

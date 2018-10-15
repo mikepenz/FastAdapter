@@ -69,7 +69,7 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
                 return true;
             }
         });
-        fastItemAdapter.withEventHook(new CheckBoxSampleItem.CheckBoxClickEvent());
+        fastItemAdapter.addEventHook(new CheckBoxSampleItem.CheckBoxClickEvent());
 
         //get our recyclerView and do basic setup
         RecyclerView recyclerView = findViewById(R.id.rv);

@@ -37,7 +37,7 @@ class OnCreateViewHolderListenerImpl<Item : IItem<out RecyclerView.ViewHolder>> 
         fastAdapter: FastAdapter<Item>,
         viewHolder: RecyclerView.ViewHolder
     ): RecyclerView.ViewHolder {
-        fastAdapter.getEventHooks()?.bind(viewHolder)
+        fastAdapter.eventHooks?.bind(viewHolder)
         return viewHolder
     }
 }

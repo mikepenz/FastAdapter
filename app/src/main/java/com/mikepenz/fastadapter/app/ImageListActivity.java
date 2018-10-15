@@ -72,7 +72,7 @@ public class ImageListActivity extends AppCompatActivity {
         //a custom OnCreateViewHolder listener class which is used to create the viewHolders
         //we define the listener for the imageLovedContainer here for better performance
         //you can also define the listener within the items bindView method but performance is better if you do it like this
-        mFastItemAdapter.withEventHook(new ImageItem.ImageItemHeartClickEvent());
+        mFastItemAdapter.addEventHook(new ImageItem.ImageItemHeartClickEvent());
 
         //set the back arrow in the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);

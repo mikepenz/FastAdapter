@@ -68,8 +68,11 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     // the total size
     private var mGlobalSize = 0
 
-    // event hooks for the items
-    private var eventHooks: MutableList<EventHook<Item>>? = null
+    /**
+     * The eventHooks handled by this FastAdapter
+     */
+    var eventHooks: MutableList<EventHook<Item>>? = null
+        private set
     // the extensions we support
     private val mExtensions = ArrayMap<Class<*>, IAdapterExtension<Item>>()
 
@@ -85,8 +88,10 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     // if set to `false` will not attach any listeners to the list. click events will have to be handled manually
     var attachDefaultListeners = true
 
-    // verbose
-    private var mVerbose = false
+    /**
+     * enables the verbose log for the adapter
+     **/
+    var verboseLoggingEnabled = false
 
     // the listeners which can be hooked on an item
     var onPreClickListener: OnClickListener<Item>? = null
@@ -135,7 +140,13 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                         position
                     ) == true
                 ) return
-                if (fastAdapter.onPreClickListener?.onClick(v, adapter, item, position) == true) return
+                if (fastAdapter.onPreClickListener?.onClick(
+                        v,
+                        adapter,
+                        item,
+                        position
+                    ) == true
+                ) return
                 for (ext in fastAdapter.mExtensions.values) {
                     if (ext.onClick(v, position, fastAdapter, item)) return
                 }
@@ -164,32 +175,31 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     val viewLongClickListener: LongClickEventHook<Item> = object : LongClickEventHook<Item>() {
         override fun onLongClick(
             v: View,
-            pos: Int,
+            position: Int,
             fastAdapter: FastAdapter<Item>,
             item: Item
         ): Boolean {
-            var consumed = false
-            val adapter = fastAdapter.getAdapter(pos)
+            val adapter = fastAdapter.getAdapter(position)
             if (adapter != null && item.isEnabled) {
-                consumed = fastAdapter.onPreLongClickListener?.onLongClick(v, adapter, item, pos) ?:
-                        false
-                for (ext in fastAdapter.mExtensions.values) {
-                    if (!consumed) {
-                        consumed = ext.onLongClick(v, pos, fastAdapter, item)
-                    } else {
-                        break
-                    }
-                }
-                if (!consumed) {
-                    consumed = fastAdapter.onLongClickListener?.onLongClick(
+                if (fastAdapter.onPreLongClickListener?.onLongClick(
                         v,
                         adapter,
                         item,
-                        pos
-                    ) ?: false
+                        position
+                    ) == true
+                ) return true
+                for (ext in fastAdapter.mExtensions.values) {
+                    if (ext.onLongClick(v, position, fastAdapter, item)) return true
                 }
+                if (fastAdapter.onLongClickListener?.onLongClick(
+                        v,
+                        adapter,
+                        item,
+                        position
+                    ) == true
+                ) return true
             }
-            return consumed
+            return false
         }
     }
 
@@ -209,21 +219,23 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             fastAdapter: FastAdapter<Item>,
             item: Item
         ): Boolean {
-            var consumed = false
             for (ext in fastAdapter.mExtensions.values) {
-                if (!consumed) {
-                    consumed = ext.onTouch(v, event, position, fastAdapter, item)
-                } else {
-                    break
-                }
+                if (ext.onTouch(v, event, position, fastAdapter, item)) return true
             }
             if (fastAdapter.onTouchListener != null) {
                 val adapter = fastAdapter.getAdapter(position)
                 if (adapter != null) {
-                    return fastAdapter.onTouchListener!!.onTouch(v, event, adapter, item, position)
+                    if (fastAdapter.onTouchListener?.onTouch(
+                            v,
+                            event,
+                            adapter,
+                            item,
+                            position
+                        ) == true
+                    ) return true
                 }
             }
-            return consumed
+            return false
         }
     }
 
@@ -232,16 +244,6 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     init {
         setHasStableIds(true)
-    }
-
-    /**
-     * enables the verbose log for the adapter
-     *
-     * @return this
-     */
-    fun enableVerboseLog(): FastAdapter<Item> {
-        this.mVerbose = true
-        return this
     }
 
     /**
@@ -307,20 +309,13 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     }
 
     /**
-     * @return the eventHooks handled by this FastAdapter
-     */
-    fun getEventHooks(): List<EventHook<Item>>? {
-        return eventHooks
-    }
-
-    /**
      * adds a new event hook for an item
      * NOTE: this has to be called before adding the first items, as this won't be called anymore after the ViewHolders were created
      *
      * @param eventHook the event hook to be added for an item
      * @return this
      */
-    fun withEventHook(eventHook: EventHook<Item>): FastAdapter<Item> {
+    fun addEventHook(eventHook: EventHook<Item>): FastAdapter<Item> {
         if (eventHooks == null) {
             eventHooks = LinkedList()
         }
@@ -335,7 +330,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param eventHooks the event hooks to be added for an item
      * @return this
      */
-    fun withEventHooks(eventHooks: Collection<EventHook<Item>>): FastAdapter<Item> {
+    fun addEventHooks(eventHooks: Collection<EventHook<Item>>): FastAdapter<Item> {
         if (this.eventHooks == null) {
             this.eventHooks = LinkedList()
         }
@@ -374,7 +369,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         if (typeInstanceCache.register(item)) {
             //check if the item implements hookable when its added for the first time
             if (item is IHookable<*>) {
-                withEventHooks((item as IHookable<Item>).eventHooks)
+                addEventHooks((item as IHookable<Item>).eventHooks)
             }
         }
     }
@@ -415,7 +410,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return the ViewHolder with the bound data
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (mVerbose) Log.v(TAG, "onCreateViewHolder: $viewType")
+        if (verboseLoggingEnabled) Log.v(TAG, "onCreateViewHolder: $viewType")
 
         val holder = onCreateViewHolderListener.onPreCreateViewHolder(this, parent, viewType)
 
@@ -446,7 +441,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (legacyBindViewMode) {
-            if (mVerbose) {
+            if (verboseLoggingEnabled) {
                 Log.v(
                     TAG,
                     "onBindViewHolderLegacy: " + position + "/" + holder.itemViewType + " isLegacy: true"
@@ -466,7 +461,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     ) {
         //we do not want the binding to happen twice (the legacyBindViewMode
         if (!legacyBindViewMode) {
-            if (mVerbose)
+            if (verboseLoggingEnabled)
                 Log.v(
                     TAG,
                     "onBindViewHolder: " + position + "/" + holder.itemViewType + " isLegacy: false"
@@ -485,7 +480,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param holder the viewHolder we unbind the data from
      */
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        if (mVerbose) Log.v(TAG, "onViewRecycled: " + holder.itemViewType)
+        if (verboseLoggingEnabled) Log.v(TAG, "onViewRecycled: " + holder.itemViewType)
         super.onViewRecycled(holder)
         onBindViewHolderListener.unBindViewHolder(holder, holder.adapterPosition)
     }
@@ -496,7 +491,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param holder the viewHolder for the view which got detached
      */
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        if (mVerbose) Log.v(TAG, "onViewDetachedFromWindow: " + holder.itemViewType)
+        if (verboseLoggingEnabled) Log.v(TAG, "onViewDetachedFromWindow: " + holder.itemViewType)
         super.onViewDetachedFromWindow(holder)
         onBindViewHolderListener.onViewDetachedFromWindow(holder, holder.adapterPosition)
     }
@@ -507,7 +502,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param holder the viewHolder for the view which got detached
      */
     override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
-        if (mVerbose) Log.v(TAG, "onViewAttachedToWindow: " + holder.itemViewType)
+        if (verboseLoggingEnabled) Log.v(TAG, "onViewAttachedToWindow: " + holder.itemViewType)
         super.onViewAttachedToWindow(holder)
         onBindViewHolderListener.onViewAttachedToWindow(holder, holder.adapterPosition)
     }
@@ -520,7 +515,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return true if we want to recycle anyways (false - it get's destroyed)
      */
     override fun onFailedToRecycleView(holder: RecyclerView.ViewHolder): Boolean {
-        if (mVerbose) Log.v(TAG, "onFailedToRecycleView: " + holder.itemViewType)
+        if (verboseLoggingEnabled) Log.v(TAG, "onFailedToRecycleView: " + holder.itemViewType)
         return onBindViewHolderListener.onFailedToRecycleView(
             holder,
             holder.adapterPosition
@@ -528,12 +523,12 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        if (mVerbose) Log.v(TAG, "onAttachedToRecyclerView")
+        if (verboseLoggingEnabled) Log.v(TAG, "onAttachedToRecyclerView")
         super.onAttachedToRecyclerView(recyclerView)
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        if (mVerbose) Log.v(TAG, "onDetachedFromRecyclerView")
+        if (verboseLoggingEnabled) Log.v(TAG, "onDetachedFromRecyclerView")
         super.onDetachedFromRecyclerView(recyclerView)
     }
 
@@ -654,7 +649,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         if (position < 0 || position >= mGlobalSize) {
             return null
         }
-        if (mVerbose) Log.v(TAG, "getAdapter")
+        if (verboseLoggingEnabled) Log.v(TAG, "getAdapter")
         //now get the adapter which is responsible for the given position
         return mAdapterSizes.valueAt(floorIndex(mAdapterSizes, position))
     }
