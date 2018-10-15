@@ -28,10 +28,10 @@ import static org.mockito.Mockito.verify;
  */
 @RunWith(RobolectricTestRunner.class)
 public class ExpandableFastAdapterTest {
-    private FastAdapter<TestItem> adapter;
-    private ItemAdapter<TestItem> itemAdapter;
-    private ExpandableExtension<TestItem> expandableExtension;
-    private SelectExtension<TestItem> selectExtension;
+    private FastAdapter<ExpandableTestItem> adapter;
+    private ItemAdapter<ExpandableTestItem> itemAdapter;
+    private ExpandableExtension<ExpandableTestItem> expandableExtension;
+    private SelectExtension<ExpandableTestItem> selectExtension;
 
     @Before
     public void setUp() throws Exception {
@@ -67,16 +67,16 @@ public class ExpandableFastAdapterTest {
 
     @Test
     public void getPosition() throws Exception {
-        TestItem testItem = TestDataGenerator.genTestItem(1);
-        itemAdapter.add(testItem);
+        ExpandableTestItem expandableTestItem = TestDataGenerator.genTestItem(1);
+        itemAdapter.add(expandableTestItem);
 
-        assertThat(adapter.getPosition(testItem)).isEqualTo(0);
+        assertThat(adapter.getPosition(expandableTestItem)).isEqualTo(0);
     }
 
     @Test
     public void getItem() throws Exception {
-        List<TestItem> items = TestDataGenerator.genTestItemList(100);
-        TestItem item = items.get(40);
+        List<ExpandableTestItem> items = TestDataGenerator.genTestItemList(100);
+        ExpandableTestItem item = items.get(40);
         itemAdapter.set(items);
 
         assertThat(adapter.getItem(40)).isEqualTo(item);
@@ -84,8 +84,8 @@ public class ExpandableFastAdapterTest {
 
     @Test
     public void getRelativeInfo() throws Exception {
-        List<TestItem> items = TestDataGenerator.genTestItemList(100);
-        TestItem item = items.get(40);
+        List<ExpandableTestItem> items = TestDataGenerator.genTestItemList(100);
+        ExpandableTestItem item = items.get(40);
         itemAdapter.set(items);
 
         assertThat(adapter.getRelativeInfo(40).getItem()).isEqualTo(item);
@@ -95,7 +95,7 @@ public class ExpandableFastAdapterTest {
 
     @Test
     public void getAdapter() throws Exception {
-        List<TestItem> items = TestDataGenerator.genTestItemList(100);
+        List<ExpandableTestItem> items = TestDataGenerator.genTestItemList(100);
         itemAdapter.set(items);
 
         assertThat(adapter.getAdapter(40)).isEqualTo(itemAdapter);
@@ -103,7 +103,7 @@ public class ExpandableFastAdapterTest {
 
     @Test
     public void getItemViewType() throws Exception {
-        List<TestItem> items = TestDataGenerator.genTestItemList(100);
+        List<ExpandableTestItem> items = TestDataGenerator.genTestItemList(100);
         itemAdapter.set(items);
 
         assertThat(adapter.getItemViewType(40)).isEqualTo(-1);
@@ -111,7 +111,7 @@ public class ExpandableFastAdapterTest {
 
     @Test
     public void getItemId() throws Exception {
-        List<TestItem> items = TestDataGenerator.genTestItemList(100);
+        List<ExpandableTestItem> items = TestDataGenerator.genTestItemList(100);
         itemAdapter.set(items);
 
         assertThat(adapter.getItemId(40)).isEqualTo(40);
@@ -119,7 +119,7 @@ public class ExpandableFastAdapterTest {
 
     @Test
     public void getItemCount() throws Exception {
-        List<TestItem> items = TestDataGenerator.genTestItemList(100);
+        List<ExpandableTestItem> items = TestDataGenerator.genTestItemList(100);
         itemAdapter.set(items);
 
         assertThat(adapter.getItemCount()).isEqualTo(100);
@@ -127,7 +127,7 @@ public class ExpandableFastAdapterTest {
 
     @Test
     public void getPreItemCountByOrder() throws Exception {
-        List<TestItem> items = TestDataGenerator.genTestItemList(100);
+        List<ExpandableTestItem> items = TestDataGenerator.genTestItemList(100);
         itemAdapter.set(items);
 
         assertThat(adapter.getPreItemCountByOrder(itemAdapter.getOrder())).isEqualTo(0);
@@ -135,7 +135,7 @@ public class ExpandableFastAdapterTest {
 
     @Test
     public void getPreItemCount() throws Exception {
-        List<TestItem> items = TestDataGenerator.genTestItemList(100);
+        List<ExpandableTestItem> items = TestDataGenerator.genTestItemList(100);
         itemAdapter.set(items);
 
         assertThat(adapter.getPreItemCount(40)).isEqualTo(0);
@@ -143,7 +143,7 @@ public class ExpandableFastAdapterTest {
 
     @Test
     public void getExpandedItemsCount() throws Exception {
-        List<TestItem> items = TestDataGenerator.genTestItemWithSubItemsList(10, 1);
+        List<ExpandableTestItem> items = TestDataGenerator.genTestItemWithSubItemsList(10, 1);
         itemAdapter.set(items);
 
         expandableExtension.expand(5);
@@ -166,8 +166,8 @@ public class ExpandableFastAdapterTest {
     public void move() throws Exception {
         itemAdapter.set(TestDataGenerator.genTestItemList(11));
         assertThat(itemAdapter.getAdapterItemCount()).isEqualTo(11);
-        TestItem movedItem = itemAdapter.getAdapterItem(0);
-        TestItem changedItem = itemAdapter.getAdapterItem(1);
+        ExpandableTestItem movedItem = itemAdapter.getAdapterItem(0);
+        ExpandableTestItem changedItem = itemAdapter.getAdapterItem(1);
         itemAdapter.move(0, 10);
         assertThat(itemAdapter.getAdapterItemCount()).isEqualTo(11);
         assertThat(movedItem).isEqualTo(itemAdapter.getAdapterItem(10));

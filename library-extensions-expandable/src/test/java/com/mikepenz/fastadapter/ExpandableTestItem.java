@@ -11,10 +11,10 @@ import java.util.List;
 /**
  * Created by fabianterhorst on 29.03.16.
  */
-public class TestItem extends AbstractItem<TestItem.ViewHolder> implements IExpandable<TestItem, TestItem, TestItem.ViewHolder>, ISubItem<TestItem, TestItem.ViewHolder> {
+public class ExpandableTestItem extends AbstractItem<ExpandableTestItem.ViewHolder> implements IExpandable<ExpandableTestItem, ExpandableTestItem, ExpandableTestItem.ViewHolder>, ISubItem<ExpandableTestItem, ExpandableTestItem.ViewHolder> {
 
-    private List<TestItem> mSubItems;
-    private TestItem mParent;
+    private List<ExpandableTestItem> mSubItems;
+    private ExpandableTestItem mParent;
     private boolean mExpanded = false;
 
     @Override
@@ -38,7 +38,7 @@ public class TestItem extends AbstractItem<TestItem.ViewHolder> implements IExpa
     }
 
     @Override
-    public List<TestItem> getSubItems() {
+    public List<ExpandableTestItem> getSubItems() {
         return mSubItems;
     }
 
@@ -48,17 +48,17 @@ public class TestItem extends AbstractItem<TestItem.ViewHolder> implements IExpa
     }
 
     @Override
-    public void setSubItems(List<TestItem> subItems) {
+    public void setSubItems(List<ExpandableTestItem> subItems) {
         this.mSubItems = subItems;
     }
 
     @Override
-    public TestItem getParent() {
+    public ExpandableTestItem getParent() {
         return mParent;
     }
 
     @Override
-    public void setParent(TestItem parent) {
+    public void setParent(ExpandableTestItem parent) {
         this.mParent = parent;
     }
 
