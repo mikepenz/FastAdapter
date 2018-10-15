@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter.app;
 
+import com.mikepenz.fastadapter.expandable.ExpandableExtensionFactory;
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories;
 import com.mikepenz.fastadapter.select.SelectExtensionFactory;
 
@@ -21,5 +22,6 @@ public class CustomApplication extends MultiDexApplication {
         Realm.setDefaultConfiguration(config);
 
         ExtensionsFactories.INSTANCE.register(new SelectExtensionFactory());
+        ExtensionsFactories.INSTANCE.register(new ExpandableExtensionFactory());
     }
 }
