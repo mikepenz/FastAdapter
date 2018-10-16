@@ -100,14 +100,9 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
         }
 
     override fun withSavedInstanceState(savedInstanceState: Bundle?, prefix: String) {
-        if (savedInstanceState == null) {
-            return
-        }
-        val selectedItems = savedInstanceState.getLongArray(BUNDLE_SELECTIONS + prefix)
-        if (selectedItems != null) {
-            for (id in selectedItems) {
-                selectByIdentifier(id, false, true)
-            }
+        val selectedItems = savedInstanceState?.getLongArray(BUNDLE_SELECTIONS + prefix) ?: return
+        for (id in selectedItems) {
+            selectByIdentifier(id, false, true)
         }
     }
 
@@ -118,10 +113,8 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
 
         val selections = selectedItems
         val selectionsArray = LongArray(selections.size)
-        var i = 0
-        for (item in selections) {
+        for ((i, item) in selections.withIndex()) {
             selectionsArray[i] = item.identifier
-            i++
         }
         //remember the selections
         savedInstanceState.putLongArray(BUNDLE_SELECTIONS + prefix, selectionsArray)
@@ -290,16 +283,17 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
     @JvmOverloads
     fun select(position: Int, fireEvent: Boolean = false, considerSelectableFlag: Boolean = false) {
         val relativeInfo = fastAdapter.getRelativeInfo(position)
-        if (relativeInfo == null || relativeInfo.item == null) {
-            return
+        relativeInfo.item?.let { item ->
+            relativeInfo.adapter?.let { adapter ->
+                select(
+                    adapter,
+                    item,
+                    position,
+                    fireEvent,
+                    considerSelectableFlag
+                )
+            }
         }
-        select(
-            relativeInfo.adapter!!,
-            relativeInfo.item!!,
-            position,
-            fireEvent,
-            considerSelectableFlag
-        )
     }
 
     /**

@@ -750,7 +750,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         for (adapter in adapters) {
             if (adapter.adapterItemCount > 0) {
                 adapterSizes.append(size, adapter)
-                size = size + adapter.adapterItemCount
+                size += adapter.adapterItemCount
             }
         }
 

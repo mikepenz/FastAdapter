@@ -31,7 +31,7 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
     private val collapseAdapterPredicate = object : AdapterPredicate<Item> {
         private var allowedParents = ArraySet<IItem<*>>()
 
-        private var expandedItemsCount = intArrayOf(0)
+        private var expandedItemsCount = 0
 
         override fun apply(
             lastParentAdapter: IAdapter<Item>,
@@ -58,12 +58,19 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
                     expandable.isExpanded = false
 
                     expandable.subItems?.let { subItems ->
-                        expandedItemsCount[0] += subItems.size
+                        expandedItemsCount += subItems.size
                         allowedParents.add(item)
                     }
                 }
             }
             return false
+        }
+
+        fun collapse(position: Int, fastAdapter: FastAdapter<Item>): Int {
+            expandedItemsCount = 0
+            allowedParents.clear()
+            fastAdapter.recursive(this, position, true)
+            return expandedItemsCount
         }
     }
 
@@ -363,12 +370,8 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
      */
     @JvmOverloads
     fun collapse(position: Int, notifyItemChanged: Boolean = false) {
-        val expandedItemsCount = intArrayOf(0)
-        fastAdapter.recursive(collapseAdapterPredicate, position, true)
-
         val adapter = fastAdapter.getAdapter(position)
-        (adapter as? IItemAdapter<*, *>?)?.removeRange(position + 1, expandedItemsCount[0])
-
+        (adapter as? IItemAdapter<*, *>?)?.removeRange(position + 1, collapseAdapterPredicate.collapse(position, fastAdapter))
         //we need to notify to get the correct drawable if there is one showing the current state
         if (notifyItemChanged) {
             fastAdapter.notifyItemChanged(position)
