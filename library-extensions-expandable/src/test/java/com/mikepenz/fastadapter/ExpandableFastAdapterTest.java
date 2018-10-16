@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -153,6 +154,60 @@ public class ExpandableFastAdapterTest {
         expandableExtension.collapse(5);
 
         assertThat(expandableExtension.getExpandedItemsCount(0, 100)).isEqualTo(0);
+    }
+
+    @Test
+    public void expand() throws Exception {
+        List<ExpandableTestItem> items = ExpandableTestDataGenerator.genTestItemWithSubItemsList(10, 1);
+        itemAdapter.set(items);
+
+        assertThat(itemAdapter.getAdapterItem(1).getIdentifier()).isEqualTo(12);
+
+        expandableExtension.expand(0);
+
+        assertThat(itemAdapter.getAdapterItem(1).getIdentifier()).isEqualTo(2);
+    }
+
+    @Test
+    public void expandDepth2() throws Exception {
+        List<ExpandableTestItem> items = ExpandableTestDataGenerator.genTestItemWithSubItemsList(10, 2);
+        itemAdapter.set(items);
+
+        expandableExtension.expand(0);
+
+        expandableExtension.expand(10);
+
+        assertThat(itemAdapter.getAdapterItem(13).getIdentifier()).isEqualTo(104);
+    }
+
+    @Test
+    public void collapse() throws Exception {
+        List<ExpandableTestItem> items = ExpandableTestDataGenerator.genTestItemWithSubItemsList(10, 1);
+        itemAdapter.set(items);
+
+        expandableExtension.expand(0);
+
+        assertThat(itemAdapter.getAdapterItem(1).getIdentifier()).isEqualTo(2);
+
+        expandableExtension.collapse(0);
+
+        assertThat(itemAdapter.getAdapterItem(1).getIdentifier()).isEqualTo(12);
+    }
+
+    @Test
+    public void collapseDepth2() throws Exception {
+        List<ExpandableTestItem> items = ExpandableTestDataGenerator.genTestItemWithSubItemsList(10, 2);
+        itemAdapter.set(items);
+
+        expandableExtension.expand(0);
+
+        expandableExtension.expand(10);
+
+        expandableExtension.collapse(0);
+
+        assertThat(itemAdapter.getAdapterItem(0).getIdentifier()).isEqualTo(1);
+
+        assertThat(expandableExtension.getExpandedItemsCount(0, 2210)).isEqualTo(0);
     }
 
     @Test

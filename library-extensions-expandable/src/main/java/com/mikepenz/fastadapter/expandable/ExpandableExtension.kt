@@ -15,9 +15,7 @@ import com.mikepenz.fastadapter.IExpandable
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
-import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.utils.AdapterPredicate
-import com.mikepenz.fastadapter.utils.AdapterUtil
 
 import java.util.ArrayList
 
@@ -448,36 +446,6 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
         }
         return totalAddedItems
     }
-
-    /**
-     * deselects all selections
-     */
-    //TODO: fix
-    /*fun deselect() {
-        val selectExtension =
-            fastAdapter.getExtension<SelectExtension<Item>>(SelectExtension::class.java) as? SelectExtension<Item>?
-                    ?: return
-        for (item in AdapterUtil.getAllItems(fastAdapter as FastAdapter<Item>)) {
-            selectExtension.deselect(item)
-        }
-        fastAdapter.notifyDataSetChanged()
-    }*/
-
-    /**
-     * select all items
-     *
-     * @param considerSelectableFlag true if the select method should not select an item if its not selectable
-     */
-    //TODO: fix
-    /*fun select(considerSelectableFlag: Boolean) {
-        val selectExtension =
-            fastAdapter.getExtension<SelectExtension<Item>>(SelectExtension::class.java) as? SelectExtension<ISubItem<*, *>>?
-                    ?: return
-        for (item in AdapterUtil.getAllItems(fastAdapter as FastAdapter<ISubItem<*, *>>)) {
-            selectExtension.select(item, considerSelectableFlag)
-        }
-        fastAdapter.notifyDataSetChanged()
-    }*/
 
     companion object {
         private const val BUNDLE_EXPANDED = "bundle_expanded"
