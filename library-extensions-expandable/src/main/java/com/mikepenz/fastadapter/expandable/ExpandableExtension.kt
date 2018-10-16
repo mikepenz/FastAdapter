@@ -134,20 +134,15 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
         }
 
     override fun withSavedInstanceState(savedInstanceState: Bundle?, prefix: String) {
-        if (savedInstanceState == null) {
-            return
-        }
-        val expandedItems = savedInstanceState.getStringArrayList(BUNDLE_EXPANDED + prefix)
-        var id: String
+        val expandedItems = savedInstanceState?.getLongArray(BUNDLE_EXPANDED + prefix) ?: return
+        var id: Long?
         var i = 0
         var size = fastAdapter.itemCount
         while (i < size) {
-            fastAdapter.getItem(i)?.let { item ->
-                id = item.identifier.toString()
-                if (expandedItems != null && expandedItems.contains(id)) {
-                    expand(i)
-                    size = fastAdapter.itemCount
-                }
+            id = fastAdapter.getItem(i)?.identifier
+            if (id != null && expandedItems.contains(id)) {
+                expand(i)
+                size = fastAdapter.itemCount
             }
             i++
         }
@@ -157,20 +152,19 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
         if (savedInstanceState == null) {
             return
         }
-        val expandedItems = ArrayList<String>()
-
+        val expandedItems = ArrayList<Long>()
         var item: Item?
         var i = 0
         val size = fastAdapter.itemCount
         while (i < size) {
             item = fastAdapter.getItem(i)
             if ((item as? IExpandable<*, *, *>?)?.isExpanded == true) {
-                expandedItems.add(item.identifier.toString())
+                expandedItems.add(item.identifier)
             }
             i++
         }
         //remember the collapsed states
-        savedInstanceState.putStringArrayList(BUNDLE_EXPANDED + prefix, expandedItems)
+        savedInstanceState.putLongArray(BUNDLE_EXPANDED + prefix, expandedItems.toLongArray())
     }
 
     override fun onClick(v: View, pos: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean {
