@@ -370,43 +370,7 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
     @JvmOverloads
     fun collapse(position: Int, notifyItemChanged: Boolean = false) {
         val expandedItemsCount = intArrayOf(0)
-        //TODO: test with collapseAdapterPredicate
-        fastAdapter.recursive(object : AdapterPredicate<Item> {
-            internal var allowedParents = ArraySet<IItem<*>>()
-
-            override fun apply(
-                lastParentAdapter: IAdapter<Item>,
-                lastParentPosition: Int,
-                item: Item,
-                position: Int
-            ): Boolean {
-                //we do not care about non visible items
-                if (position == -1) {
-                    return false
-                }
-
-                //this is the entrance parent
-                if (allowedParents.size > 0) {
-                    // Go on until we hit an item with a parent which was not in our expandable hierarchy
-                    val parent = (item as? IExpandable<*, *, *>?)?.parent
-                    if (parent == null || !allowedParents.contains(parent)) {
-                        return true
-                    }
-                }
-
-                (item as? IExpandable<*, *, *>?)?.let { expandable ->
-                    if (expandable.isExpanded) {
-                        expandable.isExpanded = false
-
-                        expandable.subItems?.let { subItems ->
-                            expandedItemsCount[0] += subItems.size
-                            allowedParents.add(item)
-                        }
-                    }
-                }
-                return false
-            }
-        }, position, true)
+        fastAdapter.recursive(collapseAdapterPredicate, position, true)
 
         val adapter = fastAdapter.getAdapter(position)
         (adapter as? IItemAdapter<*, *>?)?.removeRange(position + 1, expandedItemsCount[0])

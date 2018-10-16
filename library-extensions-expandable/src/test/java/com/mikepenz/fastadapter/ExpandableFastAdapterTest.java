@@ -149,6 +149,10 @@ public class ExpandableFastAdapterTest {
         expandableExtension.expand(5);
 
         assertThat(expandableExtension.getExpandedItemsCount(0, 100)).isEqualTo(10);
+
+        expandableExtension.collapse(5);
+
+        assertThat(expandableExtension.getExpandedItemsCount(0, 100)).isEqualTo(0);
     }
 
     @Test
