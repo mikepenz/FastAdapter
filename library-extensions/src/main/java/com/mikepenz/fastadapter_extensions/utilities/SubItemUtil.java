@@ -7,7 +7,6 @@ import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter.utils.AdapterPredicate;
@@ -317,8 +316,8 @@ public class SubItemUtil {
     }
 
     private static <T extends IExpandable & IItem> T getParent(IItem item) {
-        if (item instanceof ISubItem) {
-            return (T) ((ISubItem) item).getParent();
+        if (item instanceof IExpandable) {
+            return (T) ((IExpandable) item).getParent();
         }
         return null;
     }

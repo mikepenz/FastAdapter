@@ -10,8 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.ISubItem;
-import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;

@@ -14,7 +14,6 @@ import com.mikepenz.fastadapter.IExpandable
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.ISelectionListener
-import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.utils.AdapterPredicate
 
@@ -524,13 +523,9 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
             ): Boolean {
                 if (item.isSelected) {
                     //if it's a subitem remove it from the parent
-                    if (item is ISubItem<*, *>) {
+                    (item as? IExpandable<*, *, *>?)?.let { expandable ->
                         //a sub item which is not in the list can be instantly deleted
-                        val parent = (item as ISubItem<*, *>).parent
-                        //parent should not be null, but check in any case..
-                        if (parent != null) {
-                            parent.subItems!!.remove(item)
-                        }
+                        expandable.parent?.subItems?.remove(item)
                     }
                     if (position != -1) {
                         //a normal displayed item can only be deleted afterwards

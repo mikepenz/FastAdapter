@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by fabianterhorst on 29.03.16.
  */
-public class ExpandableTestItem extends AbstractItem<ExpandableTestItem.ViewHolder> implements IExpandable<ExpandableTestItem, ExpandableTestItem, ExpandableTestItem.ViewHolder>, ISubItem<ExpandableTestItem, ExpandableTestItem.ViewHolder> {
+public class ExpandableTestItem extends AbstractItem<ExpandableTestItem.ViewHolder> implements IExpandable<ExpandableTestItem, ExpandableTestItem, ExpandableTestItem.ViewHolder> {
 
     private List<ExpandableTestItem> mSubItems;
     private ExpandableTestItem mParent;
