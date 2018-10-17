@@ -7,7 +7,6 @@ import android.widget.TextView;
 
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -22,10 +21,37 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class IconItem<T extends IExpandable<T, IconItem<T>, IconItem.ViewHolder>> extends AbstractItem<IconItem.ViewHolder> implements ISubItem<T, IconItem.ViewHolder> {
+public class IconItem<T extends IExpandable<T, IconItem<T>, IconItem.ViewHolder>> extends AbstractItem<IconItem.ViewHolder> implements IExpandable<T, IconItem<T>, IconItem.ViewHolder> {
 
     public IIcon mIcon;
     private T mParent;
+
+    private boolean mExpanded;
+
+    @Override
+    public boolean isExpanded() {
+        return mExpanded;
+    }
+
+    @Override
+    public void setExpanded(boolean expanded) {
+        this.mExpanded = expanded;
+    }
+
+    @Override
+    public List<IconItem<T>> getSubItems() {
+        return null;
+    }
+
+    @Override
+    public void setSubItems(List<IconItem<T>> list) {
+
+    }
+
+    @Override
+    public boolean isAutoExpanding() {
+        return true;
+    }
 
     /**
      * setter method for the Icon

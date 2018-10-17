@@ -15,8 +15,6 @@ import android.widget.TextView;
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IClickable;
 import com.mikepenz.fastadapter.IExpandable;
-import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem;
@@ -31,7 +29,7 @@ import butterknife.ButterKnife;
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class SimpleSubExpandableItem<Parent extends IExpandable<Parent, SubItem, SimpleSubExpandableItem.ViewHolder>, SubItem extends ISubItem<Parent, SimpleSubExpandableItem.ViewHolder>> extends AbstractExpandableItem<Parent, SubItem, SimpleSubExpandableItem.ViewHolder> implements IClickable<SimpleSubExpandableItem<Parent, SubItem>> {
+public class SimpleSubExpandableItem<Parent extends IExpandable<Parent, SubItem, SimpleSubExpandableItem.ViewHolder>, SubItem extends IExpandable<Parent, SubItem, SimpleSubExpandableItem.ViewHolder>> extends AbstractExpandableItem<Parent, SubItem, SimpleSubExpandableItem.ViewHolder> implements IClickable<SimpleSubExpandableItem<Parent, SubItem>> {
 
     public String header;
     public StringHolder name;

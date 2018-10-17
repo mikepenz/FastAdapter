@@ -14,7 +14,6 @@ import com.mikepenz.fastadapter.IExpandable
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.ISelectionListener
-import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.utils.AdapterPredicate
 
@@ -101,14 +100,9 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
         }
 
     override fun withSavedInstanceState(savedInstanceState: Bundle?, prefix: String) {
-        if (savedInstanceState == null) {
-            return
-        }
-        val selectedItems = savedInstanceState.getLongArray(BUNDLE_SELECTIONS + prefix)
-        if (selectedItems != null) {
-            for (id in selectedItems) {
-                selectByIdentifier(id, false, true)
-            }
+        val selectedItems = savedInstanceState?.getLongArray(BUNDLE_SELECTIONS + prefix) ?: return
+        for (id in selectedItems) {
+            selectByIdentifier(id, false, true)
         }
     }
 
@@ -119,10 +113,8 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
 
         val selections = selectedItems
         val selectionsArray = LongArray(selections.size)
-        var i = 0
-        for (item in selections) {
+        for ((i, item) in selections.withIndex()) {
             selectionsArray[i] = item.identifier
-            i++
         }
         //remember the selections
         savedInstanceState.putLongArray(BUNDLE_SELECTIONS + prefix, selectionsArray)
@@ -291,16 +283,17 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
     @JvmOverloads
     fun select(position: Int, fireEvent: Boolean = false, considerSelectableFlag: Boolean = false) {
         val relativeInfo = fastAdapter.getRelativeInfo(position)
-        if (relativeInfo == null || relativeInfo.item == null) {
-            return
+        relativeInfo.item?.let { item ->
+            relativeInfo.adapter?.let { adapter ->
+                select(
+                    adapter,
+                    item,
+                    position,
+                    fireEvent,
+                    considerSelectableFlag
+                )
+            }
         }
-        select(
-            relativeInfo.adapter!!,
-            relativeInfo.item!!,
-            position,
-            fireEvent,
-            considerSelectableFlag
-        )
     }
 
     /**
@@ -524,13 +517,9 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
             ): Boolean {
                 if (item.isSelected) {
                     //if it's a subitem remove it from the parent
-                    if (item is ISubItem<*, *>) {
+                    (item as? IExpandable<*, *, *>?)?.let { expandable ->
                         //a sub item which is not in the list can be instantly deleted
-                        val parent = (item as ISubItem<*, *>).parent
-                        //parent should not be null, but check in any case..
-                        if (parent != null) {
-                            parent.subItems!!.remove(item)
-                        }
+                        expandable.parent?.subItems?.remove(item)
                     }
                     if (position != -1) {
                         //a normal displayed item can only be deleted afterwards
