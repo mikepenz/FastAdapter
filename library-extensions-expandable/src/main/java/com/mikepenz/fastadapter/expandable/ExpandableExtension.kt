@@ -282,7 +282,9 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
                 val expandedItemsList = ArrayList<Int>()
                 parent.subItems?.forEach { subItem ->
                     if ((subItem as? IExpandable<*, *, *>)?.isExpanded == true && subItem !== item) {
-                        expandedItemsList.add(fastAdapter.getPosition(subItem as Item))
+                        (subItem as? Item?)?.let { adapterItem ->
+                            expandedItemsList.add(fastAdapter.getPosition(adapterItem))
+                        }
                     }
                 }
                 val expandedItemsListLength = expandedItemsList.size
@@ -369,7 +371,10 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
     @JvmOverloads
     fun collapse(position: Int, notifyItemChanged: Boolean = false) {
         val adapter = fastAdapter.getAdapter(position)
-        (adapter as? IItemAdapter<*, *>?)?.removeRange(position + 1, collapseAdapterPredicate.collapse(position, fastAdapter))
+        (adapter as? IItemAdapter<*, *>?)?.removeRange(
+            position + 1,
+            collapseAdapterPredicate.collapse(position, fastAdapter)
+        )
         //we need to notify to get the correct drawable if there is one showing the current state
         if (notifyItemChanged) {
             fastAdapter.notifyItemChanged(position)
