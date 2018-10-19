@@ -1,13 +1,12 @@
 package com.mikepenz.fastadapter.commons.adapters
 
+import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
-import com.mikepenz.fastadapter.adapters.ItemFilter
-
-import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
+import com.mikepenz.fastadapter.adapters.ItemFilter
 
 /**
  * Created by mikepenz on 18.01.16.

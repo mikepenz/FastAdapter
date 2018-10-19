@@ -1,11 +1,11 @@
 package com.mikepenz.fastadapter.app.adapters;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
+
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by mikepenz on 28.06.16.

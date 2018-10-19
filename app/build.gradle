@@ -45,6 +45,8 @@ android {
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+
     implementation 'com.android.support:multidex:1.0.3'
 
     implementation project(':library-core')
