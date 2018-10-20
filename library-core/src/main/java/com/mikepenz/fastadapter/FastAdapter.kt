@@ -896,7 +896,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                     if (predicate.apply(adapter, i, item, i) && stopOnMatch) {
                         return Triple(true, item, i)
                     }
-                    (item as IExpandable<*>).let { expandableItem ->
+                    (item as? IExpandable<*>)?.let { expandableItem ->
                         val res = FastAdapter.recursiveSub(
                                 adapter,
                                 i,
