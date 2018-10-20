@@ -2,12 +2,6 @@ package com.mikepenz.fastadapter.app.items.expandable;
 
 import android.content.Context;
 import android.graphics.Color;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,13 +17,17 @@ import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class SimpleSubExpandableItem<Parent extends IExpandable<Parent, SubItem, SimpleSubExpandableItem.ViewHolder>, SubItem extends IExpandable<Parent, SubItem, SimpleSubExpandableItem.ViewHolder>> extends AbstractExpandableItem<Parent, SubItem, SimpleSubExpandableItem.ViewHolder> implements IClickable<SimpleSubExpandableItem<Parent, SubItem>> {
+public class SimpleSubExpandableItem<Parent extends IExpandable<Parent, SubItem, ?>, SubItem extends IExpandable<Parent, SubItem, ?>> extends AbstractExpandableItem<Parent, SubItem, SimpleSubExpandableItem.ViewHolder> implements IClickable<SimpleSubExpandableItem<Parent, SubItem>> {
 
     public String header;
     public StringHolder name;

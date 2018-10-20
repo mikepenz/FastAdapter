@@ -2,11 +2,6 @@ package com.mikepenz.fastadapter.app.items.expandable;
 
 import android.content.Context;
 import android.graphics.Color;
-
-import androidx.annotation.StringRes;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.View;
 import android.widget.TextView;
 
@@ -20,10 +15,13 @@ import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;
 
+import androidx.annotation.StringRes;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SimpleSubItem<Parent extends IExpandable<Parent, SimpleSubItem<Parent>, SimpleSubItem.ViewHolder>> extends AbstractExpandableItem<Parent, SimpleSubItem<Parent>, SimpleSubItem.ViewHolder> implements IDraggable<SimpleSubItem, IItem>, IExpandable<Parent, SimpleSubItem<Parent>, SimpleSubItem.ViewHolder> {
+public class SimpleSubItem<Parent extends IExpandable<Parent, SimpleSubItem<Parent>, ?>> extends AbstractExpandableItem<Parent, SimpleSubItem<Parent>, SimpleSubItem.ViewHolder> implements IDraggable<SimpleSubItem, IItem>, IExpandable<Parent, SimpleSubItem<Parent>, SimpleSubItem.ViewHolder> {
 
     public String header;
     public StringHolder name;
