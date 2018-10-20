@@ -3,6 +3,7 @@ package com.mikepenz.fastadapter.utils;
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.ISubItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +20,11 @@ public class AdapterUtil {
      * @param item          the parent item
      * @param selectedItems the list of selectedItems from the savedInstanceState
      */
-    public static <Item extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<?, ?, ?>> void restoreSubItemSelectionStatesForAlternativeStateManagement(Item item, List<String> selectedItems) {
-        if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
-            List<Item> subItems = (List<Item>) ((IExpandable<?, ?, ?>) item).getSubItems();
+    public static <Item extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<?>> void restoreSubItemSelectionStatesForAlternativeStateManagement(Item item, List<String> selectedItems) {
+        if (item instanceof IExpandable && !item.isExpanded() && ((IExpandable) item).getSubItems() != null) {
+            List<? extends ISubItem<?>> subItems = ((IExpandable<?>) item).getSubItems();
             for (int i = 0, size = subItems.size(); i < size; i++) {
-                Item subItem = subItems.get(i);
+                Item subItem = (Item) subItems.get(i);
                 String id = String.valueOf(subItem.getIdentifier());
                 if (selectedItems != null && selectedItems.contains(id)) {
                     subItem.setSelected(true);
@@ -39,11 +40,11 @@ public class AdapterUtil {
      * @param item       the parent item
      * @param selections the ArrayList which will be stored in the savedInstanceState
      */
-    public static <Item extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<?, ?, ?>> void findSubItemSelections(Item item, List<String> selections) {
-        if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
-            List<Item> subItems = (List<Item>) ((IExpandable<?, ?, ?>) item).getSubItems();
+    public static <Item extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<?>> void findSubItemSelections(Item item, List<String> selections) {
+        if (item instanceof IExpandable && !item.isExpanded() && ((IExpandable) item).getSubItems() != null) {
+            List<? extends ISubItem<?>> subItems = ((IExpandable<?>) item).getSubItems();
             for (int i = 0, size = subItems.size(); i < size; i++) {
-                Item subItem = subItems.get(i);
+                Item subItem = (Item) subItems.get(i);
                 String id = String.valueOf(subItem.getIdentifier());
                 if (subItem.isSelected()) {
                     selections.add(id);
@@ -59,7 +60,7 @@ public class AdapterUtil {
      * @param fastAdapter the FastAdapter
      * @return a list of all items including the whole subItem hirachy
      */
-    public static <Item extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<?, ?, ?>> List<Item> getAllItems(FastAdapter<Item> fastAdapter) {
+    public static <Item extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<?>> List<Item> getAllItems(FastAdapter<Item> fastAdapter) {
         int size = fastAdapter.getItemCount();
         List<Item> items = new ArrayList<>(size);
         for (int i = 0; i < size; i++) {
@@ -76,12 +77,12 @@ public class AdapterUtil {
      * @param item  the parent from which we add all items
      * @param items the list in which we add the subItems
      */
-    public static <Item extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<?, ?, ?>> void addAllSubItems(Item item, List<Item> items) {
-        if (item instanceof IExpandable && !((IExpandable) item).isExpanded() && ((IExpandable) item).getSubItems() != null) {
-            List<Item> subItems = (List<Item>) ((IExpandable<?, ?, ?>) item).getSubItems();
+    public static <Item extends IItem<? extends RecyclerView.ViewHolder> & IExpandable<?>> void addAllSubItems(Item item, List<Item> items) {
+        if (item instanceof IExpandable && !item.isExpanded() && ((IExpandable) item).getSubItems() != null) {
+            List<? extends ISubItem<?>> subItems = ((IExpandable<?>) item).getSubItems();
             Item subItem;
             for (int i = 0, size = subItems.size(); i < size; i++) {
-                subItem = subItems.get(i);
+                subItem = (Item) subItems.get(i);
                 items.add(subItem);
                 addAllSubItems(subItem, items);
             }

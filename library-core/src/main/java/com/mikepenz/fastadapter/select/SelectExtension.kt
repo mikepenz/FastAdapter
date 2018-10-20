@@ -1,23 +1,14 @@
 package com.mikepenz.fastadapter.select
 
 import android.os.Bundle
-import androidx.collection.ArraySet
-import androidx.recyclerview.widget.RecyclerView
-
 import android.view.MotionEvent
 import android.view.View
-
-import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IAdapterExtension
-import com.mikepenz.fastadapter.IExpandable
-import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.IItemAdapter
-import com.mikepenz.fastadapter.ISelectionListener
+import androidx.collection.ArraySet
+import androidx.recyclerview.widget.RecyclerView
+import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.utils.AdapterPredicate
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by mikepenz on 04/06/2017.
@@ -517,7 +508,7 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
             ): Boolean {
                 if (item.isSelected) {
                     //if it's a subitem remove it from the parent
-                    (item as? IExpandable<*, *, *>?)?.let { expandable ->
+                    (item as? IExpandable<*>?)?.let { expandable ->
                         //a sub item which is not in the list can be instantly deleted
                         expandable.parent?.subItems?.remove(item)
                     }

@@ -16,7 +16,7 @@ import androidx.core.view.ViewCompat;
  * Created by flisar on 21.09.2016.
  */
 
-public class HeaderSelectionItem<T extends IExpandable<T, S, ?>, S extends IExpandable<T, S, ?>> extends SimpleSubExpandableItem<T, S> {
+public class HeaderSelectionItem<T extends IExpandable<?>, S extends IExpandable<?>> extends SimpleSubExpandableItem {
 
     private ISubSelectionProvider mSubSelectionProvider;
 

@@ -21,7 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SimpleSubItem<Parent extends IExpandable<Parent, SimpleSubItem<Parent>, ?>> extends AbstractExpandableItem<Parent, SimpleSubItem<Parent>, SimpleSubItem.ViewHolder> implements IDraggable<SimpleSubItem, IItem>, IExpandable<Parent, SimpleSubItem<Parent>, SimpleSubItem.ViewHolder> {
+public class SimpleSubItem<Parent extends IExpandable<?>> extends AbstractExpandableItem<SimpleSubItem.ViewHolder> implements IDraggable<SimpleSubItem, IItem>, IExpandable<SimpleSubItem.ViewHolder> {
 
     public String header;
     public StringHolder name;
