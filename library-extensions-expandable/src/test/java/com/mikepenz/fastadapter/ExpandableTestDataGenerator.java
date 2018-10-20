@@ -1,10 +1,10 @@
 package com.mikepenz.fastadapter;
 
-import androidx.annotation.NonNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import androidx.annotation.NonNull;
 
 /**
  * Created by fabianterhorst on 29.03.16.
@@ -59,9 +59,11 @@ public class ExpandableTestDataGenerator {
         if (item.getSubItems() == null) {
             return;
         }
-        for (ExpandableTestItem expandableTestItem : item.getSubItems()) {
-            atomicInteger.incrementAndGet();
-            count(expandableTestItem, atomicInteger);
+        for (ISubItem<?> expandableTestItem : item.getSubItems()) {
+            if(expandableTestItem instanceof ExpandableTestItem) {
+                atomicInteger.incrementAndGet();
+                count((ExpandableTestItem) expandableTestItem, atomicInteger);
+            }
         }
     }
 }
