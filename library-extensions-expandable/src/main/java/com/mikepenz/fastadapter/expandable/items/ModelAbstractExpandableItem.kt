@@ -14,13 +14,13 @@ abstract class ModelAbstractExpandableItem<Model, Parent, SubItem, VH : Recycler
     override var subItems: MutableList<out ISubItem<*>>?
         set(value) {
             _subItems = value
-        }
-        get() {
             _subItems?.let { subItems ->
                 for (item in subItems) {
-                    item.parent = parent
+                    item.parent = this
                 }
             }
+        }
+        get() {
             return _subItems
         }
     override val isAutoExpanding: Boolean = true
