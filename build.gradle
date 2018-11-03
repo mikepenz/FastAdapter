@@ -15,7 +15,7 @@ buildscript {
 
         versions = [
                 androidX: '1.0.0',
-                kotlin: '1.2.71'
+                kotlin: '1.3.0'
         ]
     }
 
