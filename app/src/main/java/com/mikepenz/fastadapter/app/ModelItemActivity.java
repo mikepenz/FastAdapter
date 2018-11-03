@@ -1,11 +1,6 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -26,8 +21,13 @@ import com.turingtechnologies.materialscrollbar.DragScrollBar;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ModelItemActivity extends AppCompatActivity {
     //save our FastAdapter
@@ -68,22 +68,18 @@ public class ModelItemActivity extends AppCompatActivity {
         //init our gridLayoutManager and configure RV
         rv.setAdapter(fastScrollIndicatorAdapter.wrap(fastAdapter));
 
-        DragScrollBar materialScrollBar = new DragScrollBar(this, rv, true);
-        materialScrollBar.setHandleColour(ContextCompat.getColor(this, R.color.colorAccent));
-        materialScrollBar.setHandleOffColour(ContextCompat.getColor(this, R.color.colorAccent));
-        materialScrollBar.addIndicator(new CustomIndicator(this), true);
+        DragScrollBar materialScrollBar = findViewById(R.id.dragScrollBar);
+        materialScrollBar.setVisibility(View.VISIBLE);
+        materialScrollBar.setHandleColor(ContextCompat.getColor(this, R.color.colorAccent));
+        materialScrollBar.setHandleOffColor(ContextCompat.getColor(this, R.color.colorAccent));
+        materialScrollBar.setIndicator(new CustomIndicator(this), true);
 
         rv.setLayoutManager(new GridLayoutManager(this, 3));
         rv.setItemAnimator(new SlideDownAlphaAnimator());
 
         //order fonts by their name
         List<ITypeface> mFonts = new ArrayList<>(Iconics.getRegisteredFonts(this));
-        Collections.sort(mFonts, new Comparator<ITypeface>() {
-            @Override
-            public int compare(final ITypeface object1, final ITypeface object2) {
-                return object1.getFontName().compareTo(object2.getFontName());
-            }
-        });
+        Collections.sort(mFonts, (object1, object2) -> object1.getFontName().compareTo(object2.getFontName()));
 
         //add all icons of all registered Fonts to the list
         ArrayList<IconModel> models = new ArrayList<>();

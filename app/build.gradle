@@ -42,6 +42,10 @@ android {
     lintOptions {
         abortOnError false
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 dependencies {
@@ -104,7 +108,7 @@ dependencies {
 
     //Used to provide the FastScrollBar
     //https://github.com/krimin-killr21/MaterialScrollBar
-    implementation 'com.turingtechnologies.materialscrollbar:lib:10.0.1'
+    implementation 'com.github.turing-tech:MaterialScrollBar:13.3.1'
 
     //https://github.com/JakeWharton/butterknife
     implementation 'com.jakewharton:butterknife:9.0.0-rc1'
