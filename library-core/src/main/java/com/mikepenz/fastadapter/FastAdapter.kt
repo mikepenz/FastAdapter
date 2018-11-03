@@ -896,7 +896,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                     if (predicate.apply(adapter, i, item, i) && stopOnMatch) {
                         return Triple(true, item, i)
                     }
-                    (item as? IExpandable<*, *, *>?)?.let { expandableItem ->
+                    (item as? IExpandable<*>)?.let { expandableItem ->
                         val res = FastAdapter.recursiveSub(
                                 adapter,
                                 i,
@@ -1114,14 +1114,14 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         fun <Item : IItem<out RecyclerView.ViewHolder>> recursiveSub(
                 lastParentAdapter: IAdapter<Item>,
                 lastParentPosition: Int,
-                parent: IExpandable<*, *, *>,
+                parent: IExpandable<*>,
                 predicate: AdapterPredicate<Item>,
                 stopOnMatch: Boolean
         ): Triple<Boolean, Item, Int> {
             //in case it's expanded it can be selected via the normal way
             if (!parent.isExpanded) {
                 parent.subItems?.forEach { sub ->
-                    (sub as? Item?)?.let { subItem ->
+                    (sub as Item).let { subItem ->
                         if (predicate.apply(
                                         lastParentAdapter,
                                         lastParentPosition,
@@ -1132,11 +1132,11 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                             return Triple(true, sub, null)
                         }
                     }
-                    if (sub is IExpandable<*, *, *>) {
+                    if (sub is IExpandable<*>) {
                         val res = FastAdapter.recursiveSub(
                                 lastParentAdapter,
                                 lastParentPosition,
-                                sub as IExpandable<*, *, *>,
+                                sub,
                                 predicate,
                                 stopOnMatch
                         )

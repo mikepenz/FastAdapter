@@ -1,25 +1,12 @@
 package com.mikepenz.fastadapter.adapters
 
 import androidx.recyclerview.widget.RecyclerView
-
-import com.mikepenz.fastadapter.AbstractAdapter
-import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IAdapterNotifier
-import com.mikepenz.fastadapter.IExpandable
-import com.mikepenz.fastadapter.IIdDistributor
-import com.mikepenz.fastadapter.IInterceptor
-import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.IItemAdapter
-import com.mikepenz.fastadapter.IItemList
-import com.mikepenz.fastadapter.IModelItem
+import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.utils.AdapterPredicate
 import com.mikepenz.fastadapter.utils.DefaultItemList
 import com.mikepenz.fastadapter.utils.DefaultItemListImpl
 import com.mikepenz.fastadapter.utils.Triple
-
-import java.util.ArrayList
-
+import java.util.*
 import java.util.Arrays.asList
 
 /**
@@ -442,7 +429,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
             ): Boolean {
                 if (identifier == item.identifier) {
                     //if it's a subitem remove it from the parent
-                    (item as? IExpandable<*, *, *>?)?.let { expandable ->
+                    (item as? IExpandable<*>?)?.let { expandable ->
                         //a sub item which is not in the list can be instantly deleted
                         expandable.parent?.subItems?.remove(item)
                     }
@@ -490,7 +477,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
                             return Triple(true, item, globalPosition)
                         }
                     }
-                    (item as? IExpandable<*, *, *>?)?.let { expandableItem ->
+                    (item as? IExpandable<*>?)?.let { expandableItem ->
                         relativeInfo.adapter?.let { adapter ->
                             val res = FastAdapter.recursiveSub(
                                 adapter,

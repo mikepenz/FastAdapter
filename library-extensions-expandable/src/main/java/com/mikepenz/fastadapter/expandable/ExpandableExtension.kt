@@ -1,23 +1,15 @@
 package com.mikepenz.fastadapter.expandable
 
 import android.os.Bundle
-import androidx.collection.ArraySet
-import androidx.recyclerview.widget.RecyclerView
-
 import android.util.SparseIntArray
 import android.view.MotionEvent
 import android.view.View
-
-import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IAdapterExtension
-import com.mikepenz.fastadapter.IExpandable
-import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.IItemAdapter
+import androidx.collection.ArraySet
+import androidx.recyclerview.widget.RecyclerView
+import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.utils.AdapterPredicate
-
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Created by mikepenz on 04/06/2017.
@@ -45,13 +37,13 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
             //this is the entrance parent
             if (allowedParents.size > 0) {
                 // Go on until we hit an item with a parent which was not in our expandable hierarchy
-                val parent = (item as? IExpandable<*, *, *>?)?.parent
+                val parent = (item as ISubItem<*>).parent
                 if (parent == null || !allowedParents.contains(parent)) {
                     return true
                 }
             }
 
-            (item as? IExpandable<*, *, *>?)?.let { expandable ->
+            (item as IExpandable<*>).let { expandable ->
                 if (expandable.isExpanded) {
                     expandable.isExpanded = false
 
@@ -98,7 +90,7 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
             val size = fastAdapter.itemCount
             while (i < size) {
                 item = fastAdapter.getItem(i)
-                (item as? IExpandable<*, *, *>?)?.let { expandableItem ->
+                (item as? IExpandable<*>?)?.let { expandableItem ->
                     if (expandableItem.isExpanded) {
                         expandableItem.subItems?.size?.let { subItemCount ->
                             expandedItems.put(i, subItemCount)
@@ -123,7 +115,7 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
                 val size = fastAdapter.itemCount
                 while (i < size) {
                     item = fastAdapter.getItem(i)
-                    if ((item as? IExpandable<*, *, *>?)?.isExpanded == true) {
+                    if ((item as? IExpandable<*>?)?.isExpanded == true) {
                         expandedItemsList.add(i)
                     }
                     i++
@@ -163,7 +155,7 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
         val size = fastAdapter.itemCount
         while (i < size) {
             item = fastAdapter.getItem(i)
-            if ((item as? IExpandable<*, *, *>?)?.isExpanded == true) {
+            if ((item as? IExpandable<*>?)?.isExpanded == true) {
                 expandedItems.add(item.identifier)
             }
             i++
@@ -174,7 +166,7 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
 
     override fun onClick(v: View, pos: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean {
         //if this is a expandable item :D (this has to happen after we handled the selection as we refer to the position)
-        (item as? IExpandable<*, *, *>?)?.let { expandableItem ->
+        (item as? IExpandable<*>?)?.let { expandableItem ->
             if (expandableItem.isAutoExpanding && expandableItem.subItems != null) {
                 toggleExpandable(pos)
             }
@@ -227,7 +219,7 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
     override fun notifyAdapterItemRangeChanged(position: Int, itemCount: Int, payload: Any?) {
         for (i in position until position + itemCount) {
             val item = fastAdapter.getItem(position)
-            if ((item as? IExpandable<*, *, *>?)?.isExpanded == true) {
+            if ((item as? IExpandable<*>?)?.isExpanded == true) {
                 collapse(position)
             }
         }
@@ -252,8 +244,8 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
      */
     fun notifyAdapterSubItemsChanged(position: Int, previousCount: Int): Int {
         val item = fastAdapter.getItem(position)
-        if (item != null && item is IExpandable<*, *, *>) {
-            val expandable = item as? IExpandable<*, *, *>?
+        if (item != null && item is IExpandable<*>) {
+            val expandable = item as? IExpandable<*>?
             val adapter = fastAdapter.getAdapter(position)
             if (adapter != null && adapter is IItemAdapter<*, *>) {
                 (adapter as? IItemAdapter<*, *>)?.removeRange(position + 1, previousCount)
@@ -275,13 +267,13 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
      */
     fun getExpandedItemsSameLevel(position: Int): IntArray {
         val item = fastAdapter.getItem(position)
-        (item as? IExpandable<*, *, *>?)?.let { expandable ->
+        (item as? IExpandable<*>?)?.let { expandable ->
             expandable.parent?.let { parent ->
                 //if it is a SubItem and has a parent, only return the expanded items on the same level
                 val expandedItems: IntArray
                 val expandedItemsList = ArrayList<Int>()
                 parent.subItems?.forEach { subItem ->
-                    if ((subItem as? IExpandable<*, *, *>)?.isExpanded == true && subItem !== item) {
+                    if ((subItem as? IExpandable<*>)?.isExpanded == true && subItem !== item) {
                         (subItem as? Item?)?.let { adapterItem ->
                             expandedItemsList.add(fastAdapter.getPosition(adapterItem))
                         }
@@ -310,9 +302,9 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
         val size = fastAdapter.itemCount
         while (i < size) {
             val currItem = fastAdapter.getItem(i)
-            (currItem as? IExpandable<*, *, *>?)?.let { expandable ->
+            (currItem as? IExpandable<*>?)?.let { expandable ->
                 expandable.parent?.let { parent ->
-                    if (parent.isExpanded) {
+                    if (parent is IExpandable<*> && parent.isExpanded) {
                         i += parent.subItems?.size ?: 0
                         if (parent !== item) {
                             (parent as? Item?)?.let { adapterItem ->
@@ -342,7 +334,7 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
      */
     fun toggleExpandable(position: Int) {
         val item = fastAdapter.getItem(position)
-        if ((item as? IExpandable<*, *, *>)?.isExpanded == true) {
+        if ((item as? IExpandable<*>)?.isExpanded == true) {
             collapse(position)
         } else {
             expand(position)
@@ -404,7 +396,7 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
     @JvmOverloads
     fun expand(position: Int, notifyItemChanged: Boolean = false) {
         val item = fastAdapter.getItem(position)
-        (item as? IExpandable<*, *, *>?)?.let { expandable ->
+        (item as? IExpandable<*>?)?.let { expandable ->
             //if this item is not already expanded and has sub items we go on
             if (!expandable.isExpanded && expandable.subItems?.isNotEmpty() == true) {
                 val adapter = fastAdapter.getAdapter(position)
@@ -442,8 +434,8 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
         var tmp: Item?
         for (i in from until position) {
             tmp = fastAdapter.getItem(i)
-            if (tmp is IExpandable<*, *, *>) {
-                val tmpExpandable = tmp as IExpandable<*, *, *>
+            if (tmp is IExpandable<*>) {
+                val tmpExpandable = tmp as IExpandable<*>
                 if (tmpExpandable.subItems != null && tmpExpandable.isExpanded) {
                     totalAddedItems += tmpExpandable.subItems?.size ?: 0
                 }

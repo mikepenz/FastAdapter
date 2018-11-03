@@ -4,11 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,6 +28,12 @@ import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.Arrays;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class SampleActivity extends AppCompatActivity {
 
@@ -67,7 +68,7 @@ public class SampleActivity extends AppCompatActivity {
                 .withHasStableIds(true)
                 .withSavedInstance(savedInstanceState)
                 .withShowDrawerOnFirstLaunch(true)
-                /*.addDrawerItems(
+                .addDrawerItems(
                         new PrimaryDrawerItem().withName(R.string.sample_icon_grid).withDescription(R.string.sample_icon_grid_descr).withSelectable(false).withIdentifier(8).withIcon(MaterialDesignIconic.Icon.gmi_grid),
                         new PrimaryDrawerItem().withName(R.string.sample_simple_item_list).withDescription(R.string.sample_simple_item_list_descr).withSelectable(false).withIdentifier(6).withIcon(MaterialDesignIconic.Icon.gmi_format_align_justify),
                         new PrimaryDrawerItem().withName(R.string.sample_image_list).withDescription(R.string.sample_image_list_descr).withSelectable(false).withIdentifier(5).withIcon(MaterialDesignIconic.Icon.gmi_wallpaper),
@@ -89,11 +90,11 @@ public class SampleActivity extends AppCompatActivity {
                         new PrimaryDrawerItem().withName(R.string.sample_diff_util).withDescription(R.string.sample_diff_util_descr).withSelectable(false).withIdentifier(19).withIcon(MaterialDesignIconic.Icon.gmi_refresh),
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.open_source).withSelectable(false).withIdentifier(100).withIcon(MaterialDesignIconic.Icon.gmi_github)
-                )*/
+                )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        /*if (drawerItem != null) {
+                        if (drawerItem != null) {
                             Intent intent = null;
                             if (drawerItem.getIdentifier() == 1) {
                                 intent = new Intent(SampleActivity.this, MultiselectSampleActivity.class);
@@ -146,7 +147,7 @@ public class SampleActivity extends AppCompatActivity {
                             if (intent != null) {
                                 SampleActivity.this.startActivity(intent);
                             }
-                        }*/
+                        }
                         return false;
                     }
                 })
@@ -158,7 +159,7 @@ public class SampleActivity extends AppCompatActivity {
 
         //create our FastAdapter which will manage everything
         mFastAdapter = FastAdapter.Companion.with(Arrays.asList(mItemAdapter));
-        selectExtension = mFastAdapter.getExtension(SelectExtension.class);
+        selectExtension = mFastAdapter.getOrCreateExtension(SelectExtension.class);
         selectExtension.setSelectable(true);
         selectExtension.setMultiSelect(true);
         selectExtension.setSelectOnLongClick(false);

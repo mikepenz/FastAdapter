@@ -2,19 +2,13 @@ package com.mikepenz.fastadapter.app.items.expandable;
 
 import android.content.Context;
 import android.graphics.Color;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IClickable;
-import com.mikepenz.fastadapter.IExpandable;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem;
@@ -23,52 +17,56 @@ import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.core.view.ViewCompat;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class SimpleSubExpandableItem<Parent extends IExpandable<Parent, SubItem, SimpleSubExpandableItem.ViewHolder>, SubItem extends IExpandable<Parent, SubItem, SimpleSubExpandableItem.ViewHolder>> extends AbstractExpandableItem<Parent, SubItem, SimpleSubExpandableItem.ViewHolder> implements IClickable<SimpleSubExpandableItem<Parent, SubItem>> {
+public class SimpleSubExpandableItem extends AbstractExpandableItem<SimpleSubExpandableItem.ViewHolder> implements IClickable<SimpleSubExpandableItem>, ISubItem<SimpleSubExpandableItem.ViewHolder> {
 
     public String header;
     public StringHolder name;
     public StringHolder description;
 
-    private OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> mOnClickListener;
+    private OnClickListener<SimpleSubExpandableItem> mOnClickListener;
 
-    public SimpleSubExpandableItem<Parent, SubItem> withHeader(String header) {
+    public SimpleSubExpandableItem withHeader(String header) {
         this.header = header;
         return this;
     }
 
-    public SimpleSubExpandableItem<Parent, SubItem> withName(String Name) {
+    public SimpleSubExpandableItem withName(String Name) {
         this.name = new StringHolder(Name);
         return this;
     }
 
-    public SimpleSubExpandableItem<Parent, SubItem> withName(@StringRes int NameRes) {
+    public SimpleSubExpandableItem withName(@StringRes int NameRes) {
         this.name = new StringHolder(NameRes);
         return this;
     }
 
-    public SimpleSubExpandableItem<Parent, SubItem> withDescription(String description) {
+    public SimpleSubExpandableItem withDescription(String description) {
         this.description = new StringHolder(description);
         return this;
     }
 
-    public SimpleSubExpandableItem<Parent, SubItem> withDescription(@StringRes int descriptionRes) {
+    public SimpleSubExpandableItem withDescription(@StringRes int descriptionRes) {
         this.description = new StringHolder(descriptionRes);
         return this;
     }
 
     @Override
-    public void setOnItemClickListener(OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> onClickListener) {
+    public void setOnItemClickListener(OnClickListener<SimpleSubExpandableItem> onClickListener) {
         mOnClickListener = onClickListener;
     }
 
     //we define a clickListener in here so we can directly animate
-    final private OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> onClickListener = new OnClickListener<SimpleSubExpandableItem<Parent, SubItem>>() {
+    final private OnClickListener<SimpleSubExpandableItem> onClickListener = new OnClickListener<SimpleSubExpandableItem>() {
         @Override
         public boolean onClick(View v, IAdapter adapter, @NonNull SimpleSubExpandableItem item, int position) {
             if (item.getSubItems() != null) {
@@ -89,17 +87,17 @@ public class SimpleSubExpandableItem<Parent extends IExpandable<Parent, SubItem,
      * @return
      */
     @Override
-    public OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> getOnItemClickListener() {
+    public OnClickListener<SimpleSubExpandableItem> getOnItemClickListener() {
         return onClickListener;
     }
 
     @Override
-    public OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> getOnPreItemClickListener() {
+    public OnClickListener<SimpleSubExpandableItem> getOnPreItemClickListener() {
         return null;
     }
 
     @Override
-    public void setOnPreItemClickListener(OnClickListener<SimpleSubExpandableItem<Parent, SubItem>> onClickListener) {
+    public void setOnPreItemClickListener(OnClickListener<SimpleSubExpandableItem> onClickListener) {
 
     }
 

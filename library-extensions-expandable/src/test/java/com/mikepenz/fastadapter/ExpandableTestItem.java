@@ -1,20 +1,22 @@
 package com.mikepenz.fastadapter;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.View;
 
 import com.mikepenz.fastadapter.items.AbstractItem;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by fabianterhorst on 29.03.16.
  */
-public class ExpandableTestItem extends AbstractItem<ExpandableTestItem.ViewHolder> implements IExpandable<ExpandableTestItem, ExpandableTestItem, ExpandableTestItem.ViewHolder> {
+public class ExpandableTestItem extends AbstractItem<ExpandableTestItem.ViewHolder> implements IExpandable<ExpandableTestItem.ViewHolder> {
 
-    private List<ExpandableTestItem> mSubItems;
-    private ExpandableTestItem mParent;
+    private List<? extends ISubItem<?>> mSubItems;
+    private IParentItem<?> mParent;
     private boolean mExpanded = false;
 
     @Override
@@ -38,7 +40,7 @@ public class ExpandableTestItem extends AbstractItem<ExpandableTestItem.ViewHold
     }
 
     @Override
-    public List<ExpandableTestItem> getSubItems() {
+    public List<? extends ISubItem<?>> getSubItems() {
         return mSubItems;
     }
 
@@ -47,25 +49,28 @@ public class ExpandableTestItem extends AbstractItem<ExpandableTestItem.ViewHold
         return true;
     }
 
+
     @Override
-    public void setSubItems(List<ExpandableTestItem> subItems) {
+    public void setSubItems(@Nullable List<? extends ISubItem<?>> subItems) {
         this.mSubItems = subItems;
     }
 
     @Override
-    public ExpandableTestItem getParent() {
-        return mParent;
+    public void setParent(@Nullable IParentItem<?> parent) {
+        this.mParent = parent;
     }
 
+    @Nullable
     @Override
-    public void setParent(ExpandableTestItem parent) {
-        this.mParent = parent;
+    public IParentItem<?> getParent() {
+        return mParent;
     }
 
     @Override
     public ViewHolder getViewHolder(View v) {
         return new ViewHolder(v);
     }
+
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public ViewHolder(View view) {

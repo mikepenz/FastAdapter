@@ -76,7 +76,7 @@ dependencies {
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
-    implementation('com.mikepenz:materialdrawer:6.1.0') {
+    implementation('com.mikepenz:materialdrawer:7.0.0-alpha1') {
         transitive = true
         exclude group: "com.mikepenz"
     }

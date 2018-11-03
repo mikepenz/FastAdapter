@@ -1,30 +1,32 @@
 package com.mikepenz.fastadapter.app.items;
 
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.view.View;
 import android.widget.TextView;
 
 import com.mikepenz.fastadapter.IExpandable;
-import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.IParentItem;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.typeface.IIcon;
 import com.mikepenz.iconics.view.IconicsImageView;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
  * Created by mikepenz on 28.12.15.
  */
-public class IconItem<T extends IExpandable<T, IconItem<T>, IconItem.ViewHolder>> extends AbstractItem<IconItem.ViewHolder> implements IExpandable<T, IconItem<T>, IconItem.ViewHolder> {
+public class IconItem extends AbstractItem<IconItem.ViewHolder> implements IExpandable<IconItem.ViewHolder> {
 
     public IIcon mIcon;
-    private T mParent;
+    private IParentItem<?> mParent;
 
     private boolean mExpanded;
 
@@ -38,13 +40,14 @@ public class IconItem<T extends IExpandable<T, IconItem<T>, IconItem.ViewHolder>
         this.mExpanded = expanded;
     }
 
+    @Nullable
     @Override
-    public List<IconItem<T>> getSubItems() {
+    public List<? extends ISubItem<?>> getSubItems() {
         return null;
     }
 
     @Override
-    public void setSubItems(List<IconItem<T>> list) {
+    public void setSubItems(@Nullable List<? extends ISubItem<?>> list) {
 
     }
 
@@ -65,12 +68,12 @@ public class IconItem<T extends IExpandable<T, IconItem<T>, IconItem.ViewHolder>
     }
 
     @Override
-    public T getParent() {
+    public IParentItem<?> getParent() {
         return mParent;
     }
 
     @Override
-    public void setParent(T parent) {
+    public void setParent(@Nullable IParentItem<?> parent) {
         mParent = parent;
     }
 

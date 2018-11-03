@@ -3,9 +3,6 @@ package com.mikepenz.fastadapter.app.items;
 import android.content.Context;
 import android.graphics.Color;
 
-import androidx.core.view.ViewCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
 import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
@@ -13,11 +10,13 @@ import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;
 
+import androidx.core.view.ViewCompat;
+
 /**
  * Created by flisar on 21.09.2016.
  */
 
-public class HeaderSelectionItem<T extends IExpandable<T, S, SimpleSubExpandableItem.ViewHolder>, S extends IExpandable<T, S, SimpleSubExpandableItem.ViewHolder>> extends SimpleSubExpandableItem<T, S> {
+public class HeaderSelectionItem<T extends IExpandable<?>, S extends IExpandable<?>> extends SimpleSubExpandableItem {
 
     private ISubSelectionProvider mSubSelectionProvider;
 

@@ -1,11 +1,6 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
-import androidx.core.view.LayoutInflaterCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -23,6 +18,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.LayoutInflaterCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ExpandableSampleActivity extends AppCompatActivity {
     //save our FastAdapter
@@ -74,7 +75,7 @@ public class ExpandableSampleActivity extends AppCompatActivity {
             SimpleSubExpandableItem parent = new SimpleSubExpandableItem();
             parent.withName("Test " + i).setIdentifier(identifier.getAndIncrement());
 
-            List<IItem> subItems = new LinkedList<>();
+            List<SimpleSubExpandableItem> subItems = new LinkedList<>();
             for (int ii = 1; ii <= 5; ii++) {
                 SimpleSubExpandableItem subItem = new SimpleSubExpandableItem();
                 subItem.withName("-- SubTest " + ii).setIdentifier(identifier.getAndIncrement());
@@ -83,12 +84,12 @@ public class ExpandableSampleActivity extends AppCompatActivity {
                     continue;
                 }
 
-                List<IItem> subSubItems = new LinkedList<>();
+                List<SimpleSubExpandableItem> subSubItems = new LinkedList<>();
                 for (int iii = 1; iii <= 3; iii++) {
                     SimpleSubExpandableItem subSubItem = new SimpleSubExpandableItem();
                     subSubItem.withName("---- SubSubTest " + iii).setIdentifier(identifier.getAndIncrement());
 
-                    List<IItem> subSubSubItems = new LinkedList<>();
+                    List<SimpleSubExpandableItem> subSubSubItems = new LinkedList<>();
                     for (int iiii = 1; iiii <= 4; iiii++) {
                         SimpleSubExpandableItem subSubSubItem = new SimpleSubExpandableItem();
                         subSubSubItem.withName("---- SubSubSubTest " + iiii).setIdentifier(identifier.getAndIncrement());

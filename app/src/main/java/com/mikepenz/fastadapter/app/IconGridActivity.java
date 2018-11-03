@@ -1,18 +1,13 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
-import androidx.core.view.LayoutInflaterCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.IconItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
+import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
@@ -24,6 +19,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.LayoutInflaterCompat;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class IconGridActivity extends AppCompatActivity {
     //save our FastAdapter
@@ -88,7 +89,7 @@ public class IconGridActivity extends AppCompatActivity {
 
         //add all icons of all registered Fonts to the list
         int count = 0;
-        ArrayList<IItem<? extends RecyclerView.ViewHolder>> items = new ArrayList<>(Iconics.getRegisteredFonts(this).size());
+        ArrayList<SimpleSubExpandableItem> items = new ArrayList<>(Iconics.getRegisteredFonts(this).size());
         for (ITypeface font : mFonts) {
             //we set the identifier from the count here, as I need a stable ID in the sample to showcase the state restore
             SimpleSubExpandableItem expandableItem = new SimpleSubExpandableItem();
