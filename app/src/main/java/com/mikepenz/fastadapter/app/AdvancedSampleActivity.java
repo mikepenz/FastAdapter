@@ -1,25 +1,15 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.core.view.LayoutInflaterCompat;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ActionMode;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
-
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.IAdapterExtension;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
@@ -40,6 +30,14 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.LayoutInflaterCompat;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static com.mikepenz.fastadapter.adapters.ItemAdapter.items;
 
@@ -164,21 +162,21 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         AtomicInteger id = new AtomicInteger(1);
         List<IItem> items = new ArrayList<>();
         int size = 25;
-        //TODO: fixme
-        /*for (int i = 1; i <= size; i++) {
+
+        for (int i = 1; i <= size; i++) {
             if (i % 6 == 0) {
-                SimpleSubExpandableItem<SimpleSubExpandableItem, SimpleSubExpandableItem> expandableItem = new SimpleSubExpandableItem<>();
+                SimpleSubExpandableItem expandableItem = new SimpleSubExpandableItem();
                 expandableItem.withName("Test " + id.get())
                         .withHeader(headers[i / 5])
                         .setIdentifier(id.getAndIncrement());
                 List<SimpleSubExpandableItem> subItems = new LinkedList<>();
                 for (int ii = 1; ii <= 3; ii++) {
-                    SimpleSubExpandableItem<SimpleSubExpandableItem, SimpleSubItem> subItem = new SimpleSubExpandableItem<>();
+                    SimpleSubExpandableItem subItem = new SimpleSubExpandableItem();
                     subItem.withName("-- SubTest " + id.get())
                             .withHeader(headers[i / 5])
                             .setIdentifier(id.getAndIncrement());
 
-                    List<SimpleSubItem> subSubItems = new LinkedList<>();
+                    List<ISubItem<?>> subSubItems = new LinkedList<>();
                     for (int iii = 1; iii <= 3; iii++) {
                         SimpleSubItem subSubItem = new SimpleSubItem();
                         subSubItem.withName("---- SubSubTest " + id.get())
@@ -197,7 +195,7 @@ public class AdvancedSampleActivity extends AppCompatActivity {
                 simpleSubItem.setIdentifier(id.getAndIncrement());
                 items.add(simpleSubItem);
             }
-        }*/
+        }
         mItemAdapter.set(items);
     }
 
