@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'realm-android'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 //wrap with try and catch so the build is working even if the signing stuff is missing
 try {
     apply from: '../../../signing.gradle'
@@ -46,6 +47,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+}
+
+kapt {
+    generateStubs = true
 }
 
 dependencies {
@@ -111,8 +116,8 @@ dependencies {
     implementation 'com.github.turing-tech:MaterialScrollBar:13.3.1'
 
     //https://github.com/JakeWharton/butterknife
-    implementation 'com.jakewharton:butterknife:9.0.0-rc1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-rc1'
+    implementation 'com.jakewharton:butterknife:9.0.0-rc2'
+    kapt 'com.jakewharton:butterknife-compiler:9.0.0-rc2'
 
     //used to load the images in the ImageListSample
     //https://github.com/bumptech/glide
@@ -123,6 +128,10 @@ dependencies {
 
     //mopub sdk to showcase the usage of the mopub adapter
     implementation('com.mopub:mopub-sdk:4.11.0@aar') {
+        transitive = true
+        exclude group: "com.google.android.exoplayer"
+    }
+    implementation('com.mopub:mopub-sdk-native-static:4.11.0@aar') {
         transitive = true
         exclude group: "com.google.android.exoplayer"
     }
@@ -137,7 +146,7 @@ dependencies {
         resolutionStrategy.force "com.mikepenz:materialize:1.2.0-rc01"
         resolutionStrategy.force "com.mikepenz:iconics-core:3.1.0-rc01"
         resolutionStrategy.force "com.mikepenz:aboutlibraries:6.2.0-rc01"
-        resolutionStrategy.force "androidx.appcompat:appcompat:${versions.androidX}"
+        resolutionStrategy.force "androidx.appcompat:appcompat:${versions.appcompat}"
         resolutionStrategy.force "androidx.recyclerview:recyclerview:${versions.androidX}"
         resolutionStrategy.force "androidx.cardview:cardview:${versions.androidX}"
         resolutionStrategy.force "com.google.android.material:material:${versions.androidX}"
