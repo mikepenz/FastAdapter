@@ -1,16 +1,16 @@
 package com.mikepenz.fastadapter.app.model;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.items.ModelAbstractItem;
+import com.mikepenz.fastadapter.ui.items.ModelAbstractItem;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.view.IconicsImageView;
 
 import java.util.List;
 
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

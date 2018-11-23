@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter.app.items;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -9,12 +8,13 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
-import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils;
+import com.mikepenz.fastadapter.ui.items.AbstractItem;
 import com.mikepenz.materialize.util.UIUtils;
 
 import java.util.List;
 
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

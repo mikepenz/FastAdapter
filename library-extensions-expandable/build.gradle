@@ -31,7 +31,6 @@ android {
 
 dependencies {
     implementation project(':library-core')
-    implementation project(':library')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
 
@@ -57,7 +56,7 @@ dependencies {
     }
 }
 
-if (project.hasProperty('pushall') || project.hasProperty('libraryextensionexpandablemonly')) {
+if (project.hasProperty('pushall') || project.hasProperty('library_extensions_expandable_only')) {
     apply from: '../gradle-release.gradle'
 }
 

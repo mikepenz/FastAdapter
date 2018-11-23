@@ -7,7 +7,7 @@ import android.view.View;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;

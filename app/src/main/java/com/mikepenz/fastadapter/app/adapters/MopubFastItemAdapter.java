@@ -1,7 +1,7 @@
 package com.mikepenz.fastadapter.app.adapters;
 
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mopub.nativeads.MoPubRecyclerAdapter;
 
 import androidx.annotation.NonNull;

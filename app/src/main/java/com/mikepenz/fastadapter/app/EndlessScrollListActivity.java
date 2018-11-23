@@ -3,20 +3,11 @@ package com.mikepenz.fastadapter.app;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.SearchView;
-import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.mikepenz.fastadapter.IAdapter;
@@ -24,15 +15,15 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.drag.ItemTouchCallback;
+import com.mikepenz.fastadapter.drag.SimpleDragCallback;
 import com.mikepenz.fastadapter.listeners.ItemFilterListener;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.scroll.EndlessRecyclerOnScrollListener;
 import com.mikepenz.fastadapter.select.SelectExtension;
-import com.mikepenz.fastadapter_extensions.drag.ItemTouchCallback;
-import com.mikepenz.fastadapter_extensions.drag.SimpleDragCallback;
-import com.mikepenz.fastadapter_extensions.items.ProgressItem;
-import com.mikepenz.fastadapter_extensions.scroll.EndlessRecyclerOnScrollListener;
-import com.mikepenz.fastadapter_extensions.utilities.DragDropUtil;
+import com.mikepenz.fastadapter.ui.items.ProgressItem;
+import com.mikepenz.fastadapter.utils.DragDropUtil;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -41,6 +32,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Nullable;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import static com.mikepenz.fastadapter.adapters.ItemAdapter.items;
 
@@ -122,13 +122,10 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
                 footerAdapter.add(progressItem);
                 //simulate networking (2 seconds)
                 Handler handler = new Handler();
-                handler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        footerAdapter.clear();
-                        for (int i = 1; i < 16; i++) {
-                            fastItemAdapter.add(fastItemAdapter.getAdapterItemCount(), new SimpleItem().withName("Item " + i + " Page " + currentPage));
-                        }
+                handler.postDelayed(() -> {
+                    footerAdapter.clear();
+                    for (int i = 1; i < 16; i++) {
+                        fastItemAdapter.add(fastItemAdapter.getAdapterItemCount(), new SimpleItem().withName("Item " + i + " Page " + currentPage));
                     }
                 }, 2000);
             }

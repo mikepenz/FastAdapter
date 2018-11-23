@@ -1,21 +1,21 @@
 package com.mikepenz.fastadapter.app.items;
 
-import androidx.annotation.StringRes;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.recyclerview.widget.ItemTouchHelper;
 import android.view.View;
 import android.widget.TextView;
 
-import com.mikepenz.fastadapter_extensions.drag.IDraggable;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter_extensions.swipe.ISwipeable;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.drag.IDraggable;
+import com.mikepenz.fastadapter.swipe.ISwipeable;
+import com.mikepenz.fastadapter.ui.items.AbstractItem;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;
 
+import androidx.annotation.StringRes;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

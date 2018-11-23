@@ -1,6 +1,5 @@
 package com.mikepenz.fastadapter.app.helpers;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import com.mopub.nativeads.MoPubRecyclerAdapter;
@@ -8,19 +7,20 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import com.timehop.stickyheadersrecyclerview.caching.HeaderViewCache;
 import com.timehop.stickyheadersrecyclerview.util.OrientationProvider;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 /**
  * Created by Gagan on 5/3/2017.
  */
 
-public class CustomHeaderViewCache extends HeaderViewCache
-{
+public class CustomHeaderViewCache extends HeaderViewCache {
     private MoPubRecyclerAdapter moPubRecyclerAdapter;
 
     public CustomHeaderViewCache(StickyRecyclerHeadersAdapter adapter, OrientationProvider orientationProvider) {
         super(adapter, orientationProvider);
     }
 
-    public CustomHeaderViewCache(StickyRecyclerHeadersAdapter adapter, MoPubRecyclerAdapter moPubRecyclerAdapter,  OrientationProvider orientationProvider) {
+    public CustomHeaderViewCache(StickyRecyclerHeadersAdapter adapter, MoPubRecyclerAdapter moPubRecyclerAdapter, OrientationProvider orientationProvider) {
         super(adapter, orientationProvider);
         this.moPubRecyclerAdapter = moPubRecyclerAdapter;
     }

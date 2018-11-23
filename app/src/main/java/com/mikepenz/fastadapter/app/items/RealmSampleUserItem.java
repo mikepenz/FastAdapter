@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter.app.items;
 
 import android.content.Context;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,11 +8,12 @@ import android.widget.TextView;
 
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.items.AbstractItem;
+import com.mikepenz.fastadapter.ui.items.AbstractItem;
 
 import java.util.Collections;
 import java.util.List;
 
+import androidx.recyclerview.widget.RecyclerView;
 import io.realm.RealmObject;
 import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
@@ -251,10 +251,12 @@ public class RealmSampleUserItem extends RealmObject implements IItem<RealmSampl
     }
 
     @Override
-    public void attachToWindow(ViewHolder holder) {}
+    public void attachToWindow(ViewHolder holder) {
+    }
 
     @Override
-    public void detachFromWindow(ViewHolder holder) {}
+    public void detachFromWindow(ViewHolder holder) {
+    }
 
     @Override
     public boolean failedToRecycle(ViewHolder holder) {

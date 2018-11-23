@@ -10,7 +10,7 @@ import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IClickable;
 import com.mikepenz.fastadapter.ISubItem;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
+import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.materialdrawer.holder.StringHolder;

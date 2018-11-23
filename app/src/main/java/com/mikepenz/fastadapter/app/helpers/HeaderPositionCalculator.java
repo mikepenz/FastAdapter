@@ -1,8 +1,6 @@
 package com.mikepenz.fastadapter.app.helpers;
 
 import android.graphics.Rect;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -12,6 +10,9 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 import com.timehop.stickyheadersrecyclerview.caching.HeaderProvider;
 import com.timehop.stickyheadersrecyclerview.calculation.DimensionCalculator;
 import com.timehop.stickyheadersrecyclerview.util.OrientationProvider;
+
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by Gagan on 5/3/2017.

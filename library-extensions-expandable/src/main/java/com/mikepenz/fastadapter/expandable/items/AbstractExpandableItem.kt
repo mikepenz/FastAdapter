@@ -5,7 +5,7 @@ import com.mikepenz.fastadapter.IExpandable
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.IParentItem
 import com.mikepenz.fastadapter.ISubItem
-import com.mikepenz.fastadapter.items.AbstractItem
+import com.mikepenz.fastadapter.ui.items.AbstractItem
 
 abstract class AbstractExpandableItem<VH : RecyclerView.ViewHolder> :
         AbstractItem<VH>(),

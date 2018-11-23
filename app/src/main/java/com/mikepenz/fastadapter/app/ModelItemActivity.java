@@ -5,7 +5,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IInterceptor;
 import com.mikepenz.fastadapter.adapters.ModelAdapter;
 import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.model.IconModel;
@@ -49,12 +48,7 @@ public class ModelItemActivity extends AppCompatActivity {
 
         //adapters
         FastScrollIndicatorAdapter fastScrollIndicatorAdapter = new FastScrollIndicatorAdapter();
-        ModelAdapter<IconModel, ModelIconItem> itemAdapter = new ModelAdapter<>(new IInterceptor<IconModel, ModelIconItem>() {
-            @Override
-            public ModelIconItem intercept(IconModel iconModel) {
-                return new ModelIconItem(iconModel);
-            }
-        });
+        ModelAdapter<IconModel, ModelIconItem> itemAdapter = new ModelAdapter<>(iconModel -> new ModelIconItem(iconModel));
 
         //create our FastAdapter which will manage everything
         fastAdapter = FastAdapter.Companion.with(Arrays.asList(itemAdapter));
