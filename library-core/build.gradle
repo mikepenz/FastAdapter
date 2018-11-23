@@ -42,7 +42,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-all:1.10.19'
-    testImplementation 'org.robolectric:robolectric:3.8'
+    testImplementation "org.robolectric:robolectric:${versions.roboelectric}"
     testImplementation 'com.squareup.assertj:assertj-android:1.1.1'
     testImplementation 'com.squareup.assertj:assertj-android-design:1.1.1@aar'
     testImplementation 'com.squareup.assertj:assertj-android-appcompat-v7:1.1.1@aar'
