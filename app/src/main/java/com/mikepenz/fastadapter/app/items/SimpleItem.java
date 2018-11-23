@@ -10,7 +10,7 @@ import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils;
 import com.mikepenz.fastadapter.drag.IDraggable;
-import com.mikepenz.fastadapter.ui.items.AbstractItem;
+import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialize.util.UIUtils;
 

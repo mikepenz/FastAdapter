@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.ui.items.AbstractItem;
+import com.mikepenz.fastadapter.items.AbstractItem;
 
 import java.util.Collections;
 import java.util.List;

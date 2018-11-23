@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IExpandable
 import com.mikepenz.fastadapter.IParentItem
 import com.mikepenz.fastadapter.ISubItem
-import com.mikepenz.fastadapter.ui.items.ModelAbstractItem
+import com.mikepenz.fastadapter.items.ModelAbstractItem
 
 abstract class ModelAbstractExpandableItem<Model, Parent, SubItem, VH : RecyclerView.ViewHolder>(model: Model) : ModelAbstractItem<Model, VH>(model),
         IExpandable<VH> where Parent : IExpandable<VH>, SubItem : IExpandable<VH> {

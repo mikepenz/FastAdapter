@@ -2,7 +2,7 @@ package com.mikepenz.fastadapter;
 
 import android.view.View;
 
-import com.mikepenz.fastadapter.ui.items.AbstractItem;
+import com.mikepenz.fastadapter.items.AbstractItem;
 
 import androidx.recyclerview.widget.RecyclerView;
 

@@ -8,7 +8,7 @@ import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.app.R;
 import com.mikepenz.fastadapter.listeners.ClickEventHook;
 import com.mikepenz.fastadapter.select.SelectExtension;
-import com.mikepenz.fastadapter.ui.items.AbstractItem;
+import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;

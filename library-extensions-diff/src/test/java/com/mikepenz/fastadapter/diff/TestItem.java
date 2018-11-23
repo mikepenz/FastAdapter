@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.mikepenz.fastadapter.ui.items.AbstractItem;
+import com.mikepenz.fastadapter.items.AbstractItem;
 
 import java.util.Objects;
 

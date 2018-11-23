@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.ui.R;
 import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils;
 import com.mikepenz.materialize.holder.ImageHolder;

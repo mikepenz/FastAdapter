@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.mikepenz.fastadapter.app.R;
+import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils;
-import com.mikepenz.fastadapter.ui.items.AbstractItem;
 import com.mikepenz.materialize.util.UIUtils;
 
 import java.util.List;

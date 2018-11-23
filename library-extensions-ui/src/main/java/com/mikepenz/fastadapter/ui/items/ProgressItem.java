@@ -3,6 +3,7 @@ package com.mikepenz.fastadapter.ui.items;
 import android.view.View;
 import android.widget.ProgressBar;
 
+import com.mikepenz.fastadapter.items.AbstractItem;
 import com.mikepenz.fastadapter.ui.R;
 import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils;
 

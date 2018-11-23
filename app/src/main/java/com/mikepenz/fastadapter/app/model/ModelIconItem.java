@@ -4,7 +4,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.ui.items.ModelAbstractItem;
+import com.mikepenz.fastadapter.items.ModelAbstractItem;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.iconics.view.IconicsImageView;
 
