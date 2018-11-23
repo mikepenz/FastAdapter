@@ -12,11 +12,18 @@ import com.mikepenz.fastadapter.utils.AdapterPredicate
 import java.util.*
 
 /**
+ * Extension method to retrieve or create the ExpandableExtension from the current FastAdapter
+ * This will return a non null variant and fail
+ */
+fun <Item : IItem<out RecyclerView.ViewHolder>> FastAdapter<Item>.getExpandableExtension(): ExpandableExtension<Item> {
+    return this.getOrCreateExtension(ExpandableExtension::class.java as Class<IAdapterExtension<Item>>) as ExpandableExtension<Item>
+}
+
+/**
  * Created by mikepenz on 04/06/2017.
  */
-
 class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fastAdapter: FastAdapter<Item>) :
-    IAdapterExtension<Item> {
+        IAdapterExtension<Item> {
 
     private val collapseAdapterPredicate = object : AdapterPredicate<Item> {
         private var allowedParents = ArraySet<IItem<*>>()
@@ -24,10 +31,10 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
         private var expandedItemsCount = 0
 
         override fun apply(
-            lastParentAdapter: IAdapter<Item>,
-            lastParentPosition: Int,
-            item: Item,
-            position: Int
+                lastParentAdapter: IAdapter<Item>,
+                lastParentPosition: Int,
+                item: Item,
+                position: Int
         ): Boolean {
             //we do not care about non visible items
             if (position == -1) {
@@ -186,20 +193,20 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
     }
 
     override fun onLongClick(
-        v: View,
-        pos: Int,
-        fastAdapter: FastAdapter<Item>,
-        item: Item
+            v: View,
+            pos: Int,
+            fastAdapter: FastAdapter<Item>,
+            item: Item
     ): Boolean {
         return false
     }
 
     override fun onTouch(
-        v: View,
-        event: MotionEvent,
-        position: Int,
-        fastAdapter: FastAdapter<Item>,
-        item: Item
+            v: View,
+            event: MotionEvent,
+            position: Int,
+            fastAdapter: FastAdapter<Item>,
+            item: Item
     ): Boolean {
         return false
     }
@@ -251,8 +258,8 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
                 (adapter as? IItemAdapter<*, *>)?.removeRange(position + 1, previousCount)
                 expandable?.subItems?.let { subItems ->
                     (adapter as? IItemAdapter<IItem<out RecyclerView.ViewHolder>, *>?)?.add(
-                        position + 1,
-                        subItems
+                            position + 1,
+                            subItems
                     )
                 }
             }
@@ -364,8 +371,8 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
     fun collapse(position: Int, notifyItemChanged: Boolean = false) {
         val adapter = fastAdapter.getAdapter(position)
         (adapter as? IItemAdapter<*, *>?)?.removeRange(
-            position + 1,
-            collapseAdapterPredicate.collapse(position, fastAdapter)
+                position + 1,
+                collapseAdapterPredicate.collapse(position, fastAdapter)
         )
         //we need to notify to get the correct drawable if there is one showing the current state
         if (notifyItemChanged) {
@@ -403,8 +410,8 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
                 if (adapter != null && adapter is IItemAdapter<*, *>) {
                     (expandable.subItems as? List<Item>?)?.let { subItems ->
                         (adapter as IItemAdapter<*, Item>).addInternal(
-                            position + 1,
-                            subItems
+                                position + 1,
+                                subItems
                         )
                     }
                 }
