@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter.ui.items
+package com.mikepenz.fastadapter.items
 
 import androidx.recyclerview.widget.RecyclerView
 
