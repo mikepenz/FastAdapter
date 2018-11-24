@@ -7,6 +7,7 @@ This library has a fast and highly optimized core which provides core functional
 Beside being blazing fast, minimizing the code you need to write, it is also really easy to extend. Just provide another adapter implementation, hook into the adapter chain, custom select / deselection behaviors. Everything is possible.
 
 ## A quick overview:
+- Core module 100% in Kotlin
 - Click / Long-Click listeners
 - Selection / Multi-Selection ([MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java), [CheckBoxSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/CheckBoxSampleActivity.java), [RadioButtonSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/RadioButtonSampleActivity.java))
 - Expandable items ([ExpandableSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/ExpandableSampleActivity.java), [IconGridSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/IconGridActivity.java) ,[AdvancedSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/AdvancedSampleActivity.java))
@@ -37,30 +38,36 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 
 # Include in your project
+## Latest releases
+
+- Kotlin | [v4.0.0-alpha1](https://github.com/mikepenz/FastAdapter/tree/v4.0.0-alpha1)
+- Java && AndroidX | [v3.3.1](https://github.com/mikepenz/FastAdapter/tree/v3.3.1)
+- Java && AppCompat | [v3.2.9](https://github.com/mikepenz/FastAdapter/tree/v3.2.9)
+
 ## Using Maven
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-implementation 'com.mikepenz:fastadapter:4.0.0-alpha1'
+implementation 'com.mikepenz:fastadapter:${latestFastAdapterRelease}'
 implementation "androidx.appcompat:appcompat:${androidX}"
 implementation "androidx.recyclerview:recyclerview:${androidX}"
 ```
 
 Expandable support is included and can be added via this
 ```gradle
-implementation 'com.mikepenz:fastadapter-extensions-expandable:4.0.0-alpha1'
+implementation 'com.mikepenz:fastadapter-extensions-expandable:${latestFastAdapterRelease}'
 //The tiny Materialize library used for its useful helper classes
 implementation 'com.mikepenz:materialize:${latestVersion}' // at least 1.2.0
 ```
 
 Many helper classes are included in the following dependency.
 ```gradle
-implementation 'com.mikepenz:fastadapter-extensions-diff:4.0.0-alpha1' // diff util helpres
-implementation 'com.mikepenz:fastadapter-extensions-drag:4.0.0-alpha1' // drag support
-implementation 'com.mikepenz:fastadapter-extensions-scroll:4.0.0-alpha1' // scroll helpers
-implementation 'com.mikepenz:fastadapter-extensions-swipe:4.0.0-alpha1' // swipe support
-implementation 'com.mikepenz:fastadapter-extensions-ui:4.0.0-alpha1' // pre-defined ui components
-implementation 'com.mikepenz:fastadapter-extensions-utils:4.0.0-alpha1' // needs the `expandable`, `drag` and `scroll` extension.
+implementation 'com.mikepenz:fastadapter-extensions-diff:${latestFastAdapterRelease}' // diff util helpres
+implementation 'com.mikepenz:fastadapter-extensions-drag:${latestFastAdapterRelease}' // drag support
+implementation 'com.mikepenz:fastadapter-extensions-scroll${latestFastAdapterRelease}' // scroll helpers
+implementation 'com.mikepenz:fastadapter-extensions-swipe:${latestFastAdapterRelease}' // swipe support
+implementation 'com.mikepenz:fastadapter-extensions-ui:${latestFastAdapterRelease}' // pre-defined ui components
+implementation 'com.mikepenz:fastadapter-extensions-utils:${latestFastAdapterRelease}' // needs the `expandable`, `drag` and `scroll` extension.
 
 // required for the ui components and the utils
 implementation "com.google.android.material:material:${androidX}"
@@ -82,11 +89,13 @@ implementation 'com.mikepenz:materialize:${latestVersion}' // at least 1.2.0
 ### 1. Implement your item (the easy way)
 Just create a class which extends the `AbstractItem` as shown below. Implement the methods, and your item is ready.
 ```java
-public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> {
+public class SimpleItem extends AbstractItem<SimpleItem.ViewHolder> {
     public String name;
     public String description;
 
-    //The unique ID for this type of item
+    // The unique ID for this type of item
+    // The ID has to be unique per item type.
+    // This is important as it is used by the RV for viewHolder reusing.
     @Override
     public int getType() {
         return R.id.fastadapter_sampleitem_id;
@@ -146,90 +155,126 @@ recyclerView.setAdapter(fastAdapter);
 itemAdapter.add(ITEMS);
 ```
 
-### 3. Click listener
+### 3. Extensions
+
+By default the `FastAdapter` only provides basic functionality, which comes with the abstraction of items as `Item` and `Model`. 
+And the general functionality of adding/removing/modifying elements. To enable *selections*, or *expandables* the provided extensions need to be activated.
+
+#### 3.1. SelectExtension
+
 ```java
-fastAdapter.withSelectable(true);
-fastAdapter.withOnClickListener(new OnClickListener<Item>() {
-    @Override
-    public boolean onClick(View v, IAdapter<Item> adapter, Item item, int position) {
-       // Handle click here
-	return true;
-    }
-});
+// Gets (or creates and attaches if not yet existing) the extension from the given `FastAdapter`
+SelectExtension selectExtension = mFastAdapter.getOrCreateExtension(SelectExtension.class);
+// configure as needed
+selectExtension.setSelectable(true);
+selectExtension.setMultiSelect(true);
+selectExtension.setSelectOnLongClick(false);  
+// see the API of this class for more options.
 ```
 
+#### 3.2. ExpandableExtension
+
+> This requires the `fastadapter-extensions-expandable` extension.
+
+```java
+// Gets (or creates and attaches if not yet existing) the extension.
+ExpandableExtension expandableExtension = fastItemAdapter.getOrCreateExtension(ExpandableExtension.class);
+// configure as needed
+expandableExtension.setOnlyOneExpandedItem(true);
+```
+
+For further details scroll down to the `ExpandableItems` (under advanced usage) section.
+ 
+### 3. Click listener
+```java
+fastAdapter.setOnClickListener((view, adapter, item, position) -> {
+    // Handle click here
+    return false;
+});
+```
 
 ### 4. Click listeners for views inside your item
 ```java
 //just add an `EventHook` to your `FastAdapter` by implementing either a `ClickEventHook`, `LongClickEventHook`, `TouchEventHook`, `CustomEventHook`
-fastItemAdapter.withEventHook(new ClickEventHook<SampleItem>() {
-    
+fastAdapter.addEventHook(new ClickEventHook<SimpleItem>() {
     @Nullable
     @Override
-    public View onBind(@NonNull RecyclerView.ViewHolder viewHolder) {
+    public View onBind(@NotNull RecyclerView.ViewHolder viewHolder) {
         //return the views on which you want to bind this event
-        if (viewHolder instanceof SampleItem.ViewHolder) {
-            return ((ViewHolder) viewHolder).view;
+        if (viewHolder instanceof SimpleItem.ViewHolder) {
+            return ((SimpleItem.ViewHolder) viewHolder).viewWhichReactsOnClick;
         }
         return null;
     }
 
     @Override
-    public void onClick(View v, int position, FastAdapter<SampleItem> fastAdapter, SampleItem item) {
+    public void onClick(@NotNull View v, int position, @NotNull FastAdapter<SimpleItem> fastAdapter, @NotNull SimpleItem item) {
         //react on the click event
     }
 });
 ```
 
 ### 5. Filter 
+
 ```java
 // Call this in onQueryTextSubmit() & onQueryTextChange() when using SearchView
 itemAdapter.filter("yourSearchTerm");
-
-itemAdapter.getItemFilter().withFilterPredicate(new IItemAdapter.Predicate<Item>() {
-    @Override
-    public boolean filter(Item item, CharSequence constraint) {
-	return item.getName().startsWith(String.valueOf(constraint));
-    }
+itemAdapter.getItemFilter().setFilterPredicate((item, constraint) -> {
+    return item.getName().startsWith(String.valueOf(constraint));
 });
 ```
 `filter()` should return true for items to be retained and false for items to be removed.
 
 ### 6. Drag and drop
+
+> This requires the `fastadapter-extensions-drag` extension.
+
 First, attach `ItemTouchHelper` to RecyclerView.
+
 ```java
-SimpleDragCallback dragCallback = new SimpleDragCallback(this);
+SimpleDragCallback dragCallback = new SimpleDragCallback();
 ItemTouchHelper touchHelper = new ItemTouchHelper(dragCallback);
 touchHelper.attachToRecyclerView(recyclerView);
 ```
+
 Implement `ItemTouchCallback` interface in your Activity, and override the `itemTouchOnMove()` method.
+
 ```java
 @Override
-   public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-       Collections.swap(fastAdapter.getAdapterItems(), oldPosition, newPosition); // change position
-       fastAdapter.notifyAdapterItemMoved(oldPosition, newPosition);
-       return true;
-   }
+public boolean itemTouchOnMove(int oldPosition, int newPosition) {
+    DragDropUtil.onMove(fastAdapter.getItemAdapter(), oldPosition, newPosition);  // change position
+    return true;
+}
 ```
 
 ### 7. Using different ViewHolders (like HeaderView)
+
 Start by initializing your adapters:
+
 ```java
 // Head is a model class for your header
 ItemAdapter<Header> headerAdapter = new ItemAdapter<>();
 ```
+
 Initialize a Model FastAdapter:
+
 ```java
 ItemAdapter<IItem> itemAdapter = new ItemAdapter<>();
 ```
+
 Finally, set the adapter:
+
 ```java
 FastAdapter fastAdapter = FastAdapter.with(headerAdapter, itemAdapter); //the order defines in which order the items will show up
+// alternative the super type of both item adapters can be used. e.g.:
+// FastAdapter<IItem> fastAdapter = FastAdapter.with(headerAdapter, itemAdapter); 
 recyclerView.setAdapter(fastAdapter);
 ```
 
 ### 8. Infinite (endless) scrolling
+
 Create a FooterAdapter. We need this to display a loading ProgressBar at the end of our list. (Don't forget to pass it into `FastAdapter.with(..)`)
+
 ```java
 ItemAdapter<ProgressItem> footerAdapter = new ItemAdapter<>();
 ```
@@ -265,15 +310,16 @@ The sample app provides sample implementations of those. (Those in the sample ar
 
 As of the way how `SubItems` and their state are handled it is highly recommended to use the `identifier` based `StateManagement`. Just add `withPositionBasedStateManagement(false)` to your `FastAdapter` setup.
 
-A simple item just needs to extend from the `AbstractExpandableItem` and provide the `Parent`, the `ViewHolder` and the `SubItem`s it will contain as type.
+A simple item just needs to extend from the `AbstractExpandableItem` and provide the `ViewHolder` as type.
 ```java
-public class SimpleSubExpandableItem extends AbstractExpandableItem<SimpleSubExpandableItem, SimpleSubExpandableItem.ViewHolder, SubItem> {
+public class SimpleSubExpandableItem extends AbstractExpandableItem<SimpleSubExpandableItem.ViewHolder> {
 
     /**
      * BASIC ITEM IMPLEMENTATION
      */
 }
 ```
+// See the `SimpleSubExpandableItem.java` of the sample application for more details.
 
 
 ## Articles
