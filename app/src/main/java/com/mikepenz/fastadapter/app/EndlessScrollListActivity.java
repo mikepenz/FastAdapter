@@ -10,16 +10,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.IItemAdapter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter.drag.SimpleDragCallback;
 import com.mikepenz.fastadapter.listeners.ItemFilterListener;
-import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.scroll.EndlessRecyclerOnScrollListener;
 import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter.ui.items.ProgressItem;
@@ -33,7 +30,6 @@ import java.util.List;
 
 import javax.annotation.Nullable;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -83,27 +79,21 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         fastItemAdapter.addAdapter(1, footerAdapter);
 
         //configure our fastAdapter
-        fastItemAdapter.setOnClickListener(new OnClickListener<IItem<? extends RecyclerView.ViewHolder>>() {
-            @Override
-            public boolean onClick(View v, IAdapter<IItem<? extends RecyclerView.ViewHolder>> adapter, @NonNull IItem<? extends RecyclerView.ViewHolder> item, int position) {
-                if (item instanceof SimpleItem) {
-                    Toast.makeText(v.getContext(), ((SimpleItem) item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
-                }
-                return false;
+        fastItemAdapter.setOnClickListener((v, adapter, item, position) -> {
+            if (item instanceof SimpleItem) {
+                Toast.makeText(v.getContext(), ((SimpleItem) item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
             }
+            return false;
         });
 
         //configure the itemAdapter
-        fastItemAdapter.getItemFilter().setFilterPredicate(new IItemAdapter.Predicate<IItem<? extends RecyclerView.ViewHolder>>() {
-            @Override
-            public boolean filter(IItem<? extends RecyclerView.ViewHolder> item, CharSequence constraint) {
-                //return true if we should filter it out
-                //return false to keep it
-                if (item instanceof SimpleItem) {
-                    return ((SimpleItem) item).name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
-                }
-                return false;
+        fastItemAdapter.getItemFilter().setFilterPredicate((item, constraint) -> {
+            //return true if we should filter it out
+            //return false to keep it
+            if (item instanceof SimpleItem) {
+                return ((SimpleItem) item).name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
             }
+            return false;
         });
 
         fastItemAdapter.getItemFilter().setItemFilterListener(this);

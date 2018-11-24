@@ -36,6 +36,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
     //save our FastAdapter
     private FastItemAdapter<IItem<? extends RecyclerView.ViewHolder>> fastItemAdapter;
     private ExpandableExtension mExpandableExtension;
+    private SelectExtension mSelectExtension;
     private ActionModeHelper<IItem<? extends RecyclerView.ViewHolder>> mActionModeHelper;
     private RangeSelectorHelper mRangeSelectorHelper;
     private DragSelectTouchListener mDragSelectTouchListener;
@@ -63,10 +64,10 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
         //create our FastAdapter
         fastItemAdapter = new FastItemAdapter<>();
         mExpandableExtension = fastItemAdapter.getOrCreateExtension(ExpandableExtension.class);
-        SelectExtension selectExtension = fastItemAdapter.getOrCreateExtension(SelectExtension.class);
-        selectExtension.setSelectable(true);
-        selectExtension.setMultiSelect(true);
-        selectExtension.setSelectOnLongClick(true);
+        mSelectExtension = fastItemAdapter.getOrCreateExtension(SelectExtension.class);
+        mSelectExtension.setSelectable(true);
+        mSelectExtension.setMultiSelect(true);
+        mSelectExtension.setSelectOnLongClick(true);
 
         fastItemAdapter.setOnPreClickListener((v, adapter, item, position) -> {
             //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
@@ -164,7 +165,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
         fastItemAdapter.add(items);
         mExpandableExtension.expand();
 
-        selectExtension.setSelectionListener((item, selected) -> {
+        mSelectExtension.setSelectionListener((item, selected) -> {
             if (item instanceof SimpleSubItem) {
                 IItem headerItem = ((SimpleSubItem) item).getParent();
                 if (headerItem != null) {
@@ -221,7 +222,7 @@ public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity
 
             // delete the selected items with the SubItemUtil to correctly handle sub items
             // this will even delete empty headers if you want to
-            List<IItem> deleted = SubItemUtil.deleteSelected(fastItemAdapter, mExpandableExtension, true, true);
+            List<IItem> deleted = SubItemUtil.deleteSelected(fastItemAdapter, mSelectExtension, mExpandableExtension, true, true);
             //as we no longer have a selection so the actionMode can be finished
             mode.finish();
             //we consume the event

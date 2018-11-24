@@ -9,14 +9,10 @@ import android.widget.Toast;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.ISelectionListener;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter.helpers.ActionModeHelper;
 import com.mikepenz.fastadapter.helpers.UndoHelper;
-import com.mikepenz.fastadapter.listeners.OnClickListener;
-import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -25,9 +21,7 @@ import com.mikepenz.materialize.util.UIUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ActionMode;
 import androidx.appcompat.widget.Toolbar;
@@ -72,55 +66,36 @@ public class MultiselectSampleActivity extends AppCompatActivity {
         selectExtension.setSelectable(true);
         selectExtension.setMultiSelect(true);
         selectExtension.setSelectOnLongClick(true);
-        selectExtension.setSelectionListener(new ISelectionListener<SimpleItem>() {
-            @Override
-            public void onSelectionChanged(SimpleItem item, boolean selected) {
-                Log.i("FastAdapter", "SelectedCount: " + selectExtension.getSelections().size() + " ItemsCount: " + selectExtension.getSelectedItems().size());
-            }
+        selectExtension.setSelectionListener((item, selected) -> Log.i("FastAdapter", "SelectedCount: " + selectExtension.getSelections().size() + " ItemsCount: " + selectExtension.getSelectedItems().size()));
+        mFastAdapter.setOnPreClickListener((v, adapter, item, position) -> {
+            //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
+            Boolean res = mActionModeHelper.onClick(item);
+            return res != null ? res : false;
         });
-        mFastAdapter.setOnPreClickListener(new OnClickListener<SimpleItem>() {
-            @Override
-            public boolean onClick(View v, IAdapter<SimpleItem> adapter, @NonNull SimpleItem item, int position) {
-                //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
-                Boolean res = mActionModeHelper.onClick(item);
-                return res != null ? res : false;
-            }
+        mFastAdapter.setOnClickListener((v, adapter, item, position) -> {
+            Toast.makeText(v.getContext(), "SelectedCount: " + selectExtension.getSelections().size() + " ItemsCount: " + selectExtension.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
+            return false;
         });
-        mFastAdapter.setOnClickListener(new OnClickListener<SimpleItem>() {
-            @Override
-            public boolean onClick(View v, IAdapter<SimpleItem> adapter, @NonNull SimpleItem item, int position) {
-                Toast.makeText(v.getContext(), "SelectedCount: " + selectExtension.getSelections().size() + " ItemsCount: " + selectExtension.getSelectedItems().size(), Toast.LENGTH_SHORT).show();
-                return false;
-            }
-        });
-        mFastAdapter.setOnPreLongClickListener(new OnLongClickListener<SimpleItem>() {
-            @Override
-            public boolean onLongClick(View v, IAdapter<SimpleItem> adapter, SimpleItem item, int position) {
-                ActionMode actionMode = mActionModeHelper.onLongClick(MultiselectSampleActivity.this, position);
+        mFastAdapter.setOnPreLongClickListener((v, adapter, item, position) -> {
+            ActionMode actionMode = mActionModeHelper.onLongClick(MultiselectSampleActivity.this, position);
 
-                if (actionMode != null) {
-                    //we want color our CAB
-                    findViewById(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(MultiselectSampleActivity.this, R.attr.colorPrimary, R.color.material_drawer_primary));
-                }
-
-                //if we have no actionMode we do not consume the event
-                return actionMode != null;
+            if (actionMode != null) {
+                //we want color our CAB
+                findViewById(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(MultiselectSampleActivity.this, R.attr.colorPrimary, R.color.material_drawer_primary));
             }
+
+            //if we have no actionMode we do not consume the event
+            return actionMode != null;
         });
 
         //
-        mUndoHelper = new UndoHelper<>(mFastAdapter, new UndoHelper.UndoListener<SimpleItem>() {
-            @Override
-            public void commitRemove(Set<Integer> positions, ArrayList<FastAdapter.RelativeInfo<SimpleItem>> removed) {
-                Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size());
-            }
-        });
+        mUndoHelper = new UndoHelper<>(mFastAdapter, (positions, removed) -> Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size()));
 
         //we init our ActionModeHelper
         mActionModeHelper = new ActionModeHelper<>(mFastAdapter, R.menu.cab, new ActionBarCallBack());
 
         //get our recyclerView and do basic setup
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView rv = findViewById(R.id.rv);
         rv.setLayoutManager(new LinearLayoutManager(this));
         rv.setItemAnimator(new SlideDownAlphaAnimator());
         rv.setAdapter(mFastAdapter);

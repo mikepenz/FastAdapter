@@ -11,15 +11,12 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.IItemAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
 import com.mikepenz.fastadapter.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter.drag.SimpleDragCallback;
 import com.mikepenz.fastadapter.listeners.ItemFilterListener;
-import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter.utils.DragDropUtil;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -30,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
@@ -77,22 +73,16 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         selectExtension.setSelectable(true);
 
         //configure our fastAdapter
-        fastAdapter.setOnClickListener(new OnClickListener<SimpleItem>() {
-            @Override
-            public boolean onClick(View v, IAdapter<SimpleItem> adapter, @NonNull SimpleItem item, int position) {
-                Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
-                return false;
-            }
+        fastAdapter.setOnClickListener((v, adapter, item, position) -> {
+            Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
+            return false;
         });
 
         //configure the itemAdapter
-        itemAdapter.getItemFilter().setFilterPredicate(new IItemAdapter.Predicate<SimpleItem>() {
-            @Override
-            public boolean filter(SimpleItem item, CharSequence constraint) {
-                //return true if we should filter it out
-                //return false to keep it
-                return item.name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
-            }
+        itemAdapter.getItemFilter().setFilterPredicate((item, constraint) -> {
+            //return true if we should filter it out
+            //return false to keep it
+            return item.name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
         });
 
         itemAdapter.getItemFilter().setItemFilterListener(this);

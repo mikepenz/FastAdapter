@@ -9,10 +9,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
-import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl;
 import com.mikepenz.iconics.IconicsDrawable;
@@ -29,7 +27,6 @@ import java.util.List;
 
 import androidx.annotation.IntDef;
 import androidx.annotation.IntRange;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -93,14 +90,10 @@ public class SortActivity extends AppCompatActivity {
         selectExtension.setSelectable(true);
 
         //configure our fastAdapter
-        fastAdapter.setOnClickListener(new OnClickListener<SimpleItem>() {
-            @Override
-            public boolean onClick(View v, IAdapter<SimpleItem> adapter,
-                                   @NonNull SimpleItem item, int position) {
-                Toast.makeText(v.getContext(), (item).name.getText(v.getContext()),
-                        Toast.LENGTH_LONG).show();
-                return false;
-            }
+        fastAdapter.setOnClickListener((v, adapter, item, position) -> {
+            Toast.makeText(v.getContext(), (item).name.getText(v.getContext()),
+                    Toast.LENGTH_LONG).show();
+            return false;
         });
 
         //get our recyclerView and do basic setup

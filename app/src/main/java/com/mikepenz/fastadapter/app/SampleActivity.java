@@ -24,7 +24,6 @@ import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
 import com.mikepenz.materialdrawer.model.DividerDrawerItem;
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
-import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 
 import java.util.Arrays;
 import java.util.List;
@@ -91,65 +90,62 @@ public class SampleActivity extends AppCompatActivity {
                         new DividerDrawerItem(),
                         new PrimaryDrawerItem().withName(R.string.open_source).withSelectable(false).withIdentifier(100).withIcon(MaterialDesignIconic.Icon.gmi_github)
                 )
-                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
-                    @Override
-                    public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
-                        if (drawerItem != null) {
-                            Intent intent = null;
-                            if (drawerItem.getIdentifier() == 1) {
-                                intent = new Intent(SampleActivity.this, MultiselectSampleActivity.class);
-                            } else if (drawerItem.getIdentifier() == 2) {
-                                intent = new Intent(SampleActivity.this, ExpandableSampleActivity.class);
-                            } else if (drawerItem.getIdentifier() == 3) {
-                                intent = new Intent(SampleActivity.this, StickyHeaderSampleActivity.class);
-                            } else if (drawerItem.getIdentifier() == 4) {
-                                intent = new Intent(SampleActivity.this, AdvancedSampleActivity.class);
-                            } else if (drawerItem.getIdentifier() == 5) {
-                                intent = new Intent(SampleActivity.this, ImageListActivity.class);
-                            } else if (drawerItem.getIdentifier() == 6) {
-                                intent = new Intent(SampleActivity.this, SimpleItemListActivity.class);
-                            } else if (drawerItem.getIdentifier() == 7) {
-                                intent = new Intent(SampleActivity.this, ModelItemActivity.class);
-                            } else if (drawerItem.getIdentifier() == 8) {
-                                intent = new Intent(SampleActivity.this, IconGridActivity.class);
-                            } else if (drawerItem.getIdentifier() == 9) {
-                                intent = new Intent(SampleActivity.this, MultiTypeModelItemActivity.class);
-                            } else if (drawerItem.getIdentifier() == 10) {
-                                intent = new Intent(SampleActivity.this, CheckBoxSampleActivity.class);
-                            } else if (drawerItem.getIdentifier() == 11) {
-                                intent = new Intent(SampleActivity.this, RadioButtonSampleActivity.class);
-                            } else if (drawerItem.getIdentifier() == 12) {
-                                intent = new Intent(SampleActivity.this, SwipeListActivity.class);
-                            } else if (drawerItem.getIdentifier() == 13) {
-                                intent = new Intent(SampleActivity.this, EndlessScrollListActivity.class);
-                            } else if (drawerItem.getIdentifier() == 14) {
-                                intent = new Intent(SampleActivity.this, SortActivity.class);
-                            } else if (drawerItem.getIdentifier() == 15) {
-                                intent = new Intent(SampleActivity.this, MopubAdsActivity.class);
-                            } else if (drawerItem.getIdentifier() == 16) {
-                                intent = new Intent(SampleActivity.this, RealmActivity.class);
-                            } else if (drawerItem.getIdentifier() == 17) {
-                                intent = new Intent(SampleActivity.this, ExpandableMultiselectDeleteSampleActivity.class);
-                            } else if (drawerItem.getIdentifier() == 18) {
-                                intent = new Intent(SampleActivity.this, StickyHeaderMopubAdsActivity.class);
-                            } else if (drawerItem.getIdentifier() == 19) {
-                                intent = new Intent(SampleActivity.this, DiffUtilActivity.class);
-                            } else if (drawerItem.getIdentifier() == 100) {
-                                intent = new LibsBuilder()
-                                        .withFields(R.string.class.getFields())
-                                        .withActivityTitle(getString(R.string.open_source))
-                                        .withActivityStyle(Libs.ActivityStyle.LIGHT)
-                                        .withAboutIconShown(true)
-                                        .withVersionShown(true)
-                                        .withAboutVersionShown(true)
-                                        .intent(SampleActivity.this);
-                            }
-                            if (intent != null) {
-                                SampleActivity.this.startActivity(intent);
-                            }
+                .withOnDrawerItemClickListener((view, position, drawerItem) -> {
+                    if (drawerItem != null) {
+                        Intent intent = null;
+                        if (drawerItem.getIdentifier() == 1) {
+                            intent = new Intent(SampleActivity.this, MultiselectSampleActivity.class);
+                        } else if (drawerItem.getIdentifier() == 2) {
+                            intent = new Intent(SampleActivity.this, ExpandableSampleActivity.class);
+                        } else if (drawerItem.getIdentifier() == 3) {
+                            intent = new Intent(SampleActivity.this, StickyHeaderSampleActivity.class);
+                        } else if (drawerItem.getIdentifier() == 4) {
+                            intent = new Intent(SampleActivity.this, AdvancedSampleActivity.class);
+                        } else if (drawerItem.getIdentifier() == 5) {
+                            intent = new Intent(SampleActivity.this, ImageListActivity.class);
+                        } else if (drawerItem.getIdentifier() == 6) {
+                            intent = new Intent(SampleActivity.this, SimpleItemListActivity.class);
+                        } else if (drawerItem.getIdentifier() == 7) {
+                            intent = new Intent(SampleActivity.this, ModelItemActivity.class);
+                        } else if (drawerItem.getIdentifier() == 8) {
+                            intent = new Intent(SampleActivity.this, IconGridActivity.class);
+                        } else if (drawerItem.getIdentifier() == 9) {
+                            intent = new Intent(SampleActivity.this, MultiTypeModelItemActivity.class);
+                        } else if (drawerItem.getIdentifier() == 10) {
+                            intent = new Intent(SampleActivity.this, CheckBoxSampleActivity.class);
+                        } else if (drawerItem.getIdentifier() == 11) {
+                            intent = new Intent(SampleActivity.this, RadioButtonSampleActivity.class);
+                        } else if (drawerItem.getIdentifier() == 12) {
+                            intent = new Intent(SampleActivity.this, SwipeListActivity.class);
+                        } else if (drawerItem.getIdentifier() == 13) {
+                            intent = new Intent(SampleActivity.this, EndlessScrollListActivity.class);
+                        } else if (drawerItem.getIdentifier() == 14) {
+                            intent = new Intent(SampleActivity.this, SortActivity.class);
+                        } else if (drawerItem.getIdentifier() == 15) {
+                            intent = new Intent(SampleActivity.this, MopubAdsActivity.class);
+                        } else if (drawerItem.getIdentifier() == 16) {
+                            intent = new Intent(SampleActivity.this, RealmActivity.class);
+                        } else if (drawerItem.getIdentifier() == 17) {
+                            intent = new Intent(SampleActivity.this, ExpandableMultiselectDeleteSampleActivity.class);
+                        } else if (drawerItem.getIdentifier() == 18) {
+                            intent = new Intent(SampleActivity.this, StickyHeaderMopubAdsActivity.class);
+                        } else if (drawerItem.getIdentifier() == 19) {
+                            intent = new Intent(SampleActivity.this, DiffUtilActivity.class);
+                        } else if (drawerItem.getIdentifier() == 100) {
+                            intent = new LibsBuilder()
+                                    .withFields(R.string.class.getFields())
+                                    .withActivityTitle(getString(R.string.open_source))
+                                    .withActivityStyle(Libs.ActivityStyle.LIGHT)
+                                    .withAboutIconShown(true)
+                                    .withVersionShown(true)
+                                    .withAboutVersionShown(true)
+                                    .intent(SampleActivity.this);
                         }
-                        return false;
+                        if (intent != null) {
+                            SampleActivity.this.startActivity(intent);
+                        }
                     }
+                    return false;
                 })
                 .withSelectedItemByPosition(-1)
                 .build();
@@ -175,15 +171,12 @@ public class SampleActivity extends AppCompatActivity {
         mRecyclerView.getItemAnimator().setRemoveDuration(500);
 
         //if we do this. the first added items will be animated :D
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                //add some dummy data
-                mItemAdapter.add(ImageDummyData.getSimpleImageItems());
+        new Handler().postDelayed(() -> {
+            //add some dummy data
+            mItemAdapter.add(ImageDummyData.getSimpleImageItems());
 
-                //restore selections (this has to be done after the items were added
-                mFastAdapter.withSavedInstanceState(savedInstanceState);
-            }
+            //restore selections (this has to be done after the items were added
+            mFastAdapter.withSavedInstanceState(savedInstanceState);
         }, 50);
     }
 

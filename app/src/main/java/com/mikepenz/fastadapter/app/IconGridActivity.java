@@ -5,9 +5,9 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.IconItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.fastadapter.expandable.ExpandableExtensionKt;
 import com.mikepenz.iconics.Iconics;
@@ -18,7 +18,6 @@ import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -80,12 +79,7 @@ public class IconGridActivity extends AppCompatActivity {
 
         //order fonts by their name
         List<ITypeface> mFonts = new ArrayList<>(Iconics.getRegisteredFonts(this));
-        Collections.sort(mFonts, new Comparator<ITypeface>() {
-            @Override
-            public int compare(final ITypeface object1, final ITypeface object2) {
-                return object1.getFontName().compareTo(object2.getFontName());
-            }
-        });
+        Collections.sort(mFonts, (object1, object2) -> object1.getFontName().compareTo(object2.getFontName()));
 
         //add all icons of all registered Fonts to the list
         int count = 0;

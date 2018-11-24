@@ -45,7 +45,7 @@ public class ImageListActivity extends AppCompatActivity {
         });
 
         //get our recyclerView and do basic setup
-        RecyclerView rv = (RecyclerView) findViewById(R.id.rv);
+        RecyclerView rv = findViewById(R.id.rv);
         //find out how many columns we display
         int columns = getResources().getInteger(R.integer.wall_splash_columns);
         if (columns == 1) {

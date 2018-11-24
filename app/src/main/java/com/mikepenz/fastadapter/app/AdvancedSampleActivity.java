@@ -6,7 +6,6 @@ import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.fastadapter.FastAdapter;
-import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.ISubItem;
@@ -17,8 +16,6 @@ import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.fastadapter.helpers.ActionModeHelper;
-import com.mikepenz.fastadapter.listeners.OnClickListener;
-import com.mikepenz.fastadapter.listeners.OnLongClickListener;
 import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.materialize.MaterializeBuilder;
@@ -89,34 +86,28 @@ public class AdvancedSampleActivity extends AppCompatActivity {
         selectExtension.setSelectable(true);
         selectExtension.setMultiSelect(true);
         selectExtension.setSelectOnLongClick(true);
-        mFastAdapter.setOnPreClickListener(new OnClickListener<IItem<? extends RecyclerView.ViewHolder>>() {
-            @Override
-            public boolean onClick(View v, IAdapter<IItem<? extends RecyclerView.ViewHolder>> adapter, IItem<? extends RecyclerView.ViewHolder> item, int position) {
-                //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
-                Boolean res = mActionModeHelper.onClick(item);
-                return res != null ? res : false;
-            }
+        mFastAdapter.setOnPreClickListener((v, adapter, item, position) -> {
+            //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
+            Boolean res = mActionModeHelper.onClick(item);
+            return res != null ? res : false;
         });
 
-        mFastAdapter.setOnPreLongClickListener(new OnLongClickListener<IItem<? extends RecyclerView.ViewHolder>>() {
-            @Override
-            public boolean onLongClick(View v, IAdapter<IItem<? extends RecyclerView.ViewHolder>> adapter, IItem<? extends RecyclerView.ViewHolder> item, int position) {
-                //we do not want expandable items to be selected
-                if (item instanceof IExpandable) {
-                    if (((IExpandable) item).getSubItems() != null) {
-                        return true;
-                    }
+        mFastAdapter.setOnPreLongClickListener((v, adapter, item, position) -> {
+            //we do not want expandable items to be selected
+            if (item instanceof IExpandable) {
+                if (((IExpandable) item).getSubItems() != null) {
+                    return true;
                 }
-
-                //handle the longclick actions
-                ActionMode actionMode = mActionModeHelper.onLongClick(AdvancedSampleActivity.this, position);
-                if (actionMode != null) {
-                    //we want color our CAB
-                    findViewById(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(AdvancedSampleActivity.this, R.attr.colorPrimary, R.color.material_drawer_primary));
-                }
-                //if we have no actionMode we do not consume the event
-                return actionMode != null;
             }
+
+            //handle the longclick actions
+            ActionMode actionMode = mActionModeHelper.onLongClick(AdvancedSampleActivity.this, position);
+            if (actionMode != null) {
+                //we want color our CAB
+                findViewById(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(AdvancedSampleActivity.this, R.attr.colorPrimary, R.color.material_drawer_primary));
+            }
+            //if we have no actionMode we do not consume the event
+            return actionMode != null;
         });
 
         //we init our ActionModeHelper

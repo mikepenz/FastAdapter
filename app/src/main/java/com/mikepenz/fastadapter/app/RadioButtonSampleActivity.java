@@ -1,26 +1,24 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.app.items.RadioButtonSampleItem;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.app.items.RadioButtonSampleItem;
 import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.materialize.MaterializeBuilder;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class RadioButtonSampleActivity extends AppCompatActivity {
     private static final String[] ALPHABET = new String[]{"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
@@ -51,20 +49,14 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
         selectExtension.setSelectable(true);
 
         //configure our fastAdapter
-        fastItemAdapter.setOnClickListener(new OnClickListener<RadioButtonSampleItem>() {
-            @Override
-            public boolean onClick(View v, IAdapter<RadioButtonSampleItem> adapter, @NonNull RadioButtonSampleItem item, int position) {
-                Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
-                return false;
-            }
+        fastItemAdapter.setOnClickListener((v, adapter, item, position) -> {
+            Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
+            return false;
         });
 
-        fastItemAdapter.setOnPreClickListener(new OnClickListener<RadioButtonSampleItem>() {
-            @Override
-            public boolean onClick(View v, IAdapter<RadioButtonSampleItem> adapter, @NonNull RadioButtonSampleItem item, int position) {
-                // consume otherwise radio/checkbox will be deselected
-                return true;
-            }
+        fastItemAdapter.setOnPreClickListener((v, adapter, item, position) -> {
+            // consume otherwise radio/checkbox will be deselected
+            return true;
         });
 
         fastItemAdapter.addEventHook(new RadioButtonSampleItem.RadioButtonClickEvent());

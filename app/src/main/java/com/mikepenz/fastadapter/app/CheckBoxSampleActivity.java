@@ -5,10 +5,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.app.items.CheckBoxSampleItem;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.app.items.CheckBoxSampleItem;
 import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.materialize.MaterializeBuilder;
 
@@ -16,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DefaultItemAnimator;
@@ -52,20 +49,14 @@ public class CheckBoxSampleActivity extends AppCompatActivity {
         selectExtension.setSelectable(true);
 
         //configure our fastAdapter
-        fastItemAdapter.setOnClickListener(new OnClickListener<CheckBoxSampleItem>() {
-            @Override
-            public boolean onClick(View v, IAdapter<CheckBoxSampleItem> adapter, @NonNull CheckBoxSampleItem item, int position) {
-                Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
-                return false;
-            }
+        fastItemAdapter.setOnClickListener((v, adapter, item, position) -> {
+            Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
+            return false;
         });
 
-        fastItemAdapter.setOnPreClickListener(new OnClickListener<CheckBoxSampleItem>() {
-            @Override
-            public boolean onClick(View v, IAdapter<CheckBoxSampleItem> adapter, @NonNull CheckBoxSampleItem item, int position) {
-                // consume otherwise radio/checkbox will be deselected
-                return true;
-            }
+        fastItemAdapter.setOnPreClickListener((v, adapter, item, position) -> {
+            // consume otherwise radio/checkbox will be deselected
+            return true;
         });
         fastItemAdapter.addEventHook(new CheckBoxSampleItem.CheckBoxClickEvent());
 

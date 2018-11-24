@@ -11,13 +11,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mikepenz.fastadapter.IAdapter;
-import com.mikepenz.fastadapter.IItemAdapter;
-import com.mikepenz.fastadapter.app.items.SwipeableItem;
 import com.mikepenz.fastadapter.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.app.items.SwipeableItem;
 import com.mikepenz.fastadapter.drag.ItemTouchCallback;
 import com.mikepenz.fastadapter.drag.SimpleDragCallback;
-import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.swipe.SimpleSwipeCallback;
 import com.mikepenz.fastadapter.swipe_drag.SimpleSwipeDragCallback;
 import com.mikepenz.fastadapter.utils.DragDropUtil;
@@ -29,7 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -56,7 +52,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         setContentView(R.layout.activity_sample);
 
         // Handle Toolbar
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
 
@@ -67,22 +63,16 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         fastItemAdapter = new FastItemAdapter<>();
 
         //configure our fastAdapter
-        fastItemAdapter.setOnClickListener(new OnClickListener<SwipeableItem>() {
-            @Override
-            public boolean onClick(View v, IAdapter<SwipeableItem> adapter, @NonNull SwipeableItem item, int position) {
-                Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
-                return false;
-            }
+        fastItemAdapter.setOnClickListener((v, adapter, item, position) -> {
+            Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
+            return false;
         });
 
         //configure the itemAdapter
-        fastItemAdapter.getItemFilter().setFilterPredicate(new IItemAdapter.Predicate<SwipeableItem>() {
-            @Override
-            public boolean filter(SwipeableItem item, CharSequence constraint) {
-                //return true if we should filter it out
-                //return false to keep it
-                return item.name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
-            }
+        fastItemAdapter.getItemFilter().setFilterPredicate((item, constraint) -> {
+            //return true if we should filter it out
+            //return false to keep it
+            return item.name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
         });
 
         //get our recyclerView and do basic setup
@@ -220,29 +210,23 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
 
         // This can vary depending on direction but remove & archive simulated here both results in
         // removal from list
-        final Runnable removeRunnable = new Runnable() {
-            @Override
-            public void run() {
-                item.setSwipedAction(null);
-                int position = fastItemAdapter.getAdapterPosition(item);
-                if (position != RecyclerView.NO_POSITION) {
-                    //this sample uses a filter. If a filter is used we should use the methods provided by the filter (to make sure filter and normal state is updated)
-                    fastItemAdapter.getItemFilter().remove(position);
-                }
+        final Runnable removeRunnable = () -> {
+            item.setSwipedAction(null);
+            int position12 = fastItemAdapter.getAdapterPosition(item);
+            if (position12 != RecyclerView.NO_POSITION) {
+                //this sample uses a filter. If a filter is used we should use the methods provided by the filter (to make sure filter and normal state is updated)
+                fastItemAdapter.getItemFilter().remove(position12);
             }
         };
         final View rv = findViewById(R.id.rv);
         rv.postDelayed(removeRunnable, 3000);
 
-        item.setSwipedAction(new Runnable() {
-            @Override
-            public void run() {
-                rv.removeCallbacks(removeRunnable);
-                item.setSwipedDirection(0);
-                int position = fastItemAdapter.getAdapterPosition(item);
-                if (position != RecyclerView.NO_POSITION) {
-                    fastItemAdapter.notifyItemChanged(position);
-                }
+        item.setSwipedAction(() -> {
+            rv.removeCallbacks(removeRunnable);
+            item.setSwipedDirection(0);
+            int position1 = fastItemAdapter.getAdapterPosition(item);
+            if (position1 != RecyclerView.NO_POSITION) {
+                fastItemAdapter.notifyItemChanged(position1);
             }
         });
 
