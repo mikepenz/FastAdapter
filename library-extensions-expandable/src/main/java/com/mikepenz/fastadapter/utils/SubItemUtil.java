@@ -10,49 +10,16 @@ import com.mikepenz.fastadapter.select.SelectExtension;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
-
-import androidx.annotation.NonNull;
 
 /**
  * Created by flisar on 15.09.2016.
  */
 public class SubItemUtil {
 
-    /**
-     * returns a set of selected items, regardless of their visibility
-     *
-     * @param adapter the adapter instance
-     * @return a set of all selected items and subitems
-     * @deprecated See {@link FastAdapter#getSelectedItems()} ()} ()}
-     */
-    @Deprecated
-    public static Set<IItem> getSelectedItems(FastAdapter adapter) {
-        Set<IItem> selections = new HashSet<>();
-        int length = adapter.getItemCount();
-        List<IItem> items = new ArrayList<>();
-        for (int i = 0; i < length; i++) {
-            items.add(adapter.getItem(i));
-        }
-        updateSelectedItemsWithCollapsed(selections, items);
-        return selections;
-    }
-
-    private static void updateSelectedItemsWithCollapsed(Set<IItem> selected, List<IItem> items) {
-        int length = items.size();
-        for (int i = 0; i < length; i++) {
-            if (items.get(i).isSelected()) {
-                selected.add(items.get(i));
-            }
-            if (items.get(i) instanceof IExpandable && ((IExpandable) items.get(i)).getSubItems() != null) {
-                updateSelectedItemsWithCollapsed(selected, ((IExpandable) items.get(i)).getSubItems());
-            }
-        }
-    }
 
     /**
      * counts the items in the adapter, respecting subitems regardless of there current visibility
@@ -252,67 +219,6 @@ public class SubItemUtil {
         }
     }
 
-    /**
-     * select or unselect an item with the given identifier
-     * This will not handle the `only one selected` case. Please deselect all items first for this requirement.
-     *
-     * @param adapter    the adapter instance
-     * @param identifier the identifier of the item to select / deselect
-     * @param select     the new selected state of the sub items
-     * @deprecated See {@link SelectExtension#selectByIdentifier(long, boolean, boolean)} ()} ()}
-     */
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public static boolean selectItem(final FastAdapter adapter, final long identifier, final boolean select) {
-        Triple<Boolean, IItem, Integer> res = adapter.recursive(new AdapterPredicate() {
-            @Override
-            public boolean apply(@NonNull IAdapter lastParentAdapter, int lastParentPosition, @NonNull IItem item, int position) {
-                if (item.getIdentifier() == identifier) {
-                    if (position != -1) {
-                        SelectExtension extension = (SelectExtension) adapter.getExtension(SelectExtension.class);
-                        if (extension != null) {
-                            if (select) {
-                                extension.select(position);
-                            } else {
-                                extension.deselect(position);
-                            }
-                        }
-                    } else {
-                        item.setSelected(select);
-                    }
-                    return true;
-                }
-                return false;
-            }
-        }, true);
-        return res.getFirst();
-    }
-
-    /**
-     * deselects all items including all subitems
-     *
-     * @param adapter the adapter instance
-     * @deprecated See {@link SelectExtension#deselect()} ()}
-     */
-    @Deprecated
-    @SuppressWarnings("unchecked")
-    public static void deselect(final FastAdapter adapter) {
-        adapter.recursive(new AdapterPredicate() {
-            @Override
-            public boolean apply(@NonNull IAdapter lastParentAdapter, int lastParentPosition, @NonNull IItem item, int position) {
-                if (position != -1) {
-                    SelectExtension extension = (SelectExtension) adapter.getExtension(SelectExtension.class);
-                    if (extension != null) {
-                        extension.deselect(position);
-                    }
-                } else {
-                    item.setSelected(false);
-                }
-                return true;
-            }
-        }, false);
-    }
-
     private static <T extends IExpandable & IItem> T getParent(IItem item) {
         if (item instanceof IExpandable) {
             return (T) ((IExpandable) item).getParent();
@@ -329,12 +235,12 @@ public class SubItemUtil {
      * @param deleteEmptyHeaders if true, empty headers will be removed from the adapter
      * @return List of items that have been removed from the adapter
      */
-    public static List<IItem> deleteSelected(final FastAdapter fastAdapter, final ExpandableExtension expandableExtension, boolean notifyParent, boolean deleteEmptyHeaders) {
+    public static List<IItem> deleteSelected(final FastAdapter fastAdapter, final SelectExtension selectExtension, final ExpandableExtension expandableExtension, boolean notifyParent, boolean deleteEmptyHeaders) {
         List<IItem> deleted = new ArrayList<>();
 
         // we use a LinkedList, because this has performance advantages when modifying the listIterator during iteration!
         // Modifying list is O(1)
-        LinkedList<IItem> selectedItems = new LinkedList<>(getSelectedItems(fastAdapter));
+        LinkedList<IItem> selectedItems = new LinkedList<>(selectExtension.getSelectedItems());
 
 //        Log.d("DELETE", "selectedItems: " + selectedItems.size());
 
