@@ -2,21 +2,14 @@ package com.mikepenz.fastadapter.app;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.app.items.RealmSampleUserItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.itemanimators.AlphaInAnimator;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
@@ -25,6 +18,10 @@ import com.mikepenz.materialize.MaterializeBuilder;
 import java.util.LinkedList;
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import io.realm.Realm;
 import io.realm.RealmChangeListener;
 import io.realm.RealmResults;
@@ -53,12 +50,9 @@ public class RealmActivity extends AppCompatActivity {
         mFastItemAdapter = new FastItemAdapter<>();
 
         //configure our fastAdapter
-        mFastItemAdapter.setOnClickListener(new OnClickListener<RealmSampleUserItem>() {
-            @Override
-            public boolean onClick(View v, IAdapter<RealmSampleUserItem> adapter, @NonNull RealmSampleUserItem item, int position) {
-                Toast.makeText(v.getContext(), item.getName(), Toast.LENGTH_SHORT).show();
-                return false;
-            }
+        mFastItemAdapter.setOnClickListener((v, adapter, item, position) -> {
+            Toast.makeText(v.getContext(), item.getName(), Toast.LENGTH_SHORT).show();
+            return false;
         });
 
         //get our recyclerView and do basic setup
@@ -71,14 +65,11 @@ public class RealmActivity extends AppCompatActivity {
         mRealm = Realm.getDefaultInstance();
 
         //Add a realm on change listener (don´t forget to close this realm instance before adding this listener again)
-        mRealm.where(RealmSampleUserItem.class).findAllAsync().addChangeListener(new RealmChangeListener<RealmResults<RealmSampleUserItem>>() {
-            @Override
-            public void onChange(RealmResults<RealmSampleUserItem> userItems) {
-                //This will call twice
-                //1.) from findAllAsync()
-                //2.) from createData()
-                mFastItemAdapter.setNewList(userItems);
-            }
+        mRealm.where(RealmSampleUserItem.class).findAllAsync().addChangeListener(userItems -> {
+            //This will call twice
+            //1.) from findAllAsync()
+            //2.) from createData()
+            mFastItemAdapter.setNewList(userItems);
         });
 
         //fill with some sample data
@@ -94,19 +85,16 @@ public class RealmActivity extends AppCompatActivity {
 
     private void createData() {
         //Execute transaction
-        mRealm.executeTransactionAsync(new Realm.Transaction() {
-            @Override
-            public void execute(Realm realm) {
-                List<RealmSampleUserItem> users = new LinkedList<>();
-                for (int i = 1; i <= 5; i++) {
-                    RealmSampleUserItem user = new RealmSampleUserItem();
-                    user.withName("Sample Realm Element " + i).withIdentifier(i);
-                    users.add(user);
-                }
-                //insert the created objects to realm
-                //a bulk insert has lower object allocations then a copy
-                realm.insertOrUpdate(users);
+        mRealm.executeTransactionAsync(realm -> {
+            List<RealmSampleUserItem> users = new LinkedList<>();
+            for (int i = 1; i <= 5; i++) {
+                RealmSampleUserItem user = new RealmSampleUserItem();
+                user.withName("Sample Realm Element " + i).withIdentifier(i);
+                users.add(user);
             }
+            //insert the created objects to realm
+            //a bulk insert has lower object allocations then a copy
+            realm.insertOrUpdate(users);
         });
     }
 

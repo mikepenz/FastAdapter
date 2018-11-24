@@ -46,11 +46,6 @@ implementation "androidx.appcompat:appcompat:${androidX}"
 implementation "androidx.recyclerview:recyclerview:${androidX}"
 ```
 
-The commons package comes with some useful helpers (which are not needed in all cases) This one for example includes the `FastItemAdapter`
-```gradle
-implementation 'com.mikepenz:fastadapter-commons:4.0.0-alpha1'
-```
-
 Expandable support is included and can be added via this
 ```gradle
 implementation 'com.mikepenz:fastadapter-extensions-expandable:4.0.0-alpha1'
@@ -58,9 +53,16 @@ implementation 'com.mikepenz:fastadapter-extensions-expandable:4.0.0-alpha1'
 implementation 'com.mikepenz:materialize:${latestVersion}' // at least 1.2.0
 ```
 
-Many helper classes are included in the following dependency. (This functionality also needs the `Expandable` extension
+Many helper classes are included in the following dependency.
 ```gradle
-implementation 'com.mikepenz:fastadapter-extensions:4.0.0-alpha1'
+implementation 'com.mikepenz:fastadapter-extensions-diff:4.0.0-alpha1' // diff util helpres
+implementation 'com.mikepenz:fastadapter-extensions-drag:4.0.0-alpha1' // drag support
+implementation 'com.mikepenz:fastadapter-extensions-scroll:4.0.0-alpha1' // scroll helpers
+implementation 'com.mikepenz:fastadapter-extensions-swipe:4.0.0-alpha1' // swipe support
+implementation 'com.mikepenz:fastadapter-extensions-ui:4.0.0-alpha1' // pre-defined ui components
+implementation 'com.mikepenz:fastadapter-extensions-utils:4.0.0-alpha1' // needs the `expandable`, `drag` and `scroll` extension.
+
+// required for the ui components and the utils
 implementation "com.google.android.material:material:${androidX}"
 //The tiny Materialize library used for its useful helper classes
 implementation 'com.mikepenz:materialize:${latestVersion}' // at least 1.2.0

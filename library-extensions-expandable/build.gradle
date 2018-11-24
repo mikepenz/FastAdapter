@@ -31,7 +31,6 @@ android {
 
 dependencies {
     implementation project(':library-core')
-    implementation project(':library')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
 
@@ -41,7 +40,7 @@ dependencies {
 
     testImplementation 'junit:junit:4.12'
     testImplementation 'org.mockito:mockito-all:1.10.19'
-    testImplementation "org.robolectric:robolectric:4.0-beta-1"
+    testImplementation "org.robolectric:robolectric:${versions.roboelectric}"
 
     testImplementation 'androidx.test:rules:1.1.0-beta02'
     testImplementation 'androidx.test:runner:1.1.0-beta2'
@@ -57,7 +56,7 @@ dependencies {
     }
 }
 
-if (project.hasProperty('pushall') || project.hasProperty('libraryextensionexpandablemonly')) {
+if (project.hasProperty('pushall') || project.hasProperty('library_extensions_expandable_only')) {
     apply from: '../gradle-release.gradle'
 }
 

@@ -1,16 +1,17 @@
 package com.mikepenz.fastadapter.app.adapters;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.ViewGroup;
 
 import com.mikepenz.fastadapter.FastAdapter;
 import com.mikepenz.fastadapter.IItem;
-import com.mikepenz.fastadapter.app.model.ModelIconItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
+import com.mikepenz.fastadapter.app.model.ModelIconItem;
 import com.turingtechnologies.materialscrollbar.ICustomAdapter;
 import com.turingtechnologies.materialscrollbar.INameableAdapter;
 
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by mikepenz on 30.12.15.
@@ -40,7 +41,7 @@ public class FastScrollIndicatorAdapter<Item extends IItem<RecyclerView.ViewHold
 
 
     /*
-    * GENERAL CODE NEEDED TO WRAP AN ADAPTER
+     * GENERAL CODE NEEDED TO WRAP AN ADAPTER
      */
 
     //private AbstractAdapter mParentAdapter;

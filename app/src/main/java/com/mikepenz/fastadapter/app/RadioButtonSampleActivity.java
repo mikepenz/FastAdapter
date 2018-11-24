@@ -13,7 +13,7 @@ import android.widget.Toast;
 
 import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.app.items.RadioButtonSampleItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.listeners.OnClickListener;
 import com.mikepenz.fastadapter.select.SelectExtension;
 import com.mikepenz.materialize.MaterializeBuilder;

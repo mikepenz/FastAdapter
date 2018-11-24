@@ -1,0 +1,1 @@
+-dontwarn com.mikepenz.fastadapter.commons.utils.**

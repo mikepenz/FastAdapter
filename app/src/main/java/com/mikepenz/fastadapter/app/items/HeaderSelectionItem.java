@@ -5,7 +5,7 @@ import android.graphics.Color;
 
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
-import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
+import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;

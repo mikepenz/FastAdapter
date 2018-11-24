@@ -582,7 +582,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         if (identifier == -1L) {
             return null
         }
-        val result = recursive(object : AdapterPredicate<Item> {
+        val (_, second, third) = recursive(object : AdapterPredicate<Item> {
             override fun apply(
                     lastParentAdapter: IAdapter<Item>,
                     lastParentPosition: Int,
@@ -592,10 +592,10 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                 return item.identifier == identifier
             }
         }, true)
-        return if (result.second == null) {
+        return if (second == null) {
             null
         } else {
-            Pair(result.second, result.third)
+            Pair(second, third)
         }
     }
 

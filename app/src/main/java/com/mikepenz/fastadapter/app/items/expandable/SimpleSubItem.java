@@ -8,9 +8,9 @@ import android.widget.TextView;
 import com.mikepenz.fastadapter.IExpandable;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.R;
-import com.mikepenz.fastadapter.commons.utils.FastAdapterUIUtils;
+import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils;
+import com.mikepenz.fastadapter.drag.IDraggable;
 import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem;
-import com.mikepenz.fastadapter_extensions.drag.IDraggable;
 import com.mikepenz.materialdrawer.holder.StringHolder;
 
 import java.util.List;

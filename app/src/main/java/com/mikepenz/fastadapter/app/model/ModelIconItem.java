@@ -1,6 +1,5 @@
 package com.mikepenz.fastadapter.app.model;
 
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
@@ -11,6 +10,7 @@ import com.mikepenz.iconics.view.IconicsImageView;
 
 import java.util.List;
 
+import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 

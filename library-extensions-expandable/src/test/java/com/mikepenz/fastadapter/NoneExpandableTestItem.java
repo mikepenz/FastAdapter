@@ -4,8 +4,6 @@ import android.view.View;
 
 import com.mikepenz.fastadapter.items.AbstractItem;
 
-import java.util.List;
-
 import androidx.recyclerview.widget.RecyclerView;
 
 /**

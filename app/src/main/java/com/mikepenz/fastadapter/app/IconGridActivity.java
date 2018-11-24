@@ -7,8 +7,9 @@ import android.view.View;
 import com.mikepenz.fastadapter.IItem;
 import com.mikepenz.fastadapter.app.items.IconItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
+import com.mikepenz.fastadapter.expandable.ExpandableExtensionKt;
 import com.mikepenz.iconics.Iconics;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.iconics.typeface.ITypeface;
@@ -52,8 +53,7 @@ public class IconGridActivity extends AppCompatActivity {
         fastItemAdapter = new FastItemAdapter<>();
 
         //we want to have expandables
-        ExpandableExtension expandableExtension = new ExpandableExtension(fastItemAdapter);
-        fastItemAdapter.addExtension(expandableExtension);
+        ExpandableExtension expandableExtension = ExpandableExtensionKt.getExpandableExtension(fastItemAdapter);
 
         //get our recyclerView and do basic setup
         RecyclerView rv = findViewById(R.id.rv);

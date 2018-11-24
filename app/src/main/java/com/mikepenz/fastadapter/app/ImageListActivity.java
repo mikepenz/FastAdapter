@@ -1,23 +1,21 @@
 package com.mikepenz.fastadapter.app;
 
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DefaultItemAnimator;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import com.mikepenz.fastadapter.IAdapter;
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData;
 import com.mikepenz.fastadapter.app.items.ImageItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.listeners.OnClickListener;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.materialize.MaterializeBuilder;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DefaultItemAnimator;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class ImageListActivity extends AppCompatActivity {
     //save our FastAdapter
@@ -41,12 +39,9 @@ public class ImageListActivity extends AppCompatActivity {
         mFastItemAdapter = new FastItemAdapter<>();
 
         //configure our fastAdapter
-        mFastItemAdapter.setOnClickListener(new OnClickListener<ImageItem>() {
-            @Override
-            public boolean onClick(View v, IAdapter<ImageItem> adapter, @NonNull ImageItem item, int position) {
-                Toast.makeText(v.getContext(), item.mName, Toast.LENGTH_SHORT).show();
-                return false;
-            }
+        mFastItemAdapter.setOnClickListener((v, adapter, item, position) -> {
+            Toast.makeText(v.getContext(), item.mName, Toast.LENGTH_SHORT).show();
+            return false;
         });
 
         //get our recyclerView and do basic setup

@@ -7,4 +7,4 @@ package com.mikepenz.fastadapter.utils
  * @param <U>
  * @param <V>
 </V></U></T> */
-class Triple<T, U, V>(val first: T, val second: U?, val third: V?)
+data class Triple<T, U, V>(val first: T, val second: U?, val third: V?)

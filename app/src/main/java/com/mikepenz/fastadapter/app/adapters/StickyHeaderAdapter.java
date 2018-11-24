@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter.app.adapters;
 
 import android.graphics.Color;
-import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,8 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter;
 
 import java.security.SecureRandom;
 import java.util.List;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by mikepenz on 30.12.15.
@@ -75,7 +76,7 @@ public class StickyHeaderAdapter<Item extends IItem<RecyclerView.ViewHolder>> ex
     }
 
     /*
-    * GENERAL CODE NEEDED TO WRAP AN ADAPTER
+     * GENERAL CODE NEEDED TO WRAP AN ADAPTER
      */
 
     //private AbstractAdapter mParentAdapter;

@@ -2,21 +2,15 @@ package com.mikepenz.fastadapter.app;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DiffUtil;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.SimpleItem;
-import com.mikepenz.fastadapter.commons.adapters.FastItemAdapter;
-import com.mikepenz.fastadapter.commons.utils.FastAdapterDiffUtil;
+import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil;
 import com.mikepenz.iconics.IconicsDrawable;
 import com.mikepenz.itemanimators.AlphaInAnimator;
 import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic;
@@ -25,13 +19,15 @@ import com.mikepenz.materialize.MaterializeBuilder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.Callable;
 
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.functions.Consumer;
-import io.reactivex.functions.Function;
 import io.reactivex.schedulers.Schedulers;
 
 /**
@@ -122,28 +118,14 @@ public class DiffUtilActivity extends AppCompatActivity {
 
     private void setData() {
         List<SimpleItem> items = createData();
-        FastAdapterDiffUtil.set(fastItemAdapter, items);
+        FastAdapterDiffUtil.set(fastItemAdapter.getItemAdapter(), items);
     }
 
     private void setDataAsync() {
-        disposables.add(Single.fromCallable(new Callable<List<SimpleItem>>() {
-            @Override
-            public List<SimpleItem> call() throws Exception {
-                return createData();
-            }
-        }).map(new Function<List<SimpleItem>, DiffUtil.DiffResult>() {
-            @Override
-            public DiffUtil.DiffResult apply(List<SimpleItem> simpleItems) throws Exception {
-                return FastAdapterDiffUtil.calculateDiff(fastItemAdapter, simpleItems);
-            }
-        }).subscribeOn(Schedulers.io())
+        disposables.add(Single.fromCallable(() -> createData())
+                .map(simpleItems -> FastAdapterDiffUtil.calculateDiff(fastItemAdapter.getItemAdapter(), simpleItems)).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Consumer<DiffUtil.DiffResult>() {
-                    @Override
-                    public void accept(DiffUtil.DiffResult result) throws Exception {
-                        FastAdapterDiffUtil.set(fastItemAdapter, result);
-                    }
-                }));
+                .subscribe(result -> FastAdapterDiffUtil.set(fastItemAdapter.getItemAdapter(), result)));
     }
 
     private List<SimpleItem> createData() {
