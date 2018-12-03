@@ -86,8 +86,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     var onTouchListener: OnTouchListener<Item>? = null
 
     //the listeners for onCreateViewHolder or onBindViewHolder
-    var onCreateViewHolderListener: OnCreateViewHolderListener<Item> =
-            OnCreateViewHolderListenerImpl()
+    var onCreateViewHolderListener: OnCreateViewHolderListener<Item> = OnCreateViewHolderListenerImpl()
     var onBindViewHolderListener: OnBindViewHolderListener = OnBindViewHolderListenerImpl<Item>()
 
     /**
