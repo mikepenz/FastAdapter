@@ -18,7 +18,8 @@ interface OnCreateViewHolderListener<Item : IItem<out RecyclerView.ViewHolder>> 
     fun onPreCreateViewHolder(
         fastAdapter: FastAdapter<Item>,
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
+        typeInstance: Item
     ): RecyclerView.ViewHolder
 
     /**
@@ -30,6 +31,7 @@ interface OnCreateViewHolderListener<Item : IItem<out RecyclerView.ViewHolder>> 
      */
     fun onPostCreateViewHolder(
         fastAdapter: FastAdapter<Item>,
-        viewHolder: RecyclerView.ViewHolder
+        viewHolder: RecyclerView.ViewHolder,
+        typeInstance: Item
     ): RecyclerView.ViewHolder
 }

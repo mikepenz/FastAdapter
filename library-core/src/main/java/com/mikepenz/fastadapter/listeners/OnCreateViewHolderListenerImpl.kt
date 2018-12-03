@@ -4,6 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.IHookable
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.utils.*
 
@@ -22,9 +23,10 @@ class OnCreateViewHolderListenerImpl<Item : IItem<out RecyclerView.ViewHolder>> 
     override fun onPreCreateViewHolder(
         fastAdapter: FastAdapter<Item>,
         parent: ViewGroup,
-        viewType: Int
+        viewType: Int,
+        typeInstance: Item
     ): RecyclerView.ViewHolder {
-        return fastAdapter.getTypeInstance(viewType).getViewHolder(parent)
+        return typeInstance.getViewHolder(parent)
     }
 
     /**
@@ -35,9 +37,12 @@ class OnCreateViewHolderListenerImpl<Item : IItem<out RecyclerView.ViewHolder>> 
      */
     override fun onPostCreateViewHolder(
         fastAdapter: FastAdapter<Item>,
-        viewHolder: RecyclerView.ViewHolder
+        viewHolder: RecyclerView.ViewHolder,
+        typeInstance: Item
     ): RecyclerView.ViewHolder {
         fastAdapter.eventHooks?.bind(viewHolder)
+        //check if the item implements hookable and contains event hooks
+        (typeInstance as? IHookable<*>)?.eventHooks?.bind(viewHolder)
         return viewHolder
     }
 }
