@@ -8,7 +8,7 @@ import com.mikepenz.fastadapter.R
 
 import androidx.recyclerview.widget.RecyclerView
 
-class OnBindViewHolderListenerImpl<Item: IItem<out RecyclerView.ViewHolder>> : OnBindViewHolderListener {
+class OnBindViewHolderListenerImpl<Item : IItem<out RecyclerView.ViewHolder>> : OnBindViewHolderListener {
     /**
      * is called in onBindViewHolder to bind the data on the ViewHolder
      *
@@ -49,8 +49,8 @@ class OnBindViewHolderListenerImpl<Item: IItem<out RecyclerView.ViewHolder>> : O
             viewHolder.itemView.setTag(R.id.fastadapter_item_adapter, null)
         } else {
             Log.e(
-                "FastAdapter",
-                "The bindView method of this item should set the `Tag` on its itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.java#L189)"
+                    "FastAdapter",
+                    "The bindView method of this item should set the `Tag` on its itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.java#L189)"
             )
         }
     }
@@ -101,8 +101,8 @@ class OnBindViewHolderListenerImpl<Item: IItem<out RecyclerView.ViewHolder>> : O
      * @return true if we want to recycle anyways (false - it get's destroyed)
      */
     override fun onFailedToRecycleView(
-        viewHolder: RecyclerView.ViewHolder,
-        position: Int
+            viewHolder: RecyclerView.ViewHolder,
+            position: Int
     ): Boolean {
         val item = FastAdapter.getHolderAdapterItemTag<IItem<RecyclerView.ViewHolder>>(viewHolder)
         if (item != null) {
