@@ -20,10 +20,10 @@ interface OnTouchListener<Item : IItem<out RecyclerView.ViewHolder>> {
      * @return return true if the event was consumed, otherwise false
      */
     fun onTouch(
-        v: View,
-        event: MotionEvent,
-        adapter: IAdapter<Item>,
-        item: Item,
-        position: Int
+            v: View,
+            event: MotionEvent,
+            adapter: IAdapter<Item>,
+            item: Item,
+            position: Int
     ): Boolean
 }

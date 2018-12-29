@@ -16,9 +16,10 @@ interface OnCreateViewHolderListener<Item : IItem<out RecyclerView.ViewHolder>> 
      * @return the generated ViewHolder based on the given viewType
      */
     fun onPreCreateViewHolder(
-        fastAdapter: FastAdapter<Item>,
-        parent: ViewGroup,
-        viewType: Int
+            fastAdapter: FastAdapter<Item>,
+            parent: ViewGroup,
+            viewType: Int,
+            typeInstance: Item
     ): RecyclerView.ViewHolder
 
     /**
@@ -29,7 +30,8 @@ interface OnCreateViewHolderListener<Item : IItem<out RecyclerView.ViewHolder>> 
      * @return the viewHolder given as param
      */
     fun onPostCreateViewHolder(
-        fastAdapter: FastAdapter<Item>,
-        viewHolder: RecyclerView.ViewHolder
+            fastAdapter: FastAdapter<Item>,
+            viewHolder: RecyclerView.ViewHolder,
+            typeInstance: Item
     ): RecyclerView.ViewHolder
 }

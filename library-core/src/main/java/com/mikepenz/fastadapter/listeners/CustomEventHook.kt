@@ -44,12 +44,4 @@ abstract class CustomEventHook<Item : IItem<out RecyclerView.ViewHolder>> : Even
             adapter.getItem(pos)
         } else null
     }
-
-    override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {
-        return null
-    }
-
-    override fun onBindMany(viewHolder: RecyclerView.ViewHolder): List<View>? {
-        return null
-    }
 }

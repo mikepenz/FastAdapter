@@ -350,12 +350,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param item an IItem which will be shown in the list
      */
     fun registerTypeInstance(item: Item) {
-        if (typeInstanceCache.register(item)) {
-            //check if the item implements hookable when its added for the first time
-            if (item is IHookable<*>) {
-                addEventHooks((item as IHookable<Item>).eventHooks)
-            }
-        }
+        typeInstanceCache.register(item)
     }
 
     /**
@@ -365,7 +360,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return the Item typeInstance
      */
     fun getTypeInstance(type: Int): Item {
-        return typeInstanceCache.get(type)
+        return typeInstanceCache[type]
     }
 
     /**
@@ -396,7 +391,9 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         if (verboseLoggingEnabled) Log.v(TAG, "onCreateViewHolder: $viewType")
 
-        val holder = onCreateViewHolderListener.onPreCreateViewHolder(this, parent, viewType)
+        val typeInstance = getTypeInstance(viewType)
+
+        val holder = onCreateViewHolderListener.onPreCreateViewHolder(this, parent, viewType, typeInstance)
 
         //set the adapter
         holder.itemView.setTag(R.id.fastadapter_item_adapter, this@FastAdapter)
@@ -412,7 +409,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             viewTouchListener.attachToView(holder, holder.itemView)
         }
 
-        return onCreateViewHolderListener.onPostCreateViewHolder(this, holder)
+        return onCreateViewHolderListener.onPostCreateViewHolder(this, holder, typeInstance)
     }
 
     /**
