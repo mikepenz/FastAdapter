@@ -62,7 +62,7 @@ implementation 'com.mikepenz:materialize:${latestVersion}' // at least 1.2.0
 
 Many helper classes are included in the following dependency.
 ```gradle
-implementation 'com.mikepenz:fastadapter-extensions-diff:${latestFastAdapterRelease}' // diff util helpres
+implementation 'com.mikepenz:fastadapter-extensions-diff:${latestFastAdapterRelease}' // diff util helpers
 implementation 'com.mikepenz:fastadapter-extensions-drag:${latestFastAdapterRelease}' // drag support
 implementation 'com.mikepenz:fastadapter-extensions-scroll${latestFastAdapterRelease}' // scroll helpers
 implementation 'com.mikepenz:fastadapter-extensions-swipe:${latestFastAdapterRelease}' // swipe support
