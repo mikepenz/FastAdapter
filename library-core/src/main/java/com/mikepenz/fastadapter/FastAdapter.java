@@ -439,7 +439,8 @@ public class FastAdapter<Item extends IItem> extends RecyclerView.Adapter<Recycl
     }
 
     /**
-     * set if no item is selectable
+     * Set to true if you want the items to be selectable. 
+     * By default, no items are selectable
      *
      * @param selectable true if items are selectable
      * @return this
