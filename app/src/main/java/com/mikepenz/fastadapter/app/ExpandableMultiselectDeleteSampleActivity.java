@@ -6,12 +6,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ActionMode;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.LayoutInflaterCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.michaelflisar.dragselectrecyclerview.DragSelectTouchListener;
-import com.mikepenz.aboutlibraries.util.UIUtils;
 import com.mikepenz.fastadapter.IItem;
+import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.app.items.HeaderSelectionItem;
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem;
-import com.mikepenz.fastadapter.adapters.FastItemAdapter;
 import com.mikepenz.fastadapter.expandable.ExpandableExtension;
 import com.mikepenz.fastadapter.helpers.ActionModeHelper;
 import com.mikepenz.fastadapter.helpers.RangeSelectorHelper;
@@ -20,17 +26,11 @@ import com.mikepenz.fastadapter.utils.SubItemUtil;
 import com.mikepenz.iconics.context.IconicsLayoutInflater;
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator;
 import com.mikepenz.materialize.MaterializeBuilder;
+import com.mikepenz.materialize.util.UIUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.ActionMode;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.LayoutInflaterCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class ExpandableMultiselectDeleteSampleActivity extends AppCompatActivity {
     //save our FastAdapter
