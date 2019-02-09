@@ -81,7 +81,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
         //configure our fastAdapter
         fastItemAdapter.setOnClickListener((v, adapter, item, position) -> {
             if (item instanceof SimpleItem) {
-                Toast.makeText(v.getContext(), ((SimpleItem) item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
+                Toast.makeText(v.getContext(), ((SimpleItem) item).getName().getText(v.getContext()), Toast.LENGTH_LONG).show();
             }
             return false;
         });
@@ -91,7 +91,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
             //return true if we should filter it out
             //return false to keep it
             if (item instanceof SimpleItem) {
-                return ((SimpleItem) item).name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
+                return ((SimpleItem) item).getName().getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
             }
             return false;
         });
@@ -196,7 +196,7 @@ public class EndlessScrollListActivity extends AppCompatActivity implements Item
 
     @Override
     public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-        DragDropUtil.onMove(fastItemAdapter.getItemAdapter(), oldPosition, newPosition); // change position
+        DragDropUtil.INSTANCE.onMove(fastItemAdapter.getItemAdapter(), oldPosition, newPosition); // change position
         return true;
     }
 

@@ -64,7 +64,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
 
         //configure our fastAdapter
         fastItemAdapter.setOnClickListener((v, adapter, item, position) -> {
-            Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
+            Toast.makeText(v.getContext(), (item).getName().getText(v.getContext()), Toast.LENGTH_LONG).show();
             return false;
         });
 
@@ -72,7 +72,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
         fastItemAdapter.getItemFilter().setFilterPredicate((item, constraint) -> {
             //return true if we should filter it out
             //return false to keep it
-            return item.name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
+            return item.getName().getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
         });
 
         //get our recyclerView and do basic setup
@@ -187,7 +187,7 @@ public class SwipeListActivity extends AppCompatActivity implements ItemTouchCal
 
     @Override
     public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-        DragDropUtil.onMove(fastItemAdapter.getItemAdapter(), oldPosition, newPosition);  // change position
+        DragDropUtil.INSTANCE.onMove(fastItemAdapter.getItemAdapter(), oldPosition, newPosition);  // change position
         return true;
     }
 

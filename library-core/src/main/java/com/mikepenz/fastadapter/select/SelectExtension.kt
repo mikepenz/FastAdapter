@@ -14,14 +14,14 @@ import java.util.*
  * Extension method to retrieve or create the SelectExtension from the current FastAdapter.
  * This will return a non null variant and fail if something terrible happens.
  */
-fun <Item : IItem<out RecyclerView.ViewHolder>> FastAdapter<Item>.getSelectExtension(): SelectExtension<Item> {
+fun <Item : IItem<RecyclerView.ViewHolder>> FastAdapter<Item>.getSelectExtension(): SelectExtension<Item> {
     return this.getOrCreateExtension(SelectExtension::class.java as Class<IAdapterExtension<Item>>) as SelectExtension<Item>
 }
 
 /**
  * Created by mikepenz on 04/06/2017.
  */
-class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fastAdapter: FastAdapter<Item>) :
+class SelectExtension<Item : IItem<out  RecyclerView.ViewHolder>>(private val fastAdapter: FastAdapter<Item>) :
         IAdapterExtension<Item> {
 
     // if enabled we will select the item via a notifyItemChanged -> will animate with the Animator

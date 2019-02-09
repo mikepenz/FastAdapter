@@ -31,12 +31,12 @@ public class StickyHeaderAdapter<Item extends IItem<RecyclerView.ViewHolder>> ex
 
         //in our sample we want a separate header per first letter of our items
         //this if is not necessary for your code, we only use it as this sticky header is reused for different item implementations
-        if (item instanceof SimpleItem && ((SimpleItem) item).header != null) {
-            return ((SimpleItem) item).header.charAt(0);
-        } else if (item instanceof SimpleSubItem && ((SimpleSubItem) item).header != null) {
-            return ((SimpleSubItem) item).header.charAt(0);
-        } else if (item instanceof SimpleSubExpandableItem && ((SimpleSubExpandableItem) item).header != null) {
-            return ((SimpleSubExpandableItem) item).header.charAt(0);
+        if (item instanceof SimpleItem && ((SimpleItem) item).getHeader() != null) {
+            return ((SimpleItem) item).getHeader().charAt(0);
+        } else if (item instanceof SimpleSubItem && ((SimpleSubItem) item).getHeader() != null) {
+            return ((SimpleSubItem) item).getHeader().charAt(0);
+        } else if (item instanceof SimpleSubExpandableItem && ((SimpleSubExpandableItem) item).getHeader() != null) {
+            return ((SimpleSubExpandableItem) item).getHeader().charAt(0);
         }
         return -1;
     }
@@ -54,15 +54,15 @@ public class StickyHeaderAdapter<Item extends IItem<RecyclerView.ViewHolder>> ex
         TextView textView = (TextView) holder.itemView;
 
         IItem item = getItem(position);
-        if (item instanceof SimpleItem && ((SimpleItem) item).header != null) {
+        if (item instanceof SimpleItem && ((SimpleItem) item).getHeader() != null) {
             //based on the position we set the headers text
-            textView.setText(String.valueOf(((SimpleItem) item).header.charAt(0)));
-        } else if (item instanceof SimpleSubItem && ((SimpleSubItem) item).header != null) {
+            textView.setText(String.valueOf(((SimpleItem) item).getHeader().charAt(0)));
+        } else if (item instanceof SimpleSubItem && ((SimpleSubItem) item).getHeader() != null) {
             //based on the position we set the headers text
-            textView.setText(String.valueOf(((SimpleSubItem) item).header.charAt(0)));
-        } else if (item instanceof SimpleSubExpandableItem && ((SimpleSubExpandableItem) item).header != null) {
+            textView.setText(String.valueOf(((SimpleSubItem) item).getHeader().charAt(0)));
+        } else if (item instanceof SimpleSubExpandableItem && ((SimpleSubExpandableItem) item).getHeader() != null) {
             //based on the position we set the headers text
-            textView.setText(String.valueOf(((SimpleSubExpandableItem) item).header.charAt(0)));
+            textView.setText(String.valueOf(((SimpleSubExpandableItem) item).getHeader().charAt(0)));
         }
         holder.itemView.setBackgroundColor(getRandomColor());
     }

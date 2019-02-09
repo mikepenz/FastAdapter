@@ -22,9 +22,9 @@ public class FastScrollIndicatorAdapter<Item extends IItem<RecyclerView.ViewHold
     @Override
     public Character getCharacterForElement(int position) {
         IItem item = getItem(position);
-        if (item instanceof SimpleSubItem && ((SimpleSubItem) item).name != null) {
+        if (item instanceof SimpleSubItem && ((SimpleSubItem) item).getName() != null) {
             //based on the position we set the headers text
-            return ((SimpleSubItem) item).name.getText().charAt(0);
+            return ((SimpleSubItem) item).getName().getText().charAt(0);
         }
         return ' ';
     }

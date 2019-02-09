@@ -74,7 +74,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
 
         //configure our fastAdapter
         fastAdapter.setOnClickListener((v, adapter, item, position) -> {
-            Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
+            Toast.makeText(v.getContext(), (item).getName().getText(v.getContext()), Toast.LENGTH_LONG).show();
             return false;
         });
 
@@ -82,7 +82,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
         itemAdapter.getItemFilter().setFilterPredicate((item, constraint) -> {
             //return true if we should filter it out
             //return false to keep it
-            return item.name.getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
+            return item.getName().getText().toString().toLowerCase().contains(constraint.toString().toLowerCase());
         });
 
         itemAdapter.getItemFilter().setItemFilterListener(this);
@@ -182,7 +182,7 @@ public class SimpleItemListActivity extends AppCompatActivity implements ItemTou
 
     @Override
     public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-        DragDropUtil.onMove(itemAdapter, oldPosition, newPosition);  // change position
+        DragDropUtil.INSTANCE.onMove(itemAdapter, oldPosition, newPosition);  // change position
         return true;
     }
 

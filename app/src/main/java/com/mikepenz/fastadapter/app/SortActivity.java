@@ -91,7 +91,7 @@ public class SortActivity extends AppCompatActivity {
 
         //configure our fastAdapter
         fastAdapter.setOnClickListener((v, adapter, item, position) -> {
-            Toast.makeText(v.getContext(), (item).name.getText(v.getContext()),
+            Toast.makeText(v.getContext(), (item).getName().getText(v.getContext()),
                     Toast.LENGTH_LONG).show();
             return false;
         });
@@ -256,7 +256,7 @@ public class SortActivity extends AppCompatActivity {
     private class AlphabetComparatorAscending implements Comparator<SimpleItem>, Serializable {
         @Override
         public int compare(SimpleItem lhs, SimpleItem rhs) {
-            return lhs.name.getText().toString().compareTo(rhs.name.getText().toString());
+            return lhs.getName().getText().toString().compareTo(rhs.getName().getText().toString());
         }
     }
 
@@ -266,7 +266,7 @@ public class SortActivity extends AppCompatActivity {
     private class AlphabetComparatorDescending implements Comparator<SimpleItem>, Serializable {
         @Override
         public int compare(SimpleItem lhs, SimpleItem rhs) {
-            return rhs.name.getText().toString().compareTo(lhs.name.getText().toString());
+            return rhs.getName().getText().toString().compareTo(lhs.getName().getText().toString());
         }
     }
 }

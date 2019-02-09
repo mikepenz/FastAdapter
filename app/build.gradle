@@ -120,8 +120,8 @@ dependencies {
     implementation 'com.github.turing-tech:MaterialScrollBar:13.3.1'
 
     //https://github.com/JakeWharton/butterknife
-    implementation 'com.jakewharton:butterknife:9.0.0-rc2'
-    kapt 'com.jakewharton:butterknife-compiler:9.0.0-rc2'
+    implementation 'com.jakewharton:butterknife:10.0.0'
+    kapt 'com.jakewharton:butterknife-compiler:10.0.0'
 
     //used to load the images in the ImageListSample
     //https://github.com/bumptech/glide
