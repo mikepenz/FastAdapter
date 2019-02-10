@@ -20,8 +20,9 @@ import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.listeners.OnClickListener
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl
+import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
-import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
+import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
 import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sort.*
 import java.io.Serializable
@@ -133,9 +134,9 @@ class SortActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.sort, menu)
-        menu.findItem(R.id.item_sort_random).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_wrap_text).color(Color.BLACK).actionBar()
-        menu.findItem(R.id.item_sort_asc).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_sort_asc).color(Color.BLACK).actionBar()
-        menu.findItem(R.id.item_sort_desc).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_sort_desc).color(Color.BLACK).actionBar()
+        menu.findItem(R.id.item_sort_random).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_wrap_text).color(IconicsColor.colorInt(Color.BLACK)).actionBar()
+        menu.findItem(R.id.item_sort_asc).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_sort_asc).color(IconicsColor.colorInt(Color.BLACK)).actionBar()
+        menu.findItem(R.id.item_sort_desc).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_sort_desc).color(IconicsColor.colorInt(Color.BLACK)).actionBar()
         return true
     }
 

@@ -12,9 +12,10 @@ import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.items.RealmSampleUserItem
 import com.mikepenz.fastadapter.listeners.OnClickListener
+import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
+import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
 import com.mikepenz.itemanimators.AlphaInAnimator
-import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.mikepenz.materialize.MaterializeBuilder
 import io.realm.Realm
 import io.realm.RealmChangeListener
@@ -97,7 +98,7 @@ class RealmActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.menu_add, menu)
-        menu.findItem(R.id.item_add).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_plus_square).color(Color.BLACK).actionBar()
+        menu.findItem(R.id.item_add).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_plus_square).color(IconicsColor.colorInt(Color.BLACK)).actionBar()
         return true
     }
 

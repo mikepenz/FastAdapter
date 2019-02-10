@@ -24,8 +24,10 @@ import com.mikepenz.fastadapter.listeners.OnClickListener
 import com.mikepenz.fastadapter.swipe.SimpleSwipeCallback
 import com.mikepenz.fastadapter.swipe_drag.SimpleSwipeDragCallback
 import com.mikepenz.fastadapter.utils.DragDropUtil
+import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
-import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
+import com.mikepenz.iconics.IconicsSize
+import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
 import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
@@ -94,12 +96,12 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
         //and add swipe as well
         val leaveBehindDrawableLeft = IconicsDrawable(this)
                 .icon(MaterialDesignIconic.Icon.gmi_delete)
-                .color(Color.WHITE)
-                .sizeDp(24)
+                .color(IconicsColor.colorInt(Color.WHITE))
+                .size(IconicsSize.dp(24))
         val leaveBehindDrawableRight = IconicsDrawable(this)
                 .icon(MaterialDesignIconic.Icon.gmi_archive)
-                .color(Color.WHITE)
-                .sizeDp(24)
+                .color(IconicsColor.colorInt(Color.WHITE))
+                .size(IconicsSize.dp(24))
 
         touchCallback = SimpleSwipeDragCallback(
                 this,
@@ -147,7 +149,7 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
         inflater.inflate(R.menu.search, menu)
 
         //search icon
-        menu.findItem(R.id.search).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_search).color(Color.BLACK).actionBar()
+        menu.findItem(R.id.search).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_search).color(IconicsColor.colorInt(Color.BLACK)).actionBar()
 
         val searchView = menu.findItem(R.id.search).actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

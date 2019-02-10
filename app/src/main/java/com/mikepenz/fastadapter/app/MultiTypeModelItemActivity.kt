@@ -63,7 +63,7 @@ class MultiTypeModelItemActivity : AppCompatActivity() {
         rv.adapter = fastAdapter
 
         //order fonts by their name
-        val mFonts = ArrayList(Iconics.getRegisteredFonts(this))
+        val mFonts = ArrayList(Iconics.registeredFonts)
         mFonts.sortWith(Comparator { object1, object2 -> object1.fontName.compareTo(object2.fontName) })
 
         //add all icons of all registered Fonts to the list

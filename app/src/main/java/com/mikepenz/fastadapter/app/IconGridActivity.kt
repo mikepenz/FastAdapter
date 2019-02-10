@@ -63,11 +63,11 @@ class IconGridActivity : AppCompatActivity() {
         rv.adapter = fastItemAdapter
 
         //order fonts by their name
-        val mFonts = ArrayList(Iconics.getRegisteredFonts(this))
+        val mFonts = ArrayList(Iconics.registeredFonts)
         mFonts.sortWith(Comparator { object1, object2 -> object1.fontName.compareTo(object2.fontName) })
 
         //add all icons of all registered Fonts to the list
-        val items = ArrayList<SimpleSubExpandableItem>(Iconics.getRegisteredFonts(this).size)
+        val items = ArrayList<SimpleSubExpandableItem>(Iconics.registeredFonts.size)
         for ((count, font) in mFonts.withIndex()) {
             //we set the identifier from the count here, as I need a stable ID in the sample to showcase the state restore
             val expandableItem = SimpleSubExpandableItem()

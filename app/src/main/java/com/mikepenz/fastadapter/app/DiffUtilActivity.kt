@@ -12,9 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
+import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
+import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
 import com.mikepenz.itemanimators.AlphaInAnimator
-import com.mikepenz.material_design_iconic_typeface_library.MaterialDesignIconic
 import com.mikepenz.materialize.MaterializeBuilder
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -74,8 +75,8 @@ class DiffUtilActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.refresh, menu)
-        menu.findItem(R.id.item_refresh).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_refresh).color(Color.BLACK).actionBar()
-        menu.findItem(R.id.item_refresh_async).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_refresh_sync).color(Color.BLACK).actionBar()
+        menu.findItem(R.id.item_refresh).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_refresh).color(IconicsColor.colorInt(Color.BLACK)).actionBar()
+        menu.findItem(R.id.item_refresh_async).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_refresh_sync).color(IconicsColor.colorInt(Color.BLACK)).actionBar()
         return true
     }
 
