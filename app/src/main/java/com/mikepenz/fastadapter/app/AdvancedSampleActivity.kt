@@ -61,7 +61,7 @@ class AdvancedSampleActivity : AppCompatActivity() {
         //create our adapters
         mHeaderAdapter = items()
         mItemAdapter = items<IItem<out RecyclerView.ViewHolder>>()
-        val stickyHeaderAdapter = StickyHeaderAdapter<IItem<RecyclerView.ViewHolder>>()
+        val stickyHeaderAdapter = StickyHeaderAdapter<IItem<out RecyclerView.ViewHolder>>()
 
         //we also want the expandable feature
 
@@ -110,7 +110,6 @@ class AdvancedSampleActivity : AppCompatActivity() {
         mActionModeHelper = ActionModeHelper(mFastAdapter, R.menu.cab, ActionBarCallBack())
 
         //get our recyclerView and do basic setup
-        val rv = findViewById<RecyclerView>(R.id.rv)
         rv.layoutManager = LinearLayoutManager(this)
         rv.itemAnimator = DefaultItemAnimator()
         rv.adapter = stickyHeaderAdapter.wrap(mFastAdapter)

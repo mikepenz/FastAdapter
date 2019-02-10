@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
-import androidx.appcompat.widget.Toolbar
 import androidx.core.view.LayoutInflaterCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +29,7 @@ import com.mikepenz.iconics.context.IconicsLayoutInflater
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialize.MaterializeBuilder
 import com.mikepenz.materialize.util.UIUtils
+import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
 class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
@@ -49,11 +49,6 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
-        // get RecyclerView
-        val rv = findViewById<RecyclerView>(R.id.rv)
-
-        // Handle Toolbar
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.sample_collapsible)
 

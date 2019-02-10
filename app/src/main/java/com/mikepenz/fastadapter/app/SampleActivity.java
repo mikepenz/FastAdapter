@@ -173,7 +173,7 @@ public class SampleActivity extends AppCompatActivity {
         //if we do this. the first added items will be animated :D
         new Handler().postDelayed(() -> {
             //add some dummy data
-            mItemAdapter.add(ImageDummyData.getSimpleImageItems());
+            mItemAdapter.add(ImageDummyData.INSTANCE.getSimpleImageItems());
 
             //restore selections (this has to be done after the items were added
             mFastAdapter.withSavedInstanceState(savedInstanceState);
@@ -204,7 +204,7 @@ public class SampleActivity extends AppCompatActivity {
         //handle the menu item click
         switch (item.getItemId()) {
             case R.id.item_add:
-                mItemAdapter.add(firstVisiblePosition + 1, ImageDummyData.getDummyItem());
+                mItemAdapter.add(firstVisiblePosition + 1, ImageDummyData.INSTANCE.getDummyItem());
                 return true;
             case R.id.item_change:
                 for (Integer pos : selectExtension.getSelections()) {

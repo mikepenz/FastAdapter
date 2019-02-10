@@ -6,21 +6,19 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
-import com.mikepenz.fastadapter.app.items.RadioButtonSampleItem
+import com.mikepenz.fastadapter.app.dummy.ImageDummyData
+import com.mikepenz.fastadapter.app.items.ImageItem
 import com.mikepenz.fastadapter.listeners.OnClickListener
-import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sample.*
-import java.util.*
 
-class RadioButtonSampleActivity : AppCompatActivity() {
-
+class ImageListActivity : AppCompatActivity() {
     //save our FastAdapter
-    private lateinit var fastItemAdapter: FastItemAdapter<RadioButtonSampleItem>
-    private lateinit var selectExtension: SelectExtension<RadioButtonSampleItem>
+    private lateinit var fastItemAdapter: FastItemAdapter<ImageItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -29,56 +27,45 @@ class RadioButtonSampleActivity : AppCompatActivity() {
 
         // Handle Toolbar
         setSupportActionBar(toolbar)
+        supportActionBar?.setTitle(R.string.sample_image_list)
 
         //style our ui
         MaterializeBuilder().withActivity(this).build()
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = FastItemAdapter()
-        selectExtension = SelectExtension(fastItemAdapter)
-        fastItemAdapter.addExtension(selectExtension)
-        selectExtension.isSelectable = true
 
         //configure our fastAdapter
-        fastItemAdapter.onClickListener = object : OnClickListener<RadioButtonSampleItem> {
-            override fun onClick(v: View?, adapter: IAdapter<RadioButtonSampleItem>, item: RadioButtonSampleItem, position: Int): Boolean {
-                v?.let {
-                    Toast.makeText(v.context, item.name?.getText(v.context), Toast.LENGTH_LONG).show()
-                }
+        fastItemAdapter.onClickListener = object : OnClickListener<ImageItem> {
+            override fun onClick(v: View?, adapter: IAdapter<ImageItem>, item: ImageItem, position: Int): Boolean {
+                v ?: return false
+                Toast.makeText(v.context, item.mName, Toast.LENGTH_SHORT).show()
                 return false
             }
-
-        }
-        fastItemAdapter.onPreClickListener = object : OnClickListener<RadioButtonSampleItem> {
-            override fun onClick(v: View?, adapter: IAdapter<RadioButtonSampleItem>, item: RadioButtonSampleItem, position: Int): Boolean {
-                // consume otherwise radio/checkbox will be deselected
-                return true
-            }
         }
 
-        fastItemAdapter.addEventHook(RadioButtonSampleItem.RadioButtonClickEvent())
-
-        //get our recyclerView and do basic setup
-        rv.layoutManager = LinearLayoutManager(this)
+        //find out how many columns we display
+        val columns = resources.getInteger(R.integer.wall_splash_columns)
+        if (columns == 1) {
+            //linearLayoutManager for one column
+            rv.layoutManager = LinearLayoutManager(this)
+        } else {
+            //gridLayoutManager for more than one column ;)
+            rv.layoutManager = GridLayoutManager(this, columns)
+        }
         rv.itemAnimator = DefaultItemAnimator()
         rv.adapter = fastItemAdapter
 
         //fill with some sample data
-        var x = 0
-        val items = ArrayList<RadioButtonSampleItem>()
-        for (s in ALPHABET) {
-            val count = Random().nextInt(20)
-            for (i in 1..count) {
-                val item = RadioButtonSampleItem().withName("$s Test $x")
-                item.identifier = (100 + x).toLong()
-                items.add(item)
-                x++
-            }
-        }
-        fastItemAdapter.add(items)
+        fastItemAdapter.add(ImageDummyData.imageItems)
 
         //restore selections (this has to be done after the items were added
         fastItemAdapter.withSavedInstanceState(savedInstanceState)
+
+        //a custom OnCreateViewHolder listener class which is used to create the viewHolders
+        //we define the listener for the imageLovedContainer here for better performance
+        //you can also define the listener within the items bindView method but performance is better if you do it like this
+        fastItemAdapter.addEventHook(ImageItem.ImageItemHeartClickEvent())
 
         //set the back arrow in the toolbar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -96,15 +83,10 @@ class RadioButtonSampleActivity : AppCompatActivity() {
         //handle the click on the back arrow click
         return when (item.itemId) {
             android.R.id.home -> {
-                Toast.makeText(applicationContext, "selections = " + selectExtension.selections, Toast.LENGTH_LONG).show()
                 onBackPressed()
                 true
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    companion object {
-        private val ALPHABET = arrayOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z")
     }
 }

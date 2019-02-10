@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.items.CheckBoxSampleItem
@@ -60,10 +59,9 @@ class CheckBoxSampleActivity : AppCompatActivity() {
         fastItemAdapter.addEventHook(CheckBoxSampleItem.CheckBoxClickEvent())
 
         //get our recyclerView and do basic setup
-        val recyclerView = findViewById<RecyclerView>(R.id.rv)
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.adapter = fastItemAdapter
+        rv.layoutManager = LinearLayoutManager(this)
+        rv.itemAnimator = DefaultItemAnimator()
+        rv.adapter = fastItemAdapter
 
         //fill with some sample data
         var x = 0

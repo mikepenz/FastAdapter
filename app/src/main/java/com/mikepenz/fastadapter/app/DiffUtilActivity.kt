@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
@@ -50,7 +49,6 @@ class DiffUtilActivity : AppCompatActivity() {
         fastItemAdapter = FastItemAdapter()
 
         //get our recyclerView and do basic setup
-        val rv = findViewById<RecyclerView>(R.id.rv)
         rv.layoutManager = LinearLayoutManager(this)
         rv.itemAnimator = AlphaInAnimator()
         rv.adapter = fastItemAdapter
