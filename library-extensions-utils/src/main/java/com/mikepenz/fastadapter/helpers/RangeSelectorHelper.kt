@@ -180,33 +180,3 @@ class RangeSelectorHelper<Item : IItem<out RecyclerView.ViewHolder>>(private val
         protected val BUNDLE_LAST_LONG_PRESS = "bundle_last_long_press"
     }
 }
-/**
- * will take care to save the long pressed index
- * or to select all items in the range between the current long pressed item and the last long pressed item
- *
- * @param index the index of the long pressed item
- * @return true, if the long press was handled
- */
-/**
- * selects all items in a range, from and to indizes are inclusive
- *
- * @param from   the from index
- * @param to     the to index
- * @param select true, if the provided range should be selected, false otherwise
- */
-/**
- * add the values to the bundle for saveInstanceState
- *
- * @param savedInstanceState If the activity is being re-initialized after
- * previously being shut down then this Bundle contains the data it most
- * recently supplied in Note: Otherwise it is null.
- * @return the passed bundle with the newly added data
- */
-/**
- * restore the index of the last long pressed index
- *
- * @param savedInstanceState If the activity is being re-initialized after
- * previously being shut down then this Bundle contains the data it most
- * recently supplied in Note: Otherwise it is null.
- * @return this
- */

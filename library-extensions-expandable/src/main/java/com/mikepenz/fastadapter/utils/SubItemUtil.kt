@@ -8,6 +8,7 @@ import com.mikepenz.fastadapter.expandable.ExpandableExtension
 import com.mikepenz.fastadapter.select.SelectExtension
 import java.util.*
 
+
 /**
  * Created by flisar on 15.09.2016.
  */
@@ -237,8 +238,6 @@ object SubItemUtil {
         // Modifying list is O(1)
         val selectedItems = LinkedList(selectExtension.selectedItems)
 
-        //        Log.d("DELETE", "selectedItems: " + selectedItems.size());
-
         // we delete item per item from the adapter directly or from the parent
         // if keepEmptyHeaders is false, we add empty headers to the selected items set via the iterator, so that they are processed in the loop as well
         var item: IItem<*>
@@ -249,54 +248,47 @@ object SubItemUtil {
         val it = selectedItems.listIterator()
         while (it.hasNext()) {
             item = it.next()
-
             pos = fastAdapter.getPosition(item)
 
             // search for parent - if we find one, we remove the item from the parent's subitems directly
             parent = getParent(item)
             if (parent != null) {
-                val subItems = parent.subItems ?: emptyList<IItem<*>>()
-
                 parentPos = fastAdapter.getPosition(parent)
-                // val success = parent.subItems!!.remove(item)
-                //                Log.d("DELETE", "success=" + success + " | deletedId=" + item.getIdentifier() + " | parentId=" + parent.getIdentifier() + " (sub items: " + ((IExpandable) parent).getSubItems().size() + ") | parentPos=" + parentPos);
+                val subItems = parent.subItems
 
-                // check if parent is expanded and notify the adapter about the removed item, if necessary (only if parent is visible)
-                if (parentPos != -1 && parent.isExpanded) {
-                    expandableExtension.notifyAdapterSubItemsChanged(parentPos, subItems.size + 1)
-                }
-
-                // if desired, notify the parent about its changed items (only if parent is visible!)
-                if (parentPos != -1 && notifyParent) {
-                    expanded = parent.isExpanded
-                    fastAdapter.notifyAdapterItemChanged(parentPos)
-                    // expand the item again if it was expanded before calling notifyAdapterItemChanged
-                    if (expanded) {
-                        expandableExtension.expand(parentPos)
+                subItems?.let { subItems ->
+                    subItems.remove(item)
+                    // check if parent is expanded and notify the adapter about the removed item, if necessary (only if parent is visible)
+                    if (parentPos != -1 && parent.isExpanded) {
+                        expandableExtension.notifyAdapterSubItemsChanged(parentPos, subItems.size + 1)
                     }
-                }
 
-                deleted.add(item)
+                    // if desired, notify the parent about its changed items (only if parent is visible!)
+                    if (parentPos != -1 && notifyParent) {
+                        expanded = parent.isExpanded
+                        fastAdapter.notifyAdapterItemChanged(parentPos)
+                        // expand the item again if it was expanded before calling notifyAdapterItemChanged
+                        if (expanded) {
+                            expandableExtension.expand(parentPos)
+                        }
+                    }
 
-                if (deleteEmptyHeaders && subItems.isEmpty()) {
-                    it.add(parent)
-                    it.previous()
+                    deleted.add(item)
+
+                    if (deleteEmptyHeaders && subItems.size == 0) {
+                        it.add(parent)
+                        it.previous()
+                    }
                 }
             } else if (pos != -1) {
                 // if we did not find a parent, we remove the item from the adapter
-                //val adapter = fastAdapter.getAdapter(pos)
-                //var success = false
-                //if (adapter is IItemAdapter<*, *>) {
-                //    success = adapter.remove(pos) != null
-                //}
-                //val isHeader = item is IExpandable<*> && item.subItems != null
-                //                Log.d("DELETE", "success=" + success + " | deletedId=" + item.getIdentifier() + "(" + (isHeader ? "EMPTY HEADER" : "ITEM WITHOUT HEADER") + ")");
+                val adapter = fastAdapter.getAdapter(pos)
+                if (adapter is IItemAdapter<*, *>) {
+                    adapter.remove(pos)
+                }
                 deleted.add(item)
             }
         }
-
-        //        Log.d("DELETE", "deleted (incl. empty headers): " + deleted.size());
-
         return deleted
     }
 
@@ -339,11 +331,7 @@ object SubItemUtil {
             parent = getParent(item)
             if (parent != null) {
                 parentPos = fastAdapter.getPosition(parent)
-
                 val subItems = parent.subItems ?: emptyList<IItem<*>>()
-                //val success = parent.subItems!!.remove(item)
-                //                Log.d("DELETE", "success=" + success + " | deletedId=" + item.getIdentifier() + " | parentId=" + parent.getIdentifier() + " (sub items: " + ((IExpandable) parent).getSubItems().size() + ") | parentPos=" + parentPos);
-
                 // check if parent is expanded and notify the adapter about the removed item, if necessary (only if parent is visible)
                 if (parentPos != -1 && parent.isExpanded) {
                     expandableExtension.notifyAdapterSubItemsChanged(parentPos, subItems.size + 1)
@@ -375,14 +363,9 @@ object SubItemUtil {
                         fastAdapter.notifyAdapterItemRemoved(pos)
                     }
                 }
-                //val isHeader = item is IExpandable<*> && item.subItems != null
-                //                Log.d("DELETE", "success=" + success + " | deletedId=" + item.getIdentifier() + "(" + (isHeader ? "EMPTY HEADER" : "ITEM WITHOUT HEADER") + ")");
                 deleted.add(item)
             }
         }
-
-        //        Log.d("DELETE", "deleted (incl. empty headers): " + deleted.size());
-
         return deleted
     }
 
