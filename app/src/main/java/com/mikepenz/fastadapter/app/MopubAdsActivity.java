@@ -80,7 +80,7 @@ public class MopubAdsActivity extends AppCompatActivity implements OnClickListen
 
     @Override
     public boolean onClick(View v, IAdapter<LetterItem> adapter, @NonNull LetterItem item, int position) {
-        Toast.makeText(this, "Item pressed " + item.letter + " at position " + position, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "Item pressed " + item.getLetter() + " at position " + position, Toast.LENGTH_SHORT).show();
         return false;
     }
 

@@ -108,9 +108,9 @@ class RangeSelectorHelper<Item : IItem<out RecyclerView.ViewHolder>>(private val
      * @param skipHeaders true, if you do not want to process headers, false otherwise
      */
     @JvmOverloads
-    fun selectRange(from: Int, to: Int, select: Boolean, skipHeaders: Boolean = false) {
-        var from = from
-        var to = to
+    fun selectRange(_from: Int, _to: Int, select: Boolean, skipHeaders: Boolean = false) {
+        var from = _from
+        var to = _to
         if (from > to) {
             val temp = from
             from = to

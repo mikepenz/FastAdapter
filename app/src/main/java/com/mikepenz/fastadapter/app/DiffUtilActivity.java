@@ -118,14 +118,14 @@ public class DiffUtilActivity extends AppCompatActivity {
 
     private void setData() {
         List<SimpleItem> items = createData();
-        FastAdapterDiffUtil.set(fastItemAdapter.getItemAdapter(), items);
+        FastAdapterDiffUtil.INSTANCE.set(fastItemAdapter.getItemAdapter(), items);
     }
 
     private void setDataAsync() {
         disposables.add(Single.fromCallable(() -> createData())
-                .map(simpleItems -> FastAdapterDiffUtil.calculateDiff(fastItemAdapter.getItemAdapter(), simpleItems)).subscribeOn(Schedulers.io())
+                .map(simpleItems -> FastAdapterDiffUtil.INSTANCE.calculateDiff(fastItemAdapter.getItemAdapter(), simpleItems)).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(result -> FastAdapterDiffUtil.set(fastItemAdapter.getItemAdapter(), result)));
+                .subscribe(result -> FastAdapterDiffUtil.INSTANCE.set(fastItemAdapter.getItemAdapter(), result)));
     }
 
     private List<SimpleItem> createData() {

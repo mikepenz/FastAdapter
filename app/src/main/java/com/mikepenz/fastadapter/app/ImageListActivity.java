@@ -40,7 +40,7 @@ public class ImageListActivity extends AppCompatActivity {
 
         //configure our fastAdapter
         mFastItemAdapter.setOnClickListener((v, adapter, item, position) -> {
-            Toast.makeText(v.getContext(), item.mName, Toast.LENGTH_SHORT).show();
+            Toast.makeText(v.getContext(), item.getMName(), Toast.LENGTH_SHORT).show();
             return false;
         });
 

@@ -111,8 +111,12 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
         }
 
         // provide a custom title provider that even shows the count of sub items
-        mActionModeHelper = ActionModeHelper<IItem<out RecyclerView.ViewHolder>>(fastItemAdapter, R.menu.cab, ActionBarCallBack())
-                .withTitleProvider { selected -> selected.toString() + "/" + SubItemUtil.countItems(fastItemAdapter.itemAdapter, false) }
+        mActionModeHelper = ActionModeHelper(fastItemAdapter, R.menu.cab, ActionBarCallBack())
+                .withTitleProvider(object : ActionModeHelper.ActionModeTitleProvider {
+                    override fun getTitle(selected: Int): String {
+                        return selected.toString() + "/" + SubItemUtil.countItems(fastItemAdapter.itemAdapter, false)
+                    }
+                })
 
         // this will take care of selecting range of items via long press on the first and afterwards on the last item
         mRangeSelectorHelper = RangeSelectorHelper(fastItemAdapter)

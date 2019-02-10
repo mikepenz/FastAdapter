@@ -6,7 +6,6 @@ import androidx.annotation.StringRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.drag.IDraggable
 import com.mikepenz.fastadapter.items.AbstractItem
@@ -16,7 +15,7 @@ import com.mikepenz.materialdrawer.holder.StringHolder
 /**
  * Created by Mattias on 2016-02-15.
  */
-class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable<SwipeableItem, IItem<*>>, IDraggable {
+class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable, IDraggable {
 
     var name: StringHolder? = null
     var description: StringHolder? = null
@@ -28,7 +27,7 @@ class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable<Swipe
 
     var swipedDirection: Int = 0
     var swipedAction: Runnable? = null
-    var swipeable = true
+    override var isSwipeable = true
     override var isDraggable = true
 
     /**
@@ -67,12 +66,8 @@ class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable<Swipe
         return this
     }
 
-    override fun isSwipeable(): Boolean {
-        return swipeable
-    }
-
-    override fun withIsSwipeable(swipeable: Boolean): SwipeableItem {
-        this.swipeable = swipeable
+    fun withIsSwipeable(swipeable: Boolean): SwipeableItem {
+        this.isSwipeable = swipeable
         return this
     }
 

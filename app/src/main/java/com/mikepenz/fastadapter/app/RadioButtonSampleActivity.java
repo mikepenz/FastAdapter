@@ -50,7 +50,7 @@ public class RadioButtonSampleActivity extends AppCompatActivity {
 
         //configure our fastAdapter
         fastItemAdapter.setOnClickListener((v, adapter, item, position) -> {
-            Toast.makeText(v.getContext(), (item).name.getText(v.getContext()), Toast.LENGTH_LONG).show();
+            Toast.makeText(v.getContext(), (item).getName().getText(v.getContext()), Toast.LENGTH_LONG).show();
             return false;
         });
 
