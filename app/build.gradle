@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
-apply plugin: 'realm-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'realm-android'
 //wrap with try and catch so the build is working even if the signing stuff is missing
 try {
     apply from: '../../../signing.gradle'
@@ -168,6 +168,6 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "io.realm:realm-gradle-plugin:4.1.1"
+        classpath "io.realm:realm-gradle-plugin:5.9.0"
     }
 }

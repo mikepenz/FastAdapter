@@ -2,6 +2,8 @@ package com.mikepenz.fastadapter.app
 
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import android.os.Message
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
@@ -40,6 +42,19 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
     //drag & drop
     private lateinit var touchCallback: SimpleDragCallback
     private lateinit var touchHelper: ItemTouchHelper
+
+    private val deleteHandler = Handler {
+        val item = it.obj as SwipeableItem
+
+        item.swipedAction = null
+        val position12 = fastItemAdapter.getAdapterPosition(item)
+        if (position12 != RecyclerView.NO_POSITION) {
+            //this sample uses a filter. If a filter is used we should use the methods provided by the filter (to make sure filter and normal state is updated)
+            fastItemAdapter.itemFilter.remove(position12)
+        }
+
+        true
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -192,18 +207,12 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
 
         // This can vary depending on direction but remove & archive simulated here both results in
         // removal from list
-        val removeRunnable = {
-            item.swipedAction = null
-            val position12 = fastItemAdapter.getAdapterPosition(item)
-            if (position12 != RecyclerView.NO_POSITION) {
-                //this sample uses a filter. If a filter is used we should use the methods provided by the filter (to make sure filter and normal state is updated)
-                fastItemAdapter.itemFilter.remove(position12)
-            }
-        }
-        rv.postDelayed(removeRunnable, 3000)
+        val message = Random().nextInt()
+        deleteHandler.sendMessageDelayed(Message.obtain().apply { what = message; obj = item }, 3000)
 
         item.swipedAction = Runnable {
-            rv.removeCallbacks(removeRunnable)
+            deleteHandler.removeMessages(message)
+
             item.swipedDirection = 0
             val position1 = fastItemAdapter.getAdapterPosition(item)
             if (position1 != RecyclerView.NO_POSITION) {

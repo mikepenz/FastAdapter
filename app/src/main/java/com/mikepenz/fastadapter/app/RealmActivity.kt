@@ -122,7 +122,7 @@ class RealmActivity : AppCompatActivity() {
                         //Remove the change listener
                         userItems.removeChangeListener(this)
                         //Store the primary key to get access from a other thread
-                        val newPrimaryKey = userItems.last()?.identifier ?: 0 + 1
+                        val newPrimaryKey = (userItems.last()?.identifier ?: 0) + 1
                         mRealm.executeTransactionAsync { realm ->
                             val newUser = realm.createObject(RealmSampleUserItem::class.java, newPrimaryKey)
                             newUser.withName("Sample Realm Element $newPrimaryKey")
