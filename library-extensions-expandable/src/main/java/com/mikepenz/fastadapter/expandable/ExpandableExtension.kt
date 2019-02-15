@@ -15,7 +15,8 @@ import java.util.*
  * Extension method to retrieve or create the ExpandableExtension from the current FastAdapter
  * This will return a non null variant and fail
  */
-fun <Item : IItem<out RecyclerView.ViewHolder>> FastAdapter<Item>.getExpandableExtension(): ExpandableExtension<Item> {
+fun <Item : IItem<*>> FastAdapter<Item>.getExpandableExtension(): ExpandableExtension<Item> {
+    ExpandableExtension.Companion.toString() // enforces the vm to lead in the companion object
     return this.getOrCreateExtension(ExpandableExtension::class.java as Class<IAdapterExtension<Item>>) as ExpandableExtension<Item>
 }
 

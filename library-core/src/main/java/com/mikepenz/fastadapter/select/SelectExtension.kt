@@ -14,7 +14,8 @@ import java.util.*
  * Extension method to retrieve or create the SelectExtension from the current FastAdapter.
  * This will return a non null variant and fail if something terrible happens.
  */
-fun <Item : IItem<RecyclerView.ViewHolder>> FastAdapter<Item>.getSelectExtension(): SelectExtension<Item> {
+fun <Item : IItem<*>> FastAdapter<Item>.getSelectExtension(): SelectExtension<Item> {
+    SelectExtension.Companion.toString() // enforces the vm to lead in the companion object
     return this.getOrCreateExtension(SelectExtension::class.java as Class<IAdapterExtension<Item>>) as SelectExtension<Item>
 }
 
