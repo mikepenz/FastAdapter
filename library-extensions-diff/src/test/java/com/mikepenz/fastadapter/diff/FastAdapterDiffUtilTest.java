@@ -89,7 +89,7 @@ public class FastAdapterDiffUtilTest {
     public void test(List<TestItem> original, List<TestItem> adjusted) {
         itemAdapter.set(original);
 
-        FastAdapterDiffUtil.set(itemAdapter, adjusted);
+        FastAdapterDiffUtil.INSTANCE.set(itemAdapter, adjusted);
 
         Assert.assertEquals(adjusted.size(), itemAdapter.getAdapterItemCount());
 
