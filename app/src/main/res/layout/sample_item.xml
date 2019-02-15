@@ -5,10 +5,10 @@
     android:layout_height="@dimen/material_drawer_item_primary"
     android:gravity="center_vertical|start"
     android:orientation="vertical"
-    android:paddingEnd="@dimen/material_drawer_vertical_padding"
+    android:paddingStart="@dimen/material_drawer_vertical_padding"
     android:paddingLeft="@dimen/material_drawer_vertical_padding"
-    android:paddingRight="@dimen/material_drawer_vertical_padding"
-    android:paddingStart="@dimen/material_drawer_vertical_padding">
+    android:paddingEnd="@dimen/material_drawer_vertical_padding"
+    android:paddingRight="@dimen/material_drawer_vertical_padding">
 
     <TextView
         android:id="@+id/material_drawer_name"

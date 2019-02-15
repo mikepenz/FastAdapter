@@ -1,6 +1,6 @@
 package com.mikepenz.fastadapter
 
-import androidx.recyclerview.widget.RecyclerView
+import android.support.v7.widget.RecyclerView
 
 /**
  * Created by mikepenz on 27.12.15.

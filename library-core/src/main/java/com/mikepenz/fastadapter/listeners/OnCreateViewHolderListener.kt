@@ -1,8 +1,7 @@
 package com.mikepenz.fastadapter.listeners
 
-import androidx.recyclerview.widget.RecyclerView
+import android.support.v7.widget.RecyclerView
 import android.view.ViewGroup
-
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
 

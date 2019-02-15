@@ -1,11 +1,11 @@
 package com.mikepenz.fastadapter.items
 
 import android.content.Context
+import android.support.annotation.CallSuper
+import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.CallSuper
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IItem
 import java.util.*
 

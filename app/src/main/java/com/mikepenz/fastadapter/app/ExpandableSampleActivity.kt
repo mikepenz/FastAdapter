@@ -1,20 +1,19 @@
 package com.mikepenz.fastadapter.app
 
 import android.os.Bundle
+import android.support.v7.app.AppCompatActivity
+import android.support.v7.widget.DefaultItemAnimator
+import android.support.v7.widget.LinearLayoutManager
+import android.support.v7.widget.RecyclerView
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.LayoutInflaterCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
-import com.mikepenz.fastadapter.expandable.ExpandableExtension
-import com.mikepenz.fastadapter.select.SelectExtension
-import com.mikepenz.iconics.context.IconicsLayoutInflater2
-import com.mikepenz.itemanimators.SlideDownAlphaAnimator
+import com.mikepenz.fastadapter.expandable.getExpandableExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
@@ -22,13 +21,12 @@ import java.util.concurrent.atomic.AtomicLong
 
 class ExpandableSampleActivity : AppCompatActivity() {
     //save our FastAdapter
-    private lateinit var fastItemAdapter: FastItemAdapter<IItem<out RecyclerView.ViewHolder>>
+    private lateinit var fastAdapter: FastAdapter<IItem<out RecyclerView.ViewHolder>>
+    private lateinit var itemAdapter: ItemAdapter<IItem<out RecyclerView.ViewHolder>>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        //as we use an icon from Android-Iconics via xml we add the IconicsLayoutInflater
-        //https://github.com/mikepenz/Android-Iconics
-        LayoutInflaterCompat.setFactory2(layoutInflater, IconicsLayoutInflater2(delegate))
+
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
@@ -40,17 +38,18 @@ class ExpandableSampleActivity : AppCompatActivity() {
         MaterializeBuilder().withActivity(this).build()
 
         //create our FastAdapter
-        fastItemAdapter = FastItemAdapter()
+        itemAdapter = ItemAdapter()
+        fastAdapter = FastAdapter.with(itemAdapter)
 
-        fastItemAdapter.getOrCreateExtension<ExpandableExtension<IItem<*>>>(ExpandableExtension::class.java)
-        val selectExtension = fastItemAdapter.getOrCreateExtension<SelectExtension<IItem<*>>>(SelectExtension::class.java) as SelectExtension<*>
+        fastAdapter.getExpandableExtension()
+        val selectExtension = fastAdapter.getSelectExtension()
         selectExtension.isSelectable = true
         //expandableExtension.setOnlyOneExpandedItem(true);
 
         //get our recyclerView and do basic setup
         rv.layoutManager = LinearLayoutManager(this)
-        rv.itemAnimator = SlideDownAlphaAnimator()
-        rv.adapter = fastItemAdapter
+        rv.itemAnimator = DefaultItemAnimator()
+        rv.adapter = fastAdapter
 
         //fill with some sample data
         val items = ArrayList<IItem<out RecyclerView.ViewHolder>>()
@@ -95,10 +94,10 @@ class ExpandableSampleActivity : AppCompatActivity() {
             parent.subItems = subItems
             items.add(parent)
         }
-        fastItemAdapter.add(items)
+        itemAdapter.add(items)
 
         //restore selections (this has to be done after the items were added
-        fastItemAdapter.withSavedInstanceState(savedInstanceState)
+        fastAdapter.withSavedInstanceState(savedInstanceState)
 
         //set the back arrow in the toolbar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -108,7 +107,7 @@ class ExpandableSampleActivity : AppCompatActivity() {
     override fun onSaveInstanceState(_outState: Bundle?) {
         var outState = _outState
         //add the values which need to be saved from the adapter to the bundle
-        outState = fastItemAdapter.saveInstanceState(outState)
+        outState = fastAdapter.saveInstanceState(outState)
         super.onSaveInstanceState(outState)
     }
 

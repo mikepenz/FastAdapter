@@ -1,10 +1,10 @@
 package com.mikepenz.fastadapter.adapters
 
+import android.support.v7.widget.RecyclerView
 import com.mikepenz.fastadapter.IInterceptor
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.IItemList
 
-import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created by mikepenz on 27.12.15.
@@ -15,8 +15,8 @@ class ItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : ModelAdapter<Item
     constructor() : super(IInterceptor.DEFAULT as IInterceptor<Item, Item>)
 
     constructor(itemList: IItemList<Item>) : super(
-        itemList,
-        IInterceptor.DEFAULT as IInterceptor<Item, Item>
+            itemList,
+            IInterceptor.DEFAULT as IInterceptor<Item, Item>
     )
 
     companion object {

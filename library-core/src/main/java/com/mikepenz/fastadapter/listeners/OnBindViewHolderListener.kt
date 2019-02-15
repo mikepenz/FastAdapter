@@ -1,6 +1,6 @@
 package com.mikepenz.fastadapter.listeners
 
-import androidx.recyclerview.widget.RecyclerView
+import android.support.v7.widget.RecyclerView
 
 interface OnBindViewHolderListener {
     /**

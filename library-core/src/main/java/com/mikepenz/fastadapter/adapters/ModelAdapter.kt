@@ -1,6 +1,6 @@
 package com.mikepenz.fastadapter.adapters
 
-import androidx.recyclerview.widget.RecyclerView
+import android.support.v7.widget.RecyclerView
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.utils.AdapterPredicate
 import com.mikepenz.fastadapter.utils.DefaultItemList
@@ -14,11 +14,11 @@ import java.util.Arrays.asList
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  */
 open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
-    //the items handled and managed by this item
-    /**
-     * @return the `IItemList` implementation used by this `ModelAdapter`
-     */
-    val itemList: IItemList<Item>, var interceptor: IInterceptor<Model, Item>
+        //the items handled and managed by this item
+        /**
+         * @return the `IItemList` implementation used by this `ModelAdapter`
+         */
+        val itemList: IItemList<Item>, var interceptor: IInterceptor<Model, Item>
 ) : AbstractAdapter<Item>(), IItemAdapter<Model, Item> {
 
 
@@ -86,8 +86,8 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
         get() = itemList.items
 
     constructor(interceptor: IInterceptor<Model, Item>) : this(
-        DefaultItemListImpl<Item>(),
-        interceptor
+            DefaultItemListImpl<Item>(),
+            interceptor
     )
 
     /**
@@ -189,9 +189,9 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @return this
      */
     operator fun set(
-        list: List<Model>,
-        resetFilter: Boolean,
-        adapterNotifier: IAdapterNotifier?
+            list: List<Model>,
+            resetFilter: Boolean,
+            adapterNotifier: IAdapterNotifier?
     ): ModelAdapter<Model, Item> {
         val items = intercept(list)
         return setInternal(items, resetFilter, adapterNotifier)
@@ -207,9 +207,9 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @return this
      */
     fun setInternal(
-        items: List<Item>,
-        resetFilter: Boolean,
-        adapterNotifier: IAdapterNotifier?
+            items: List<Item>,
+            resetFilter: Boolean,
+            adapterNotifier: IAdapterNotifier?
     ): ModelAdapter<Model, Item> {
         if (isUseIdDistributor) {
             idDistributor.checkIds(items)
@@ -422,10 +422,10 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
     fun removeByIdentifier(identifier: Long): ModelAdapter<Model, Item> {
         recursive(object : AdapterPredicate<Item> {
             override fun apply(
-                lastParentAdapter: IAdapter<Item>,
-                lastParentPosition: Int,
-                item: Item,
-                position: Int
+                    lastParentAdapter: IAdapter<Item>,
+                    lastParentPosition: Int,
+                    item: Item,
+                    position: Int
             ): Boolean {
                 if (identifier == item.identifier) {
                     //if it's a subitem remove it from the parent
@@ -454,8 +454,8 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @return Triple&lt;Boolean, IItem, Integer&gt; The first value is true (it is always not null), the second contains the item and the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
      */
     fun recursive(
-        predicate: AdapterPredicate<Item>,
-        stopOnMatch: Boolean
+            predicate: AdapterPredicate<Item>,
+            stopOnMatch: Boolean
     ): Triple<Boolean, Item, Int> {
         fastAdapter?.let { fastAdapter ->
             val preItemCount = fastAdapter.getPreItemCountByOrder(order)
@@ -468,11 +468,11 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
                 if (item != null) {
                     relativeInfo.adapter?.let { adapter ->
                         if (predicate.apply(
-                                adapter,
-                                globalPosition,
-                                item,
-                                globalPosition
-                            ) && stopOnMatch
+                                        adapter,
+                                        globalPosition,
+                                        item,
+                                        globalPosition
+                                ) && stopOnMatch
                         ) {
                             return Triple(true, item, globalPosition)
                         }
@@ -480,11 +480,11 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
                     (item as? IExpandable<*>?)?.let { expandableItem ->
                         relativeInfo.adapter?.let { adapter ->
                             val res = FastAdapter.recursiveSub(
-                                adapter,
-                                globalPosition,
-                                expandableItem,
-                                predicate,
-                                stopOnMatch
+                                    adapter,
+                                    globalPosition,
+                                    expandableItem,
+                                    predicate,
+                                    stopOnMatch
                             )
                             if (res.first && stopOnMatch) {
                                 return res

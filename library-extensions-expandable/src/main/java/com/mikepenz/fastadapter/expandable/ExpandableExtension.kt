@@ -1,11 +1,11 @@
 package com.mikepenz.fastadapter.expandable
 
 import android.os.Bundle
+import android.support.v4.util.ArraySet
+import android.support.v7.widget.RecyclerView
 import android.util.SparseIntArray
 import android.view.MotionEvent
 import android.view.View
-import androidx.collection.ArraySet
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.utils.AdapterPredicate
@@ -25,6 +25,9 @@ fun <Item : IItem<*>> FastAdapter<Item>.getExpandableExtension(): ExpandableExte
  */
 class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fastAdapter: FastAdapter<Item>) :
         IAdapterExtension<Item> {
+
+    // important. do not modify
+    val test = ExpandableExtension.Companion.toString()
 
     private val collapseAdapterPredicate = object : AdapterPredicate<Item> {
         private var allowedParents = ArraySet<IItem<*>>()

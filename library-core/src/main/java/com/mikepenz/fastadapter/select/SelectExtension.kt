@@ -1,10 +1,10 @@
 package com.mikepenz.fastadapter.select
 
 import android.os.Bundle
+import android.support.v4.util.ArraySet
+import android.support.v7.widget.RecyclerView
 import android.view.MotionEvent
 import android.view.View
-import androidx.collection.ArraySet
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.utils.AdapterPredicate
@@ -22,7 +22,7 @@ fun <Item : IItem<*>> FastAdapter<Item>.getSelectExtension(): SelectExtension<It
 /**
  * Created by mikepenz on 04/06/2017.
  */
-class SelectExtension<Item : IItem<out  RecyclerView.ViewHolder>>(private val fastAdapter: FastAdapter<Item>) :
+class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fastAdapter: FastAdapter<Item>) :
         IAdapterExtension<Item> {
 
     // if enabled we will select the item via a notifyItemChanged -> will animate with the Animator

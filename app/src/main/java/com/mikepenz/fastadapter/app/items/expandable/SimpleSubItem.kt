@@ -1,25 +1,17 @@
 package com.mikepenz.fastadapter.app.items.expandable
 
-import android.graphics.Color
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.TextView
-import androidx.annotation.StringRes
-import androidx.core.view.ViewCompat
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IExpandable
 import com.mikepenz.fastadapter.app.R
-import com.mikepenz.fastadapter.drag.IDraggable
 import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem
-import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils
-import com.mikepenz.materialdrawer.holder.StringHolder
 
-open class SimpleSubItem : AbstractExpandableItem<SimpleSubItem.ViewHolder>(), IDraggable, IExpandable<SimpleSubItem.ViewHolder> {
+open class SimpleSubItem : AbstractExpandableItem<SimpleSubItem.ViewHolder>(), IExpandable<SimpleSubItem.ViewHolder> {
 
     var header: String? = null
-    var name: StringHolder? = null
-    var description: StringHolder? = null
-
-    override var isDraggable = true
+    var name: String? = null
+    var description: String? = null
 
     /**
      * defines the type defining this item. must be unique. preferably an id
@@ -42,28 +34,13 @@ open class SimpleSubItem : AbstractExpandableItem<SimpleSubItem.ViewHolder>(), I
         return this
     }
 
-    fun withName(Name: String): SimpleSubItem {
-        this.name = StringHolder(Name)
-        return this
-    }
-
-    fun withName(@StringRes NameRes: Int): SimpleSubItem {
-        this.name = StringHolder(NameRes)
+    fun withName(name: String): SimpleSubItem {
+        this.name = name
         return this
     }
 
     fun withDescription(description: String): SimpleSubItem {
-        this.description = StringHolder(description)
-        return this
-    }
-
-    fun withDescription(@StringRes descriptionRes: Int): SimpleSubItem {
-        this.description = StringHolder(descriptionRes)
-        return this
-    }
-
-    fun withIsDraggable(draggable: Boolean): SimpleSubItem {
-        this.isDraggable = draggable
+        this.description = description
         return this
     }
 
@@ -80,17 +57,17 @@ open class SimpleSubItem : AbstractExpandableItem<SimpleSubItem.ViewHolder>(), I
 
         //set the background for the item
         holder.view.clearAnimation()
-        ViewCompat.setBackground(holder.view, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true))
+        //ViewCompat.setBackground(holder.view, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true))
         //set the text for the name
-        StringHolder.applyTo(name, holder.name)
+        holder.name.text = name
         //set the text for the description or hide
-        StringHolder.applyToOrHide(description, holder.description)
+        holder.description.text = description
     }
 
     override fun unbindView(holder: ViewHolder) {
         super.unbindView(holder)
-        holder.name?.text = null
-        holder.description?.text = null
+        holder.name.text = null
+        holder.description.text = null
     }
 
     override fun getViewHolder(v: View): ViewHolder {

@@ -1,20 +1,16 @@
 package com.mikepenz.fastadapter.app.items.expandable
 
-import android.graphics.Color
+import android.support.v4.view.ViewCompat
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.annotation.StringRes
-import androidx.core.view.ViewCompat
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.IClickable
 import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem
 import com.mikepenz.fastadapter.listeners.OnClickListener
-import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils
-import com.mikepenz.materialdrawer.holder.StringHolder
 
 /**
  * Created by mikepenz on 28.12.15.
@@ -22,8 +18,8 @@ import com.mikepenz.materialdrawer.holder.StringHolder
 open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableItem.ViewHolder>(), IClickable<SimpleSubExpandableItem>, ISubItem<SimpleSubExpandableItem.ViewHolder> {
 
     var header: String? = null
-    var name: StringHolder? = null
-    var description: StringHolder? = null
+    var name: String? = null
+    var description: String? = null
 
     private var mOnClickListener: OnClickListener<SimpleSubExpandableItem>? = null
 
@@ -86,23 +82,13 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
         return this
     }
 
-    fun withName(Name: String): SimpleSubExpandableItem {
-        this.name = StringHolder(Name)
-        return this
-    }
-
-    fun withName(@StringRes NameRes: Int): SimpleSubExpandableItem {
-        this.name = StringHolder(NameRes)
+    fun withName(name: String): SimpleSubExpandableItem {
+        this.name = name
         return this
     }
 
     fun withDescription(description: String): SimpleSubExpandableItem {
-        this.description = StringHolder(description)
-        return this
-    }
-
-    fun withDescription(@StringRes descriptionRes: Int): SimpleSubExpandableItem {
-        this.description = StringHolder(descriptionRes)
+        this.description = description
         return this
     }
 
@@ -119,11 +105,11 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
 
         //set the background for the item
         holder.view.clearAnimation()
-        ViewCompat.setBackground(holder.view, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true))
+        //ViewCompat.setBackground(holder.view, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true))
         //set the text for the name
-        StringHolder.applyTo(name, holder.name)
+        holder.name.text = name
         //set the text for the description or hide
-        StringHolder.applyToOrHide(description, holder.description)
+        holder.description.text = description
 
         if (subItems == null || subItems?.size == 0) {
             holder.icon?.visibility = View.GONE

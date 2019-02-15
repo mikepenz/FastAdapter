@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Definition for the Drawer Slider margin right -->
+    <dimen name="material_drawer_margin">0dp</dimen>
+    <!-- General padding value -->
+    <dimen name="material_drawer_padding">8dp</dimen>
+    <!-- General vertical padding values / 24dp for tablets -->
+    <dimen name="material_drawer_vertical_padding">16dp</dimen>
+
+
+    <!-- Definition for the primary item -->
+    <dimen name="material_drawer_item_primary">48dp</dimen>
+    <dimen name="material_drawer_item_primary_icon">56dp</dimen>
+    <dimen name="material_drawer_item_primary_icon_padding">12dp</dimen>
+    <dimen name="material_drawer_item_primary_icon_padding_right">32dp</dimen>
+    <dimen name="material_drawer_item_primary_text">14sp</dimen>
+    <dimen name="material_drawer_item_primary_description">14sp</dimen>
+    <dimen name="material_drawer_item_secondary_description">12sp</dimen>
+</resources>

@@ -18,6 +18,6 @@ interface IIdDistributor<Identifiable : IIdentifyable> {
     companion object {
 
         val DEFAULT: IIdDistributor<out IIdentifyable> =
-            DefaultIdDistributorImpl()
+                DefaultIdDistributorImpl()
     }
 }

@@ -1,13 +1,13 @@
 package com.mikepenz.fastadapter
 
 import android.os.Bundle
+import android.support.v4.util.ArrayMap
+import android.support.v7.widget.RecyclerView
 import android.util.Log
 import android.util.SparseArray
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
-import androidx.collection.ArrayMap
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.listeners.*

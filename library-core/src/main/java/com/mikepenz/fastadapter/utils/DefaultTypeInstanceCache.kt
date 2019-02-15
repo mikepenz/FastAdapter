@@ -1,8 +1,7 @@
 package com.mikepenz.fastadapter.utils
 
+import android.support.v7.widget.RecyclerView
 import android.util.SparseArray
-import androidx.recyclerview.widget.RecyclerView
-
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.ITypeInstanceCache
 
@@ -11,7 +10,7 @@ import com.mikepenz.fastadapter.ITypeInstanceCache
  */
 
 class DefaultTypeInstanceCache<Item : IItem<out RecyclerView.ViewHolder>> :
-    ITypeInstanceCache<Item> {
+        ITypeInstanceCache<Item> {
 
     // we remember all possible types so we can create a new view efficiently
     private val mTypeInstances = SparseArray<Item>()

@@ -1,6 +1,6 @@
 package com.mikepenz.fastadapter
 
-import androidx.recyclerview.widget.RecyclerView
+import android.support.v7.widget.RecyclerView
 
 /**
  * Created by mikepenz on 30.12.15.
@@ -11,11 +11,11 @@ interface IInterceptor<Element, Item> {
 
     companion object {
         val DEFAULT: IInterceptor<IItem<out RecyclerView.ViewHolder>, IItem<out RecyclerView.ViewHolder>> =
-            object :
-                IInterceptor<IItem<out RecyclerView.ViewHolder>, IItem<out RecyclerView.ViewHolder>> {
-                override fun intercept(element: IItem<out RecyclerView.ViewHolder>): IItem<out RecyclerView.ViewHolder>? {
-                    return element
+                object :
+                        IInterceptor<IItem<out RecyclerView.ViewHolder>, IItem<out RecyclerView.ViewHolder>> {
+                    override fun intercept(element: IItem<out RecyclerView.ViewHolder>): IItem<out RecyclerView.ViewHolder>? {
+                        return element
+                    }
                 }
-            }
     }
 }

@@ -1,12 +1,10 @@
 package com.mikepenz.fastadapter.listeners
 
+import android.support.v7.widget.RecyclerView
 import android.view.MotionEvent
 import android.view.View
-
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.IItem
-
-import androidx.recyclerview.widget.RecyclerView
 
 interface OnTouchListener<Item : IItem<out RecyclerView.ViewHolder>> {
     /**

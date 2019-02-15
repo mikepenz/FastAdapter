@@ -1,6 +1,6 @@
 package com.mikepenz.fastadapter
 
-import androidx.recyclerview.widget.RecyclerView
+import android.support.v7.widget.RecyclerView
 
 /**
  * Created by mikepenz on 27.12.15.
@@ -23,7 +23,7 @@ abstract class AbstractAdapter<Item : IItem<out RecyclerView.ViewHolder>> : IAda
      *
      * @param items
      */
-   override fun mapPossibleTypes(items: Iterable<Item>?) {
+    override fun mapPossibleTypes(items: Iterable<Item>?) {
         fastAdapter?.let { fastAdapter ->
             if (items != null) {
                 for (item in items) {

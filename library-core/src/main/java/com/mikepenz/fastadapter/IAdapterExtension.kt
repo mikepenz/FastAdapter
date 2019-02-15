@@ -1,10 +1,9 @@
 package com.mikepenz.fastadapter
 
 import android.os.Bundle
+import android.support.v7.widget.RecyclerView
 import android.view.MotionEvent
 import android.view.View
-
-import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created by mikepenz on 04/06/2017.
@@ -20,11 +19,11 @@ interface IAdapterExtension<Item : IItem<out RecyclerView.ViewHolder>> {
     fun onLongClick(v: View, pos: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean
 
     fun onTouch(
-        v: View,
-        event: MotionEvent,
-        position: Int,
-        fastAdapter: FastAdapter<Item>,
-        item: Item
+            v: View,
+            event: MotionEvent,
+            position: Int,
+            fastAdapter: FastAdapter<Item>,
+            item: Item
     ): Boolean
 
     fun notifyAdapterDataSetChanged()
