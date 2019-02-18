@@ -51,7 +51,7 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
                 }
             }
 
-            (item as IExpandable<*>).let { expandable ->
+            (item as? IExpandable<*>)?.let { expandable ->
                 if (expandable.isExpanded) {
                     expandable.isExpanded = false
 
