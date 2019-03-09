@@ -19,8 +19,6 @@ import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
 import com.mikepenz.fastadapter.expandable.ExpandableExtension
 import com.mikepenz.fastadapter.helpers.ActionModeHelper
-import com.mikepenz.fastadapter.listeners.OnClickListener
-import com.mikepenz.fastadapter.listeners.OnLongClickListener
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.iconics.context.IconicsLayoutInflater2
 import com.mikepenz.materialize.MaterializeBuilder
@@ -78,23 +76,17 @@ class AdvancedSampleActivity : AppCompatActivity() {
         selectExtension.multiSelect = true
         selectExtension.selectOnLongClick = true
 
-        mFastAdapter.onPreClickListener = object : OnClickListener<IItem<out RecyclerView.ViewHolder>> {
-            override fun onClick(v: View?, adapter: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, position: Int): Boolean {
-                //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
-                val res = mActionModeHelper?.onClick(item)
-                return res ?: false
-            }
+        mFastAdapter.onPreClickListener = { _: View?, _: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, _: Int ->
+            //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
+            val res = mActionModeHelper?.onClick(item)
+            res ?: false
         }
 
-        mFastAdapter.onPreLongClickListener = object : OnLongClickListener<IItem<out RecyclerView.ViewHolder>> {
-            override fun onLongClick(v: View, adapter: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, position: Int): Boolean {
-                //we do not want expandable items to be selected
-                if (item is IExpandable<*>) {
-                    if (item.subItems != null) {
-                        return true
-                    }
-                }
-
+        mFastAdapter.onPreLongClickListener = { _: View, _: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, position: Int ->
+            //we do not want expandable items to be selected
+            if (item is IExpandable<*> && item.subItems != null) {
+                true
+            } else {
                 //handle the longclick actions
                 val actionMode = mActionModeHelper?.onLongClick(this@AdvancedSampleActivity, position)
                 if (actionMode != null) {
@@ -102,7 +94,7 @@ class AdvancedSampleActivity : AppCompatActivity() {
                     findViewById<View>(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(this@AdvancedSampleActivity, R.attr.colorPrimary, R.color.material_drawer_primary))
                 }
                 //if we have no actionMode we do not consume the event
-                return actionMode != null
+                actionMode != null
             }
         }
 

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.items.RealmSampleUserItem
-import com.mikepenz.fastadapter.listeners.OnClickListener
 import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
@@ -45,12 +44,11 @@ class RealmActivity : AppCompatActivity() {
         mFastItemAdapter = FastItemAdapter()
 
         //configure our fastAdapter
-        mFastItemAdapter.onClickListener = object : OnClickListener<RealmSampleUserItem> {
-            override fun onClick(v: View?, adapter: IAdapter<RealmSampleUserItem>, item: RealmSampleUserItem, position: Int): Boolean {
-                v ?: return false
+        mFastItemAdapter.onClickListener = { v: View?, _: IAdapter<RealmSampleUserItem>, item: RealmSampleUserItem, _: Int ->
+            v?.let { v ->
                 Toast.makeText(v.context, item.name, Toast.LENGTH_SHORT).show()
-                return false
             }
+            false
         }
 
         //get our recyclerView and do basic setup

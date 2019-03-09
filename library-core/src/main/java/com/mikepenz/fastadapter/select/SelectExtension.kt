@@ -322,7 +322,7 @@ class SelectExtension<Item : IItem<out  RecyclerView.ViewHolder>>(private val fa
         selectionListener?.onSelectionChanged(item, true)
 
         if (fireEvent) {
-            fastAdapter.onClickListener?.onClick(null, adapter, item, position)
+            fastAdapter.onClickListener?.invoke(null, adapter, item, position)
         }
     }
 

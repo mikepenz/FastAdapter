@@ -18,8 +18,6 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.helpers.ActionModeHelper
 import com.mikepenz.fastadapter.helpers.UndoHelper
-import com.mikepenz.fastadapter.listeners.OnClickListener
-import com.mikepenz.fastadapter.listeners.OnLongClickListener
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialize.MaterializeBuilder
@@ -69,32 +67,27 @@ class MultiselectSampleActivity : AppCompatActivity() {
             }
         }
 
-        mFastAdapter.onPreClickListener = object : OnClickListener<SimpleItem> {
-            override fun onClick(v: View?, adapter: IAdapter<SimpleItem>, item: SimpleItem, position: Int): Boolean {
-                //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
-                val res = mActionModeHelper.onClick(item)
-                return res ?: false
-            }
+        mFastAdapter.onPreClickListener = { _: View?, _: IAdapter<SimpleItem>, item: SimpleItem, _: Int ->
+            //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
+            val res = mActionModeHelper.onClick(item)
+            res ?: false
         }
 
-        mFastAdapter.onClickListener = object : OnClickListener<SimpleItem> {
-            override fun onClick(v: View?, adapter: IAdapter<SimpleItem>, item: SimpleItem, position: Int): Boolean {
-                v ?: return false
+        mFastAdapter.onClickListener = { v: View?, _: IAdapter<SimpleItem>, _: SimpleItem, _: Int ->
+            if (v != null) {
                 Toast.makeText(v.context, "SelectedCount: " + selectExtension.selections.size + " ItemsCount: " + selectExtension.selectedItems.size, Toast.LENGTH_SHORT).show()
-                return false
             }
+            false
         }
 
-        mFastAdapter.onPreLongClickListener = object : OnLongClickListener<SimpleItem> {
-            override fun onLongClick(v: View, adapter: IAdapter<SimpleItem>, item: SimpleItem, position: Int): Boolean {
-                val actionMode = mActionModeHelper.onLongClick(this@MultiselectSampleActivity, position)
-                if (actionMode != null) {
-                    //we want color our CAB
-                    findViewById<View>(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(this@MultiselectSampleActivity, R.attr.colorPrimary, R.color.material_drawer_primary))
-                }
-                //if we have no actionMode we do not consume the event
-                return actionMode != null
+        mFastAdapter.onPreLongClickListener = { _: View, _: IAdapter<SimpleItem>, _: SimpleItem, position: Int ->
+            val actionMode = mActionModeHelper.onLongClick(this@MultiselectSampleActivity, position)
+            if (actionMode != null) {
+                //we want color our CAB
+                findViewById<View>(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(this@MultiselectSampleActivity, R.attr.colorPrimary, R.color.material_drawer_primary))
             }
+            //if we have no actionMode we do not consume the event
+            actionMode != null
         }
 
         //

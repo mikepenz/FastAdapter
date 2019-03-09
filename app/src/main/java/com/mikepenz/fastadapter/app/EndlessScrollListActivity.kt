@@ -24,7 +24,6 @@ import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
 import com.mikepenz.fastadapter.listeners.ItemFilterListener
-import com.mikepenz.fastadapter.listeners.OnClickListener
 import com.mikepenz.fastadapter.scroll.EndlessRecyclerOnScrollListener
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.ui.items.ProgressItem
@@ -70,14 +69,11 @@ class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFi
         fastItemAdapter.addAdapter(1, footerAdapter)
 
         //configure our fastAdapter
-        fastItemAdapter.onClickListener = object : OnClickListener<IItem<out RecyclerView.ViewHolder>> {
-            override fun onClick(v: View?, adapter: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, position: Int): Boolean {
-                v ?: return false
-                if (item is SimpleItem) {
-                    Toast.makeText(v.context, item.name?.getText(v.context), Toast.LENGTH_LONG).show()
-                }
-                return false
+        fastItemAdapter.onClickListener = { v: View?, _: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, _: Int ->
+            if (v != null && item is SimpleItem) {
+                Toast.makeText(v.context, item.name?.getText(v.context), Toast.LENGTH_LONG).show()
             }
+            false
         }
 
         //configure the itemAdapter

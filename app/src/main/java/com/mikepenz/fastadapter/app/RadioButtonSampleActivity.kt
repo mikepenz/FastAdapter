@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.items.RadioButtonSampleItem
-import com.mikepenz.fastadapter.listeners.OnClickListener
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sample.*
@@ -40,20 +39,14 @@ class RadioButtonSampleActivity : AppCompatActivity() {
         selectExtension.isSelectable = true
 
         //configure our fastAdapter
-        fastItemAdapter.onClickListener = object : OnClickListener<RadioButtonSampleItem> {
-            override fun onClick(v: View?, adapter: IAdapter<RadioButtonSampleItem>, item: RadioButtonSampleItem, position: Int): Boolean {
-                v?.let {
-                    Toast.makeText(v.context, item.name?.getText(v.context), Toast.LENGTH_LONG).show()
-                }
-                return false
+        fastItemAdapter.onClickListener = { v: View?, _: IAdapter<RadioButtonSampleItem>, item: RadioButtonSampleItem, _: Int ->
+            v?.let {
+                Toast.makeText(v.context, item.name?.getText(v.context), Toast.LENGTH_LONG).show()
             }
-
+            false
         }
-        fastItemAdapter.onPreClickListener = object : OnClickListener<RadioButtonSampleItem> {
-            override fun onClick(v: View?, adapter: IAdapter<RadioButtonSampleItem>, item: RadioButtonSampleItem, position: Int): Boolean {
-                // consume otherwise radio/checkbox will be deselected
-                return true
-            }
+        fastItemAdapter.onPreClickListener = { _: View?, _: IAdapter<RadioButtonSampleItem>, _: RadioButtonSampleItem, _: Int ->
+            true // consume otherwise radio/checkbox will be deselected
         }
 
         fastItemAdapter.addEventHook(RadioButtonSampleItem.RadioButtonClickEvent())

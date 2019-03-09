@@ -22,7 +22,6 @@ import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.items.SwipeableItem
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
-import com.mikepenz.fastadapter.listeners.OnClickListener
 import com.mikepenz.fastadapter.swipe.SimpleSwipeCallback
 import com.mikepenz.fastadapter.swipe_drag.SimpleSwipeDragCallback
 import com.mikepenz.fastadapter.utils.DragDropUtil
@@ -71,11 +70,9 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
         fastItemAdapter = FastItemAdapter()
 
         //configure our fastAdapter
-        fastItemAdapter.onClickListener = object : OnClickListener<SwipeableItem> {
-            override fun onClick(v: View?, adapter: IAdapter<SwipeableItem>, item: SwipeableItem, position: Int): Boolean {
-                Toast.makeText(this@SwipeListActivity, item.name?.getText(this@SwipeListActivity), Toast.LENGTH_LONG).show()
-                return false
-            }
+        fastItemAdapter.onClickListener = { _: View?, _: IAdapter<SwipeableItem>, item: SwipeableItem, _: Int ->
+            Toast.makeText(this@SwipeListActivity, item.name?.getText(this@SwipeListActivity), Toast.LENGTH_LONG).show()
+            false
         }
 
         //configure the itemAdapter

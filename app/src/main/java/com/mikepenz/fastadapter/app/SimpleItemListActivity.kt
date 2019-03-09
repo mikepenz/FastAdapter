@@ -22,7 +22,6 @@ import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
 import com.mikepenz.fastadapter.listeners.ItemFilterListener
-import com.mikepenz.fastadapter.listeners.OnClickListener
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.utils.DragDropUtil
 import com.mikepenz.iconics.IconicsColor
@@ -63,12 +62,11 @@ class SimpleItemListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilte
         selectExtension.isSelectable = true
 
         //configure our fastAdapter
-        fastAdapter.onClickListener = object : OnClickListener<SimpleItem> {
-            override fun onClick(v: View?, adapter: IAdapter<SimpleItem>, item: SimpleItem, position: Int): Boolean {
-                v ?: return false
+        fastAdapter.onClickListener = { v: View?, _: IAdapter<SimpleItem>, item: SimpleItem, _: Int ->
+            v?.let {
                 Toast.makeText(v.context, item.name?.getText(v.context), Toast.LENGTH_LONG).show()
-                return false
             }
+            false
         }
 
         //configure the itemAdapter

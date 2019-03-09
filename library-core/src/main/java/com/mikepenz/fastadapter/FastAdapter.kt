@@ -79,11 +79,11 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     var verboseLoggingEnabled = false
 
     // the listeners which can be hooked on an item
-    var onPreClickListener: OnClickListener<Item>? = null
-    var onClickListener: OnClickListener<Item>? = null
-    var onPreLongClickListener: OnLongClickListener<Item>? = null
-    var onLongClickListener: OnLongClickListener<Item>? = null
-    var onTouchListener: OnTouchListener<Item>? = null
+    var onPreClickListener: ((v: View?, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean)? = null
+    var onClickListener: ((v: View?, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean)? = null
+    var onPreLongClickListener: ((v: View, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean)? = null
+    var onLongClickListener: ((v: View, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean)? = null
+    var onTouchListener: ((v: View, event: MotionEvent, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean)? = null
 
     //the listeners for onCreateViewHolder or onBindViewHolder
     var onCreateViewHolderListener: OnCreateViewHolderListener<Item> = OnCreateViewHolderListenerImpl()
@@ -98,50 +98,17 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     /**
      * the ClickEventHook to hook onto the itemView of a viewholder
      */
-    //-------------------------
-    //-------------------------
-    //Convenient getters
-    //-------------------------
-    //-------------------------
-
-    /**
-     * @return the `ClickEventHook` which is attached by default (if not deactivated) via `withAttachDefaultListeners`
-     * @see .withAttachDefaultListeners
-     */
-    //on the very first we call the click listener from the item itself (if defined)
-    //first call the onPreClickListener which would allow to prevent executing of any following code, including selection
-    // handle our extensions
-    //before calling the global adapter onClick listener call the item specific onClickListener
-    //call the normal click listener after selection was handlded
     val viewClickListener: ClickEventHook<Item> = object : ClickEventHook<Item>() {
         override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<Item>, item: Item) {
             val adapter = fastAdapter.getAdapter(position)
             if (adapter != null && item.isEnabled) {
-                if ((item as? IClickable<Item>?)?.onPreItemClickListener?.onClick(
-                                v,
-                                adapter,
-                                item,
-                                position
-                        ) == true
-                ) return
-                if (fastAdapter.onPreClickListener?.onClick(
-                                v,
-                                adapter,
-                                item,
-                                position
-                        ) == true
-                ) return
+                if ((item as? IClickable<Item>?)?.onPreItemClickListener?.invoke(v, adapter, item, position) == true) return
+                if (fastAdapter.onPreClickListener?.invoke(v, adapter, item, position) == true) return
                 for (ext in fastAdapter.extensionsCache.values) {
                     if (ext.onClick(v, position, fastAdapter, item)) return
                 }
-                if ((item as? IClickable<Item>?)?.onItemClickListener?.onClick(
-                                v,
-                                adapter,
-                                item,
-                                position
-                        ) == true
-                ) return
-                if (fastAdapter.onClickListener?.onClick(v, adapter, item, position) == true) return
+                if ((item as? IClickable<Item>?)?.onItemClickListener?.invoke(v, adapter, item, position) == true) return
+                if (fastAdapter.onClickListener?.invoke(v, adapter, item, position) == true) return
             }
         }
     }
@@ -149,39 +116,15 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     /**
      * the LongClickEventHook to hook onto the itemView of a viewholder
      */
-    /**
-     * @return the `LongClickEventHook` which is attached by default (if not deactivated) via `withAttachDefaultListeners`
-     * @see .withAttachDefaultListeners
-     */
-    //first call the OnPreLongClickListener which would allow to prevent executing of any following code, including selection
-    // handle our extensions
-    //call the normal long click listener after selection was handled
     val viewLongClickListener: LongClickEventHook<Item> = object : LongClickEventHook<Item>() {
-        override fun onLongClick(
-                v: View,
-                position: Int,
-                fastAdapter: FastAdapter<Item>,
-                item: Item
-        ): Boolean {
+        override fun onLongClick(v: View, position: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean {
             val adapter = fastAdapter.getAdapter(position)
             if (adapter != null && item.isEnabled) {
-                if (fastAdapter.onPreLongClickListener?.onLongClick(
-                                v,
-                                adapter,
-                                item,
-                                position
-                        ) == true
-                ) return true
+                if (fastAdapter.onPreLongClickListener?.invoke(v, adapter, item, position) == true) return true
                 for (ext in fastAdapter.extensionsCache.values) {
                     if (ext.onLongClick(v, position, fastAdapter, item)) return true
                 }
-                if (fastAdapter.onLongClickListener?.onLongClick(
-                                v,
-                                adapter,
-                                item,
-                                position
-                        ) == true
-                ) return true
+                if (fastAdapter.onLongClickListener?.invoke(v, adapter, item, position) == true) return true
             }
             return false
         }
@@ -190,33 +133,15 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     /**
      * the TouchEventHook to hook onto the itemView of a viewholder
      */
-    /**
-     * @return the `TouchEventHook` which is attached by default (if not deactivated) via `withAttachDefaultListeners`
-     * @see .withAttachDefaultListeners
-     */
-    // handle our extensions
     val viewTouchListener: TouchEventHook<Item> = object : TouchEventHook<Item>() {
-        override fun onTouch(
-                v: View,
-                event: MotionEvent,
-                position: Int,
-                fastAdapter: FastAdapter<Item>,
-                item: Item
-        ): Boolean {
+        override fun onTouch(v: View, event: MotionEvent, position: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean {
             for (ext in fastAdapter.extensionsCache.values) {
                 if (ext.onTouch(v, event, position, fastAdapter, item)) return true
             }
             if (fastAdapter.onTouchListener != null) {
                 val adapter = fastAdapter.getAdapter(position)
                 if (adapter != null) {
-                    if (fastAdapter.onTouchListener?.onTouch(
-                                    v,
-                                    event,
-                                    adapter,
-                                    item,
-                                    position
-                            ) == true
-                    ) return true
+                    if (fastAdapter.onTouchListener?.invoke(v, event, adapter, item, position) == true) return true
                 }
             }
             return false
