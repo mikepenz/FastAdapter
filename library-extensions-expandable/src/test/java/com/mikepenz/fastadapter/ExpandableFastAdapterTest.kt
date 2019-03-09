@@ -1,20 +1,17 @@
 package com.mikepenz.fastadapter
 
 import android.os.Bundle
-
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.expandable.ExpandableExtension
+import com.mikepenz.fastadapter.expandable.getExpandableExtension
 import com.mikepenz.fastadapter.select.SelectExtension
-
+import com.mikepenz.fastadapter.select.getSelectExtension
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-
-import java.util.ArrayList
-
-import androidx.test.ext.junit.runners.AndroidJUnit4
-
-import org.assertj.core.api.Assertions.assertThat
+import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class ExpandableFastAdapterTest {
@@ -28,10 +25,8 @@ class ExpandableFastAdapterTest {
     fun setUp() {
         itemAdapter = ItemAdapter()
         adapter = FastAdapter.with<ExpandableTestItem, IAdapter<ExpandableTestItem>>(itemAdapter)
-        expandableExtension = ExpandableExtension(adapter)
-        selectExtension = SelectExtension(adapter)
-        adapter.addExtension<IAdapterExtension<ExpandableTestItem>>(expandableExtension)
-        adapter.addExtension<IAdapterExtension<ExpandableTestItem>>(selectExtension)
+        expandableExtension = adapter.getExpandableExtension()
+        selectExtension = adapter.getSelectExtension()
     }
 
     @Test
@@ -145,10 +140,8 @@ class ExpandableFastAdapterTest {
     @Throws(Exception::class)
     fun toggleNoneExpandable() {
         val itemAdapter = ItemAdapter<NoneExpandableTestItem>()
-        val fastAdapter =
-            FastAdapter.with<NoneExpandableTestItem, IAdapter<NoneExpandableTestItem>>(itemAdapter)
-        val expandableExtension = ExpandableExtension(fastAdapter)
-        fastAdapter.addExtension<IAdapterExtension<NoneExpandableTestItem>>(expandableExtension)
+        val fastAdapter = FastAdapter.with<NoneExpandableTestItem, IAdapter<NoneExpandableTestItem>>(itemAdapter)
+        val expandableExtension = fastAdapter.getExpandableExtension()
         val noneExpandableTestItems = ArrayList<NoneExpandableTestItem>()
         val item = NoneExpandableTestItem()
         item.identifier = 1

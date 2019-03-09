@@ -2,20 +2,22 @@ package com.mikepenz.fastadapter;
 
 import android.view.View;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.mikepenz.fastadapter.items.AbstractItem;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
-
-import androidx.recyclerview.widget.RecyclerView;
 
 /**
  * Created by fabianterhorst on 29.03.16.
  */
 public class ExpandableTestItem extends AbstractItem<ExpandableTestItem.ViewHolder> implements IExpandable<ExpandableTestItem.ViewHolder> {
 
-    private List<? extends ISubItem<?>> mSubItems;
+    private List<ISubItem<?>> mSubItems = new ArrayList<>();
     private IParentItem<?> mParent;
     private boolean mExpanded = false;
 
@@ -39,20 +41,20 @@ public class ExpandableTestItem extends AbstractItem<ExpandableTestItem.ViewHold
         mExpanded = expanded;
     }
 
+    @NotNull
     @Override
-    public List<? extends ISubItem<?>> getSubItems() {
+    public List<ISubItem<?>> getSubItems() {
         return mSubItems;
+    }
+
+    @Override
+    public void setSubItems(@NotNull List<ISubItem<?>> list) {
+        this.mSubItems = list;
     }
 
     @Override
     public boolean isAutoExpanding() {
         return true;
-    }
-
-
-    @Override
-    public void setSubItems(@Nullable List<? extends ISubItem<?>> subItems) {
-        this.mSubItems = subItems;
     }
 
     @Override

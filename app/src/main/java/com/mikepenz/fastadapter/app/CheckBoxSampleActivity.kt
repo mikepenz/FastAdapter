@@ -11,6 +11,7 @@ import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.items.CheckBoxSampleItem
 import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
@@ -34,8 +35,7 @@ class CheckBoxSampleActivity : AppCompatActivity() {
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = FastItemAdapter()
-        selectExtension = SelectExtension(fastItemAdapter)
-        fastItemAdapter.addExtension(selectExtension)
+        selectExtension = fastItemAdapter.getSelectExtension()
         selectExtension.isSelectable = true
 
         //configure our fastAdapter
