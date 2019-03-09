@@ -21,8 +21,8 @@ class IconItem : AbstractItem<IconItem.ViewHolder>(), IExpandable<IconItem.ViewH
     override var parent: IParentItem<*>? = null
     override var isExpanded: Boolean = false
 
-    override var subItems: MutableList<out ISubItem<*>>?
-        get() = null
+    override var subItems: MutableList<ISubItem<*>>
+        get() = mutableListOf()
         set(list) {
 
         }

@@ -86,13 +86,13 @@ class ExpandableSampleActivity : AppCompatActivity() {
                         subSubSubItem.withName("---- SubSubSubTest $iiii").identifier = identifier.getAndIncrement()
                         subSubSubItems.add(subSubSubItem)
                     }
-                    subSubItem.subItems = subSubSubItems
+                    subSubItem.subItems.addAll(subSubSubItems)
                     subSubItems.add(subSubItem)
                 }
-                subItem.subItems = subSubItems
+                subItem.subItems.addAll(subSubItems)
                 subItems.add(subItem)
             }
-            parent.subItems = subItems
+            parent.subItems.addAll(subItems)
             items.add(parent)
         }
         fastItemAdapter.add(items)

@@ -3,7 +3,6 @@ package com.mikepenz.fastadapter.adapters
 import android.widget.Filter
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.listeners.ItemFilterListener
 import com.mikepenz.fastadapter.select.SelectExtension
 import java.util.*
@@ -24,7 +23,7 @@ class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private val m
     var itemFilterListener: ItemFilterListener<Item>? = null
 
     //the filter predicate which is used in the ItemFilter
-    var filterPredicate: IItemAdapter.Predicate<Item>? = null
+    var filterPredicate: ((item: Item, constraint: CharSequence?) -> Boolean)? = null
 
     /**
      * helper method to get all selections from the ItemAdapter's original item list
@@ -102,7 +101,7 @@ class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private val m
             val filteredItems = filterPredicate?.let { filterPredicate ->
                 val filteredItems: MutableList<Item> = ArrayList()
                 originalItems?.forEach { item ->
-                    if (filterPredicate.filter(item, constraint)) {
+                    if (filterPredicate.invoke(item, constraint)) {
                         filteredItems.add(item)
                     }
                 }

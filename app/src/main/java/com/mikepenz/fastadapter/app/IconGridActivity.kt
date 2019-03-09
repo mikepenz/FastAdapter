@@ -79,7 +79,7 @@ class IconGridActivity : AppCompatActivity() {
                 iconItem.withIcon(font.getIcon(icon))
                 icons.add(iconItem)
             }
-            expandableItem.subItems = icons
+            expandableItem.subItems.addAll(icons)
             items.add(expandableItem)
         }
 

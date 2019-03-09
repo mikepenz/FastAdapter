@@ -166,7 +166,7 @@ class AdvancedSampleActivity : AppCompatActivity() {
 
                     subItems.add(subItem)
                 }
-                expandableItem.subItems = subItems
+                expandableItem.subItems.addAll(subItems)
                 items.add(expandableItem)
             } else {
                 val simpleSubItem = SimpleSubItem().withName("Test " + id.get()).withHeader(headers[i / 5])
