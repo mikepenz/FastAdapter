@@ -15,7 +15,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.IItemAdapter.Predicate
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter
@@ -77,14 +76,13 @@ class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFi
         }
 
         //configure the itemAdapter
-        fastItemAdapter.itemFilter.filterPredicate = object : Predicate<IItem<out RecyclerView.ViewHolder>> {
-            override fun filter(item: IItem<out RecyclerView.ViewHolder>, constraint: CharSequence?): Boolean {
-                if (item is SimpleItem) {
-                    //return true if we should filter it out
-                    return item.name?.text.toString().toLowerCase().contains(constraint.toString().toLowerCase())
-                }
+        fastItemAdapter.itemFilter.filterPredicate = { item: IItem<out RecyclerView.ViewHolder>, constraint: CharSequence? ->
+            if (item is SimpleItem) {
+                //return true if we should filter it out
+                item.name?.text.toString().toLowerCase().contains(constraint.toString().toLowerCase())
+            } else {
                 //return false to keep it
-                return false
+                false
             }
         }
 

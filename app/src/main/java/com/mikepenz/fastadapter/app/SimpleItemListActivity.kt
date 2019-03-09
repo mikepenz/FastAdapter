@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
 import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter
@@ -70,10 +69,8 @@ class SimpleItemListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilte
         }
 
         //configure the itemAdapter
-        itemAdapter.itemFilter.filterPredicate = object : IItemAdapter.Predicate<SimpleItem> {
-            override fun filter(item: SimpleItem, constraint: CharSequence?): Boolean {
-                return item.name?.text.toString().toLowerCase().contains(constraint.toString().toLowerCase())
-            }
+        itemAdapter.itemFilter.filterPredicate = { item: SimpleItem, constraint: CharSequence? ->
+            item.name?.text.toString().toLowerCase().contains(constraint.toString().toLowerCase())
         }
 
         itemAdapter.itemFilter.itemFilterListener = this
