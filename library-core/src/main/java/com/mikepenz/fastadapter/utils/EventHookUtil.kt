@@ -1,16 +1,11 @@
 package com.mikepenz.fastadapter.utils
 
-import androidx.recyclerview.widget.RecyclerView
 import android.view.View
-
+import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.R
-import com.mikepenz.fastadapter.listeners.ClickEventHook
-import com.mikepenz.fastadapter.listeners.CustomEventHook
-import com.mikepenz.fastadapter.listeners.EventHook
-import com.mikepenz.fastadapter.listeners.LongClickEventHook
-import com.mikepenz.fastadapter.listeners.TouchEventHook
+import com.mikepenz.fastadapter.listeners.*
 
 /**
  * binds the hooks to the viewHolder

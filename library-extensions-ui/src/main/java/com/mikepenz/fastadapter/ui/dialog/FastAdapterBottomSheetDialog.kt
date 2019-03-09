@@ -1,17 +1,14 @@
 package com.mikepenz.fastadapter_extensions.dialog
 
 import android.content.Context
-import com.google.android.material.bottomsheet.BottomSheetDialog
+import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.ViewGroup
-
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
-import com.mikepenz.fastadapter.listeners.OnLongClickListener
-import com.mikepenz.fastadapter.listeners.OnTouchListener
 
 /**
  * Created by fabianterhorst on 04.07.16.
@@ -23,7 +20,7 @@ class FastAdapterBottomSheetDialog<Item : IItem<out RecyclerView.ViewHolder>> : 
         private set
 
     var fastAdapter: FastAdapter<Item>? = null
-    var itemAdapter: ItemAdapter<Item>? = null
+    lateinit var itemAdapter: ItemAdapter<Item>
 
     constructor(context: Context) : super(context) {
         this.recyclerView = createRecyclerView()
@@ -41,8 +38,8 @@ class FastAdapterBottomSheetDialog<Item : IItem<out RecyclerView.ViewHolder>> : 
     private fun createRecyclerView(): RecyclerView {
         val recyclerView = RecyclerView(context)
         val params = RecyclerView.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
         )
         recyclerView.layoutParams = params
         setContentView(recyclerView)
@@ -50,37 +47,37 @@ class FastAdapterBottomSheetDialog<Item : IItem<out RecyclerView.ViewHolder>> : 
     }
 
     fun withFastItemAdapter(
-        fastAdapter: FastAdapter<Item>,
-        itemAdapter: ItemAdapter<Item>
+            fastAdapter: FastAdapter<Item>,
+            itemAdapter: ItemAdapter<Item>
     ): FastAdapterBottomSheetDialog<Item> {
         this.fastAdapter = fastAdapter
         this.itemAdapter = itemAdapter
-        recyclerView!!.adapter = this.fastAdapter
+        recyclerView?.adapter = this.fastAdapter
         return this
     }
 
     private fun initAdapterIfNeeded() {
-        if (fastAdapter == null || recyclerView!!.adapter == null) {
+        if (fastAdapter == null || recyclerView?.adapter == null) {
             itemAdapter = ItemAdapter.items()
-            fastAdapter = FastAdapter.with<Item, IAdapter<Item>>(itemAdapter!!)
-            recyclerView!!.adapter = fastAdapter
+            fastAdapter = FastAdapter.with<Item, IAdapter<Item>>(itemAdapter)
+            recyclerView?.adapter = fastAdapter
         }
     }
 
     fun withItems(items: List<Item>): FastAdapterBottomSheetDialog<Item> {
         initAdapterIfNeeded()
-        itemAdapter!!.set(items)
+        itemAdapter.set(items)
         return this
     }
 
     fun withItems(vararg items: Item): FastAdapterBottomSheetDialog<Item> {
         initAdapterIfNeeded()
-        itemAdapter!!.add(*items)
+        itemAdapter.add(*items)
         return this
     }
 
     fun withAdapter(adapter: FastAdapter<Item>): FastAdapterBottomSheetDialog<Item> {
-        this.recyclerView!!.adapter = adapter
+        this.recyclerView?.adapter = adapter
         return this
     }
 
@@ -90,7 +87,7 @@ class FastAdapterBottomSheetDialog<Item : IItem<out RecyclerView.ViewHolder>> : 
      * @param layoutManager LayoutManager to use
      */
     fun withLayoutManager(layoutManager: RecyclerView.LayoutManager): FastAdapterBottomSheetDialog<Item> {
-        this.recyclerView!!.layoutManager = layoutManager
+        this.recyclerView?.layoutManager = layoutManager
         return this
     }
 
@@ -101,7 +98,7 @@ class FastAdapterBottomSheetDialog<Item : IItem<out RecyclerView.ViewHolder>> : 
      * @param listener listener to set or null to clear
      */
     fun withOnScrollListener(listener: RecyclerView.OnScrollListener): FastAdapterBottomSheetDialog<Item> {
-        recyclerView!!.addOnScrollListener(listener)
+        recyclerView?.addOnScrollListener(listener)
         return this
     }
 
@@ -112,8 +109,8 @@ class FastAdapterBottomSheetDialog<Item : IItem<out RecyclerView.ViewHolder>> : 
      * that in [.onStart].
      */
     override fun show() {
-        if (recyclerView!!.layoutManager == null) {
-            recyclerView!!.layoutManager = LinearLayoutManager(context)
+        if (recyclerView?.layoutManager == null) {
+            recyclerView?.layoutManager = LinearLayoutManager(context)
         }
         initAdapterIfNeeded()
         super.show()

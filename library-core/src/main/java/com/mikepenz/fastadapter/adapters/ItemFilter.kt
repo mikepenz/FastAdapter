@@ -1,17 +1,12 @@
 package com.mikepenz.fastadapter.adapters
 
 import android.widget.Filter
-
+import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.listeners.ItemFilterListener
 import com.mikepenz.fastadapter.select.SelectExtension
-
-import java.util.ArrayList
-import java.util.HashSet
-
-import androidx.recyclerview.widget.RecyclerView
-
+import java.util.*
 import java.util.Arrays.asList
 
 /**

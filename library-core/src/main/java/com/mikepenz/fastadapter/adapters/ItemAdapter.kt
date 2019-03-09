@@ -1,10 +1,9 @@
 package com.mikepenz.fastadapter.adapters
 
+import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IInterceptor
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.IItemList
-
-import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created by mikepenz on 27.12.15.
