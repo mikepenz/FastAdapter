@@ -1,4 +1,4 @@
-package com.mikepenz.fastadapter_extensions.dialog
+package com.mikepenz.fastadapter.ui.dialog
 
 import android.content.Context
 import android.view.ViewGroup
