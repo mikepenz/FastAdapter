@@ -11,7 +11,7 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter
 import com.mikepenz.fastadapter.app.items.SimpleItem
-import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.materialize.MaterializeBuilder
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
 import kotlinx.android.synthetic.main.activity_sample.*
@@ -45,7 +45,7 @@ class StickyHeaderSampleActivity : AppCompatActivity() {
 
         //create our FastAdapter
         fastAdapter = FastAdapter.with(Arrays.asList(headerAdapter, itemAdapter))
-        val selectExtension = fastAdapter.getOrCreateExtension<SelectExtension<SimpleItem>>(SelectExtension::class.java) as SelectExtension<*>
+        val selectExtension = fastAdapter.getSelectExtension()
         selectExtension.isSelectable = true
 
         //configure our fastAdapter

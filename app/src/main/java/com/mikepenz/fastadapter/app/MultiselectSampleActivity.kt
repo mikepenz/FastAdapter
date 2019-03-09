@@ -19,6 +19,7 @@ import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.helpers.ActionModeHelper
 import com.mikepenz.fastadapter.helpers.UndoHelper
 import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialize.MaterializeBuilder
 import com.mikepenz.materialize.util.UIUtils
@@ -55,7 +56,7 @@ class MultiselectSampleActivity : AppCompatActivity() {
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
         mFastAdapter.setHasStableIds(true)
-        selectExtension = mFastAdapter.getOrCreateExtension(SelectExtension::class.java)!!
+        selectExtension = mFastAdapter.getSelectExtension()
         selectExtension.apply {
             isSelectable = true
             multiSelect = true

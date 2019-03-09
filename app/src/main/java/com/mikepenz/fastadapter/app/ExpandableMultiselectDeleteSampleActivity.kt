@@ -16,12 +16,15 @@ import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.ISelectionListener
 import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
 import com.mikepenz.fastadapter.app.items.HeaderSelectionItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
 import com.mikepenz.fastadapter.expandable.ExpandableExtension
+import com.mikepenz.fastadapter.expandable.getExpandableExtension
 import com.mikepenz.fastadapter.helpers.ActionModeHelper
 import com.mikepenz.fastadapter.helpers.RangeSelectorHelper
 import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.fastadapter.utils.SubItemUtil
 import com.mikepenz.iconics.context.IconicsLayoutInflater
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
@@ -32,7 +35,7 @@ import java.util.*
 
 class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
     //save our FastAdapter
-    private lateinit var fastItemAdapter: FastItemAdapter<IItem<out RecyclerView.ViewHolder>>
+    private lateinit var fastItemAdapter: GenericFastItemAdapter
     private lateinit var mExpandableExtension: ExpandableExtension<IItem<*>>
     private lateinit var mSelectExtension: SelectExtension<IItem<*>>
     private lateinit var mRangeSelectorHelper: RangeSelectorHelper<*>
@@ -55,8 +58,8 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
 
         //create our FastAdapter
         fastItemAdapter = FastItemAdapter()
-        mExpandableExtension = fastItemAdapter.getOrCreateExtension(ExpandableExtension::class.java)!!
-        mSelectExtension = fastItemAdapter.getOrCreateExtension(SelectExtension::class.java)!!
+        mExpandableExtension = fastItemAdapter.getExpandableExtension()
+        mSelectExtension = fastItemAdapter.getSelectExtension()
         mSelectExtension.isSelectable = true
         mSelectExtension.multiSelect = true
         mSelectExtension.selectOnLongClick = true

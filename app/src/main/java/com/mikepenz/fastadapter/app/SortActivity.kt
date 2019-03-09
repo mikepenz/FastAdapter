@@ -18,6 +18,7 @@ import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl
 import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
@@ -79,7 +80,7 @@ class SortActivity : AppCompatActivity() {
         itemListImpl = ComparableItemListImpl(comparator)
         itemAdapter = ItemAdapter(itemListImpl)
         fastAdapter = FastAdapter.with(itemAdapter)
-        selectExtension = fastAdapter.getOrCreateExtension<SelectExtension<SimpleItem>>(SelectExtension::class.java) as SelectExtension<SimpleItem>
+        selectExtension = fastAdapter.getSelectExtension()
         selectExtension.isSelectable = true
 
         //configure our fastAdapter

@@ -6,12 +6,11 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.LayoutInflaterCompat
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
 import com.mikepenz.fastadapter.app.items.IconItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem
-import com.mikepenz.fastadapter.expandable.ExpandableExtension
+import com.mikepenz.fastadapter.expandable.getExpandableExtension
 import com.mikepenz.iconics.Iconics
 import com.mikepenz.iconics.context.IconicsLayoutInflater2
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
@@ -22,7 +21,7 @@ import kotlin.Comparator
 
 class IconGridActivity : AppCompatActivity() {
     //save our FastAdapter
-    private lateinit var fastItemAdapter: FastItemAdapter<IItem<out RecyclerView.ViewHolder>>
+    private lateinit var fastItemAdapter: GenericFastItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -44,7 +43,7 @@ class IconGridActivity : AppCompatActivity() {
         fastItemAdapter = FastItemAdapter()
 
         //we want to have expandables
-        val expandableExtension = fastItemAdapter.getOrCreateExtension<ExpandableExtension<IItem<*>>>(ExpandableExtension::class.java) as ExpandableExtension<*>
+        val expandableExtension = fastItemAdapter.getExpandableExtension()
 
         //init our gridLayoutManager and configure RV
         val gridLayoutManager = GridLayoutManager(this, 3)

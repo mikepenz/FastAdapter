@@ -21,7 +21,7 @@ import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
 import com.mikepenz.fastadapter.listeners.ItemFilterListener
-import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.fastadapter.utils.DragDropUtil
 import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
@@ -57,7 +57,7 @@ class SimpleItemListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilte
 
         //create our FastAdapter which will manage everything
         fastAdapter = FastAdapter.with(itemAdapter)
-        val selectExtension = fastAdapter.getOrCreateExtension<SelectExtension<SimpleItem>>(SelectExtension::class.java) as SelectExtension<*>
+        val selectExtension = fastAdapter.getSelectExtension()
         selectExtension.isSelectable = true
 
         //configure our fastAdapter
