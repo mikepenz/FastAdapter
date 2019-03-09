@@ -11,15 +11,16 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.*
+import com.mikepenz.fastadapter.adapters.GenericItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
-import com.mikepenz.fastadapter.expandable.ExpandableExtension
+import com.mikepenz.fastadapter.expandable.getExpandableExtension
 import com.mikepenz.fastadapter.helpers.ActionModeHelper
-import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.iconics.context.IconicsLayoutInflater2
 import com.mikepenz.materialize.MaterializeBuilder
 import com.mikepenz.materialize.util.UIUtils
@@ -35,9 +36,9 @@ import java.util.concurrent.atomic.AtomicLong
 class AdvancedSampleActivity : AppCompatActivity() {
 
     //save our FastAdapter
-    private lateinit var mFastAdapter: FastAdapter<IItem<out RecyclerView.ViewHolder>>
+    private lateinit var mFastAdapter: GenericFastAdapter
     private lateinit var mHeaderAdapter: ItemAdapter<SimpleItem>
-    private lateinit var mItemAdapter: ItemAdapter<IItem<*>>
+    private lateinit var mItemAdapter: GenericItemAdapter
 
     private var mActionModeHelper: ActionModeHelper<IItem<out RecyclerView.ViewHolder>>? = null
 
@@ -58,17 +59,17 @@ class AdvancedSampleActivity : AppCompatActivity() {
 
         //create our adapters
         mHeaderAdapter = items()
-        mItemAdapter = items<IItem<out RecyclerView.ViewHolder>>()
+        mItemAdapter = items()
         val stickyHeaderAdapter = StickyHeaderAdapter<IItem<out RecyclerView.ViewHolder>>()
 
         //we also want the expandable feature
 
         //create our FastAdapter
         val adapters: Collection<ItemAdapter<out IItem<out RecyclerView.ViewHolder>>> = Arrays.asList(mHeaderAdapter, mItemAdapter)
-        mFastAdapter = FastAdapter.with<IItem<*>, ItemAdapter<out IItem<out RecyclerView.ViewHolder>>>(adapters)
+        mFastAdapter = FastAdapter.with(adapters)
 
-        mFastAdapter.getOrCreateExtension<ExpandableExtension<IItem<*>>>(ExpandableExtension::class.java)
-        val selectExtension = mFastAdapter.getOrCreateExtension<SelectExtension<IItem<*>>>(SelectExtension::class.java) as SelectExtension<*>
+        mFastAdapter.getExpandableExtension()
+        val selectExtension = mFastAdapter.getSelectExtension()
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things

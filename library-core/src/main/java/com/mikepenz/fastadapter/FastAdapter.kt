@@ -18,6 +18,11 @@ import com.mikepenz.fastadapter.utils.attachToView
 import java.util.*
 
 /**
+ * Kotlin type alias to simplify usage for an all accepting FastAdapter
+ */
+typealias GenericFastAdapter = FastAdapter<IItem<out RecyclerView.ViewHolder>>
+
+/**
  * The `FastAdapter` class is the core managing class of the `FastAdapter` library, it handles all `IAdapter` implementations, keeps track of the item types which can be displayed
  * and correctly provides the size and position and identifier information to the [RecyclerView].
  *
@@ -28,8 +33,8 @@ import java.util.*
  *
  * See the sample application for more details
  *
- * @param <Item> Defines the type of items this `FastAdapter` manages (in case of multiple different types, use `IItem`)
-</Item> */
+ * @param <Item> Defines the type of items this `FastAdapter` manages (in case of multiple different types, use `IItem`)</Item>
+ */
 open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 

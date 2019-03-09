@@ -4,7 +4,6 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.com_mikepenz_fastadapter_extensions_scroll.postOnRecyclerView
-import com.mikepenz.fastadapter.IInterceptor
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -144,7 +143,7 @@ class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
      * @return
      * @see .withNewItemsDeliveredTo
     </Item> */
-    fun <Item : IItem<out RecyclerView.ViewHolder>> withNewItemsDeliveredTo(itemAdapter: IItemAdapter<*, Item>, itemFactory: IInterceptor<Model, Item>): EndlessScrollHelper<Model> {
+    fun <Item : IItem<out RecyclerView.ViewHolder>> withNewItemsDeliveredTo(itemAdapter: IItemAdapter<*, Item>, itemFactory: (element: Model) -> Item?): EndlessScrollHelper<Model> {
         mOnNewItemsListener = DeliverToIItemAdapter(itemAdapter, itemFactory)
         return this
     }
@@ -172,7 +171,7 @@ class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
      * @param <Item>
      * @return
     </Item> */
-    fun <Item : IItem<out RecyclerView.ViewHolder>> withNewItemsDeliveredTo(itemAdapter: IItemAdapter<*, Item>, itemFactory: IInterceptor<Model, Item>, extraOnNewItemsListener: OnNewItemsListener<Model>): EndlessScrollHelper<Model> {
+    fun <Item : IItem<out RecyclerView.ViewHolder>> withNewItemsDeliveredTo(itemAdapter: IItemAdapter<*, Item>, itemFactory: (element: Model) -> Item?, extraOnNewItemsListener: OnNewItemsListener<Model>): EndlessScrollHelper<Model> {
         mOnNewItemsListener = DeliverToIItemAdapter2(itemAdapter, itemFactory, extraOnNewItemsListener)
         return this
     }
@@ -295,28 +294,26 @@ class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
     //-----------------------------------------
     //-----------------------------------------
 
-    private open class DeliverToIItemAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>> internal constructor(private val mItemAdapter: IItemAdapter<*, Item>, private val mItemFactory: IInterceptor<Model, Item>) : OnNewItemsListener<Model> {
+    private open class DeliverToIItemAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>> internal constructor(private val mItemAdapter: IItemAdapter<*, Item>, private val mItemFactory: (element: Model) -> Item?) : OnNewItemsListener<Model> {
 
         override fun onNewItems(newItems: List<Model>, page: Int) {
             val size = newItems.size
-            val iitems = ArrayList<Item>(size)
+            val items = ArrayList<Item>(size)
             for (i in 0 until size) {
-                val item = mItemFactory.intercept(newItems[i]) ?: continue
-                iitems.add(item)
+                val item = mItemFactory.invoke(newItems[i]) ?: continue
+                items.add(item)
             }
-            mItemAdapter.addInternal(iitems)
+            mItemAdapter.addInternal(items)
         }
     }
 
     private open class DeliverToModelAdapter<Model> internal constructor(private val mModelAdapter: ModelAdapter<Model, *>) : OnNewItemsListener<Model> {
-
         override fun onNewItems(newItems: List<Model>, page: Int) {
             mModelAdapter.add(newItems)
         }
     }
 
-    private class DeliverToIItemAdapter2<Model, Item : IItem<out RecyclerView.ViewHolder>> internal constructor(itemAdapter: IItemAdapter<*, Item>, itemFactory: IInterceptor<Model, Item>, private val mExtraOnNewItemsListener: OnNewItemsListener<Model>) : DeliverToIItemAdapter<Model, Item>(itemAdapter, itemFactory) {
-
+    private class DeliverToIItemAdapter2<Model, Item : IItem<out RecyclerView.ViewHolder>> internal constructor(itemAdapter: IItemAdapter<*, Item>, itemFactory: (element: Model) -> Item?, private val mExtraOnNewItemsListener: OnNewItemsListener<Model>) : DeliverToIItemAdapter<Model, Item>(itemAdapter, itemFactory) {
         override fun onNewItems(newItems: List<Model>, page: Int) {
             mExtraOnNewItemsListener.onNewItems(newItems, page)
             super.onNewItems(newItems, page)
@@ -324,7 +321,6 @@ class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
     }
 
     private class DeliverToModelAdapter2<Model> internal constructor(modelItemAdapter: ModelAdapter<Model, *>, private val mExtraOnNewItemsListener: OnNewItemsListener<Model>) : DeliverToModelAdapter<Model>(modelItemAdapter) {
-
         override fun onNewItems(newItems: List<Model>, page: Int) {
             mExtraOnNewItemsListener.onNewItems(newItems, page)
             super.onNewItems(newItems, page)
