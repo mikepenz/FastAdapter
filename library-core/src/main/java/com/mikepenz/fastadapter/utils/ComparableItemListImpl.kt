@@ -1,12 +1,8 @@
 package com.mikepenz.fastadapter.utils
 
 import androidx.recyclerview.widget.RecyclerView
-
 import com.mikepenz.fastadapter.IItem
-
-import java.util.ArrayList
-import java.util.Collections
-import java.util.Comparator
+import java.util.*
 
 /**
  * The default item list implementation

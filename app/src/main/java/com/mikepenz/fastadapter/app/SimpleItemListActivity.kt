@@ -14,7 +14,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
 import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter
@@ -22,8 +21,7 @@ import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
 import com.mikepenz.fastadapter.listeners.ItemFilterListener
-import com.mikepenz.fastadapter.listeners.OnClickListener
-import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.fastadapter.utils.DragDropUtil
 import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
@@ -59,23 +57,20 @@ class SimpleItemListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilte
 
         //create our FastAdapter which will manage everything
         fastAdapter = FastAdapter.with(itemAdapter)
-        val selectExtension = fastAdapter.getOrCreateExtension<SelectExtension<SimpleItem>>(SelectExtension::class.java) as SelectExtension<*>
+        val selectExtension = fastAdapter.getSelectExtension()
         selectExtension.isSelectable = true
 
         //configure our fastAdapter
-        fastAdapter.onClickListener = object : OnClickListener<SimpleItem> {
-            override fun onClick(v: View?, adapter: IAdapter<SimpleItem>, item: SimpleItem, position: Int): Boolean {
-                v ?: return false
+        fastAdapter.onClickListener = { v: View?, _: IAdapter<SimpleItem>, item: SimpleItem, _: Int ->
+            v?.let {
                 Toast.makeText(v.context, item.name?.getText(v.context), Toast.LENGTH_LONG).show()
-                return false
             }
+            false
         }
 
         //configure the itemAdapter
-        itemAdapter.itemFilter.filterPredicate = object : IItemAdapter.Predicate<SimpleItem> {
-            override fun filter(item: SimpleItem, constraint: CharSequence?): Boolean {
-                return item.name?.text.toString().toLowerCase().contains(constraint.toString().toLowerCase())
-            }
+        itemAdapter.itemFilter.filterPredicate = { item: SimpleItem, constraint: CharSequence? ->
+            item.name?.text.toString().toLowerCase().contains(constraint.toString().toLowerCase())
         }
 
         itemAdapter.itemFilter.itemFilterListener = this

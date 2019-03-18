@@ -7,16 +7,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import butterknife.ButterKnife
-import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.app.adapters.MopubFastItemAdapter
 import com.mikepenz.fastadapter.app.items.LetterItem
-import com.mikepenz.fastadapter.listeners.OnClickListener
 import com.mopub.nativeads.MoPubRecyclerAdapter
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer
 import com.mopub.nativeads.ViewBinder
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MopubAdsActivity : AppCompatActivity(), OnClickListener<LetterItem> {
+class MopubAdsActivity : AppCompatActivity() {
 
     private lateinit var adapter: MopubFastItemAdapter<LetterItem>
 
@@ -32,7 +30,10 @@ class MopubAdsActivity : AppCompatActivity(), OnClickListener<LetterItem> {
         setSupportActionBar(toolbar)
 
         adapter = MopubFastItemAdapter()
-        adapter.onClickListener = this
+        adapter.onClickListener = { _, _, item, position ->
+            Toast.makeText(this, "Item pressed " + item.letter + " at position " + position, Toast.LENGTH_SHORT).show()
+            false
+        }
 
         for (i in 65..90) {
             adapter.add(LetterItem(i.toChar().toString()))
@@ -62,11 +63,6 @@ class MopubAdsActivity : AppCompatActivity(), OnClickListener<LetterItem> {
         //set the back arrow in the toolbar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(false)
-    }
-
-    override fun onClick(v: View?, adapter: IAdapter<LetterItem>, item: LetterItem, position: Int): Boolean {
-        Toast.makeText(this, "Item pressed " + item.letter + " at position " + position, Toast.LENGTH_SHORT).show()
-        return false
     }
 
     override fun onSaveInstanceState(_outState: Bundle?) {

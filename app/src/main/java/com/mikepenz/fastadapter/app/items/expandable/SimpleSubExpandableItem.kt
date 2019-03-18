@@ -12,7 +12,6 @@ import com.mikepenz.fastadapter.IClickable
 import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem
-import com.mikepenz.fastadapter.listeners.OnClickListener
 import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils
 import com.mikepenz.materialdrawer.holder.StringHolder
 
@@ -25,7 +24,7 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
     var name: StringHolder? = null
     var description: StringHolder? = null
 
-    private var mOnClickListener: OnClickListener<SimpleSubExpandableItem>? = null
+    private var mOnClickListener: ((v: View?, adapter: IAdapter<SimpleSubExpandableItem>, item: SimpleSubExpandableItem, position: Int) -> Boolean)? = null
 
     //we define a clickListener in here so we can directly animate
     /**
@@ -33,29 +32,25 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
      *
      * @return
      */
-    override var onItemClickListener: OnClickListener<SimpleSubExpandableItem>? = object : OnClickListener<SimpleSubExpandableItem> {
-        override fun onClick(v: View?, adapter: IAdapter<SimpleSubExpandableItem>, item: SimpleSubExpandableItem, position: Int): Boolean {
-            if (item.subItems != null) {
-                v?.findViewById<View>(R.id.material_drawer_icon)?.let {
-                    if (!item.isExpanded) {
-                        ViewCompat.animate(it).rotation(180f).start()
-                    } else {
-                        ViewCompat.animate(it).rotation(0f).start()
-                    }
+    override var onItemClickListener: ((v: View?, adapter: IAdapter<SimpleSubExpandableItem>, item: SimpleSubExpandableItem, position: Int) -> Boolean)? = { v: View?, adapter: IAdapter<SimpleSubExpandableItem>, item: SimpleSubExpandableItem, position: Int ->
+        if (item.subItems != null) {
+            v?.findViewById<View>(R.id.material_drawer_icon)?.let {
+                if (!item.isExpanded) {
+                    ViewCompat.animate(it).rotation(180f).start()
+                } else {
+                    ViewCompat.animate(it).rotation(0f).start()
                 }
-                return mOnClickListener?.onClick(v, adapter, item, position) ?: true
             }
-            return mOnClickListener?.onClick(v, adapter, item, position) ?: true
         }
+        mOnClickListener?.invoke(v, adapter, item, position) ?: true
     }
         set(onClickListener) {
             this.mOnClickListener = onClickListener // on purpose
         }
 
-    override var onPreItemClickListener: OnClickListener<SimpleSubExpandableItem>?
+    override var onPreItemClickListener: ((v: View?, adapter: IAdapter<SimpleSubExpandableItem>, item: SimpleSubExpandableItem, position: Int) -> Boolean)?
         get() = null
         set(onClickListener) {
-
         }
 
     override//this might not be true for your application

@@ -5,16 +5,14 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.IInterceptor
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ModelAdapter
 import com.mikepenz.fastadapter.app.model.IconModel
 import com.mikepenz.fastadapter.app.model.ModelIconItem
 import com.mikepenz.fastadapter.app.model.RightIconModel
 import com.mikepenz.fastadapter.app.model.RightModelIconItem
-import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.iconics.Iconics
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialize.MaterializeBuilder
@@ -25,7 +23,7 @@ import kotlin.Comparator
 
 class MultiTypeModelItemActivity : AppCompatActivity() {
     //save our FastAdapter
-    private lateinit var fastAdapter: FastAdapter<IItem<out RecyclerView.ViewHolder>>
+    private lateinit var fastAdapter: GenericFastAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -40,19 +38,17 @@ class MultiTypeModelItemActivity : AppCompatActivity() {
         MaterializeBuilder().withActivity(this).build()
 
         //if you need multiple items for different models you can also do this be defining a Function which get's the model object and returns the item (extends IItem)
-        val itemAdapter = ModelAdapter(object : IInterceptor<IconModel, ModelIconItem> {
-            override fun intercept(element: IconModel): ModelIconItem? {
-                return if (element is RightIconModel) {
-                    RightModelIconItem(element)
-                } else {
-                    ModelIconItem(element)
-                }
+        val itemAdapter = ModelAdapter { element: IconModel ->
+            if (element is RightIconModel) {
+                RightModelIconItem(element)
+            } else {
+                ModelIconItem(element)
             }
-        })
+        }
 
         //create our FastAdapter which will manage everything
         fastAdapter = FastAdapter.with(Arrays.asList(itemAdapter))
-        val selectExtension = fastAdapter.getOrCreateExtension<SelectExtension<IItem<*>>>(SelectExtension::class.java) as SelectExtension<*>
+        val selectExtension = fastAdapter.getSelectExtension()
         selectExtension.isSelectable = true
 
         //init our gridLayoutManager and configure RV

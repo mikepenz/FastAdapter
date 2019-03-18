@@ -7,6 +7,11 @@ import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
 
 /**
+ * Kotlin type alias to simplify usage for an all accepting FastItemAdapter
+ */
+typealias GenericFastItemAdapter = FastItemAdapter<IItem<out RecyclerView.ViewHolder>>
+
+/**
  * Created by mikepenz on 18.01.16.
  */
 open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdapter<Item>() {

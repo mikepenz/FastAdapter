@@ -3,20 +3,16 @@ package com.mikepenz.fastadapter.app
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.ButterKnife
-import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.app.adapters.MopubFastItemAdapter
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter
 import com.mikepenz.fastadapter.app.helpers.CustomStickyRecyclerHeadersDecoration
-import com.mikepenz.fastadapter.app.items.LetterItem
 import com.mikepenz.fastadapter.app.items.SimpleItem
-import com.mikepenz.fastadapter.listeners.OnClickListener
 import com.mopub.nativeads.MoPubRecyclerAdapter
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer
 import com.mopub.nativeads.ViewBinder
@@ -27,7 +23,7 @@ import java.util.*
  * Created by Gagan on 5/3/2017.
  */
 
-class StickyHeaderMopubAdsActivity : AppCompatActivity(), OnClickListener<LetterItem> {
+class StickyHeaderMopubAdsActivity : AppCompatActivity() {
 
     private lateinit var mAdapter: MopubFastItemAdapter<SimpleItem>
 
@@ -92,11 +88,6 @@ class StickyHeaderMopubAdsActivity : AppCompatActivity(), OnClickListener<Letter
         //set the back arrow in the toolbar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(false)
-    }
-
-    override fun onClick(v: View?, adapter: IAdapter<LetterItem>, item: LetterItem, position: Int): Boolean {
-        Toast.makeText(this, "Item pressed " + item.letter + " at position " + position, Toast.LENGTH_SHORT).show()
-        return false
     }
 
     override fun onSaveInstanceState(_outState: Bundle?) {

@@ -11,17 +11,16 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.*
+import com.mikepenz.fastadapter.adapters.GenericItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
-import com.mikepenz.fastadapter.expandable.ExpandableExtension
+import com.mikepenz.fastadapter.expandable.getExpandableExtension
 import com.mikepenz.fastadapter.helpers.ActionModeHelper
-import com.mikepenz.fastadapter.listeners.OnClickListener
-import com.mikepenz.fastadapter.listeners.OnLongClickListener
-import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.iconics.context.IconicsLayoutInflater2
 import com.mikepenz.materialize.MaterializeBuilder
 import com.mikepenz.materialize.util.UIUtils
@@ -37,9 +36,9 @@ import java.util.concurrent.atomic.AtomicLong
 class AdvancedSampleActivity : AppCompatActivity() {
 
     //save our FastAdapter
-    private lateinit var mFastAdapter: FastAdapter<IItem<out RecyclerView.ViewHolder>>
+    private lateinit var mFastAdapter: GenericFastAdapter
     private lateinit var mHeaderAdapter: ItemAdapter<SimpleItem>
-    private lateinit var mItemAdapter: ItemAdapter<IItem<*>>
+    private lateinit var mItemAdapter: GenericItemAdapter
 
     private var mActionModeHelper: ActionModeHelper<IItem<out RecyclerView.ViewHolder>>? = null
 
@@ -60,17 +59,17 @@ class AdvancedSampleActivity : AppCompatActivity() {
 
         //create our adapters
         mHeaderAdapter = items()
-        mItemAdapter = items<IItem<out RecyclerView.ViewHolder>>()
+        mItemAdapter = items()
         val stickyHeaderAdapter = StickyHeaderAdapter<IItem<out RecyclerView.ViewHolder>>()
 
         //we also want the expandable feature
 
         //create our FastAdapter
         val adapters: Collection<ItemAdapter<out IItem<out RecyclerView.ViewHolder>>> = Arrays.asList(mHeaderAdapter, mItemAdapter)
-        mFastAdapter = FastAdapter.with<IItem<*>, ItemAdapter<out IItem<out RecyclerView.ViewHolder>>>(adapters)
+        mFastAdapter = FastAdapter.with(adapters)
 
-        mFastAdapter.getOrCreateExtension<ExpandableExtension<IItem<*>>>(ExpandableExtension::class.java)
-        val selectExtension = mFastAdapter.getOrCreateExtension<SelectExtension<IItem<*>>>(SelectExtension::class.java) as SelectExtension<*>
+        mFastAdapter.getExpandableExtension()
+        val selectExtension = mFastAdapter.getSelectExtension()
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things
@@ -78,23 +77,17 @@ class AdvancedSampleActivity : AppCompatActivity() {
         selectExtension.multiSelect = true
         selectExtension.selectOnLongClick = true
 
-        mFastAdapter.onPreClickListener = object : OnClickListener<IItem<out RecyclerView.ViewHolder>> {
-            override fun onClick(v: View?, adapter: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, position: Int): Boolean {
-                //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
-                val res = mActionModeHelper?.onClick(item)
-                return res ?: false
-            }
+        mFastAdapter.onPreClickListener = { _: View?, _: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, _: Int ->
+            //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
+            val res = mActionModeHelper?.onClick(item)
+            res ?: false
         }
 
-        mFastAdapter.onPreLongClickListener = object : OnLongClickListener<IItem<out RecyclerView.ViewHolder>> {
-            override fun onLongClick(v: View, adapter: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, position: Int): Boolean {
-                //we do not want expandable items to be selected
-                if (item is IExpandable<*>) {
-                    if (item.subItems != null) {
-                        return true
-                    }
-                }
-
+        mFastAdapter.onPreLongClickListener = { _: View, _: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, position: Int ->
+            //we do not want expandable items to be selected
+            if (item is IExpandable<*> && item.subItems != null) {
+                true
+            } else {
                 //handle the longclick actions
                 val actionMode = mActionModeHelper?.onLongClick(this@AdvancedSampleActivity, position)
                 if (actionMode != null) {
@@ -102,7 +95,7 @@ class AdvancedSampleActivity : AppCompatActivity() {
                     findViewById<View>(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(this@AdvancedSampleActivity, R.attr.colorPrimary, R.color.material_drawer_primary))
                 }
                 //if we have no actionMode we do not consume the event
-                return actionMode != null
+                actionMode != null
             }
         }
 
@@ -173,7 +166,7 @@ class AdvancedSampleActivity : AppCompatActivity() {
 
                     subItems.add(subItem)
                 }
-                expandableItem.subItems = subItems
+                expandableItem.subItems.addAll(subItems)
                 items.add(expandableItem)
             } else {
                 val simpleSubItem = SimpleSubItem().withName("Test " + id.get()).withHeader(headers[i / 5])

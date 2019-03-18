@@ -12,7 +12,6 @@ import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData
 import com.mikepenz.fastadapter.app.items.ImageItem
-import com.mikepenz.fastadapter.listeners.OnClickListener
 import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sample.*
 
@@ -36,12 +35,11 @@ class ImageListActivity : AppCompatActivity() {
         fastItemAdapter = FastItemAdapter()
 
         //configure our fastAdapter
-        fastItemAdapter.onClickListener = object : OnClickListener<ImageItem> {
-            override fun onClick(v: View?, adapter: IAdapter<ImageItem>, item: ImageItem, position: Int): Boolean {
-                v ?: return false
+        fastItemAdapter.onClickListener = { v: View?, _: IAdapter<ImageItem>, item: ImageItem, _: Int ->
+            if (v != null) {
                 Toast.makeText(v.context, item.mName, Toast.LENGTH_SHORT).show()
-                return false
             }
+            false
         }
 
         //find out how many columns we display

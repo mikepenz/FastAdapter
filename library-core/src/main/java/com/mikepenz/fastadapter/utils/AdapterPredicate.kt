@@ -1,9 +1,8 @@
 package com.mikepenz.fastadapter.utils
 
+import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.IItem
-
-import androidx.recyclerview.widget.RecyclerView
 
 /**
  * AdapterPredicate interface to be used with the recursive method.

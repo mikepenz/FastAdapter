@@ -14,19 +14,17 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.IItemAdapter.Predicate
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
-import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
+import com.mikepenz.fastadapter.adapters.GenericItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
 import com.mikepenz.fastadapter.listeners.ItemFilterListener
-import com.mikepenz.fastadapter.listeners.OnClickListener
 import com.mikepenz.fastadapter.scroll.EndlessRecyclerOnScrollListener
-import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.fastadapter.ui.items.ProgressItem
 import com.mikepenz.fastadapter.utils.DragDropUtil
 import com.mikepenz.iconics.IconicsColor
@@ -39,8 +37,8 @@ import java.util.*
 class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilterListener<IItem<out RecyclerView.ViewHolder>> {
 
     //save our FastAdapter
-    private lateinit var fastItemAdapter: FastItemAdapter<IItem<out RecyclerView.ViewHolder>>
-    private lateinit var footerAdapter: ItemAdapter<IItem<out RecyclerView.ViewHolder>>
+    private lateinit var fastItemAdapter: GenericFastItemAdapter
+    private lateinit var footerAdapter: GenericItemAdapter
 
     //drag & drop
     private lateinit var touchCallback: SimpleDragCallback
@@ -62,7 +60,7 @@ class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFi
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = FastItemAdapter()
-        val selectExtension = fastItemAdapter.getOrCreateExtension<SelectExtension<IItem<*>>>(SelectExtension::class.java) as SelectExtension<*>
+        val selectExtension = fastItemAdapter.getSelectExtension()
         selectExtension.isSelectable = true
 
         //create our FooterAdapter which will manage the progress items
@@ -70,25 +68,21 @@ class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFi
         fastItemAdapter.addAdapter(1, footerAdapter)
 
         //configure our fastAdapter
-        fastItemAdapter.onClickListener = object : OnClickListener<IItem<out RecyclerView.ViewHolder>> {
-            override fun onClick(v: View?, adapter: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, position: Int): Boolean {
-                v ?: return false
-                if (item is SimpleItem) {
-                    Toast.makeText(v.context, item.name?.getText(v.context), Toast.LENGTH_LONG).show()
-                }
-                return false
+        fastItemAdapter.onClickListener = { v, _, item, _ ->
+            if (v != null && item is SimpleItem) {
+                Toast.makeText(v.context, item.name?.getText(v.context), Toast.LENGTH_LONG).show()
             }
+            false
         }
 
         //configure the itemAdapter
-        fastItemAdapter.itemFilter.filterPredicate = object : Predicate<IItem<out RecyclerView.ViewHolder>> {
-            override fun filter(item: IItem<out RecyclerView.ViewHolder>, constraint: CharSequence?): Boolean {
-                if (item is SimpleItem) {
-                    //return true if we should filter it out
-                    return item.name?.text.toString().toLowerCase().contains(constraint.toString().toLowerCase())
-                }
+        fastItemAdapter.itemFilter.filterPredicate = { item: IItem<out RecyclerView.ViewHolder>, constraint: CharSequence? ->
+            if (item is SimpleItem) {
+                //return true if we should filter it out
+                item.name?.text.toString().toLowerCase().contains(constraint.toString().toLowerCase())
+            } else {
                 //return false to keep it
-                return false
+                false
             }
         }
 

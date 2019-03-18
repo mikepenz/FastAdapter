@@ -10,18 +10,17 @@ import java.util.*
 import java.util.Arrays.asList
 
 /**
+ * Kotlin type alias to simplify usage for an all accepting ModelAdapter
+ */
+typealias GenericModelAdapter<Model> = ModelAdapter<Model, IItem<out RecyclerView.ViewHolder>>
+
+/**
  * Created by mikepenz on 27.12.15.
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  */
 open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
-    //the items handled and managed by this item
-    /**
-     * @return the `IItemList` implementation used by this `ModelAdapter`
-     */
-    val itemList: IItemList<Item>, var interceptor: IInterceptor<Model, Item>
+        val itemList: IItemList<Item>, var interceptor: (element: Model) -> Item?
 ) : AbstractAdapter<Item>(), IItemAdapter<Model, Item> {
-
-
     override var fastAdapter: FastAdapter<Item>?
         get() = super.fastAdapter
         set(fastAdapter) {
@@ -31,7 +30,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
             super.fastAdapter = fastAdapter
         }
 
-    var reverseInterceptor: IInterceptor<Item, Model>? = null
+    var reverseInterceptor: ((element: Item) -> Model?)? = null
 
     var idDistributor: IIdDistributor<Item> = IIdDistributor.DEFAULT as IIdDistributor<Item>
 
@@ -63,7 +62,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
                         }
                     }
                     reverseInterceptor != null -> {
-                        reverseInterceptor?.intercept(item)?.let { interceptedItem ->
+                        reverseInterceptor?.invoke(item)?.let { interceptedItem ->
                             list.add(interceptedItem)
                         }
                     }
@@ -85,9 +84,9 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
     override val adapterItems: MutableList<Item>
         get() = itemList.items
 
-    constructor(interceptor: IInterceptor<Model, Item>) : this(
-        DefaultItemListImpl<Item>(),
-        interceptor
+    constructor(interceptor: (element: Model) -> Item?) : this(
+            DefaultItemListImpl<Item>(),
+            interceptor
     )
 
     /**
@@ -97,7 +96,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @return the generated `Item`
      */
     fun intercept(model: Model): Item? {
-        return interceptor.intercept(model)
+        return interceptor.invoke(model)
     }
 
     /**
@@ -189,9 +188,9 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @return this
      */
     operator fun set(
-        list: List<Model>,
-        resetFilter: Boolean,
-        adapterNotifier: IAdapterNotifier?
+            list: List<Model>,
+            resetFilter: Boolean,
+            adapterNotifier: IAdapterNotifier?
     ): ModelAdapter<Model, Item> {
         val items = intercept(list)
         return setInternal(items, resetFilter, adapterNotifier)
@@ -207,9 +206,9 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @return this
      */
     fun setInternal(
-        items: List<Item>,
-        resetFilter: Boolean,
-        adapterNotifier: IAdapterNotifier?
+            items: List<Item>,
+            resetFilter: Boolean,
+            adapterNotifier: IAdapterNotifier?
     ): ModelAdapter<Model, Item> {
         if (isUseIdDistributor) {
             idDistributor.checkIds(items)
@@ -422,10 +421,10 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
     fun removeByIdentifier(identifier: Long): ModelAdapter<Model, Item> {
         recursive(object : AdapterPredicate<Item> {
             override fun apply(
-                lastParentAdapter: IAdapter<Item>,
-                lastParentPosition: Int,
-                item: Item,
-                position: Int
+                    lastParentAdapter: IAdapter<Item>,
+                    lastParentPosition: Int,
+                    item: Item,
+                    position: Int
             ): Boolean {
                 if (identifier == item.identifier) {
                     //if it's a subitem remove it from the parent
@@ -454,8 +453,8 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @return Triple&lt;Boolean, IItem, Integer&gt; The first value is true (it is always not null), the second contains the item and the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
      */
     fun recursive(
-        predicate: AdapterPredicate<Item>,
-        stopOnMatch: Boolean
+            predicate: AdapterPredicate<Item>,
+            stopOnMatch: Boolean
     ): Triple<Boolean, Item, Int> {
         fastAdapter?.let { fastAdapter ->
             val preItemCount = fastAdapter.getPreItemCountByOrder(order)
@@ -468,11 +467,11 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
                 if (item != null) {
                     relativeInfo.adapter?.let { adapter ->
                         if (predicate.apply(
-                                adapter,
-                                globalPosition,
-                                item,
-                                globalPosition
-                            ) && stopOnMatch
+                                        adapter,
+                                        globalPosition,
+                                        item,
+                                        globalPosition
+                                ) && stopOnMatch
                         ) {
                             return Triple(true, item, globalPosition)
                         }
@@ -480,11 +479,11 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
                     (item as? IExpandable<*>?)?.let { expandableItem ->
                         relativeInfo.adapter?.let { adapter ->
                             val res = FastAdapter.recursiveSub(
-                                adapter,
-                                globalPosition,
-                                expandableItem,
-                                predicate,
-                                stopOnMatch
+                                    adapter,
+                                    globalPosition,
+                                    expandableItem,
+                                    predicate,
+                                    stopOnMatch
                             )
                             if (res.first && stopOnMatch) {
                                 return res
@@ -506,7 +505,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
          * @return a new ItemAdapter
          */
         @JvmStatic
-        fun <Model, Item : IItem<out RecyclerView.ViewHolder>> models(interceptor: IInterceptor<Model, Item>): ModelAdapter<Model, Item> {
+        fun <Model, Item : IItem<out RecyclerView.ViewHolder>> models(interceptor: (element: Model) -> Item?): ModelAdapter<Model, Item> {
             return ModelAdapter(interceptor)
         }
     }

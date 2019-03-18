@@ -9,10 +9,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
-import com.mikepenz.fastadapter.expandable.ExpandableExtension
-import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.expandable.getExpandableExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.iconics.context.IconicsLayoutInflater2
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialize.MaterializeBuilder
@@ -22,7 +23,7 @@ import java.util.concurrent.atomic.AtomicLong
 
 class ExpandableSampleActivity : AppCompatActivity() {
     //save our FastAdapter
-    private lateinit var fastItemAdapter: FastItemAdapter<IItem<out RecyclerView.ViewHolder>>
+    private lateinit var fastItemAdapter: GenericFastItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -42,8 +43,8 @@ class ExpandableSampleActivity : AppCompatActivity() {
         //create our FastAdapter
         fastItemAdapter = FastItemAdapter()
 
-        fastItemAdapter.getOrCreateExtension<ExpandableExtension<IItem<*>>>(ExpandableExtension::class.java)
-        val selectExtension = fastItemAdapter.getOrCreateExtension<SelectExtension<IItem<*>>>(SelectExtension::class.java) as SelectExtension<*>
+        fastItemAdapter.getExpandableExtension()
+        val selectExtension = fastItemAdapter.getSelectExtension()
         selectExtension.isSelectable = true
         //expandableExtension.setOnlyOneExpandedItem(true);
 
@@ -86,13 +87,13 @@ class ExpandableSampleActivity : AppCompatActivity() {
                         subSubSubItem.withName("---- SubSubSubTest $iiii").identifier = identifier.getAndIncrement()
                         subSubSubItems.add(subSubSubItem)
                     }
-                    subSubItem.subItems = subSubSubItems
+                    subSubItem.subItems.addAll(subSubSubItems)
                     subSubItems.add(subSubItem)
                 }
-                subItem.subItems = subSubItems
+                subItem.subItems.addAll(subSubItems)
                 subItems.add(subItem)
             }
-            parent.subItems = subItems
+            parent.subItems.addAll(subItems)
             items.add(parent)
         }
         fastItemAdapter.add(items)

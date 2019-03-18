@@ -10,8 +10,8 @@ abstract class ModelAbstractExpandableItem<Model, Parent, SubItem, VH : Recycler
         IExpandable<VH> where Parent : IExpandable<VH>, SubItem : IExpandable<VH> {
     override var isExpanded: Boolean = false
     override var parent: IParentItem<*>? = null
-    private var _subItems: MutableList<out ISubItem<*>>? = null
-    override var subItems: MutableList<out ISubItem<*>>?
+    private var _subItems: MutableList<ISubItem<*>> = mutableListOf()
+    override var subItems: MutableList<ISubItem<*>>
         set(value) {
             _subItems = value
             _subItems?.let { subItems ->

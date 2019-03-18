@@ -1,13 +1,12 @@
-package com.mikepenz.fastadapter_extensions.dialog
+package com.mikepenz.fastadapter.ui.dialog
 
 import android.content.Context
 import android.content.DialogInterface
+import android.view.ViewGroup
 import androidx.annotation.StringRes
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import android.view.ViewGroup
-
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.IItem

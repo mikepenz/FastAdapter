@@ -1,12 +1,10 @@
 package com.mikepenz.fastadapter.listeners
 
 import android.util.Log
-
+import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.R
-
-import androidx.recyclerview.widget.RecyclerView
 
 class OnBindViewHolderListenerImpl<Item : IItem<out RecyclerView.ViewHolder>> : OnBindViewHolderListener {
     /**

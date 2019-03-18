@@ -17,6 +17,7 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData
 import com.mikepenz.fastadapter.app.items.SimpleImageItem
 import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.communitymaterial.CommunityMaterial
@@ -129,7 +130,7 @@ class SampleActivity : AppCompatActivity() {
 
         //create our FastAdapter which will manage everything
         mFastAdapter = FastAdapter.with(Arrays.asList(mItemAdapter))
-        selectExtension = mFastAdapter.getOrCreateExtension(SelectExtension::class.java)!!
+        selectExtension = mFastAdapter.getSelectExtension()
         selectExtension.apply {
             isSelectable = true
             multiSelect = true

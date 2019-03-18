@@ -16,14 +16,15 @@ import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.ISelectionListener
 import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
 import com.mikepenz.fastadapter.app.items.HeaderSelectionItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
 import com.mikepenz.fastadapter.expandable.ExpandableExtension
+import com.mikepenz.fastadapter.expandable.getExpandableExtension
 import com.mikepenz.fastadapter.helpers.ActionModeHelper
 import com.mikepenz.fastadapter.helpers.RangeSelectorHelper
-import com.mikepenz.fastadapter.listeners.OnClickListener
-import com.mikepenz.fastadapter.listeners.OnLongClickListener
 import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.fastadapter.utils.SubItemUtil
 import com.mikepenz.iconics.context.IconicsLayoutInflater
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
@@ -34,7 +35,7 @@ import java.util.*
 
 class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
     //save our FastAdapter
-    private lateinit var fastItemAdapter: FastItemAdapter<IItem<out RecyclerView.ViewHolder>>
+    private lateinit var fastItemAdapter: GenericFastItemAdapter
     private lateinit var mExpandableExtension: ExpandableExtension<IItem<*>>
     private lateinit var mSelectExtension: SelectExtension<IItem<*>>
     private lateinit var mRangeSelectorHelper: RangeSelectorHelper<*>
@@ -57,52 +58,44 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
 
         //create our FastAdapter
         fastItemAdapter = FastItemAdapter()
-        mExpandableExtension = fastItemAdapter.getOrCreateExtension(ExpandableExtension::class.java)!!
-        mSelectExtension = fastItemAdapter.getOrCreateExtension(SelectExtension::class.java)!!
+        mExpandableExtension = fastItemAdapter.getExpandableExtension()
+        mSelectExtension = fastItemAdapter.getSelectExtension()
         mSelectExtension.isSelectable = true
         mSelectExtension.multiSelect = true
         mSelectExtension.selectOnLongClick = true
 
-        fastItemAdapter.onPreClickListener = object : OnClickListener<IItem<out RecyclerView.ViewHolder>> {
-            override fun onClick(v: View?, adapter: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, position: Int): Boolean {
-                //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
-                val res = mActionModeHelper?.onClick(this@ExpandableMultiselectDeleteSampleActivity, item)
-                // in this example, we want to consume a click, if the ActionModeHelper will remove the ActionMode
-                // so that the click listener is not fired
-                return if (res != null && !res) true else res ?: false
-            }
+        fastItemAdapter.onPreClickListener = { _: View?, _: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, _: Int ->
+            //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
+            val res = mActionModeHelper?.onClick(this@ExpandableMultiselectDeleteSampleActivity, item)
+            // in this example, we want to consume a click, if the ActionModeHelper will remove the ActionMode
+            // so that the click listener is not fired
+            if (res != null && !res) true else res ?: false
         }
 
 
-        fastItemAdapter.onClickListener = object : OnClickListener<IItem<out RecyclerView.ViewHolder>> {
-            override fun onClick(v: View?, adapter: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, position: Int): Boolean {
-                // check if the actionMode consumes the click. This returns true, if it does, false if not
-                if (mActionModeHelper?.isActive == false) {
-                    Toast.makeText(this@ExpandableMultiselectDeleteSampleActivity, (item as SimpleSubItem).name.toString() + " clicked!", Toast.LENGTH_SHORT).show()
-                }
-                //                        else
-                //                            mFastAdapter.notifyItemChanged(position); // im Bsp. ist das nicht nötig, k.A. warum ich das machen muss!
+        fastItemAdapter.onClickListener = { _: View?, _: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, _: Int ->
+            // check if the actionMode consumes the click. This returns true, if it does, false if not
+            if (mActionModeHelper?.isActive == false) {
+                Toast.makeText(this@ExpandableMultiselectDeleteSampleActivity, (item as SimpleSubItem).name.toString() + " clicked!", Toast.LENGTH_SHORT).show()
                 mRangeSelectorHelper.onClick()
-                return false
             }
+            false
         }
 
-        fastItemAdapter.onPreLongClickListener = object : OnLongClickListener<IItem<out RecyclerView.ViewHolder>> {
-            override fun onLongClick(v: View, adapter: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, position: Int): Boolean {
-                val actionModeWasActive = mActionModeHelper?.isActive ?: false
-                val actionMode = mActionModeHelper?.onLongClick(this@ExpandableMultiselectDeleteSampleActivity, position)
-                mRangeSelectorHelper.onLongClick(position)
-                if (actionMode != null) {
-                    //we want color our CAB
-                    this@ExpandableMultiselectDeleteSampleActivity.findViewById<View>(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(this@ExpandableMultiselectDeleteSampleActivity, R.attr.colorPrimary, R.color.material_drawer_primary))
+        fastItemAdapter.onPreLongClickListener = { _: View, _: IAdapter<IItem<out RecyclerView.ViewHolder>>, _: IItem<out RecyclerView.ViewHolder>, position: Int ->
+            val actionModeWasActive = mActionModeHelper?.isActive ?: false
+            val actionMode = mActionModeHelper?.onLongClick(this@ExpandableMultiselectDeleteSampleActivity, position)
+            mRangeSelectorHelper.onLongClick(position)
+            if (actionMode != null) {
+                //we want color our CAB
+                this@ExpandableMultiselectDeleteSampleActivity.findViewById<View>(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(this@ExpandableMultiselectDeleteSampleActivity, R.attr.colorPrimary, R.color.material_drawer_primary))
 
-                    // start the drag selection
-                    mDragSelectTouchListener?.startDragSelection(position)
-                }
-
-                //if we have no actionMode we do not consume the event
-                return actionMode != null && !actionModeWasActive
+                // start the drag selection
+                mDragSelectTouchListener.startDragSelection(position)
             }
+
+            //if we have no actionMode we do not consume the event
+            actionMode != null && !actionModeWasActive
         }
 
         // provide a custom title provider that even shows the count of sub items

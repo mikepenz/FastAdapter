@@ -17,8 +17,8 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.app.items.SimpleItem
-import com.mikepenz.fastadapter.listeners.OnClickListener
 import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl
 import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
@@ -80,15 +80,13 @@ class SortActivity : AppCompatActivity() {
         itemListImpl = ComparableItemListImpl(comparator)
         itemAdapter = ItemAdapter(itemListImpl)
         fastAdapter = FastAdapter.with(itemAdapter)
-        selectExtension = fastAdapter.getOrCreateExtension<SelectExtension<SimpleItem>>(SelectExtension::class.java) as SelectExtension<SimpleItem>
+        selectExtension = fastAdapter.getSelectExtension()
         selectExtension.isSelectable = true
 
         //configure our fastAdapter
-        fastAdapter.onClickListener = object : OnClickListener<SimpleItem> {
-            override fun onClick(v: View?, adapter: IAdapter<SimpleItem>, item: SimpleItem, position: Int): Boolean {
-                Toast.makeText(this@SortActivity, item.name?.getText(this@SortActivity), Toast.LENGTH_LONG).show()
-                return false
-            }
+        fastAdapter.onClickListener = { _: View?, _: IAdapter<SimpleItem>, item: SimpleItem, _: Int ->
+            Toast.makeText(this@SortActivity, item.name?.getText(this@SortActivity), Toast.LENGTH_LONG).show()
+            false
         }
 
         //get our recyclerView and do basic setup

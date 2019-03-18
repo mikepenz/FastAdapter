@@ -101,16 +101,4 @@ interface IItemAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>> : IAdap
      * removes all items of this adapter
      */
     fun clear(): IItemAdapter<Model, Item>
-
-    /**
-     * the interface used to filter the list inside the ItemFilter
-     */
-    interface Predicate<Item : IItem<out RecyclerView.ViewHolder>> {
-        /**
-         * @param item       the item which is checked if it should get filtered
-         * @param constraint the string constraint used to filter items away
-         * @return true if it should stay. false if it should get filtered away
-         */
-        fun filter(item: Item, constraint: CharSequence?): Boolean
-    }
 }

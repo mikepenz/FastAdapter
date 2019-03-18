@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.items.CheckBoxSampleItem
-import com.mikepenz.fastadapter.listeners.OnClickListener
 import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
@@ -35,25 +35,16 @@ class CheckBoxSampleActivity : AppCompatActivity() {
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = FastItemAdapter()
-        selectExtension = SelectExtension(fastItemAdapter)
-        fastItemAdapter.addExtension(selectExtension)
+        selectExtension = fastItemAdapter.getSelectExtension()
         selectExtension.isSelectable = true
 
         //configure our fastAdapter
-        fastItemAdapter.onClickListener = object : OnClickListener<CheckBoxSampleItem> {
-            override fun onClick(v: View?, adapter: IAdapter<CheckBoxSampleItem>, item: CheckBoxSampleItem, position: Int): Boolean {
-                v?.let {
-                    Toast.makeText(v.context, item.name?.getText(v.context), Toast.LENGTH_LONG).show()
-                }
-                return false
-            }
-
+        fastItemAdapter.onClickListener = { v: View?, _: IAdapter<CheckBoxSampleItem>, item: CheckBoxSampleItem, _: Int ->
+            v?.let { Toast.makeText(v.context, item.name?.getText(v.context), Toast.LENGTH_LONG).show() }
+            false
         }
-        fastItemAdapter.onPreClickListener = object : OnClickListener<CheckBoxSampleItem> {
-            override fun onClick(v: View?, adapter: IAdapter<CheckBoxSampleItem>, item: CheckBoxSampleItem, position: Int): Boolean {
-                // consume otherwise radio/checkbox will be deselected
-                return true
-            }
+        fastItemAdapter.onPreClickListener = { _: View?, _: IAdapter<CheckBoxSampleItem>, _: CheckBoxSampleItem, _: Int ->
+            true // consume otherwise radio/checkbox will be deselected
         }
 
         fastItemAdapter.addEventHook(CheckBoxSampleItem.CheckBoxClickEvent())

@@ -7,12 +7,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.IInterceptor
 import com.mikepenz.fastadapter.adapters.ModelAdapter
 import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter
 import com.mikepenz.fastadapter.app.model.IconModel
 import com.mikepenz.fastadapter.app.model.ModelIconItem
-import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.iconics.Iconics
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialize.MaterializeBuilder
@@ -41,15 +40,13 @@ class ModelItemActivity : AppCompatActivity() {
 
         //adapters
         val fastScrollIndicatorAdapter = FastScrollIndicatorAdapter<ModelIconItem>()
-        val itemAdapter = ModelAdapter(object : IInterceptor<IconModel, ModelIconItem> {
-            override fun intercept(element: IconModel): ModelIconItem? {
-                return ModelIconItem(element)
-            }
-        })
+        val itemAdapter = ModelAdapter { model: IconModel ->
+            ModelIconItem(model)
+        }
 
         //create our FastAdapter which will manage everything
         fastAdapter = FastAdapter.with(Arrays.asList(itemAdapter))
-        val selectExtension = fastAdapter.getOrCreateExtension<SelectExtension<ModelIconItem>>(SelectExtension::class.java) as SelectExtension<*>
+        val selectExtension = fastAdapter.getSelectExtension()
         selectExtension.isSelectable = true
 
         //init our gridLayoutManager and configure RV
