@@ -18,8 +18,8 @@ buildscript {
                 appcompat     : '1.0.2',
                 kotlin        : '1.3.21',
                 materialize   : '1.2.1',
-                iconics       : '4.0.0-a1',
-                materialdrawer: '7.0.0-alpha4i',
+                iconics       : '4.0.0-b1',
+                materialdrawer: '7.0.0-beta01',
                 aboutlib      : '7.0.0-rc1',
                 roboelectric  : '4.0.2'
         ]
