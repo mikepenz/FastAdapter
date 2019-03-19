@@ -211,23 +211,23 @@ object FastAdapterDiffUtil {
     private class FastAdapterListUpdateCallback<A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> internal constructor(private val adapter: A) : ListUpdateCallback {
 
         override fun onInserted(position: Int, count: Int) {
-            adapter.fastAdapter?.notifyAdapterItemRangeInserted(adapter.fastAdapter?.getPreItemCountByOrder(adapter.order)
-                    ?: 0 + position, count)
+            adapter.fastAdapter?.notifyAdapterItemRangeInserted((adapter.fastAdapter?.getPreItemCountByOrder(adapter.order)
+                    ?: 0) + position, count)
         }
 
         override fun onRemoved(position: Int, count: Int) {
-            adapter.fastAdapter?.notifyAdapterItemRangeRemoved(adapter.fastAdapter?.getPreItemCountByOrder(adapter.order)
-                    ?: 0 + position, count)
+            adapter.fastAdapter?.notifyAdapterItemRangeRemoved((adapter.fastAdapter?.getPreItemCountByOrder(adapter.order)
+                    ?: 0) + position, count)
         }
 
         override fun onMoved(fromPosition: Int, toPosition: Int) {
-            adapter.fastAdapter?.notifyAdapterItemMoved(adapter.fastAdapter?.getPreItemCountByOrder(adapter.order)
-                    ?: 0 + fromPosition, toPosition)
+            adapter.fastAdapter?.notifyAdapterItemMoved((adapter.fastAdapter?.getPreItemCountByOrder(adapter.order)
+                    ?: 0) + fromPosition, toPosition)
         }
 
         override fun onChanged(position: Int, count: Int, payload: Any?) {
-            adapter.fastAdapter?.notifyAdapterItemRangeChanged(adapter.fastAdapter?.getPreItemCountByOrder(adapter.order)
-                    ?: 0 + position, count, payload)
+            adapter.fastAdapter?.notifyAdapterItemRangeChanged((adapter.fastAdapter?.getPreItemCountByOrder(adapter.order)
+                    ?: 0) + position, count, payload)
         }
     }
 }
