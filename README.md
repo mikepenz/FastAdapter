@@ -115,7 +115,7 @@ public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> 
         @Override
         public void bindView(SimpleItem item, List<Object> payloads) {
 	    name.setText(item.name)
-	    descripttion.settText(item.description)
+	    description.setText(item.description)
         }
 
         @Override
