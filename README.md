@@ -78,8 +78,8 @@ implementation 'com.mikepenz:materialize:${latestVersion}' // at least 1.2.0
 Just create a class which extends the `AbstractItem` as shown below. Implement the methods, and your item is ready.
 ```java
 public class SimpleItem extends AbstractItem<SimpleItem, SimpleItem.ViewHolder> {
-    public String name;
-    public String description;
+    public StringHolder name;
+    public StringHolder description;
 
     //The unique ID for this type of item
     @Override
