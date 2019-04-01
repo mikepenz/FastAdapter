@@ -12,7 +12,7 @@ import java.util.Arrays.asList
  * ItemFilter which extends the Filter api provided by Android
  * This calls automatically all required methods, just overwrite the filterItems method
  */
-class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private val mItemAdapter: ModelAdapter<Model, Item>) :
+open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private val mItemAdapter: ModelAdapter<Model, Item>) :
     Filter() {
     private var originalItems: MutableList<Item>? = null
     var constraint: CharSequence? = null
