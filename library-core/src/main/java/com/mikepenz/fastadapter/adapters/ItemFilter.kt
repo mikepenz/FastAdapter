@@ -30,7 +30,7 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
      *
      * @return a Set with the global positions of all selected Items
      */
-    val selections: Set<Int>
+    open val selections: Set<Int>
         get() {
             return originalItems?.let { originalItems ->
                 val selections = HashSet<Int>()
@@ -53,7 +53,7 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
      *
      * @return a Set with the selected items out of all items in this itemAdapter (not the listed ones)
      */
-    val selectedItems: Set<Item>
+    open val selectedItems: Set<Item>
         get() {
             return originalItems?.let { originalItems ->
                 val selections = HashSet<Item>()

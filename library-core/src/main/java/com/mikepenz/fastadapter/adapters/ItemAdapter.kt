@@ -14,7 +14,7 @@ typealias GenericItemAdapter = ItemAdapter<IItem<out RecyclerView.ViewHolder>>
  * Created by mikepenz on 27.12.15.
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  */
-class ItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : ModelAdapter<Item, Item> {
+open class ItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : ModelAdapter<Item, Item> {
 
     constructor() : super(InterceptorUtil.DEFAULT as (element: Item) -> Item?)
 

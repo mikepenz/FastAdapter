@@ -52,7 +52,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      *
      * @param mTypeInstanceCache a custom `TypeInstanceCache` implementation
      */
-    var typeInstanceCache: ITypeInstanceCache<Item> = DefaultTypeInstanceCache()
+    open var typeInstanceCache: ITypeInstanceCache<Item> = DefaultTypeInstanceCache()
     // cache the sizes of the different adapters so we can access the items more performant
     private val adapterSizes = SparseArray<IAdapter<Item>>()
     // the total size
@@ -103,7 +103,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     /**
      * the ClickEventHook to hook onto the itemView of a viewholder
      */
-    val viewClickListener: ClickEventHook<Item> = object : ClickEventHook<Item>() {
+    open val viewClickListener: ClickEventHook<Item> = object : ClickEventHook<Item>() {
         override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<Item>, item: Item) {
             val adapter = fastAdapter.getAdapter(position)
             if (adapter != null && item.isEnabled) {
@@ -121,7 +121,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     /**
      * the LongClickEventHook to hook onto the itemView of a viewholder
      */
-    val viewLongClickListener: LongClickEventHook<Item> = object : LongClickEventHook<Item>() {
+    open val viewLongClickListener: LongClickEventHook<Item> = object : LongClickEventHook<Item>() {
         override fun onLongClick(v: View, position: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean {
             val adapter = fastAdapter.getAdapter(position)
             if (adapter != null && item.isEnabled) {
@@ -138,7 +138,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     /**
      * the TouchEventHook to hook onto the itemView of a viewholder
      */
-    val viewTouchListener: TouchEventHook<Item> = object : TouchEventHook<Item>() {
+    open val viewTouchListener: TouchEventHook<Item> = object : TouchEventHook<Item>() {
         override fun onTouch(v: View, event: MotionEvent, position: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean {
             for (ext in fastAdapter.extensionsCache.values) {
                 if (ext.onTouch(v, event, position, fastAdapter, item)) return true
@@ -167,7 +167,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param adapter the new adapter to be added
      * @return this
      */
-    fun <A : IAdapter<Item>> addAdapter(index: Int, adapter: A): FastAdapter<Item> {
+    open fun <A : IAdapter<Item>> addAdapter(index: Int, adapter: A): FastAdapter<Item> {
         adapters.add(index, adapter)
         adapter.fastAdapter = this
         adapter.mapPossibleTypes(adapter.adapterItems)
@@ -184,7 +184,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param order the order (position) to search the adapter at
      * @return the IAdapter if found
      */
-    fun adapter(order: Int): IAdapter<Item>? {
+    open fun adapter(order: Int): IAdapter<Item>? {
         return if (adapters.size <= order) {
             null
         } else adapters[order]
@@ -449,7 +449,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param item the item which is searched for
      * @return the global position, or -1 if not found
      */
-    fun getPosition(item: Item): Int {
+    open fun getPosition(item: Item): Int {
         if (item.identifier == -1L) {
             Log.e(
                     "FastAdapter",
@@ -466,7 +466,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param identifier the identifier of an item which is searched for
      * @return the global position, or -1 if not found
      */
-    fun getPosition(identifier: Long): Int {
+    open fun getPosition(identifier: Long): Int {
         var position = 0
         for (adapter in adapters) {
             if (adapter.order < 0) {
@@ -489,7 +489,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param position the global position
      * @return the found IItem or null
      */
-    fun getItem(position: Int): Item? {
+    open fun getItem(position: Int): Item? {
         //if we are out of range just return null
         if (position < 0 || position >= globalSize) {
             return null
@@ -505,7 +505,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param identifier the identifier of the searched item
      * @return the found Pair&lt;IItem, Integer&gt; (the found item, and it's global position if it is currently displayed) or null
      */
-    fun getItemById(identifier: Long): Pair<Item, Int?>? {
+    open fun getItemById(identifier: Long): Pair<Item, Int?>? {
         if (identifier == -1L) {
             return null
         }
@@ -533,7 +533,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param position the global position
      * @return the adapter which is responsible for this position
      */
-    fun getRelativeInfo(position: Int): RelativeInfo<Item> {
+    open fun getRelativeInfo(position: Int): RelativeInfo<Item> {
         if (position < 0 || position >= itemCount) {
             return RelativeInfo()
         }
@@ -555,7 +555,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param position the global position
      * @return the adapter responsible for this global position
      */
-    fun getAdapter(position: Int): IAdapter<Item>? {
+    open fun getAdapter(position: Int): IAdapter<Item>? {
         //if we are out of range just return null
         if (position < 0 || position >= globalSize) {
             return null
@@ -600,7 +600,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param order the number up to which the items are counted
      * @return the total count of items up to the adapter order
      */
-    fun getPreItemCountByOrder(order: Int): Int {
+    open fun getPreItemCountByOrder(order: Int): Int {
         //if we are empty just return 0 count
         if (globalSize == 0) {
             return 0
@@ -624,7 +624,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param position the global position of an adapter item
      * @return the total count of items up to the adapter which holds the given position
      */
-    fun getPreItemCount(position: Int): Int {
+    open fun getPreItemCount(position: Int): Int {
         //if we are empty just return 0 count
         return if (globalSize == 0) {
             0
@@ -643,7 +643,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return the passed bundle with the newly added data
      */
     @JvmOverloads
-    fun saveInstanceState(savedInstanceState: Bundle?, prefix: String = ""): Bundle? {
+    open fun saveInstanceState(savedInstanceState: Bundle?, prefix: String = ""): Bundle? {
         // handle our extensions
         for (ext in extensionsCache.values) {
             ext.saveInstanceState(savedInstanceState, prefix)
@@ -682,7 +682,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     /**
      * wraps notifyDataSetChanged
      */
-    fun notifyAdapterDataSetChanged() {
+    open fun notifyAdapterDataSetChanged() {
         // handle our extensions
         for (ext in extensionsCache.values) {
             ext.notifyAdapterDataSetChanged()
@@ -696,7 +696,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      *
      * @param position the global position
      */
-    fun notifyAdapterItemInserted(position: Int) {
+    open fun notifyAdapterItemInserted(position: Int) {
         notifyAdapterItemRangeInserted(position, 1)
     }
 
@@ -706,7 +706,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param position  the global position
      * @param itemCount the count of items inserted
      */
-    fun notifyAdapterItemRangeInserted(position: Int, itemCount: Int) {
+    open fun notifyAdapterItemRangeInserted(position: Int, itemCount: Int) {
         // handle our extensions
         for (ext in extensionsCache.values) {
             ext.notifyAdapterItemRangeInserted(position, itemCount)
@@ -720,7 +720,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      *
      * @param position the global position
      */
-    fun notifyAdapterItemRemoved(position: Int) {
+    open fun notifyAdapterItemRemoved(position: Int) {
         notifyAdapterItemRangeRemoved(position, 1)
     }
 
@@ -730,7 +730,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param position  the global position
      * @param itemCount the count of items removed
      */
-    fun notifyAdapterItemRangeRemoved(position: Int, itemCount: Int) {
+    open fun notifyAdapterItemRangeRemoved(position: Int, itemCount: Int) {
         // handle our extensions
         for (ext in extensionsCache.values) {
             ext.notifyAdapterItemRangeRemoved(position, itemCount)
@@ -746,7 +746,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param fromPosition the global fromPosition
      * @param toPosition   the global toPosition
      */
-    fun notifyAdapterItemMoved(fromPosition: Int, toPosition: Int) {
+    open fun notifyAdapterItemMoved(fromPosition: Int, toPosition: Int) {
         // handle our extensions
         for (ext in extensionsCache.values) {
             ext.notifyAdapterItemMoved(fromPosition, toPosition)
@@ -761,7 +761,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param payload  additional payload
      */
     @JvmOverloads
-    fun notifyAdapterItemChanged(position: Int, payload: Any? = null) {
+    open fun notifyAdapterItemChanged(position: Int, payload: Any? = null) {
         notifyAdapterItemRangeChanged(position, 1, payload)
     }
 
@@ -773,7 +773,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param payload   an additional payload
      */
     @JvmOverloads
-    fun notifyAdapterItemRangeChanged(position: Int, itemCount: Int, payload: Any? = null) {
+    open fun notifyAdapterItemRangeChanged(position: Int, itemCount: Int, payload: Any? = null) {
         // handle our extensions
         for (ext in extensionsCache.values) {
             ext.notifyAdapterItemRangeChanged(position, itemCount, payload)

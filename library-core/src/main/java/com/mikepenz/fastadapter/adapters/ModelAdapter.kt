@@ -30,9 +30,9 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
             super.fastAdapter = fastAdapter
         }
 
-    var reverseInterceptor: ((element: Item) -> Model?)? = null
+    open var reverseInterceptor: ((element: Item) -> Model?)? = null
 
-    var idDistributor: IIdDistributor<Item> = IIdDistributor.DEFAULT as IIdDistributor<Item>
+    open var idDistributor: IIdDistributor<Item> = IIdDistributor.DEFAULT as IIdDistributor<Item>
 
     /**
      * Defines if the DefaultIdDistributor is used to provide an ID to all added items which do not yet define an id
@@ -43,7 +43,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
     /**
      * allows you to define your own Filter implementation instead of the default `ItemFilter`
      */
-    var itemFilter = ItemFilter(this)
+    open var itemFilter = ItemFilter(this)
 
     /**
      * the ModelAdapter does not keep a list of input model's to get retrieve them a `reverseInterceptor` is required
@@ -51,7 +51,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      *
      * @return a List of initial Model's
      */
-    val models: List<Model>
+    open val models: List<Model>
         get() {
             val list = ArrayList<Model>(itemList.size())
             for (item in itemList.items) {
@@ -95,7 +95,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @param model the `Model` which will be used to create the `Item`
      * @return the generated `Item`
      */
-    fun intercept(model: Model): Item? {
+    open fun intercept(model: Model): Item? {
         return interceptor.invoke(model)
     }
 
@@ -105,7 +105,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @param models the List of Model which will be used to create the List of Item
      * @return the generated List of Item
      */
-    fun intercept(models: List<Model>): List<Item> {
+    open fun intercept(models: List<Model>): List<Item> {
         val items = ArrayList<Item>(models.size)
         var item: Item?
         for (model in models) {
@@ -121,7 +121,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      *
      * @param constraint the string used to filter the list
      */
-    fun filter(constraint: CharSequence?) {
+    open fun filter(constraint: CharSequence?) {
         itemFilter.filter(constraint)
     }
 
