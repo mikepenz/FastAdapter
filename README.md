@@ -88,71 +88,53 @@ implementation 'com.mikepenz:materialize:${latestVersion}' // at least 1.2.0
 ## How to use
 ### 1. Implement your item (the easy way)
 Just create a class which extends the `AbstractItem` as shown below. Implement the methods, and your item is ready.
-```java
-public class SimpleItem extends AbstractItem<SimpleItem.ViewHolder> {
-    public String name;
-    public String description;
+```kotlin
+open class SimpleItem : AbstractItem<SimpleItem.ViewHolder>() {
+    var name: String? = null
+    var description: String? = null
 
-    // The unique ID for this type of item
-    // The ID has to be unique per item type.
-    // This is important as it is used by the RV for viewHolder reusing.
-    @Override
-    public int getType() {
-        return R.id.fastadapter_sampleitem_id;
+    /** defines the type defining this item. must be unique. preferably an id */
+    override val type: Int
+        get() = R.id.fastadapter_sample_item_id
+
+    /** defines the layout which will be used for this item in the list  */
+    override val layoutRes: Int
+        get() = R.layout.sample_item
+
+    override fun getViewHolder(v: View): ViewHolder {
+        return ViewHolder(v)
     }
+    
+    class ViewHolder(view: View) : FastAdapter.ViewHolder<SimpleItem>(view) {
+        var name: TextView = view.findViewById(R.id.material_drawer_name)
+        var description: TextView = view.findViewById(R.id.material_drawer_description)
 
-    //The layout to be used for this type of item
-    @Override
-    public int getLayoutRes() {
-        return R.layout.sample_item;
-    }
-
-    @Override
-    public ViewHolder getViewHolder(@NonNull View v) {
-        return new ViewHolder(v);
-    }
-
-    /**
-     * our ViewHolder
-     */
-    protected static class ViewHolder extends FastAdapter.ViewHolder<SimpleItem> {
-        @BindView(R.id.material_drawer_name)
-        TextView name;
-        @BindView(R.id.material_drawer_description)
-        TextView description;
-
-        public ViewHolder(View view) {
-            super(view);
-            ButterKnife.bind(this, view);
+        override fun bindView(item: SimpleItem, payloads: MutableList<Any>) {
+            name.text = item.name
+            description.text = item.name
         }
 
-        @Override
-        public void bindView(SimpleItem item, List<Object> payloads) {
-            StringHolder.applyTo(item.name, name);
-            StringHolder.applyToOrHide(item.description, description);
-        }
-
-        @Override
-        public void unbindView(SimpleItem item) {
-            name.setText(null);
-            description.setText(null);
+        override fun unbindView(item: SimpleItem) {
+            name.text = null
+            description.text = null
         }
     }
 }
+
 ```
 
 ### 2. Set the Adapter to the RecyclerView
-```java
+```kotlin
 //create the ItemAdapter holding your Items
-ItemAdapter itemAdapter = new ItemAdapter();
+val itemAdapter = ItemAdapter<SimpleItem>()
 //create the managing FastAdapter, by passing in the itemAdapter
-FastAdapter fastAdapter = FastAdapter.with(itemAdapter);
+val fastAdapter = FastAdapter.with(itemAdapter)
 
 //set our adapters to the RecyclerView
-recyclerView.setAdapter(fastAdapter);
+recyclerView.setAdapter(fastAdapter)
 
 //set the items to your ItemAdapter
-itemAdapter.add(ITEMS);
+itemAdapter.add(ITEMS)
 ```
 
 ### 3. Extensions
@@ -162,13 +144,13 @@ And the general functionality of adding/removing/modifying elements. To enable *
 
 #### 3.1. SelectExtension
 
-```java
+```kotlin
 // Gets (or creates and attaches if not yet existing) the extension from the given `FastAdapter`
-SelectExtension selectExtension = mFastAdapter.getOrCreateExtension(SelectExtension.class);
+val selectExtension = fastAdapter.getSelectExtension()
 // configure as needed
-selectExtension.setSelectable(true);
-selectExtension.setMultiSelect(true);
-selectExtension.setSelectOnLongClick(false);  
+selectExtension.isSelectable = true
+selectExtension.multiSelect = true
+selectExtension.selectOnLongClick = false
 // see the API of this class for more options.
 ```
 
@@ -176,52 +158,48 @@ selectExtension.setSelectOnLongClick(false);
 
 > This requires the `fastadapter-extensions-expandable` extension.
 
-```java
+```kotlin
 // Gets (or creates and attaches if not yet existing) the extension.
-ExpandableExtension expandableExtension = fastItemAdapter.getOrCreateExtension(ExpandableExtension.class);
+val expandableExtension = fastAdapter.getExpandableExtension()
 // configure as needed
-expandableExtension.setOnlyOneExpandedItem(true);
+expandableExtension.isOnlyOneExpandedItem = true
 ```
 
 For further details scroll down to the `ExpandableItems` (under advanced usage) section.
  
 ### 3. Click listener
-```java
-fastAdapter.setOnClickListener((view, adapter, item, position) -> {
+```kotlin
+fastAdapter.onClickListener = { view, adapter, item, position ->
     // Handle click here
-    return false;
-});
+    false
+}
 ```
 
 ### 4. Click listeners for views inside your item
-```java
+```kotlin
 //just add an `EventHook` to your `FastAdapter` by implementing either a `ClickEventHook`, `LongClickEventHook`, `TouchEventHook`, `CustomEventHook`
-fastAdapter.addEventHook(new ClickEventHook<SimpleItem>() {
-    @Nullable
-    @Override
-    public View onBind(@NotNull RecyclerView.ViewHolder viewHolder) {
+fastAdapter.addEventHook(object : ClickEventHook<SimpleImageItem>() {
+    override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {
         //return the views on which you want to bind this event
-        if (viewHolder instanceof SimpleItem.ViewHolder) {
-            return ((SimpleItem.ViewHolder) viewHolder).viewWhichReactsOnClick;
-        }
-        return null;
+        return if (viewHolder is SimpleImageItem.ViewHolder) {
+            viewHolder.viewWhichReactsOnClick
+        } else null
     }
 
-    @Override
-    public void onClick(@NotNull View v, int position, @NotNull FastAdapter<SimpleItem> fastAdapter, @NotNull SimpleItem item) {
+    override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<SimpleImageItem>, item: SimpleImageItem) {
         //react on the click event
     }
-});
+})
 ```
 
 ### 5. Filter 
 
-```java
+```kotlin
 // Call this in onQueryTextSubmit() & onQueryTextChange() when using SearchView
-itemAdapter.filter("yourSearchTerm");
-itemAdapter.getItemFilter().setFilterPredicate((item, constraint) -> {
-    return item.getName().startsWith(String.valueOf(constraint));
-});
+itemAdapter.filter("yourSearchTerm")
+itemAdapter.itemFilter.filterPredicate = { item: SimpleItem, constraint: CharSequence? ->
+    item.name?.text.toString().toLowerCase().contains(constraint.toString().toLowerCase())
+}
 ```
 `filter()` should return true for items to be retained and false for items to be removed.
 
@@ -231,19 +209,18 @@ itemAdapter.getItemFilter().setFilterPredicate((item, constraint) -> {
 
 First, attach `ItemTouchHelper` to RecyclerView.
 
-```java
-SimpleDragCallback dragCallback = new SimpleDragCallback();
-ItemTouchHelper touchHelper = new ItemTouchHelper(dragCallback);
-touchHelper.attachToRecyclerView(recyclerView);
+```kotlin
+val dragCallback = SimpleDragCallback()
+val touchHelper = ItemTouchHelper(dragCallback)
+touchHelper.attachToRecyclerView(recyclerView)
 ```
 
 Implement `ItemTouchCallback` interface in your Activity, and override the `itemTouchOnMove()` method.
 
-```java
-@Override
-public boolean itemTouchOnMove(int oldPosition, int newPosition) {
-    DragDropUtil.onMove(fastAdapter.getItemAdapter(), oldPosition, newPosition);  // change position
-    return true;
+```kotlin
+override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
+    DragDropUtil.onMove(fastItemAdapter.itemAdapter, oldPosition, newPosition) // change position
+    return true
 }
 ```
 
@@ -251,44 +228,43 @@ public boolean itemTouchOnMove(int oldPosition, int newPosition) {
 
 Start by initializing your adapters:
 
-```java
+```kotlin
 // Head is a model class for your header
-ItemAdapter<Header> headerAdapter = new ItemAdapter<>();
+val headerAdapter = ItemAdapter<Header>()
 ```
 
 Initialize a Model FastAdapter:
 
-```java
-ItemAdapter<IItem> itemAdapter = new ItemAdapter<>();
+```kotlin
+val itemAdapter = GenericItemAdapter()
 ```
 
 Finally, set the adapter:
 
-```java
-FastAdapter fastAdapter = FastAdapter.with(headerAdapter, itemAdapter); //the order defines in which order the items will show up
+```kotlin
+val fastAdapter: GenericFastAdapter = FastAdapter.with(headerAdapter, itemAdapter) //the order defines in which order the items will show up
 // alternative the super type of both item adapters can be used. e.g.:
-// FastAdapter<IItem> fastAdapter = FastAdapter.with(headerAdapter, itemAdapter); 
-recyclerView.setAdapter(fastAdapter);
+recyclerView.setAdapter(fastAdapter)
 ```
 
 ### 8. Infinite (endless) scrolling
 
 Create a FooterAdapter. We need this to display a loading ProgressBar at the end of our list. (Don't forget to pass it into `FastAdapter.with(..)`)
 
-```java
-ItemAdapter<ProgressItem> footerAdapter = new ItemAdapter<>();
+```kotlin
+val footerAdapter = ItemAdapter<ProgressItem>()
 ```
 Keep in mind that ProgressItem is provided by FastAdapter’s extensions.
-```java
-recyclerView.addOnScrollListener(new EndlessRecyclerOnScrollListener(footerAdapter) {
-    @Override
-    public void onLoadMore(int currentPage) {
-	footerAdapter.clear();
-	footerAdapter.add(new ProgressItem().withEnabled(false));
-	// Load your items here and add it to FastAdapter
-	fastAdapter.add(NEWITEMS);
-    }
-});
+```kotlin
+recyclerView.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
+     override fun onLoadMore(currentPage: Int) {
+         footerAdapter.clear()
+         footerAdapter.add(ProgressItem())
+         
+         // Load your items here and add it to FastAdapter
+         itemAdapter.add(NEWITEMS)
+     }
+})
 ```
 
 For the complete tutorial and more features such as multi-select and CAB check out the [sample app](https://github.com/mikepenz/FastAdapter/tree/develop/app).
@@ -300,9 +276,8 @@ For the complete tutorial and more features such as multi-select and CAB check o
 ### ExpandableItems
 The `FastAdapter` comes with support for expandable items. After adding the dependency set up the `Expandable` extension via:
 
-```java
-expandableExtension = new ExpandableExtension<>();
-fastAdapter.addExtension(expandableExtension);
+```kotlin
+val expandableExtension = fastAdapter.getExpandableExtension()
 ```
 
 Expandable items have to implement the `IExpandable` interface, and the sub items the `ISubItem` interface. This allows better support.
@@ -311,8 +286,8 @@ The sample app provides sample implementations of those. (Those in the sample ar
 As of the way how `SubItems` and their state are handled it is highly recommended to use the `identifier` based `StateManagement`. Just add `withPositionBasedStateManagement(false)` to your `FastAdapter` setup.
 
 A simple item just needs to extend from the `AbstractExpandableItem` and provide the `ViewHolder` as type.
-```java
-public class SimpleSubExpandableItem extends AbstractExpandableItem<SimpleSubExpandableItem.ViewHolder> {
+```kotlin
+open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableItem.ViewHolder>() {
 
     /**
      * BASIC ITEM IMPLEMENTATION

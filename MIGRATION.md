@@ -28,6 +28,7 @@ The new modules are:
 - com.mikepenz:fastadapter-extensions-ui // pre-defined ui components
 - com.mikepenz:fastadapter-extensions-utils // needs the `expandable`, `drag` and `scroll` extension.
 
+If you have any issues during the migration, or any questions come up please open a github issue so we can improve the migration guide or the documentation.
 
 #### v3.3.x
 * Upgraded the library to use `androidX` dependencies. This means your project will need to depend on `androidX` dependencies too. If you still use appcompat please consider using a version older than v3.3.x. 
