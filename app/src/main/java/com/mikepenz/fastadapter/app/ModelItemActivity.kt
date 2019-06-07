@@ -62,7 +62,7 @@ class ModelItemActivity : AppCompatActivity() {
         rv.itemAnimator = SlideDownAlphaAnimator()
 
         //order fonts by their name
-        val mFonts = ArrayList(Iconics.registeredFonts)
+        val mFonts = ArrayList(Iconics.getRegisteredFonts(this))
         mFonts.sortWith(Comparator { object1, object2 -> object1.fontName.compareTo(object2.fontName) })
 
         //add all icons of all registered Fonts to the list
