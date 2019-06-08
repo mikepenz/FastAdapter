@@ -107,11 +107,11 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      */
     open fun intercept(models: List<Model>): List<Item> {
         val items = ArrayList<Item>(models.size)
-        var item: Item?
-        for (model in models) {
-            item = intercept(model)
-            if (item == null) continue
-            items.add(item)
+        models.forEach { model ->
+            val item = intercept(model)
+            if (item != null) {
+                items.add(item)
+            }
         }
         return items
     }
