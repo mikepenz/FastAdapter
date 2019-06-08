@@ -1,5 +1,35 @@
 ### Upgrade Notes
 
+#### v4.x.y
+
+v4 is a huge release changing most of the codebase to Kotlin. This comes with many refactors, and as a result of that with many breaking API changes. 
+We put a lot of focus on type safety with this release, as such this release is a lot more strict and tries to prevent as many potential bad type mixups as possible.
+
+* As a result of the Kotlin migration the static methods can now be accessed via `FastAdapter.Companion`. E.g.: `FastAdapter.Companion.with(...)`
+* The `IItem` interface now requires a type specification. E.g. `IItem<RecyclerView.ViewHolder>`
+* The `SelectExtension` is no longer default enabled and wrapped in the `FastAdapter` use its API standalone. E.g.: `selectExtension.setSelectable(true)`, ...
+* Extensions can be retrieved via `getOrCreateExtension`. `SelectExtension<?> selectExtension = (SelectExtension<?>) mFastAdapter.getOrCreateExtension(SelectExtension.class)`
+* Most API methods which were possible to be chained in the previous releases are now standard properties. So use `set` / `get`. E.g.: `sampleItem.setSelectable(false)`, `sampleItem.setIdentifier(1)`, ...
+* `FastAdapterDiffUtil` no longer directly takes the `FastItemAdapter`, provide the `ItemAdapter` or `ModelAdapter` instead.
+* The `IItem` interface now only requires the `ViewHolder` type.
+* The `IExpandable` interface was changed and now extends `IParentItem` and `ISubItem`.
+* The `ISubItem` interface now only requires the `ViewHolder` type.
+* The `IParentItem` interface only requires the `ViewHolder` type.
+* `IIdentifyable` interface does not require any type anymore.
+
+The v4 release brings a new more modular setup. Allowing to be a lot more precise on what to take from the `FastAdapter`. 
+Due to the new modules some packages of various classes might have changes. Check out here on GitHub for the new location of classes.
+
+The new modules are:
+- com.mikepenz:fastadapter-extensions-diff // diff util helpers
+- com.mikepenz:fastadapter-extensions-drag // drag support
+- com.mikepenz:fastadapter-extensions-scroll // scroll helpers
+- com.mikepenz:fastadapter-extensions-swipe // swipe support
+- com.mikepenz:fastadapter-extensions-ui // pre-defined ui components
+- com.mikepenz:fastadapter-extensions-utils // needs the `expandable`, `drag` and `scroll` extension.
+
+If you have any issues during the migration, or any questions come up please open a github issue so we can improve the migration guide or the documentation.
+
 #### v3.3.x
 * Upgraded the library to use `androidX` dependencies. This means your project will need to depend on `androidX` dependencies too. If you still use appcompat please consider using a version older than v3.3.x. 
 * Further details about migrating to androidX and a overview can be found on the official docs. https://developer.android.com/topic/libraries/support-library/refactor

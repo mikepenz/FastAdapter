@@ -1,4 +1,5 @@
 apply plugin: 'com.android.library'
+apply plugin: 'kotlin-android'
 
 android {
     compileSdkVersion setup.compileSdk
@@ -25,15 +26,60 @@ android {
     lintOptions {
         abortOnError false
     }
+    testOptions {
+        unitTests {
+            includeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
-    implementation "androidx.appcompat:appcompat:${versions.androidX}"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+
+    implementation "androidx.appcompat:appcompat:${versions.appcompat}"
     implementation "androidx.recyclerview:recyclerview:${versions.androidX}"
     implementation "androidx.annotation:annotation:${versions.androidX}"
-    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+
+    testImplementation 'junit:junit:4.12'
+    testImplementation 'org.mockito:mockito-all:1.10.19'
+    testImplementation "org.robolectric:robolectric:${versions.roboelectric}"
+    testImplementation 'com.squareup.assertj:assertj-android:1.1.1'
+    testImplementation 'com.squareup.assertj:assertj-android-design:1.1.1@aar'
+    testImplementation 'com.squareup.assertj:assertj-android-appcompat-v7:1.1.1@aar'
+    testImplementation("com.squareup.assertj:assertj-android-support-v4:1.1.1@aar") {
+        exclude group: "com.android.support", module: "support-annotations"
+        exclude group: "com.android.support", module: "support-v4"
+    }
 }
 
-if (project.hasProperty('pushall') || project.hasProperty('librarycoreonly')) {
+if (project.hasProperty('pushall') || project.hasProperty('library_core_only')) {
     apply from: '../gradle-release.gradle'
+}
+
+tasks.withType(Test) {
+    testLogging {
+        // set options for log level LIFECYCLE
+        events "passed", "skipped", "failed", "standardOut"
+        showExceptions true
+        exceptionFormat "short"
+        showCauses true
+        showStackTraces true
+
+        // set options for log level DEBUG and INFO
+        debug {
+            events "started", "passed", "skipped", "failed", "standardOut", "standardError"
+            exceptionFormat "full"
+        }
+        info.events = debug.events
+        info.exceptionFormat = debug.exceptionFormat
+
+        afterSuite { desc, result ->
+            if (!desc.parent) { // will match the outermost suite
+                def output = "Results: ${result.resultType} (${result.testCount} tests, ${result.successfulTestCount} successes, ${result.failedTestCount} failures, ${result.skippedTestCount} skipped)"
+                def startItem = '|  ', endItem = '  |'
+                def repeatLength = startItem.length() + output.length() + endItem.length()
+                println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+            }
+        }
+    }
 }
