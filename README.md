@@ -1,4 +1,4 @@
-# FastAdapter  [![Download](https://api.bintray.com/packages/mikepenz/maven/com.mikepenz%3Afastadapter/images/download.svg?version=3.2.7) ](https://bintray.com/mikepenz/maven/com.mikepenz%3Afastadapter/3.2.7/link) [![Join the chat at https://gitter.im/mikepenz/fastadapter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/mikepenz/fastadapter?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+# FastAdapter [ ![Download](https://api.bintray.com/packages/mikepenz/maven/com.mikepenz%3Afastadapter/images/download.svg) ](https://bintray.com/mikepenz/maven/com.mikepenz%3Afastadapter/_latestVersion)
 
 > The RecyclerView is one of the most used widgets in the Android world, and with it you have to implement an Adapter which provides the items for the view. Most use cases require the same base logic, but require you to write everything again and again.
 
