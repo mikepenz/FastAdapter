@@ -76,14 +76,7 @@ implementation 'com.mikepenz:materialize:${latestVersion}' // at least 1.2.0
 ```
 
 ## v4.x.y
-> Major release, migrates fully to Kotlin. No migration notes yet available. Stay tuned!
-
-## v3.3.x
-> Upgrades to use androidX dependencies. Use a version smaller than 3.3.x to use with appCompat dependencies.
-
-## v3.x.x
-> v3 is a huge new release and comes with a big set of new changes. If you previously used the `FastAdapter` and head over to the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md) on how to get started with v3.
-> In case you are searching [v2.x head over here to it here](https://github.com/mikepenz/FastAdapter/tree/v2.6.3).
+> Major release, migrates fully to Kotlin. Check out the changelog or the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md for more details
 
 ## How to use
 ### 1. Implement your item (the easy way)
