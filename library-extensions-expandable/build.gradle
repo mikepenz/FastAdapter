@@ -42,10 +42,10 @@ dependencies {
     testImplementation 'org.mockito:mockito-all:1.10.19'
     testImplementation "org.robolectric:robolectric:${versions.roboelectric}"
 
-    testImplementation 'androidx.test:rules:1.1.0-beta02'
-    testImplementation 'androidx.test:runner:1.1.0-beta2'
-    testImplementation 'androidx.test.ext:junit:1.0.0-beta02'
-    testImplementation 'androidx.test.espresso:espresso-core:3.1.0-beta02'
+    testImplementation 'androidx.test:rules:1.2.0'
+    testImplementation 'androidx.test:runner:1.2.0'
+    testImplementation 'androidx.test.ext:junit:1.1.1'
+    testImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 
     testImplementation 'com.squareup.assertj:assertj-android:1.1.1'
     testImplementation 'com.squareup.assertj:assertj-android-design:1.1.1@aar'

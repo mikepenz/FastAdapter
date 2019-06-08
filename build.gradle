@@ -10,7 +10,7 @@ buildscript {
                 compileSdk: 29,
                 buildTools: "29.0.0",
                 minSdk    : 14,
-                targetSdk : 29
+                targetSdk : 28
         ]
 
         versions = [
@@ -21,7 +21,7 @@ buildscript {
                 iconics       : '4.0.0',
                 materialdrawer: '7.0.0-beta01',
                 aboutlib      : '7.0.0-rc1',
-                roboelectric  : '4.0.2'
+                roboelectric  : '4.3'
         ]
     }
 
