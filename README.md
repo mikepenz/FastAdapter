@@ -40,7 +40,7 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 # Include in your project
 ## Latest releases
 
-- Kotlin | [v4.0.0-rc04](https://github.com/mikepenz/FastAdapter/tree/v4.0.0-rc4)
+- Kotlin | [v4.0.0](https://github.com/mikepenz/FastAdapter/tree/v4.0.0)
 - Java && AndroidX | [v3.3.1](https://github.com/mikepenz/FastAdapter/tree/v3.3.1)
 - Java && AppCompat | [v3.2.9](https://github.com/mikepenz/FastAdapter/tree/v3.2.9)
 
@@ -337,7 +337,7 @@ I want to give say thanks to some special contributors who provided some huge PR
 
 # License
 
-    Copyright 2017 Mike Penz
+    Copyright 2019 Mike Penz
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
