@@ -1,4 +1,7 @@
 apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 //wrap with try and catch so the build is working even if the signing stuff is missing
 try {
@@ -41,15 +44,33 @@ android {
     lintOptions {
         abortOnError false
     }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    packagingOptions {
+        exclude 'META-INF/library-core_release.kotlin_module'
+        exclude 'META-INF/library_release.kotlin_module'
+    }
+}
+
+kapt {
+    generateStubs = true
 }
 
 dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+
     implementation 'com.android.support:multidex:1.0.3'
 
     implementation project(':library-core')
-    implementation project(':library')
-    implementation project(':library-extensions')
+    implementation project(':library-extensions-diff')
+    implementation project(':library-extensions-drag')
     implementation project(':library-extensions-expandable')
+    implementation project(':library-extensions-scroll')
+    implementation project(':library-extensions-swipe')
+    implementation project(':library-extensions-ui')
+    implementation project(':library-extensions-utils')
 
     implementation "androidx.appcompat:appcompat:${versions.androidX}"
     implementation "androidx.recyclerview:recyclerview:${versions.androidX}"
@@ -57,23 +78,23 @@ dependencies {
     implementation "com.google.android.material:material:${versions.androidX}"
 
     // view binding lib?
-    implementation 'com.android.support:support-annotations:27.1.1'
+    implementation 'com.android.support:support-annotations:28.0.0'
 
     // used to base on some backwards compatible themes
     // contains util classes to support various android versions, and clean up code
     // comes with the awesome "Holder"-Pattern
     // https://github.com/mikepenz/Materialize
-    implementation 'com.mikepenz:materialize:1.2.0'
+    implementation "com.mikepenz:materialize:${versions.materialize}"
 
     // used to provide out of the box icon font support. simplifies development,
     // and provides scalable icons. the core is very very light
     // https://github.com/mikepenz/Android-Iconics
-    implementation 'com.mikepenz:iconics-core:3.1.0'
-    implementation "com.mikepenz:iconics-views:3.1.0"
+    implementation "com.mikepenz:iconics-core:${versions.iconics}"
+    implementation "com.mikepenz:iconics-views:${versions.iconics}"
 
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
-    implementation('com.mikepenz:materialdrawer:6.1.0') {
+    implementation("com.mikepenz:materialdrawer:${versions.materialdrawer}") {
         transitive = true
         exclude group: "com.mikepenz"
     }
@@ -82,16 +103,16 @@ dependencies {
     implementation 'com.mikepenz:itemanimators:1.1.0'
     //used to generate the Open Source section
     //https://github.com/mikepenz/AboutLibraries
-    implementation('com.mikepenz:aboutlibraries:6.2.0') {
+    implementation("com.mikepenz:aboutlibraries:${versions.aboutlib}") {
         transitive = true
         exclude group: "com.mikepenz"
     }
     //used to display the icons in the drawer
     //https://github.com/mikepenz/Android-Iconics
-    implementation 'com.mikepenz:material-design-iconic-typeface:2.2.0.1@aar'
-    implementation 'com.mikepenz:community-material-typeface:1.7.22.1@aar'
-    implementation 'com.mikepenz:google-material-typeface:3.0.1.1.original@aar'
-    implementation 'com.mikepenz:fontawesome-typeface:4.7.0.0@aar'
+    implementation 'com.mikepenz:material-design-iconic-typeface:2.2.0.6-kotlin@aar'
+    implementation 'com.mikepenz:community-material-typeface:2.7.94.2-kotlin@aar'
+    implementation 'com.mikepenz:google-material-typeface:3.0.1.4.original-kotlin@aar'
+    implementation 'com.mikepenz:fontawesome-typeface:5.3.1.2-kotlin@aar'
 
     //Used for the StickyHeaderSample
     //https://github.com/timehop/sticky-headers-recyclerview
@@ -101,11 +122,11 @@ dependencies {
 
     //Used to provide the FastScrollBar
     //https://github.com/krimin-killr21/MaterialScrollBar
-    implementation 'com.turingtechnologies.materialscrollbar:lib:10.0.1'
+    implementation 'com.github.turing-tech:MaterialScrollBar:13.3.1'
 
     //https://github.com/JakeWharton/butterknife
-    implementation 'com.jakewharton:butterknife:9.0.0-SNAPSHOT'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:9.0.0-SNAPSHOT'
+    implementation 'com.jakewharton:butterknife:10.0.0'
+    kapt 'com.jakewharton:butterknife-compiler:10.0.0'
 
     //used to load the images in the ImageListSample
     //https://github.com/bumptech/glide
@@ -115,20 +136,26 @@ dependencies {
     implementation 'com.github.MFlisar:DragSelectRecyclerView:0.2'
 
     //mopub sdk to showcase the usage of the mopub adapter
-    implementation('com.mopub:mopub-sdk:4.7.1@aar') {
+    implementation('com.mopub:mopub-sdk:4.11.0@aar') {
+        transitive = true
+        exclude group: "com.google.android.exoplayer"
+    }
+    implementation('com.mopub:mopub-sdk-native-static:4.11.0@aar') {
         transitive = true
         exclude group: "com.google.android.exoplayer"
     }
 
     //Used to async operations
-    implementation 'io.reactivex.rxjava2:rxandroid:2.0.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
+
+    compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
     configurations.all {
-        resolutionStrategy.force "com.mikepenz:materialize:1.2.0-rc01"
-        resolutionStrategy.force "com.mikepenz:iconics-core:3.1.0-rc01"
-        resolutionStrategy.force "com.mikepenz:aboutlibraries:6.2.0-rc01"
-        resolutionStrategy.force "androidx.appcompat:appcompat:${versions.androidX}"
+        resolutionStrategy.force "com.mikepenz:materialize:${versions.materialize}"
+        resolutionStrategy.force "com.mikepenz:iconics-core:${versions.iconics}"
+        resolutionStrategy.force "com.mikepenz:aboutlibraries:${versions.aboutlib}"
+        resolutionStrategy.force "androidx.appcompat:appcompat:${versions.appcompat}"
         resolutionStrategy.force "androidx.recyclerview:recyclerview:${versions.androidX}"
         resolutionStrategy.force "androidx.cardview:cardview:${versions.androidX}"
         resolutionStrategy.force "com.google.android.material:material:${versions.androidX}"
@@ -141,6 +168,6 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "io.realm:realm-gradle-plugin:4.1.1"
+        classpath "io.realm:realm-gradle-plugin:5.11.0"
     }
 }
