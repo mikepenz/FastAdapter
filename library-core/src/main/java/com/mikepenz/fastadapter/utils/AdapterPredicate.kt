@@ -18,9 +18,9 @@ interface AdapterPredicate<Item : IItem<out RecyclerView.ViewHolder>> {
      * @return true if we matched and no longer want to continue (will be ignored if `stopOnMatch` of the recursive function is false)
      */
     fun apply(
-        lastParentAdapter: IAdapter<Item>,
-        lastParentPosition: Int,
-        item: Item,
-        position: Int
+            lastParentAdapter: IAdapter<Item>,
+            lastParentPosition: Int,
+            item: Item,
+            position: Int
     ): Boolean
 }

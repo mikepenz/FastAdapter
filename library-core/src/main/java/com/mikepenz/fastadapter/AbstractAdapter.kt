@@ -23,7 +23,7 @@ abstract class AbstractAdapter<Item : IItem<out RecyclerView.ViewHolder>> : IAda
      *
      * @param items
      */
-   override fun mapPossibleTypes(items: Iterable<Item>?) {
+    override fun mapPossibleTypes(items: Iterable<Item>?) {
         fastAdapter?.let { fastAdapter ->
             if (items != null) {
                 for (item in items) {

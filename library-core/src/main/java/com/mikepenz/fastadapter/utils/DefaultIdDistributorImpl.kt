@@ -7,7 +7,7 @@ import java.util.concurrent.atomic.AtomicLong
  * Created by mikepenz on 19.09.15.
  */
 class DefaultIdDistributorImpl<Identifiable : IIdentifyable> :
-    DefaultIdDistributor<Identifiable>() {
+        DefaultIdDistributor<Identifiable>() {
 
     private val idDistributor = AtomicLong(-2L)
 

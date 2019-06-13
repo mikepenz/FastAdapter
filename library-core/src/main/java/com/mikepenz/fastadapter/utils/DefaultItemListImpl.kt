@@ -10,7 +10,7 @@ import java.util.*
  */
 
 open class DefaultItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> @JvmOverloads constructor(
-    protected var mItems: MutableList<Item> = ArrayList()
+        protected var mItems: MutableList<Item> = ArrayList()
 ) : DefaultItemList<Item>() {
 
     override val items: MutableList<Item>
@@ -103,10 +103,10 @@ open class DefaultItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> @JvmOv
         fastAdapter?.let { fastAdapter ->
             //now properly notify the adapter about the changes
             (adapterNotifier ?: IAdapterNotifier.DEFAULT).notify(
-                fastAdapter,
-                newItemsCount,
-                previousItemsCount,
-                preItemCount
+                    fastAdapter,
+                    newItemsCount,
+                    previousItemsCount,
+                    preItemCount
             )
         }
     }
