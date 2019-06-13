@@ -55,10 +55,8 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
                 if (expandable.isExpanded) {
                     expandable.isExpanded = false
 
-                    expandable.subItems?.let { subItems ->
-                        expandedItemsCount += subItems.size
-                        allowedParents.add(item)
-                    }
+                    expandedItemsCount += expandable.subItems.size
+                    allowedParents.add(item)
                 }
             }
             return false
