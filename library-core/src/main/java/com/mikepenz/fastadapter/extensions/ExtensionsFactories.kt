@@ -17,13 +17,8 @@ object ExtensionsFactories {
     fun create(
         fastAdapter: FastAdapter<out IItem<out RecyclerView.ViewHolder>>,
         clazz: Class<out IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>
-    ): IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>? {
-        if (!factories.containsKey(clazz)) {
-            return null
-        }
-        val extension = factories[clazz]
-        return extension?.create(fastAdapter)
-    }
+    ): IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>? =
+        factories[clazz]?.create(fastAdapter)
 
     inline fun <reified T : IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>
         create(fastAdapter: FastAdapter<out IItem<out RecyclerView.ViewHolder>>): IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>? =
