@@ -24,4 +24,8 @@ object ExtensionsFactories {
         val extension = factories[clazz]
         return extension?.create(fastAdapter)
     }
+
+    inline fun <reified T : IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>
+        create(fastAdapter: FastAdapter<out IItem<out RecyclerView.ViewHolder>>): IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>? =
+        create(fastAdapter, T::class.java)
 }
