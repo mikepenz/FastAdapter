@@ -953,10 +953,8 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             }
             fastAdapter.cacheSizes()
 
-            if (extensions != null) {
-                for (extension in extensions) {
-                    fastAdapter.addExtension(extension)
-                }
+            extensions?.forEach {
+                fastAdapter.addExtension(it)
             }
 
             return fastAdapter
