@@ -297,11 +297,10 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
     /**
      * add a list of items to the end of the existing items
      *
-     * @param list the items to add
+     * @param items the items to add
      */
-    override fun add(list: List<Model>): ModelAdapter<Model, Item> {
-        val items = intercept(list)
-        return addInternal(items)
+    override fun add(items: List<Model>): ModelAdapter<Model, Item> {
+        return addInternal(intercept(items))
     }
 
     override fun addInternal(items: List<Item>): ModelAdapter<Model, Item> {
