@@ -943,10 +943,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             if (adapters == null) {
                 fastAdapter.adapters.add(items<IItem<out RecyclerView.ViewHolder>>() as IAdapter<Item>)
             } else {
-                val adapters = adapters as Collection<IAdapter<Item>>?
-                if (adapters != null) {
-                    fastAdapter.adapters.addAll(adapters)
-                }
+                fastAdapter.adapters.addAll(adapters as Collection<IAdapter<Item>>)
             }
             for (i in fastAdapter.adapters.indices) {
                 fastAdapter.adapters[i].apply {
