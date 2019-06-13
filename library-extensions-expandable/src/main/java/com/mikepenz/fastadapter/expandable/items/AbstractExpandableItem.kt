@@ -18,10 +18,8 @@ abstract class AbstractExpandableItem<VH : RecyclerView.ViewHolder> :
     override var subItems: MutableList<ISubItem<*>>
         set(value) {
             _subItems = value
-            _subItems?.let { subItems ->
-                for (item in subItems) {
-                    item.parent = this
-                }
+            for (item in value) {
+                item.parent = this
             }
         }
         get() {
