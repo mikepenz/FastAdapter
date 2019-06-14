@@ -144,7 +144,7 @@ object FastAdapterDiffUtil {
      * @param <Item>      The item type kept in the adapter
      * @return the adapter to allow chaining
     </Item></Model></A> */
-    fun <A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> set(adapter: A, items: List<Item>, callback: DiffCallback<Item> = DiffCallbackImpl(), detectMoves: Boolean = true): A {
+    operator fun <A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> set(adapter: A, items: List<Item>, callback: DiffCallback<Item>, detectMoves: Boolean): A {
         val result = calculateDiff(adapter, items, callback, detectMoves)
         return set(adapter, result)
     }
