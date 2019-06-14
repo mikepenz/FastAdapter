@@ -61,7 +61,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      * @param useIdDistributor false if the IdDistributor shouldn't be used
      * @return this
      */
-    fun withUseIdDistributor(useIdDistributor: Boolean): FastItemAdapter<Item> {
+    open fun withUseIdDistributor(useIdDistributor: Boolean): FastItemAdapter<Item> {
         itemAdapter.isUseIdDistributor = useIdDistributor
         return this
     }
@@ -71,7 +71,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      *
      * @param constraint the string used to filter the list
      */
-    fun filter(constraint: CharSequence) {
+    open fun filter(constraint: CharSequence) {
         itemAdapter.filter(constraint)
     }
 
@@ -81,7 +81,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      * @param item the item which is searched for
      * @return the relative position
      */
-    fun getAdapterPosition(item: Item): Int {
+    open fun getAdapterPosition(item: Item): Int {
         return itemAdapter.getAdapterPosition(item)
     }
 
@@ -91,7 +91,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      * @param position the relative postion
      * @return the global position
      */
-    fun getGlobalPosition(position: Int): Int {
+    open fun getGlobalPosition(position: Int): Int {
         return itemAdapter.getGlobalPosition(position)
     }
 
@@ -99,7 +99,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      * @param position the relative position
      * @return the item inside this adapter
      */
-    fun getAdapterItem(position: Int): Item {
+    open fun getAdapterItem(position: Int): Item {
         return itemAdapter.getAdapterItem(position)
     }
 
@@ -108,7 +108,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      *
      * @param items the new items to set
      */
-    fun set(items: List<Item>): FastItemAdapter<Item> {
+    open fun set(items: List<Item>): FastItemAdapter<Item> {
         itemAdapter.set(items)
         return this
     }
@@ -119,7 +119,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      * @param items the new items to set
      * @return this
      */
-    fun setNewList(items: List<Item>): FastItemAdapter<Item> {
+    open fun setNewList(items: List<Item>): FastItemAdapter<Item> {
         itemAdapter.setNewList(items)
         return this
     }
@@ -132,7 +132,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      * @param retainFilter set to true if you want to keep the filter applied
      * @return this
      */
-    fun setNewList(items: List<Item>, retainFilter: Boolean): FastItemAdapter<Item> {
+    open fun setNewList(items: List<Item>, retainFilter: Boolean): FastItemAdapter<Item> {
         itemAdapter.setNewList(items, retainFilter)
         return this
     }
@@ -143,7 +143,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      * @param items the items to add
      */
     @SafeVarargs
-    fun add(vararg items: Item): FastItemAdapter<Item> {
+    open fun add(vararg items: Item): FastItemAdapter<Item> {
         itemAdapter.add(*items)
         return this
     }
@@ -153,7 +153,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      *
      * @param items the items to add
      */
-    fun add(items: List<Item>): FastItemAdapter<Item> {
+    open fun add(items: List<Item>): FastItemAdapter<Item> {
         itemAdapter.add(items)
         return this
     }
@@ -165,7 +165,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      * @param items    the items to add
      */
     @SafeVarargs
-    fun add(position: Int, vararg items: Item): FastItemAdapter<Item> {
+    open fun add(position: Int, vararg items: Item): FastItemAdapter<Item> {
         itemAdapter.add(position, *items)
         return this
     }
@@ -176,7 +176,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      * @param position the global position
      * @param items    the items to add
      */
-    fun add(position: Int, items: List<Item>): FastItemAdapter<Item> {
+    open fun add(position: Int, items: List<Item>): FastItemAdapter<Item> {
         itemAdapter.add(position, items)
         return this
     }
@@ -187,8 +187,8 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      * @param position the global position
      * @param item     the item to set
      */
-    operator fun set(position: Int, item: Item): FastItemAdapter<Item> {
-        itemAdapter.set(position, item)
+    open operator fun set(position: Int, item: Item): FastItemAdapter<Item> {
+        itemAdapter[position] = item
         return this
     }
 
@@ -197,7 +197,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      *
      * @param item the item to add
      */
-    fun add(item: Item): FastItemAdapter<Item> {
+    open fun add(item: Item): FastItemAdapter<Item> {
         itemAdapter.add(item)
         return this
     }
@@ -208,7 +208,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      * @param position the global position
      * @param item     the item to add
      */
-    fun add(position: Int, item: Item): FastItemAdapter<Item> {
+    open fun add(position: Int, item: Item): FastItemAdapter<Item> {
         itemAdapter.add(position, item)
         return this
     }
@@ -220,7 +220,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      * @param toPosition   the global position to which to move
      * @return this
      */
-    fun move(fromPosition: Int, toPosition: Int): FastItemAdapter<Item> {
+    open fun move(fromPosition: Int, toPosition: Int): FastItemAdapter<Item> {
         itemAdapter.move(fromPosition, toPosition)
         return this
     }
@@ -230,7 +230,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      *
      * @param position the global position
      */
-    fun remove(position: Int): FastItemAdapter<Item> {
+    open fun remove(position: Int): FastItemAdapter<Item> {
         itemAdapter.remove(position)
         return this
     }
@@ -241,7 +241,7 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
      * @param position  the global position
      * @param itemCount the count of items removed
      */
-    fun removeItemRange(position: Int, itemCount: Int): FastItemAdapter<Item> {
+    open fun removeItemRange(position: Int, itemCount: Int): FastItemAdapter<Item> {
         itemAdapter.removeRange(position, itemCount)
         return this
     }
@@ -249,15 +249,15 @@ open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : FastAdap
     /**
      * removes all items of this adapter
      */
-    fun clear(): FastItemAdapter<Item> {
+    open fun clear(): FastItemAdapter<Item> {
         itemAdapter.clear()
         return this
     }
 
     /**
-     * convenient functions, to force to remap all possible types for the RecyclerView
+     * convenient open functions, to force to remap all possible types for the RecyclerView
      */
-    fun remapMappedTypes() {
+    open fun remapMappedTypes() {
         itemAdapter.remapMappedTypes()
     }
 }
