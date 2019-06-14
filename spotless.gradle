@@ -1,0 +1,10 @@
+apply plugin: "com.diffplug.gradle.spotless"
+
+spotless {
+    kotlin {
+        target "**/*.kt"
+        ktlint()
+        trimTrailingWhitespace()
+        endWithNewline()
+    }
+}
