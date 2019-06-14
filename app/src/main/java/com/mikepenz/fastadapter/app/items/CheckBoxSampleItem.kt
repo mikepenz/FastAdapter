@@ -105,8 +105,8 @@ class CheckBoxSampleItem : AbstractItem<CheckBoxSampleItem.ViewHolder>() {
         }
 
         override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<CheckBoxSampleItem>, item: CheckBoxSampleItem) {
-            val selectExtension = fastAdapter.getExtension<SelectExtension<CheckBoxSampleItem>>(SelectExtension::class.java)
-            selectExtension?.toggleSelection(position)
+            val selectExtension: SelectExtension<CheckBoxSampleItem> = fastAdapter.requireExtension()
+            selectExtension.toggleSelection(position)
         }
     }
 }

@@ -206,21 +206,30 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param clazz the extension class, to retrieve its instance
      * @return the found IAdapterExtension or null if it is not found
      */
+    @Suppress("UNCHECKED_CAST")
     fun <T : IAdapterExtension<Item>> getExtension(clazz: Class<in T>): T? {
-        return extensionsCache[clazz] as T
+        return extensionsCache[clazz] as T?
     }
 
+
+    inline fun <reified T : IAdapterExtension<Item>> getExtension(): T? = getExtension(T::class.java)
+
+    inline fun <reified T : IAdapterExtension<Item>> requireExtension(): T = getExtension()!!
+
+    @Suppress("UNCHECKED_CAST")
     fun <T : IAdapterExtension<Item>> getOrCreateExtension(clazz: Class<in T>): T? {
         if (extensionsCache.containsKey(clazz)) {
             return extensionsCache[clazz] as T
         }
-        val extension = ExtensionsFactories.create(
-                this,
-                clazz as Class<out IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>
-        ) as? T? ?: return null
+        val extension = ExtensionsFactories.create(this, clazz as Class<out IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>) as? T
+                ?: return null
         extensionsCache[clazz] = extension
         return extension
     }
+
+    inline fun <reified T : IAdapterExtension<Item>> getOrCreateExtension(): T? = getOrCreateExtension(T::class.java)
+
+    inline fun <reified T : IAdapterExtension<Item>> requireOrCreateExtension(): T = getOrCreateExtension(T::class.java)!!
 
     /**
      * adds a new event hook for an item

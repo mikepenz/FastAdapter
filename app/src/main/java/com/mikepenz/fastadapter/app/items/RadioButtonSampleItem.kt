@@ -106,10 +106,9 @@ class RadioButtonSampleItem : AbstractItem<RadioButtonSampleItem.ViewHolder>() {
 
         override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<RadioButtonSampleItem>, item: RadioButtonSampleItem) {
             if (!item.isSelected) {
-                val selectExtension = fastAdapter.getExtension<SelectExtension<RadioButtonSampleItem>>(SelectExtension::class.java)
-                        ?: return
+                val selectExtension: SelectExtension<RadioButtonSampleItem> = fastAdapter.requireExtension()
                 val selections = selectExtension.selections
-                if (!selections.isEmpty()) {
+                if (selections.isNotEmpty()) {
                     val selectedPosition = selections.iterator().next()
                     selectExtension.deselect()
                     fastAdapter.notifyItemChanged(selectedPosition)
