@@ -10,6 +10,6 @@ interface ExtensionFactory {
     val clazz: Class<out IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>
 
     fun create(
-        fastAdapter: FastAdapter<out IItem<out RecyclerView.ViewHolder>>
+            fastAdapter: FastAdapter<out IItem<out RecyclerView.ViewHolder>>
     ): IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>?
 }

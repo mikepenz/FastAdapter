@@ -9,7 +9,7 @@ import java.util.*
  */
 
 class ComparableItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> :
-    DefaultItemListImpl<Item> {
+        DefaultItemListImpl<Item> {
 
     /**
      * @return the defined Comparator used for this ItemAdaper
@@ -37,8 +37,8 @@ class ComparableItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     @JvmOverloads
     fun withComparator(
-        comparator: Comparator<Item>?,
-        sortNow: Boolean = true
+            comparator: Comparator<Item>?,
+            sortNow: Boolean = true
     ): ComparableItemListImpl<Item> {
         this.comparator = comparator
 

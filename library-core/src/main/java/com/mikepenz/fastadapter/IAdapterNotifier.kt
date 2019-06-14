@@ -7,47 +7,47 @@ package com.mikepenz.fastadapter
 interface IAdapterNotifier {
 
     fun notify(
-        fastAdapter: FastAdapter<*>,
-        newItemsCount: Int,
-        previousItemsCount: Int,
-        itemsBeforeThisAdapter: Int
+            fastAdapter: FastAdapter<*>,
+            newItemsCount: Int,
+            previousItemsCount: Int,
+            itemsBeforeThisAdapter: Int
     ): Boolean
 
     companion object {
 
         val DEFAULT: IAdapterNotifier = object : IAdapterNotifier {
             override fun notify(
-                fastAdapter: FastAdapter<*>,
-                newItemsCount: Int,
-                previousItemsCount: Int,
-                itemsBeforeThisAdapter: Int
+                    fastAdapter: FastAdapter<*>,
+                    newItemsCount: Int,
+                    previousItemsCount: Int,
+                    itemsBeforeThisAdapter: Int
             ): Boolean {
                 //now properly notify the adapter about the changes
                 when {
                     newItemsCount > previousItemsCount -> {
                         if (previousItemsCount > 0) {
                             fastAdapter.notifyAdapterItemRangeChanged(
-                                itemsBeforeThisAdapter,
-                                previousItemsCount
+                                    itemsBeforeThisAdapter,
+                                    previousItemsCount
                             )
                         }
                         fastAdapter.notifyAdapterItemRangeInserted(
-                            itemsBeforeThisAdapter + previousItemsCount,
-                            newItemsCount - previousItemsCount
+                                itemsBeforeThisAdapter + previousItemsCount,
+                                newItemsCount - previousItemsCount
                         )
                     }
                     newItemsCount > 0 -> {
                         fastAdapter.notifyAdapterItemRangeChanged(itemsBeforeThisAdapter, newItemsCount)
                         if (newItemsCount < previousItemsCount) {
                             fastAdapter.notifyAdapterItemRangeRemoved(
-                                itemsBeforeThisAdapter + newItemsCount,
-                                previousItemsCount - newItemsCount
+                                    itemsBeforeThisAdapter + newItemsCount,
+                                    previousItemsCount - newItemsCount
                             )
                         }
                     }
                     newItemsCount == 0 -> fastAdapter.notifyAdapterItemRangeRemoved(
-                        itemsBeforeThisAdapter,
-                        previousItemsCount
+                            itemsBeforeThisAdapter,
+                            previousItemsCount
                     )
                     else -> //this condition should practically never happen
                         fastAdapter.notifyAdapterDataSetChanged()
@@ -58,35 +58,35 @@ interface IAdapterNotifier {
 
         val LEGACY_DEFAULT: IAdapterNotifier = object : IAdapterNotifier {
             override fun notify(
-                fastAdapter: FastAdapter<*>,
-                newItemsCount: Int,
-                previousItemsCount: Int,
-                itemsBeforeThisAdapter: Int
+                    fastAdapter: FastAdapter<*>,
+                    newItemsCount: Int,
+                    previousItemsCount: Int,
+                    itemsBeforeThisAdapter: Int
             ): Boolean {
                 //now properly notify the adapter about the changes
                 when {
                     newItemsCount > previousItemsCount -> {
                         if (previousItemsCount > 0) {
                             fastAdapter.notifyAdapterItemRangeChanged(
-                                itemsBeforeThisAdapter,
-                                previousItemsCount
+                                    itemsBeforeThisAdapter,
+                                    previousItemsCount
                             )
                         }
                         fastAdapter.notifyAdapterItemRangeInserted(
-                            itemsBeforeThisAdapter + previousItemsCount,
-                            newItemsCount - previousItemsCount
+                                itemsBeforeThisAdapter + previousItemsCount,
+                                newItemsCount - previousItemsCount
                         )
                     }
                     newItemsCount in 1..(previousItemsCount - 1) -> {
                         fastAdapter.notifyAdapterItemRangeChanged(itemsBeforeThisAdapter, newItemsCount)
                         fastAdapter.notifyAdapterItemRangeRemoved(
-                            itemsBeforeThisAdapter + newItemsCount,
-                            previousItemsCount - newItemsCount
+                                itemsBeforeThisAdapter + newItemsCount,
+                                previousItemsCount - newItemsCount
                         )
                     }
                     newItemsCount == 0 -> fastAdapter.notifyAdapterItemRangeRemoved(
-                        itemsBeforeThisAdapter,
-                        previousItemsCount
+                            itemsBeforeThisAdapter,
+                            previousItemsCount
                     )
                     else -> //this condition should practically never happen
                         fastAdapter.notifyAdapterDataSetChanged()

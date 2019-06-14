@@ -22,7 +22,7 @@ fun <Item : IItem<*>> FastAdapter<Item>.getSelectExtension(): SelectExtension<It
 /**
  * Created by mikepenz on 04/06/2017.
  */
-class SelectExtension<Item : IItem<out  RecyclerView.ViewHolder>>(private val fastAdapter: FastAdapter<Item>) :
+class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fastAdapter: FastAdapter<Item>) :
         IAdapterExtension<Item> {
 
     // if enabled we will select the item via a notifyItemChanged -> will animate with the Animator

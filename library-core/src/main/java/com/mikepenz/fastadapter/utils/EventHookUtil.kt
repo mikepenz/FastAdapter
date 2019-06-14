@@ -35,8 +35,8 @@ internal fun List<EventHook<out IItem<out RecyclerView.ViewHolder>>>.bind(viewHo
  * @param view       the view to attach to
  */
 internal fun <Item : IItem<out RecyclerView.ViewHolder>> EventHook<Item>.attachToView(
-    viewHolder: RecyclerView.ViewHolder,
-    view: View
+        viewHolder: RecyclerView.ViewHolder,
+        view: View
 ) {
     when (this) {
         is ClickEventHook<*> -> view.setOnClickListener { v ->
@@ -69,10 +69,10 @@ internal fun <Item : IItem<out RecyclerView.ViewHolder>> EventHook<Item>.attachT
                     if (item != null) {
                         //we update our item with the changed property
                         return@OnLongClickListener (this as LongClickEventHook<Item>).onLongClick(
-                            v,
-                            pos,
-                            adapter,
-                            item
+                                v,
+                                pos,
+                                adapter,
+                                item
                         )
                     }
                 }
@@ -92,11 +92,11 @@ internal fun <Item : IItem<out RecyclerView.ViewHolder>> EventHook<Item>.attachT
                     if (item != null) {
                         //we update our item with the changed property
                         return@OnTouchListener (this as TouchEventHook<Item>).onTouch(
-                            v,
-                            e,
-                            pos,
-                            adapter,
-                            item
+                                v,
+                                e,
+                                pos,
+                                adapter,
+                                item
                         )
                     }
                 }
