@@ -6,6 +6,7 @@ import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.expandable.ExpandableExtension
 import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import java.util.*
 
 
@@ -186,7 +187,7 @@ object SubItemUtil {
             if (header.isExpanded) {
                 for (i in 0 until subItemsCount) {
                     if ((subItems[i] as IItem<*>).isSelectable) {
-                        val extension: SelectExtension<T>? = adapter.getOrCreateExtension(SelectExtension::class.java)
+                        val extension: SelectExtension<T>? = adapter.getSelectExtension()
                         if (extension != null) {
                             if (select) {
                                 extension.select(position + i + 1)

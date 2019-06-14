@@ -221,15 +221,15 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         if (extensionsCache.containsKey(clazz)) {
             return extensionsCache[clazz] as T
         }
-        val extension = ExtensionsFactories.create(
-                this,
-                clazz as Class<out IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>
-        ) as? T ?: return null
+        val extension = ExtensionsFactories.create(this, clazz as Class<out IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>) as? T
+                ?: return null
         extensionsCache[clazz] = extension
         return extension
     }
 
     inline fun <reified T : IAdapterExtension<Item>> getOrCreateExtension(): T? = getOrCreateExtension(T::class.java)
+
+    inline fun <reified T : IAdapterExtension<Item>> requireOrCreateExtension(): T = getOrCreateExtension(T::class.java)!!
 
     /**
      * adds a new event hook for an item

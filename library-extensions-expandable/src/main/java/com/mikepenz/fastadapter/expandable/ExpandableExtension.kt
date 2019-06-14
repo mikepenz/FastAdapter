@@ -17,7 +17,7 @@ import java.util.*
  */
 fun <Item : IItem<*>> FastAdapter<Item>.getExpandableExtension(): ExpandableExtension<Item> {
     ExpandableExtension.Companion.toString() // enforces the vm to lead in the companion object
-    return this.getOrCreateExtension(ExpandableExtension::class.java as Class<IAdapterExtension<Item>>) as ExpandableExtension<Item>
+    return requireOrCreateExtension()
 }
 
 /**
