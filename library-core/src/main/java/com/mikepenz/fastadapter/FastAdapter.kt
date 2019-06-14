@@ -952,10 +952,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             if (adapters == null) {
                 fastAdapter.adapters.add(items<IItem<out RecyclerView.ViewHolder>>() as IAdapter<Item>)
             } else {
-                val adapters = adapters as Collection<IAdapter<Item>>?
-                if (adapters != null) {
-                    fastAdapter.adapters.addAll(adapters)
-                }
+                fastAdapter.adapters.addAll(adapters as Collection<IAdapter<Item>>)
             }
             for (i in fastAdapter.adapters.indices) {
                 fastAdapter.adapters[i].apply {
@@ -965,10 +962,8 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             }
             fastAdapter.cacheSizes()
 
-            if (extensions != null) {
-                for (extension in extensions) {
-                    fastAdapter.addExtension(extension)
-                }
+            extensions?.forEach {
+                fastAdapter.addExtension(it)
             }
 
             return fastAdapter
@@ -984,7 +979,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         fun <Item : IItem<*>> getHolderAdapterItem(holder: RecyclerView.ViewHolder?): Item? {
             if (holder != null) {
                 val tag =
-                        holder.itemView.getTag(com.mikepenz.fastadapter.R.id.fastadapter_item_adapter)
+                        holder.itemView.getTag(R.id.fastadapter_item_adapter)
                 if (tag is FastAdapter<*>) {
                     val pos = tag.getHolderAdapterPosition(holder)
                     if (pos != RecyclerView.NO_POSITION) {
@@ -1009,7 +1004,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         ): Item? {
             if (holder != null) {
                 val tag =
-                        holder.itemView.getTag(com.mikepenz.fastadapter.R.id.fastadapter_item_adapter)
+                        holder.itemView.getTag(R.id.fastadapter_item_adapter)
                 if (tag is FastAdapter<*>) {
                     return tag.getItem(position) as? Item?
                 }

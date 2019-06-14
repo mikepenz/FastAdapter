@@ -17,10 +17,10 @@ object AdapterUtil {
      * @param selectedItems the list of selectedItems from the savedInstanceState
      */
     fun <Item> restoreSubItemSelectionStatesForAlternativeStateManagement(item: Item, selectedItems: List<String>?) where Item : IItem<out RecyclerView.ViewHolder>, Item : IExpandable<*> {
-        if (!item.isExpanded && (item as IExpandable<*>).subItems != null) {
+        if (!item.isExpanded) {
             val subItems = (item as IExpandable<*>).subItems
             var i = 0
-            val size = subItems!!.size
+            val size = subItems.size
             while (i < size) {
                 val subItem = subItems[i] as Item
                 val id = subItem.identifier.toString()
@@ -40,10 +40,10 @@ object AdapterUtil {
      * @param selections the ArrayList which will be stored in the savedInstanceState
      */
     fun <Item> findSubItemSelections(item: Item, selections: MutableList<String>) where Item : IItem<out RecyclerView.ViewHolder>, Item : IExpandable<*> {
-        if (!item.isExpanded && (item as IExpandable<*>).subItems != null) {
+        if (!item.isExpanded) {
             val subItems = (item as IExpandable<*>).subItems
             var i = 0
-            val size = subItems!!.size
+            val size = subItems.size
             while (i < size) {
                 val subItem = subItems[i] as Item
                 val id = subItem.identifier.toString()
@@ -81,11 +81,11 @@ object AdapterUtil {
      * @param items the list in which we add the subItems
      */
     fun <Item> addAllSubItems(item: Item?, items: MutableList<Item>) where Item : IItem<out RecyclerView.ViewHolder>, Item : IExpandable<*> {
-        if (item is IExpandable<*> && !item.isExpanded && (item as IExpandable<*>).subItems != null) {
+        if (item is IExpandable<*> && !item.isExpanded) {
             val subItems = (item as IExpandable<*>).subItems
             var subItem: Item
             var i = 0
-            val size = subItems!!.size
+            val size = subItems.size
             while (i < size) {
                 subItem = subItems[i] as Item
                 items.add(subItem)
