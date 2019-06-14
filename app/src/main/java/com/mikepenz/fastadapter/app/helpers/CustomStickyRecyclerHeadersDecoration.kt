@@ -30,13 +30,12 @@ class CustomStickyRecyclerHeadersDecoration private constructor(private val mAda
     private val mTempRect = Rect()
 
     // TODO: Consider passing in orientation to simplify orientation accounting within calculation
-    constructor(adapter: StickyRecyclerHeadersAdapter<*>, moPubRecyclerAdapter: MoPubRecyclerAdapter) : this(adapter, moPubRecyclerAdapter, LinearLayoutOrientationProvider(), DimensionCalculator()) {}
+    constructor(adapter: StickyRecyclerHeadersAdapter<*>, moPubRecyclerAdapter: MoPubRecyclerAdapter) : this(adapter, moPubRecyclerAdapter, LinearLayoutOrientationProvider(), DimensionCalculator())
 
     private constructor(adapter: StickyRecyclerHeadersAdapter<*>, moPubRecyclerAdapter: MoPubRecyclerAdapter, orientationProvider: OrientationProvider,
                         dimensionCalculator: DimensionCalculator, headerRenderer: HeaderRenderer = HeaderRenderer(orientationProvider), headerProvider: HeaderProvider = CustomHeaderViewCache(adapter, moPubRecyclerAdapter, orientationProvider)) : this(adapter, headerRenderer, orientationProvider, dimensionCalculator, headerProvider,
             HeaderPositionCalculator(adapter, moPubRecyclerAdapter, headerProvider, orientationProvider,
-                    dimensionCalculator)) {
-    }
+                    dimensionCalculator))
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)

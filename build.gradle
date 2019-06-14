@@ -10,17 +10,23 @@ buildscript {
                 compileSdk: 29,
                 buildTools: "29.0.0",
                 minSdk    : 14,
-                targetSdk : 28
+                targetSdk : 29
         ]
 
         versions = [
                 androidX      : '1.0.0',
                 appcompat     : '1.0.2',
+                recyclerView    : '1.1.0-alpha06',
+                material        : '1.1.0-alpha07',
+                appcompat       : '1.1.0-beta01',
+                drawerlayout    : '1.1.0-alpha01',
+                constraintLayout: '2.0.0-beta1',
+                cardview        : '1.0.0',
                 kotlin        : '1.3.31',
                 materialize   : '1.2.1',
                 iconics       : '4.0.0',
-                materialdrawer: '7.0.0-beta01',
-                aboutlib      : '7.0.0-rc1',
+                materialdrawer: '7.0.0-rc01',
+                aboutlib      : '7.0.0',
                 roboelectric  : '4.3'
         ]
     }

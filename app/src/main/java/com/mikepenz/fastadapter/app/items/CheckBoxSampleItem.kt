@@ -99,7 +99,7 @@ class CheckBoxSampleItem : AbstractItem<CheckBoxSampleItem.ViewHolder>() {
 
     class CheckBoxClickEvent : ClickEventHook<CheckBoxSampleItem>() {
         override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {
-            return if (viewHolder is CheckBoxSampleItem.ViewHolder) {
+            return if (viewHolder is ViewHolder) {
                 viewHolder.checkBox
             } else null
         }

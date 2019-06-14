@@ -98,8 +98,8 @@ open class SimpleItem : AbstractItem<SimpleItem.ViewHolder>(), IDraggable {
         }
 
         override fun unbindView(item: SimpleItem) {
-            name?.text = null
-            description?.text = null
+            name.text = null
+            description.text = null
         }
     }
 }

@@ -99,7 +99,7 @@ class RadioButtonSampleItem : AbstractItem<RadioButtonSampleItem.ViewHolder>() {
 
     class RadioButtonClickEvent : ClickEventHook<RadioButtonSampleItem>() {
         override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {
-            return if (viewHolder is RadioButtonSampleItem.ViewHolder) {
+            return if (viewHolder is ViewHolder) {
                 viewHolder.radioButton
             } else null
         }

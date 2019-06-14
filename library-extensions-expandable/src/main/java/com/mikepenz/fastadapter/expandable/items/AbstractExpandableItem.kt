@@ -14,22 +14,16 @@ abstract class AbstractExpandableItem<VH : RecyclerView.ViewHolder> :
     override var isExpanded: Boolean = false
     override var parent: IParentItem<*>? = null
 
-    private var _subItems: MutableList<ISubItem<*>> = mutableListOf()
-    override var subItems: MutableList<ISubItem<*>>
+    override var subItems: MutableList<ISubItem<*>> = mutableListOf()
         set(value) {
-            _subItems = value
-            _subItems?.let { subItems ->
-                for (item in subItems) {
-                    item.parent = this
-                }
+            field = value
+            for (item in value) {
+                item.parent = this
             }
-        }
-        get() {
-            return _subItems
         }
 
     override val isAutoExpanding: Boolean = true
     override var isSelectable: Boolean
-        get() = _subItems.isNullOrEmpty()
+        get() = subItems.isNullOrEmpty()
         set(value) {}
 }

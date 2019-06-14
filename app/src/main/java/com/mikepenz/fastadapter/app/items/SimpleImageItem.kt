@@ -62,7 +62,7 @@ class SimpleImageItem : AbstractItem<SimpleImageItem.ViewHolder>() {
      *
      * @param holder the viewHolder of this item
      */
-    override fun bindView(holder: SimpleImageItem.ViewHolder, payloads: MutableList<Any>) {
+    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
         super.bindView(holder, payloads)
 
         //get the context

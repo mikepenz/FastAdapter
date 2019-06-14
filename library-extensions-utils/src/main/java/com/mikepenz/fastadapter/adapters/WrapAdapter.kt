@@ -8,7 +8,7 @@ import com.mikepenz.fastadapter.IItem
  */
 class WrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolder>(items: List<Item>) : AbstractWrapAdapter<Item, VH>(items) {
 
-    override var items: List<Item> = ArrayList()
+    override var items: List<Item> = emptyList()
         set(items) {
             field = items
             notifyDataSetChanged()

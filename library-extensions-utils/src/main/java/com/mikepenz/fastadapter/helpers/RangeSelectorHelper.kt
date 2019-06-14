@@ -151,9 +151,9 @@ class RangeSelectorHelper<Item : IItem<out RecyclerView.ViewHolder>>(private val
      * @return the passed bundle with the newly added data
      */
     @JvmOverloads
-    fun saveInstanceState(savedInstanceState: Bundle?, prefix: String = ""): Bundle? {
+    fun saveInstanceState(savedInstanceState: Bundle, prefix: String = ""): Bundle {
         mLastLongPressIndex?.let {
-            savedInstanceState?.putInt(BUNDLE_LAST_LONG_PRESS, it)
+            savedInstanceState.putInt(BUNDLE_LAST_LONG_PRESS, it)
         }
         return savedInstanceState
     }
@@ -177,6 +177,6 @@ class RangeSelectorHelper<Item : IItem<out RecyclerView.ViewHolder>>(private val
 
     companion object {
 
-        protected val BUNDLE_LAST_LONG_PRESS = "bundle_last_long_press"
+        protected const val BUNDLE_LAST_LONG_PRESS = "bundle_last_long_press"
     }
 }

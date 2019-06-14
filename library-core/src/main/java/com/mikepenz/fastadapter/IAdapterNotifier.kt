@@ -77,7 +77,7 @@ interface IAdapterNotifier {
                                 newItemsCount - previousItemsCount
                         )
                     }
-                    newItemsCount in 1..(previousItemsCount - 1) -> {
+                    newItemsCount in 1 until previousItemsCount -> {
                         fastAdapter.notifyAdapterItemRangeChanged(itemsBeforeThisAdapter, newItemsCount)
                         fastAdapter.notifyAdapterItemRangeRemoved(
                                 itemsBeforeThisAdapter + newItemsCount,

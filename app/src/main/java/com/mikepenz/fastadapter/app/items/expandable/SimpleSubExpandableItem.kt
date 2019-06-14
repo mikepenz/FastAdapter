@@ -32,6 +32,7 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
      *
      * @return
      */
+    @Suppress("SetterBackingFieldAssignment")
     override var onItemClickListener: ((v: View?, adapter: IAdapter<SimpleSubExpandableItem>, item: SimpleSubExpandableItem, position: Int) -> Boolean)? = { v: View?, adapter: IAdapter<SimpleSubExpandableItem>, item: SimpleSubExpandableItem, position: Int ->
         if (item.subItems != null) {
             v?.findViewById<View>(R.id.material_drawer_icon)?.let {
@@ -120,25 +121,25 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
         //set the text for the description or hide
         StringHolder.applyToOrHide(description, holder.description)
 
-        if (subItems == null || subItems?.size == 0) {
-            holder.icon?.visibility = View.GONE
+        if (subItems == null || subItems.size == 0) {
+            holder.icon.visibility = View.GONE
         } else {
-            holder.icon?.visibility = View.VISIBLE
+            holder.icon.visibility = View.VISIBLE
         }
 
         if (isExpanded) {
-            holder.icon?.rotation = 0f
+            holder.icon.rotation = 0f
         } else {
-            holder.icon?.rotation = 180f
+            holder.icon.rotation = 180f
         }
     }
 
     override fun unbindView(holder: ViewHolder) {
         super.unbindView(holder)
-        holder.name?.text = null
-        holder.description?.text = null
+        holder.name.text = null
+        holder.description.text = null
         //make sure all animations are stopped
-        holder.icon?.clearAnimation()
+        holder.icon.clearAnimation()
     }
 
     override fun getViewHolder(v: View): ViewHolder {

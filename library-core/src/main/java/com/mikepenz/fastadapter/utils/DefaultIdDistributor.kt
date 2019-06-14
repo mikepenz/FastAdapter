@@ -27,7 +27,7 @@ abstract class DefaultIdDistributor<Identifiable : IIdentifyable> : IIdDistribut
     /**
      * set an unique identifier for all items which do not have one set already
      *
-     * @param items
+     * @param identifiables
      * @return
      */
     override fun checkIds(vararg identifiables: Identifiable): Array<out Identifiable> {

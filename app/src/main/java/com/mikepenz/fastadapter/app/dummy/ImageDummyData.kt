@@ -47,8 +47,7 @@ object ImageDummyData {
 
     val dummyItem: SimpleImageItem
         get() {
-            val ran = Random().nextInt(3)
-            return when (ran) {
+            return when (Random().nextInt(3)) {
                 0 -> SimpleImageItem().withName("NEW").withDescription("Newly added item").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/yang_zhuo_yong_cuo,_tibet-china-63.jpg")
                 1 -> SimpleImageItem().withName("NEW").withDescription("Newly added item").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/yellowstone-united_states-17.jpg")
                 else -> SimpleImageItem().withName("NEW").withDescription("Newly added item").withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/victoria-australia-31.jpg")

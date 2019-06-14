@@ -65,7 +65,7 @@ class MopubAdsActivity : AppCompatActivity() {
         supportActionBar?.setHomeButtonEnabled(false)
     }
 
-    override fun onSaveInstanceState(_outState: Bundle?) {
+    override fun onSaveInstanceState(_outState: Bundle) {
         var outState = _outState
         //add the values which need to be saved from the adapter to the bundle
         outState = adapter.saveInstanceState(outState)
