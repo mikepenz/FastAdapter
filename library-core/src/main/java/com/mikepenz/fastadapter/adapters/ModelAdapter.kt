@@ -187,7 +187,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @param adapterNotifier a `IAdapterNotifier` allowing to modify the notify logic for the adapter (keep null for default)
      * @return this
      */
-    open fun set(
+    open operator fun set(
             list: List<Model>,
             resetFilter: Boolean,
             adapterNotifier: IAdapterNotifier?
