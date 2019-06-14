@@ -652,7 +652,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return the passed bundle with the newly added data
      */
     @JvmOverloads
-    open fun saveInstanceState(savedInstanceState: Bundle?, prefix: String = ""): Bundle? {
+    open fun saveInstanceState(savedInstanceState: Bundle, prefix: String = ""): Bundle {
         // handle our extensions
         for (ext in extensionsCache.values) {
             ext.saveInstanceState(savedInstanceState, prefix)
@@ -833,7 +833,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                         return Triple(true, item, i)
                     }
                     (item as? IExpandable<*>)?.let { expandableItem ->
-                        val res = FastAdapter.recursiveSub(
+                        val res = recursiveSub(
                                 adapter,
                                 i,
                                 expandableItem,
@@ -1021,7 +1021,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         @JvmStatic
         fun <Item : IItem<*>> getHolderAdapterItemTag(holder: RecyclerView.ViewHolder?): Item? {
             if (holder != null) {
-                val item = holder.itemView.getTag(com.mikepenz.fastadapter.R.id.fastadapter_item)
+                val item = holder.itemView.getTag(R.id.fastadapter_item)
                 if (item is IItem<*>) {
                     return item as? Item?
                 }
@@ -1051,7 +1051,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         ): Triple<Boolean, Item, Int> {
             //in case it's expanded it can be selected via the normal way
             if (!parent.isExpanded) {
-                parent.subItems?.forEach { sub ->
+                parent.subItems.forEach { sub ->
                     (sub as Item).let { subItem ->
                         if (predicate.apply(
                                         lastParentAdapter,
@@ -1064,7 +1064,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                         }
                     }
                     if (sub is IExpandable<*>) {
-                        val res = FastAdapter.recursiveSub(
+                        val res = recursiveSub(
                                 lastParentAdapter,
                                 lastParentPosition,
                                 sub,

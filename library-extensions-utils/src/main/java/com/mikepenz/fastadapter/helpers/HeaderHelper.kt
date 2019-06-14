@@ -64,9 +64,9 @@ class HeaderHelper<Item, HeaderItem : Item> {
             var i = -1
             while (i < size) {
                 val headerItem: HeaderItem? = when (i) {
-                    -1 -> groupingFunction.group(null, items[i + 1] as Item, i)
-                    size - 1 -> groupingFunction.group(items[i] as Item, null, i)
-                    else -> groupingFunction.group(items[i] as Item, items[i + 1] as Item, i)
+                    -1 -> groupingFunction.group(null, items[i + 1], i)
+                    size - 1 -> groupingFunction.group(items[i], null, i)
+                    else -> groupingFunction.group(items[i], items[i + 1], i)
                 }
 
                 if (headerItem != null) {

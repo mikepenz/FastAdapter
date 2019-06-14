@@ -14,7 +14,7 @@ abstract class ModelAbstractExpandableItem<Model, Parent, SubItem, VH : Recycler
     override var subItems: MutableList<ISubItem<*>>
         set(value) {
             _subItems = value
-            _subItems?.let { subItems ->
+            _subItems.let { subItems ->
                 for (item in subItems) {
                     item.parent = this
                 }
@@ -25,6 +25,6 @@ abstract class ModelAbstractExpandableItem<Model, Parent, SubItem, VH : Recycler
         }
     override val isAutoExpanding: Boolean = true
     override var isSelectable: Boolean
-        get() = _subItems?.isNotEmpty() == true
+        get() = _subItems.isNotEmpty()
         set(value) {}
 }

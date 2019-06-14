@@ -130,7 +130,7 @@ class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFi
         supportActionBar?.setHomeButtonEnabled(false)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
+    override fun onSaveInstanceState(outState: Bundle) {
         var outState = outState
         //add the values which need to be saved from the adapter to the bundle
         outState = fastItemAdapter.saveInstanceState(outState)

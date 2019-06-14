@@ -30,7 +30,6 @@ internal fun List<EventHook<out IItem<out RecyclerView.ViewHolder>>>.bind(viewHo
 /**
  * attaches the specific event to a view
  *
- * @param event      the event to attach
  * @param viewHolder the viewHolder containing this view
  * @param view       the view to attach to
  */

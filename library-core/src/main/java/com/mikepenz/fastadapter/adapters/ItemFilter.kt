@@ -68,8 +68,8 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
                     ?: emptySet()
         }
 
-    override fun performFiltering(constraint: CharSequence?): Filter.FilterResults {
-        val results = Filter.FilterResults()
+    override fun performFiltering(constraint: CharSequence?): FilterResults {
+        val results = FilterResults()
 
         //return nothing
         if (originalItems == null && (constraint == null || constraint.isEmpty())) {
@@ -114,7 +114,7 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
         return results
     }
 
-    override fun publishResults(constraint: CharSequence?, results: Filter.FilterResults) {
+    override fun publishResults(constraint: CharSequence?, results: FilterResults) {
         // Now we have to inform the adapter about the new list filtered
         if (results.values != null) {
             mItemAdapter.setInternal(results.values as List<Item>, false, null)

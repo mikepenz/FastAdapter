@@ -76,7 +76,7 @@ class CheckBoxSampleActivity : AppCompatActivity() {
         supportActionBar?.setHomeButtonEnabled(false)
     }
 
-    override fun onSaveInstanceState(_outState: Bundle?) {
+    override fun onSaveInstanceState(_outState: Bundle) {
         var outState = _outState
         //add the values which need to be saved from the adapter to the bundle
         outState = fastItemAdapter.saveInstanceState(outState)
@@ -87,7 +87,7 @@ class CheckBoxSampleActivity : AppCompatActivity() {
         //handle the click on the back arrow click
         return when (item.itemId) {
             android.R.id.home -> {
-                Toast.makeText(applicationContext, "selections = " + selectExtension!!.selections, Toast.LENGTH_LONG).show()
+                Toast.makeText(applicationContext, "selections = " + selectExtension.selections, Toast.LENGTH_LONG).show()
                 onBackPressed()
                 true
             }

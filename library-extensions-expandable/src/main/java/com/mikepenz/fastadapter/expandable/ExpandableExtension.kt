@@ -16,7 +16,7 @@ import java.util.*
  * This will return a non null variant and fail
  */
 fun <Item : IItem<*>> FastAdapter<Item>.getExpandableExtension(): ExpandableExtension<Item> {
-    ExpandableExtension.Companion.toString() // enforces the vm to lead in the companion object
+    ExpandableExtension.toString() // enforces the vm to lead in the companion object
     return requireOrCreateExtension()
 }
 
@@ -276,7 +276,7 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
                 //if it is a SubItem and has a parent, only return the expanded items on the same level
                 val expandedItems: IntArray
                 val expandedItemsList = ArrayList<Int>()
-                parent.subItems?.forEach { subItem ->
+                parent.subItems.forEach { subItem ->
                     if ((subItem as? IExpandable<*>)?.isExpanded == true && subItem !== item) {
                         (subItem as? Item?)?.let { adapterItem ->
                             expandedItemsList.add(fastAdapter.getPosition(adapterItem))
@@ -309,7 +309,7 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
             (currItem as? IExpandable<*>?)?.let { expandable ->
                 expandable.parent?.let { parent ->
                     if (parent is IExpandable<*> && parent.isExpanded) {
-                        i += parent.subItems?.size ?: 0
+                        i += parent.subItems.size
                         if (parent !== item) {
                             (parent as? Item?)?.let { adapterItem ->
                                 expandedItemsList.add(fastAdapter.getPosition(adapterItem))
@@ -402,7 +402,7 @@ class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val
         val item = fastAdapter.getItem(position)
         (item as? IExpandable<*>?)?.let { expandable ->
             //if this item is not already expanded and has sub items we go on
-            if (!expandable.isExpanded && expandable.subItems?.isNotEmpty() == true) {
+            if (!expandable.isExpanded && expandable.subItems.isNotEmpty()) {
                 val adapter = fastAdapter.getAdapter(position)
                 if (adapter != null && adapter is IItemAdapter<*, *>) {
                     (expandable.subItems as? List<Item>?)?.let { subItems ->

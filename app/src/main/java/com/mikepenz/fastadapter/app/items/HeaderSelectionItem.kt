@@ -18,7 +18,7 @@ open class HeaderSelectionItem : SimpleSubExpandableItem() {
         this.mSubSelectionProvider = subSelectionProvider
     }
 
-    override fun bindView(viewHolder: SimpleSubExpandableItem.ViewHolder, payloads: MutableList<Any>) {
+    override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any>) {
         super.bindView(viewHolder, payloads)
 
         //get the context
@@ -36,9 +36,9 @@ open class HeaderSelectionItem : SimpleSubExpandableItem() {
             selectedSubItems = mSubSelectionProvider?.invoke() ?: 0
         val descr = StringHolder(description?.text)
         if (selectedSubItems > 0)
-            descr.setText("Selected children: " + selectedSubItems + "/" + (subItems?.size ?: 0))
+            descr.setText("Selected children: " + selectedSubItems + "/" + subItems.size)
         StringHolder.applyToOrHide(descr, viewHolder.description)
 
-        viewHolder.description?.setTextColor(if (selectedSubItems == 0) Color.BLACK else Color.RED)
+        viewHolder.description.setTextColor(if (selectedSubItems == 0) Color.BLACK else Color.RED)
     }
 }

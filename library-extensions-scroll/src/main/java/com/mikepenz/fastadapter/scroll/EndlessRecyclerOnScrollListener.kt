@@ -29,7 +29,7 @@ abstract class EndlessRecyclerOnScrollListener : RecyclerView.OnScrollListener {
     lateinit var layoutManager: RecyclerView.LayoutManager
         private set
 
-    constructor() {}
+    constructor()
 
     /**
      * @param adapter the ItemAdapter used to host footer items

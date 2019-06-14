@@ -40,7 +40,7 @@ class UndoHelper<Item : IItem<out RecyclerView.ViewHolder>>
 
             // If the undo button was clicked (DISMISS_EVENT_ACTION) or
             // if a commit was already executed, skip it
-            if (event == Snackbar.Callback.DISMISS_EVENT_ACTION || alreadyCommitted)
+            if (event == DISMISS_EVENT_ACTION || alreadyCommitted)
                 return
 
             notifyCommit()

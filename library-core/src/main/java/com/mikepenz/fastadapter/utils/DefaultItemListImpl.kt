@@ -93,7 +93,7 @@ open class DefaultItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> @JvmOv
         //make sure the new items list is not a reference of the already mItems list
         if (items !== mItems) {
             //remove all previous items
-            if (!mItems.isEmpty()) {
+            if (mItems.isNotEmpty()) {
                 mItems.clear()
             }
 

@@ -62,7 +62,7 @@ object FastAdapterDiffUtil {
         //make sure the new items list is not a reference of the already mItems list
         if (items !== adapterItems) {
             //remove all previous items
-            if (!adapterItems.isEmpty()) {
+            if (adapterItems.isNotEmpty()) {
                 adapterItems.clear()
             }
 
