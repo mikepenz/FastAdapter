@@ -10,7 +10,7 @@ buildscript {
                 compileSdk: 29,
                 buildTools: "29.0.0",
                 minSdk    : 14,
-                targetSdk : 29
+                targetSdk : 28
         ]
 
         versions = [
@@ -34,12 +34,16 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven {
+            url "https://plugins.gradle.org/m2/"
+        }
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.4.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.0.0-RC15"
     }
 }
 
@@ -53,3 +57,12 @@ allprojects {
         maven { url "https://jitpack.io" }
     }
 }
+
+subprojects {
+    apply from: '../detekt.gradle'
+
+    dependencies {
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.0.0-RC15"
+    }
+}
+
