@@ -27,7 +27,8 @@ buildscript {
                 iconics         : '4.0.0',
                 materialdrawer  : '7.0.0-rc01',
                 aboutlib        : '7.0.0',
-                roboelectric    : '4.3'
+                roboelectric    : '4.3',
+                detekt          : '1.0.0-RC15',
         ]
     }
 
@@ -43,7 +44,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
-        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:1.0.0-RC15"
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${versions.detekt}"
     }
 }
 
@@ -62,7 +63,7 @@ subprojects {
     apply from: '../detekt.gradle'
 
     dependencies {
-        detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:1.0.0-RC15"
+        detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:${versions.detekt}"
     }
 }
 
