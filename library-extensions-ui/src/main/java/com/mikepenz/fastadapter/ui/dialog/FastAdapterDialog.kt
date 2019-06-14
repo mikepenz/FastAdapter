@@ -36,8 +36,8 @@ class FastAdapterDialog<Item : IItem<out RecyclerView.ViewHolder>> : AlertDialog
     private fun createRecyclerView(): RecyclerView {
         val recyclerView = RecyclerView(context)
         val params = RecyclerView.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.MATCH_PARENT
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT
         )
         recyclerView.layoutParams = params
         setView(recyclerView)
@@ -65,8 +65,8 @@ class FastAdapterDialog<Item : IItem<out RecyclerView.ViewHolder>> : AlertDialog
     }
 
     fun withFastItemAdapter(
-        fastAdapter: FastAdapter<Item>,
-        itemAdapter: ItemAdapter<Item>
+            fastAdapter: FastAdapter<Item>,
+            itemAdapter: ItemAdapter<Item>
     ): FastAdapterDialog<Item> {
         this.fastAdapter = fastAdapter
         this.itemAdapter = itemAdapter
@@ -128,8 +128,8 @@ class FastAdapterDialog<Item : IItem<out RecyclerView.ViewHolder>> : AlertDialog
      * @return This Builder object to allow for chaining of calls to set methods
      */
     fun withPositiveButton(
-        text: String,
-        listener: DialogInterface.OnClickListener
+            text: String,
+            listener: DialogInterface.OnClickListener
     ): FastAdapterDialog<Item> {
         return withButton(DialogInterface.BUTTON_POSITIVE, text, listener)
     }
@@ -153,8 +153,8 @@ class FastAdapterDialog<Item : IItem<out RecyclerView.ViewHolder>> : AlertDialog
      * @return This Builder object to allow for chaining of calls to set methods
      */
     fun withNegativeButton(
-        text: String,
-        listener: DialogInterface.OnClickListener
+            text: String,
+            listener: DialogInterface.OnClickListener
     ): FastAdapterDialog<Item> {
         return withButton(DialogInterface.BUTTON_NEGATIVE, text, listener)
     }
@@ -198,8 +198,8 @@ class FastAdapterDialog<Item : IItem<out RecyclerView.ViewHolder>> : AlertDialog
      * @return This Builder object to allow for chaining of calls to set methods
      */
     fun withNeutralButton(
-        text: String,
-        listener: DialogInterface.OnClickListener
+            text: String,
+            listener: DialogInterface.OnClickListener
     ): FastAdapterDialog<Item> {
         return withButton(DialogInterface.BUTTON_NEUTRAL, text, listener)
     }
@@ -227,9 +227,9 @@ class FastAdapterDialog<Item : IItem<out RecyclerView.ViewHolder>> : AlertDialog
      * @param listener    The [DialogInterface.OnClickListener] to use.
      */
     fun withButton(
-        whichButton: Int,
-        text: String,
-        listener: DialogInterface.OnClickListener?
+            whichButton: Int,
+            text: String,
+            listener: DialogInterface.OnClickListener?
     ): FastAdapterDialog<Item> {
         setButton(whichButton, text, listener)
         return this
@@ -247,8 +247,8 @@ class FastAdapterDialog<Item : IItem<out RecyclerView.ViewHolder>> : AlertDialog
      * @param listener    The [DialogInterface.OnClickListener] to use.
      */
     fun withButton(
-        whichButton: Int, @StringRes textRes: Int,
-        listener: DialogInterface.OnClickListener?
+            whichButton: Int, @StringRes textRes: Int,
+            listener: DialogInterface.OnClickListener?
     ): FastAdapterDialog<Item> {
         setButton(whichButton, context.getString(textRes), listener)
         return this

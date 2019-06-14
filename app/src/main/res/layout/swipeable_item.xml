@@ -43,7 +43,7 @@
             android:textColor="@android:color/primary_text_dark"
             android:textStyle="bold"
             android:textSize="@dimen/material_drawer_item_primary_description"
-            android:text="@string/action_undo"/>
+            android:text="@string/action_undo" />
     </LinearLayout>
 
     <LinearLayout

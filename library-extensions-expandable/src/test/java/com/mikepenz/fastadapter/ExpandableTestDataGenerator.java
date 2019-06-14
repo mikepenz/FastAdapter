@@ -60,7 +60,7 @@ public class ExpandableTestDataGenerator {
             return;
         }
         for (ISubItem<?> expandableTestItem : item.getSubItems()) {
-            if(expandableTestItem instanceof ExpandableTestItem) {
+            if (expandableTestItem instanceof ExpandableTestItem) {
                 atomicInteger.incrementAndGet();
                 count((ExpandableTestItem) expandableTestItem, atomicInteger);
             }

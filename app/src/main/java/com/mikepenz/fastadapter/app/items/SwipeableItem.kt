@@ -125,7 +125,7 @@ class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable, IDra
         var description: TextView = view.findViewById(R.id.material_drawer_description)
         var swipeResultContent: View = view.findViewById(R.id.swipe_result_content)
         var itemContent: View = view.findViewById(R.id.item_content)
-        var swipedText: TextView= view.findViewById(R.id.swiped_text)
+        var swipedText: TextView = view.findViewById(R.id.swiped_text)
         var swipedAction: TextView = view.findViewById(R.id.swiped_action)
 
         var swipedActionRunnable: Runnable? = null
