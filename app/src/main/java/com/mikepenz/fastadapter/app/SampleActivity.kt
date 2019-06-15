@@ -120,7 +120,6 @@ class SampleActivity : AppCompatActivity() {
                         }
                         return false
                     }
-
                 })
                 .withSelectedItemByPosition(-1)
                 .build()

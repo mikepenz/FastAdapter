@@ -17,7 +17,6 @@ import com.timehop.stickyheadersrecyclerview.util.OrientationProvider
 /**
  * Created by Gagan on 5/3/2017.
  */
-
 class CustomStickyRecyclerHeadersDecoration private constructor(private val mAdapter: StickyRecyclerHeadersAdapter<*>, private val mRenderer: HeaderRenderer,
                                                                 private val mOrientationProvider: OrientationProvider, private val mDimensionCalculator: DimensionCalculator, private val mHeaderProvider: HeaderProvider,
                                                                 private val mHeaderPositionCalculator: HeaderPositionCalculator) : RecyclerView.ItemDecoration() {
@@ -29,7 +28,7 @@ class CustomStickyRecyclerHeadersDecoration private constructor(private val mAda
      */
     private val mTempRect = Rect()
 
-    // TODO: Consider passing in orientation to simplify orientation accounting within calculation
+    // TODO Consider passing in orientation to simplify orientation accounting within calculation
     constructor(adapter: StickyRecyclerHeadersAdapter<*>, moPubRecyclerAdapter: MoPubRecyclerAdapter) : this(adapter, moPubRecyclerAdapter, LinearLayoutOrientationProvider(), DimensionCalculator())
 
     private constructor(adapter: StickyRecyclerHeadersAdapter<*>, moPubRecyclerAdapter: MoPubRecyclerAdapter, orientationProvider: OrientationProvider,

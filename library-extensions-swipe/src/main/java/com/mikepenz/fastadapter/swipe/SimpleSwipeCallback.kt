@@ -31,7 +31,6 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
          * @param direction direction the item was swiped
          */
         fun itemSwiped(position: Int, direction: Int)
-
     }
 
     fun withLeaveBehindSwipeLeft(d: Drawable): SimpleSwipeCallback {

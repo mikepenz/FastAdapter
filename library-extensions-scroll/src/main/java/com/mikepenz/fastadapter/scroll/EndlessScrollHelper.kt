@@ -214,7 +214,6 @@ class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
             else
                 NullPointerException("You must provide an `OnLoadMoreHandler`")
         }
-
     }
 
     /**
@@ -236,7 +235,6 @@ class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
             else
                 NullPointerException("You must provide an `OnNewItemsListener`")
         }
-
     }
 
     //-------------------------

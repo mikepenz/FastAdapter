@@ -1,5 +1,5 @@
 build:
-  maxIssues: 10
+  maxIssues: 0
   weights:
     # complexity: 2
     # LongParameterList: 1
@@ -68,7 +68,7 @@ complexity:
     threshold: 60
   LongParameterList:
     active: true
-    threshold: 6
+    threshold: 10
     ignoreDefaultParameters: false
   MethodOverloading:
     active: false
@@ -157,7 +157,7 @@ exceptions:
   ThrowingNewInstanceOfSameException:
     active: false
   TooGenericExceptionCaught:
-    active: true
+    active: false
     excludes: "**/test/**,**/androidTest/**,**/*.Test.kt,**/*.Spec.kt,**/*.Spek.kt"
     exceptionNames:
      - ArrayIndexOutOfBoundsException

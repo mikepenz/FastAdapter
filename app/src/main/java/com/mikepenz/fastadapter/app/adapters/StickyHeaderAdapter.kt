@@ -59,7 +59,6 @@ class StickyHeaderAdapter<Item : IItem<out RecyclerView.ViewHolder>> : RecyclerV
         //we create the view for the header
         val view = LayoutInflater.from(parent.context).inflate(R.layout.view_header, parent, false)
         return object : RecyclerView.ViewHolder(view) {
-
         }
     }
 

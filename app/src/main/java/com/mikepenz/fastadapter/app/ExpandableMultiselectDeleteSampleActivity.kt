@@ -146,7 +146,6 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
                             .withDescription("ID: " + ((i + 1) * 100 + ii))
                             .identifier = ((i + 1) * 100 + ii).toLong()
                     subItems.add(sampleItem)
-
                 }
                 expandableItem.subItems = subItems
 

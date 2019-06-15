@@ -90,7 +90,6 @@ object FastAdapterDiffUtil {
         } catch (ignored: Exception) {
             //
         }
-
     }
 
     /**

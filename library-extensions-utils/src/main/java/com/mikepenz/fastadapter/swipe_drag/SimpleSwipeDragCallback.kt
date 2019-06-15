@@ -1,3 +1,5 @@
+@file:Suppress("PackageName", "PackageNaming")
+
 package com.mikepenz.fastadapter.swipe_drag
 
 import android.content.Context

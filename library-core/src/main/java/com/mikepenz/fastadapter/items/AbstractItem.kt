@@ -58,7 +58,6 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
      * @param holder
      */
     override fun unbindView(holder: VH) {
-
     }
 
     /**
@@ -67,7 +66,6 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
      * @param holder
      */
     override fun attachToWindow(holder: VH) {
-
     }
 
     /**
@@ -76,7 +74,6 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
      * @param holder
      */
     override fun detachFromWindow(holder: VH) {
-
     }
 
     /**

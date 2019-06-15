@@ -24,7 +24,6 @@ class IconItem : AbstractItem<IconItem.ViewHolder>(), IExpandable<IconItem.ViewH
     override var subItems: MutableList<ISubItem<*>>
         get() = mutableListOf()
         set(list) {
-
         }
 
     override val isAutoExpanding: Boolean

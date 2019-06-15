@@ -160,13 +160,9 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
 
     override fun notifyAdapterItemRangeChanged(position: Int, itemCount: Int, payload: Any?) {}
 
-    override fun set(items: List<Item>, resetFilter: Boolean) {
+    override fun set(items: List<Item>, resetFilter: Boolean) {}
 
-    }
-
-    override fun performFiltering(constraint: CharSequence?) {
-
-    }
+    override fun performFiltering(constraint: CharSequence?) {}
 
     /**
      * toggles the selection of the item at the given position

@@ -121,9 +121,9 @@ object SubItemUtil {
                 } else if (predicate.apply(item)) {
                     res.add(item)
                 }
-            }// in some cases, we must manually check, if the item is a sub item, process is optimised as much as possible via the subItemsOnly parameter already
+            }
+            // in some cases, we must manually check, if the item is a sub item, process is optimised as much as possible via the subItemsOnly parameter already
             // sub items will be counted in above if statement!
-
         }
         return res
     }
@@ -196,9 +196,9 @@ object SubItemUtil {
                             }
                         }
                     }
-                    if (subItems[i] is IExpandable<*>)
+                    if (subItems[i] is IExpandable<*>) {
                         selectAllSubItems(adapter, header, select, notifyParent, payload)
-
+                    }
                 }
             } else {
                 for (i in 0 until subItemsCount) {
