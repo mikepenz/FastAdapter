@@ -77,13 +77,13 @@ class AdvancedSampleActivity : AppCompatActivity() {
         selectExtension.multiSelect = true
         selectExtension.selectOnLongClick = true
 
-        mFastAdapter.onPreClickListener = { _: View?, _: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, _: Int ->
+        mFastAdapter.onPreClickListener = { _: View?, _: GenericAdapter, item: IItem<out RecyclerView.ViewHolder>, _: Int ->
             //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
             val res = mActionModeHelper?.onClick(item)
             res ?: false
         }
 
-        mFastAdapter.onPreLongClickListener = { _: View, _: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, position: Int ->
+        mFastAdapter.onPreLongClickListener = { _: View, _: GenericAdapter, item: IItem<out RecyclerView.ViewHolder>, position: Int ->
             //we do not want expandable items to be selected
             if (item is IExpandable<*> && item.subItems != null) {
                 true
