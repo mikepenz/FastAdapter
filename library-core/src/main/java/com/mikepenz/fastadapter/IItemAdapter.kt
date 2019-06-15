@@ -8,6 +8,11 @@ import androidx.recyclerview.widget.RecyclerView
 interface IItemAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>> : IAdapter<Item> {
 
     /**
+     * The [IIdDistributor] used to provide identifiers to added items (if no identifier was specified prior)
+     */
+    var idDistributor: IIdDistributor<Item>
+
+    /**
      * set a new list of items and apply it to the existing list (clear - add) for this adapter
      *
      * @param items
@@ -19,7 +24,7 @@ interface IItemAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>> : IAdap
      *
      * @param items
      */
-    fun setNewList(items: List<Model>): IItemAdapter<Model, Item>
+    fun setNewList(items: List<Model>, retainFilter: Boolean = false): IItemAdapter<Model, Item>
 
     /**
      * add an array of items to the end of the existing items
@@ -83,6 +88,11 @@ interface IItemAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>> : IAdap
     fun setInternal(position: Int, item: Item): IItemAdapter<Model, Item>
 
     /**
+     * moves the item at the [fromPosition] to the [toPosition]
+     */
+    fun move(fromPosition: Int, toPosition: Int): IItemAdapter<Model, Item>
+
+    /**
      * removes an item at the given position within the existing icons
      *
      * @param position the global position
@@ -101,4 +111,11 @@ interface IItemAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>> : IAdap
      * removes all items of this adapter
      */
     fun clear(): IItemAdapter<Model, Item>
+
+    /**
+     * filters the items with the constraint using the provided Predicate
+     *
+     * @param constraint the string used to filter the list
+     */
+    fun filter(constraint: CharSequence?)
 }
