@@ -8,9 +8,9 @@ import com.mikepenz.fastadapter.IItem
 object ExtensionsFactories {
 
     private val factories =
-            LinkedHashMap<Class<out IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>, ExtensionFactory>()
+            LinkedHashMap<Class<out IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>, ExtensionFactory<*>>()
 
-    fun register(factory: ExtensionFactory) {
+    fun register(factory: ExtensionFactory<*>) {
         factories[factory.clazz] = factory
     }
 
