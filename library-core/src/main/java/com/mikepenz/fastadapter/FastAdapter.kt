@@ -41,16 +41,13 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     // we remember all adapters
     //priority queue...
     private val adapters = ArrayList<IAdapter<Item>>()
-    // we remember all possible types so we can create a new view efficiently
-    /**
-     * @return the current type instance cache
-     */
+
     /**
      * Sets an type instance cache to this fast adapter instance.
      * The cache will manage the type instances to create new views more efficient.
      * Normally an shared cache is used over all adapter instances.
      *
-     * @param mTypeInstanceCache a custom `TypeInstanceCache` implementation
+     * typeInstanceCache a custom `TypeInstanceCache` implementation
      */
     open var typeInstanceCache: ITypeInstanceCache<Item> = DefaultTypeInstanceCache()
     // cache the sizes of the different adapters so we can access the items more performant

@@ -32,7 +32,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
 
     open var reverseInterceptor: ((element: Item) -> Model?)? = null
 
-    open var idDistributor: IIdDistributor<Item> = IIdDistributor.DEFAULT as IIdDistributor<Item>
+    override var idDistributor: IIdDistributor<Item> = IIdDistributor.DEFAULT as IIdDistributor<Item>
 
     /**
      * Defines if the DefaultIdDistributor is used to provide an ID to all added items which do not yet define an id
@@ -121,7 +121,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      *
      * @param constraint the string used to filter the list
      */
-    open fun filter(constraint: CharSequence?) {
+    override fun filter(constraint: CharSequence?) {
         itemFilter.filter(constraint)
     }
 
@@ -236,20 +236,11 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
     /**
      * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
      *
-     * @param items the new items to set
-     */
-    override fun setNewList(items: List<Model>): ModelAdapter<Model, Item> {
-        return setNewList(items, false)
-    }
-
-    /**
-     * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
-     *
      * @param list         the new items to set
      * @param retainFilter set to true if you want to keep the filter applied
      * @return this
      */
-    open fun setNewList(list: List<Model>, retainFilter: Boolean): ModelAdapter<Model, Item> {
+    override fun setNewList(list: List<Model>, retainFilter: Boolean): ModelAdapter<Model, Item> {
         val items = intercept(list)
 
         if (isUseIdDistributor) {
@@ -377,7 +368,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @param toPosition   the global position to which to move
      * @return this
      */
-    open fun move(fromPosition: Int, toPosition: Int): ModelAdapter<Model, Item> {
+    override fun move(fromPosition: Int, toPosition: Int): ModelAdapter<Model, Item> {
         itemList.move(fromPosition, toPosition, fastAdapter?.getPreItemCount(fromPosition) ?: 0)
         return this
     }
