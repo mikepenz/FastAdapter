@@ -16,6 +16,7 @@ import com.mikepenz.fastadapter.utils.DefaultTypeInstanceCache
 import com.mikepenz.fastadapter.utils.Triple
 import com.mikepenz.fastadapter.utils.attachToView
 import java.util.*
+import kotlin.math.min
 
 /**
  * Kotlin type alias to simplify usage for an all accepting FastAdapter
@@ -594,7 +595,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
         var size = 0
 
         //count the number of items before the adapter with the given order
-        for (i in 0 until Math.min(order, adapters.size)) {
+        for (i in 0 until min(order, adapters.size)) {
             size += adapters[i].adapterItemCount
         }
 

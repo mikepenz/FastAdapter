@@ -6,6 +6,7 @@ import com.mikepenz.fastadapter.listeners.ItemFilterListener
 import com.mikepenz.fastadapter.select.SelectExtension
 import java.util.*
 import java.util.Arrays.asList
+import kotlin.math.min
 
 /**
  * ItemFilter which extends the Filter api provided by Android
@@ -299,7 +300,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
             val length = originalItems.size
             mItemAdapter.fastAdapter?.getPreItemCount(position)?.let { preItemCount ->
                 //make sure we do not delete to many items
-                val saveItemCount = Math.min(itemCount, length - position + preItemCount)
+                val saveItemCount = min(itemCount, length - position + preItemCount)
                 for (i in 0 until saveItemCount) {
                     originalItems.removeAt(position - preItemCount)
                 }

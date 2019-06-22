@@ -29,7 +29,6 @@ import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
 import kotlinx.android.synthetic.main.activity_main.*
-import java.util.*
 
 class SampleActivity : AppCompatActivity() {
 
@@ -128,7 +127,7 @@ class SampleActivity : AppCompatActivity() {
         mItemAdapter = ItemAdapter()
 
         //create our FastAdapter which will manage everything
-        mFastAdapter = FastAdapter.with(Arrays.asList(mItemAdapter))
+        mFastAdapter = FastAdapter.with(listOf(mItemAdapter))
         selectExtension = mFastAdapter.getSelectExtension()
         selectExtension.apply {
             isSelectable = true
@@ -154,6 +153,7 @@ class SampleActivity : AppCompatActivity() {
             mFastAdapter.withSavedInstanceState(savedInstanceState)
         }, 50)
     }
+
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater

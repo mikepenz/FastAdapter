@@ -32,7 +32,7 @@ import java.util.*
  *
  * Created by jayson on 3/26/2016.
  */
-class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
+open class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
     private var mOnLoadMoreHandler: OnLoadMoreHandler<Model>? = null
     private var mOnNewItemsListener: OnNewItemsListener<Model>? = null
 

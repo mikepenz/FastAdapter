@@ -11,7 +11,7 @@ import com.mikepenz.fastadapter.utils.SubItemUtil
 /**
  * Created by Michael on 15.09.2016.
  */
-class RangeSelectorHelper<Item : GenericItem>(private val mFastAdapter: FastItemAdapter<Item>) {
+open class RangeSelectorHelper<Item : GenericItem>(private val mFastAdapter: FastItemAdapter<Item>) {
     private var mActionModeHelper: ActionModeHelper<*>? = null
     private var mSupportSubItems = false
     private var mPayload: Any? = null

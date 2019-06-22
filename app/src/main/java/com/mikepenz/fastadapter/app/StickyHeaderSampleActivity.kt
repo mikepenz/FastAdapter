@@ -44,7 +44,7 @@ class StickyHeaderSampleActivity : AppCompatActivity() {
         val itemAdapter = ItemAdapter<SimpleItem>()
 
         //create our FastAdapter
-        fastAdapter = FastAdapter.with(Arrays.asList(headerAdapter, itemAdapter))
+        fastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter))
         val selectExtension = fastAdapter.getSelectExtension()
         selectExtension.isSelectable = true
 

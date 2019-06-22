@@ -45,7 +45,7 @@ object FastAdapterDiffUtil {
 
         //if we have a comparator then sort
         if (adapter.itemList is ComparableItemListImpl<*>) {
-            Collections.sort<Item>(items, (adapter.itemList as ComparableItemListImpl<Item>).comparator)
+            Collections.sort(items, (adapter.itemList as ComparableItemListImpl<Item>).comparator)
         }
 
         //map the types
