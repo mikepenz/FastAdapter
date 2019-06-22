@@ -11,6 +11,7 @@ import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersAdapter
 import com.timehop.stickyheadersrecyclerview.caching.HeaderProvider
 import com.timehop.stickyheadersrecyclerview.calculation.DimensionCalculator
 import com.timehop.stickyheadersrecyclerview.util.OrientationProvider
+import kotlin.math.max
 
 /**
  * Created by Gagan on 5/3/2017.
@@ -122,14 +123,10 @@ class HeaderPositionCalculator(private val mAdapter: StickyRecyclerHeadersAdapte
 
         if (orientation == LinearLayoutManager.VERTICAL) {
             translationX = firstView.left - leftMargin + mTempRect1.left
-            translationY = Math.max(
-                    firstView.top - topMargin - header.height - mTempRect1.bottom,
-                    getListTop(recyclerView) + mTempRect1.top)
+            translationY = max(firstView.top - topMargin - header.height - mTempRect1.bottom, getListTop(recyclerView) + mTempRect1.top)
         } else {
             translationY = firstView.top - topMargin + mTempRect1.top
-            translationX = Math.max(
-                    firstView.left - leftMargin - header.width - mTempRect1.right,
-                    getListLeft(recyclerView) + mTempRect1.left)
+            translationX = max(firstView.left - leftMargin - header.width - mTempRect1.right, getListLeft(recyclerView) + mTempRect1.left)
         }
 
         headerMargins.set(translationX, translationY, translationX + header.width,

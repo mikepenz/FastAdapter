@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
+import kotlin.math.abs
 
 
 /**
@@ -97,7 +98,7 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
         if (viewHolder.adapterPosition == RecyclerView.NO_POSITION) {
             return
         }
-        if (Math.abs(dX) > Math.abs(dY)) {
+        if (abs(dX) > abs(dY)) {
             val isLeft = dX < 0
             if (bgPaint == null) {
                 bgPaint = Paint()

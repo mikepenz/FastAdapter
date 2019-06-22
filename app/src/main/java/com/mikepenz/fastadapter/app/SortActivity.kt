@@ -124,7 +124,7 @@ class SortActivity : AppCompatActivity() {
         //add the values which need to be saved from the adapter to the bundle
         outState = fastAdapter.saveInstanceState(outState)
         //We need to persist our sorting strategy between orientation changes
-        outState?.putInt("sorting_strategy", sortingStrategy)
+        outState.putInt("sorting_strategy", sortingStrategy)
         super.onSaveInstanceState(outState)
     }
 

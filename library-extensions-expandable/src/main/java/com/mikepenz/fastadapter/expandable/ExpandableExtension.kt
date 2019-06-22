@@ -439,7 +439,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
         for (i in from until position) {
             tmp = fastAdapter.getItem(i)
             if (tmp is IExpandable<*>) {
-                val tmpExpandable = tmp as IExpandable<*>
+                val tmpExpandable = tmp
                 if (tmpExpandable.isExpanded) {
                     totalAddedItems += tmpExpandable.subItems.size
                 }
