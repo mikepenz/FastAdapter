@@ -167,7 +167,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      */
     open fun <A : IAdapter<Item>> addAdapter(index: Int, adapter: A): FastAdapter<Item> {
         adapters.add(index, adapter)
-        prepareAdapters()
+        prepareAdapters(adapter)
         return this
     }
 
@@ -179,7 +179,9 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      */
     open fun <A : IAdapter<Item>> addAdapters(newAdapters: List<A>): FastAdapter<Item> {
         adapters.addAll(newAdapters as Collection<IAdapter<Item>>)
-        prepareAdapters()
+        newAdapters.forEach {
+            prepareAdapters(it)
+        }
         return this
     }
 
@@ -187,16 +189,11 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      * prepares all adapters for their usage. update the fastAdapter, ensure all types are mapped, and update the order for the adapter.
      * It also updates the cached sizes.
      */
-    private fun prepareAdapters(remapTypes: Boolean = true) {
+    private fun prepareAdapters(adapter: IAdapter<Item>) {
+        adapter.fastAdapter = this
+        adapter.mapPossibleTypes(adapter.adapterItems)
         for (i in adapters.indices) {
-            adapters[i].apply {
-                this.fastAdapter = fastAdapter
-                this.order = i
-
-                if (remapTypes) {
-                    this.mapPossibleTypes(this.adapterItems)
-                }
-            }
+            adapters[i].order = i
         }
         cacheSizes()
     }
