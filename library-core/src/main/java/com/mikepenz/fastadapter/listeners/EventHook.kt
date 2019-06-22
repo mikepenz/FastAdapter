@@ -2,9 +2,9 @@ package com.mikepenz.fastadapter.listeners
 
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 
-interface EventHook<Item : IItem<out RecyclerView.ViewHolder>> {
+interface EventHook<Item : GenericItem> {
 
     /*
 	 * Return the view for this hook that the listener should be bound to

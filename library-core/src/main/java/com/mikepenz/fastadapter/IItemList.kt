@@ -1,12 +1,10 @@
 package com.mikepenz.fastadapter
 
-import androidx.recyclerview.widget.RecyclerView
-
 /**
  * The Item list interface
  */
 
-interface IItemList<Item : IItem<out RecyclerView.ViewHolder>> {
+interface IItemList<Item : GenericItem> {
 
     val isEmpty: Boolean
 

@@ -20,7 +20,7 @@ import java.util.*
 /**
  * Kotlin type alias to simplify usage for an all accepting FastAdapter
  */
-typealias GenericFastAdapter = FastAdapter<IItem<out RecyclerView.ViewHolder>>
+typealias GenericFastAdapter = FastAdapter<GenericItem>
 
 /**
  * The `FastAdapter` class is the core managing class of the `FastAdapter` library, it handles all `IAdapter` implementations, keeps track of the item types which can be displayed
@@ -35,8 +35,7 @@ typealias GenericFastAdapter = FastAdapter<IItem<out RecyclerView.ViewHolder>>
  *
  * @param <Item> Defines the type of items this `FastAdapter` manages (in case of multiple different types, use `IItem`)</Item>
  */
-open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
-        RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     // we remember all adapters
     //priority queue...
@@ -208,7 +207,6 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         return extensionsCache[clazz] as T?
     }
 
-
     inline fun <reified T : IAdapterExtension<Item>> getExtension(): T? = getExtension(T::class.java)
 
     inline fun <reified T : IAdapterExtension<Item>> requireExtension(): T = getExtension()!!
@@ -218,7 +216,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         if (extensionsCache.containsKey(clazz)) {
             return extensionsCache[clazz] as T
         }
-        val extension = ExtensionsFactories.create(this, clazz as Class<out IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>) as? T
+        val extension = ExtensionsFactories.create(this, clazz as Class<out IAdapterExtension<out GenericItem>>) as? T
                 ?: return null
         extensionsCache[clazz] = extension
         return extension
@@ -269,10 +267,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return this
      */
     @JvmOverloads
-    fun withSavedInstanceState(
-            savedInstanceState: Bundle?,
-            prefix: String = ""
-    ): FastAdapter<Item> {
+    fun withSavedInstanceState(savedInstanceState: Bundle?, prefix: String = ""): FastAdapter<Item> {
         for (ext in extensionsCache.values) {
             ext.withSavedInstanceState(savedInstanceState, prefix)
         }
@@ -359,10 +354,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (legacyBindViewMode) {
             if (verboseLoggingEnabled) {
-                Log.v(
-                        TAG,
-                        "onBindViewHolderLegacy: " + position + "/" + holder.itemViewType + " isLegacy: true"
-                )
+                Log.v(TAG, "onBindViewHolderLegacy: " + position + "/" + holder.itemViewType + " isLegacy: true")
             }
             //set the R.id.fastadapter_item_adapter tag to the adapter so we always have the proper bound adapter available
             holder.itemView.setTag(R.id.fastadapter_item_adapter, this)
@@ -371,18 +363,11 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         }
     }
 
-    override fun onBindViewHolder(
-            holder: RecyclerView.ViewHolder,
-            position: Int,
-            payloads: MutableList<Any>
-    ) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
         //we do not want the binding to happen twice (the legacyBindViewMode
         if (!legacyBindViewMode) {
             if (verboseLoggingEnabled)
-                Log.v(
-                        TAG,
-                        "onBindViewHolder: " + position + "/" + holder.itemViewType + " isLegacy: false"
-                )
+                Log.v(TAG, "onBindViewHolder: " + position + "/" + holder.itemViewType + " isLegacy: false")
             //set the R.id.fastadapter_item_adapter tag to the adapter so we always have the proper bound adapter available
             holder.itemView.setTag(R.id.fastadapter_item_adapter, this)
             //now we bind the item to this viewHolder
@@ -433,10 +418,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     override fun onFailedToRecycleView(holder: RecyclerView.ViewHolder): Boolean {
         if (verboseLoggingEnabled) Log.v(TAG, "onFailedToRecycleView: " + holder.itemViewType)
-        return onBindViewHolderListener.onFailedToRecycleView(
-                holder,
-                holder.adapterPosition
-        ) || super.onFailedToRecycleView(holder)
+        return onBindViewHolderListener.onFailedToRecycleView(holder, holder.adapterPosition) || super.onFailedToRecycleView(holder)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
@@ -457,10 +439,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      */
     open fun getPosition(item: Item): Int {
         if (item.identifier == -1L) {
-            Log.e(
-                    "FastAdapter",
-                    "You have to define an identifier for your item to retrieve the position via this method"
-            )
+            Log.e("FastAdapter", "You have to define an identifier for your item to retrieve the position via this method")
             return -1
         }
         return getPosition(item.identifier)
@@ -799,10 +778,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param stopOnMatch defines if we should stop iterating after the first match
      * @return Triple&lt;Boolean, IItem, Integer&gt; The first value is true (it is always not null), the second contains the item and the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
      */
-    fun recursive(
-            predicate: AdapterPredicate<Item>,
-            stopOnMatch: Boolean
-    ): Triple<Boolean, Item, Int> {
+    fun recursive(predicate: AdapterPredicate<Item>, stopOnMatch: Boolean): Triple<Boolean, Item, Int> {
         return recursive(predicate, 0, stopOnMatch)
     }
 
@@ -815,11 +791,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param stopOnMatch         defines if we should stop iterating after the first match
      * @return Triple&lt;Boolean, IItem, Integer&gt; The first value is true (it is always not null), the second contains the item and the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
      */
-    fun recursive(
-            predicate: AdapterPredicate<Item>,
-            globalStartPosition: Int,
-            stopOnMatch: Boolean
-    ): Triple<Boolean, Item, Int> {
+    fun recursive(predicate: AdapterPredicate<Item>, globalStartPosition: Int, stopOnMatch: Boolean): Triple<Boolean, Item, Int> {
         for (i in globalStartPosition until itemCount) {
             //retrieve the item + it's adapter
             val relativeInfo = getRelativeInfo(i)
@@ -830,13 +802,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                         return Triple(true, item, i)
                     }
                     (item as? IExpandable<*>)?.let { expandableItem ->
-                        val res = recursiveSub(
-                                adapter,
-                                i,
-                                expandableItem,
-                                predicate,
-                                stopOnMatch
-                        )
+                        val res = recursiveSub(adapter, i, expandableItem, predicate, stopOnMatch)
                         if (res.first && stopOnMatch) {
                             return res
                         }
@@ -851,7 +817,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     /**
      * an internal class to return the IItem and relativePosition and its adapter at once. used to save one iteration inside the getInternalItem method
      */
-    class RelativeInfo<Item : IItem<out RecyclerView.ViewHolder>> {
+    class RelativeInfo<Item : GenericItem> {
         var adapter: IAdapter<Item>? = null
         var item: Item? = null
         var position = -1
@@ -863,8 +829,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      *
      * @param <Item>
     </Item> */
-    abstract class ViewHolder<Item : IItem<out RecyclerView.ViewHolder>>(itemView: View) :
-            RecyclerView.ViewHolder(itemView) {
+    abstract class ViewHolder<Item : GenericItem>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         /**
          * binds the data of this item onto the viewHolder
@@ -915,7 +880,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
          * @return a new FastAdapter
          */
         @JvmStatic
-        fun <Item : IItem<out RecyclerView.ViewHolder>, A : IAdapter<Item>> with(adapter: A): FastAdapter<Item> {
+        fun <Item : GenericItem, A : IAdapter<Item>> with(adapter: A): FastAdapter<Item> {
             val fastAdapter = FastAdapter<Item>()
             fastAdapter.addAdapter(0, adapter)
             return fastAdapter
@@ -929,7 +894,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
          * @return a new FastAdapter
          */
         @JvmStatic
-        fun <Item : IItem<out RecyclerView.ViewHolder>, A : IAdapter<*>> with(adapters: Collection<A>?): FastAdapter<Item> {
+        fun <Item : GenericItem, A : IAdapter<*>> with(adapters: Collection<A>?): FastAdapter<Item> {
             return with(adapters, null)
         }
 
@@ -941,13 +906,10 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
          * @return a new FastAdapter
          */
         @JvmStatic
-        fun <Item : IItem<out RecyclerView.ViewHolder>, A : IAdapter<*>> with(
-                adapters: Collection<A>?,
-                extensions: Collection<IAdapterExtension<Item>>?
-        ): FastAdapter<Item> {
+        fun <Item : GenericItem, A : IAdapter<*>> with(adapters: Collection<A>?, extensions: Collection<IAdapterExtension<Item>>?): FastAdapter<Item> {
             val fastAdapter = FastAdapter<Item>()
             if (adapters == null) {
-                fastAdapter.adapters.add(items<IItem<out RecyclerView.ViewHolder>>() as IAdapter<Item>)
+                fastAdapter.adapters.add(items<GenericItem>() as IAdapter<Item>)
             } else {
                 fastAdapter.adapters.addAll(adapters as Collection<IAdapter<Item>>)
             }
@@ -973,10 +935,9 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
          * @return the Item found for this ViewHolder
          */
         @JvmStatic
-        fun <Item : IItem<*>> getHolderAdapterItem(holder: RecyclerView.ViewHolder?): Item? {
+        fun <Item : GenericItem> getHolderAdapterItem(holder: RecyclerView.ViewHolder?): Item? {
             if (holder != null) {
-                val tag =
-                        holder.itemView.getTag(R.id.fastadapter_item_adapter)
+                val tag = holder.itemView.getTag(R.id.fastadapter_item_adapter)
                 if (tag is FastAdapter<*>) {
                     val pos = tag.getHolderAdapterPosition(holder)
                     if (pos != RecyclerView.NO_POSITION) {
@@ -995,13 +956,9 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
          * @return the Item found for the given position and that ViewHolder
          */
         @JvmStatic
-        fun <Item : IItem<*>> getHolderAdapterItem(
-                holder: RecyclerView.ViewHolder?,
-                position: Int
-        ): Item? {
+        fun <Item : GenericItem> getHolderAdapterItem(holder: RecyclerView.ViewHolder?, position: Int): Item? {
             if (holder != null) {
-                val tag =
-                        holder.itemView.getTag(R.id.fastadapter_item_adapter)
+                val tag = holder.itemView.getTag(R.id.fastadapter_item_adapter)
                 if (tag is FastAdapter<*>) {
                     return tag.getItem(position) as? Item?
                 }
@@ -1016,10 +973,10 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
          * @return the Item found for the given position and that ViewHolder
          */
         @JvmStatic
-        fun <Item : IItem<*>> getHolderAdapterItemTag(holder: RecyclerView.ViewHolder?): Item? {
+        fun <Item : GenericItem> getHolderAdapterItemTag(holder: RecyclerView.ViewHolder?): Item? {
             if (holder != null) {
                 val item = holder.itemView.getTag(R.id.fastadapter_item)
-                if (item is IItem<*>) {
+                if (item is GenericItem) {
                     return item as? Item?
                 }
             }
@@ -1039,7 +996,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
          * @return Triple&lt;Boolean, IItem, Integer&gt; The first value is true (it is always not null), the second contains the item and the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
         </Item> */
         @JvmStatic
-        fun <Item : IItem<out RecyclerView.ViewHolder>> recursiveSub(
+        fun <Item : GenericItem> recursiveSub(
                 lastParentAdapter: IAdapter<Item>,
                 lastParentPosition: Int,
                 parent: IExpandable<*>,
@@ -1050,24 +1007,12 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             if (!parent.isExpanded) {
                 parent.subItems.forEach { sub ->
                     (sub as Item).let { subItem ->
-                        if (predicate.apply(
-                                        lastParentAdapter,
-                                        lastParentPosition,
-                                        subItem,
-                                        -1
-                                ) && stopOnMatch
-                        ) {
+                        if (predicate.apply(lastParentAdapter, lastParentPosition, subItem, -1) && stopOnMatch) {
                             return Triple(true, sub, null)
                         }
                     }
                     if (sub is IExpandable<*>) {
-                        val res = recursiveSub(
-                                lastParentAdapter,
-                                lastParentPosition,
-                                sub,
-                                predicate,
-                                stopOnMatch
-                        )
+                        val res = recursiveSub(lastParentAdapter, lastParentPosition, sub, predicate, stopOnMatch)
                         if (res.first) {
                             return res
                         }

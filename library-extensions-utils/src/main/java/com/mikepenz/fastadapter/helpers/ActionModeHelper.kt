@@ -6,8 +6,8 @@ import android.view.MenuItem
 import androidx.annotation.MenuRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.expandable.ExpandableExtension
 import com.mikepenz.fastadapter.select.SelectExtension
@@ -15,7 +15,7 @@ import com.mikepenz.fastadapter.select.SelectExtension
 /**
  * Created by mikepenz on 02.01.16.
  */
-class ActionModeHelper<Item : IItem<out RecyclerView.ViewHolder>> {
+class ActionModeHelper<Item : GenericItem> {
     private var fastAdapter: FastAdapter<Item>
     private var selectExtension: SelectExtension<Item>
 

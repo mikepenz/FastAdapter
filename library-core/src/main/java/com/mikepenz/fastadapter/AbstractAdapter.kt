@@ -1,11 +1,9 @@
 package com.mikepenz.fastadapter
 
-import androidx.recyclerview.widget.RecyclerView
-
 /**
  * Created by mikepenz on 27.12.15.
  */
-abstract class AbstractAdapter<Item : IItem<out RecyclerView.ViewHolder>> : IAdapter<Item> {
+abstract class AbstractAdapter<Item : GenericItem> : IAdapter<Item> {
     override var fastAdapter: FastAdapter<Item>? = null
     /**
      * returs the position of this Adapter in the FastAdapter

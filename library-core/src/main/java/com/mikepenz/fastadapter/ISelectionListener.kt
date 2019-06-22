@@ -1,12 +1,10 @@
 package com.mikepenz.fastadapter
 
-import androidx.recyclerview.widget.RecyclerView
-
 /**
  * Created by flisar on 21.09.2016.
  */
 
-interface ISelectionListener<Item : IItem<out RecyclerView.ViewHolder>> {
+interface ISelectionListener<Item : GenericItem> {
     /**
      * is called, whenever the provided item is selected or deselected
      *

@@ -1,15 +1,14 @@
 package com.mikepenz.fastadapter.utils
 
-import androidx.recyclerview.widget.RecyclerView
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapterNotifier
-import com.mikepenz.fastadapter.IItem
 import java.util.*
 
 /**
  * The default item list implementation
  */
 
-open class DefaultItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> @JvmOverloads constructor(
+open class DefaultItemListImpl<Item : GenericItem> @JvmOverloads constructor(
         protected var mItems: MutableList<Item> = ArrayList()
 ) : DefaultItemList<Item>() {
 

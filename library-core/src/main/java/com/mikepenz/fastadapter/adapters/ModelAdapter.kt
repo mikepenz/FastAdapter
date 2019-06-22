@@ -18,7 +18,7 @@ typealias GenericModelAdapter<Model> = ModelAdapter<Model, IItem<out RecyclerVie
  * Created by mikepenz on 27.12.15.
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  */
-open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
+open class ModelAdapter<Model, Item : GenericItem>(
         val itemList: IItemList<Item>, var interceptor: (element: Model) -> Item?
 ) : AbstractAdapter<Item>(), IItemAdapter<Model, Item> {
     override var fastAdapter: FastAdapter<Item>?
@@ -495,7 +495,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
          * @return a new ItemAdapter
          */
         @JvmStatic
-        fun <Model, Item : IItem<out RecyclerView.ViewHolder>> models(interceptor: (element: Model) -> Item?): ModelAdapter<Model, Item> {
+        fun <Model, Item : GenericItem> models(interceptor: (element: Model) -> Item?): ModelAdapter<Model, Item> {
             return ModelAdapter(interceptor)
         }
     }

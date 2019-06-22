@@ -10,7 +10,7 @@ typealias GenericAdapter = IAdapter<IItem<out RecyclerView.ViewHolder>>
 /**
  * Created by mikepenz on 27.12.15.
  */
-interface IAdapter<Item : IItem<out RecyclerView.ViewHolder>> {
+interface IAdapter<Item : GenericItem> {
     /**
      * defines the FastAdapter which manages all the core logic
      *
