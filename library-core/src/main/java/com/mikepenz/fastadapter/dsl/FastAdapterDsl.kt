@@ -11,11 +11,11 @@ import com.mikepenz.fastadapter.adapters.ModelAdapter
 annotation class FastAdapterDsl
 
 fun genericfastadapter(block: (FastAdapter<GenericItem>).() -> Unit): FastAdapter<GenericItem> {
-    return FastAdapter<GenericItem>().apply { block(this) }
+    return FastAdapter<GenericItem>().apply(block)
 }
 
 fun <Item : GenericItem> fastadapter(block: (FastAdapter<Item>).() -> Unit): FastAdapter<Item> {
-    return FastAdapter<Item>().apply { block(this) }
+    return FastAdapter<Item>().apply(block)
 }
 
 fun <ParentItem : GenericItem, ChildItem : ParentItem> FastAdapter<ParentItem>.itemAdapter(block: ItemAdapter<ChildItem>.() -> Unit) {
