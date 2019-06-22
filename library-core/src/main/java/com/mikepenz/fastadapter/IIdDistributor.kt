@@ -16,8 +16,6 @@ interface IIdDistributor<Identifiable : IIdentifyable> {
     fun nextId(identifiable: Identifiable): Long
 
     companion object {
-
-        val DEFAULT: IIdDistributor<out IIdentifyable> =
-                DefaultIdDistributorImpl()
+        val DEFAULT: IIdDistributor<out IIdentifyable> = DefaultIdDistributorImpl()
     }
 }

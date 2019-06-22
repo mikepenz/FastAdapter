@@ -1,12 +1,11 @@
 package com.mikepenz.fastadapter
 
 import android.view.View
-import androidx.recyclerview.widget.RecyclerView
 
 /**
  * Created by mikepenz on 25.02.16.
  */
-interface IClickable<Item : IItem<out RecyclerView.ViewHolder>> {
+interface IClickable<Item : GenericItem> {
 
     /**
      * Provide a listener which is called before any processing is done within the adapter

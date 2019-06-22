@@ -23,7 +23,7 @@ fun <Item : IItem<*>> FastAdapter<Item>.getExpandableExtension(): ExpandableExte
 /**
  * Created by mikepenz on 04/06/2017.
  */
-class ExpandableExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fastAdapter: FastAdapter<Item>) :
+class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<Item>) :
         IAdapterExtension<Item> {
 
     private val collapseAdapterPredicate = object : AdapterPredicate<Item> {

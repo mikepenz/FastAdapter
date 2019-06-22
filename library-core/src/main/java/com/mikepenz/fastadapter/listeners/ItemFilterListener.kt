@@ -1,12 +1,11 @@
 package com.mikepenz.fastadapter.listeners
 
-import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 
 /**
  * interface for the ItemFilterListener
  */
-interface ItemFilterListener<Item : IItem<out RecyclerView.ViewHolder>> {
+interface ItemFilterListener<Item : GenericItem> {
     fun itemsFiltered(constraint: CharSequence?, results: List<Item>?)
 
     fun onReset()

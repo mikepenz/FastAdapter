@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import androidx.collection.ArraySet
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.utils.AdapterPredicate
@@ -14,7 +13,7 @@ import java.util.*
  * Extension method to retrieve or create the SelectExtension from the current FastAdapter.
  * This will return a non null variant and fail if something terrible happens.
  */
-fun <Item : IItem<*>> FastAdapter<Item>.getSelectExtension(): SelectExtension<Item> {
+fun <Item : GenericItem> FastAdapter<Item>.getSelectExtension(): SelectExtension<Item> {
     SelectExtension.toString() // enforces the vm to lead in the companion object
     return requireOrCreateExtension()
 }
@@ -22,7 +21,7 @@ fun <Item : IItem<*>> FastAdapter<Item>.getSelectExtension(): SelectExtension<It
 /**
  * Created by mikepenz on 04/06/2017.
  */
-class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fastAdapter: FastAdapter<Item>) : IAdapterExtension<Item> {
+class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<Item>) : IAdapterExtension<Item> {
 
     // if enabled we will select the item via a notifyItemChanged -> will animate with the Animator
     // you can also use this if you have any custom logic for selections, and do not depend on the "selected" state of the view
@@ -279,13 +278,7 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
         val relativeInfo = fastAdapter.getRelativeInfo(position)
         relativeInfo.item?.let { item ->
             relativeInfo.adapter?.let { adapter ->
-                select(
-                        adapter,
-                        item,
-                        position,
-                        fireEvent,
-                        considerSelectableFlag
-                )
+                select(adapter, item, position, fireEvent, considerSelectableFlag)
             }
         }
     }
@@ -299,13 +292,7 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
      * @param fireEvent              true if the onClick listener should be called
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
-    fun select(
-            adapter: IAdapter<Item>,
-            item: Item,
-            position: Int,
-            fireEvent: Boolean,
-            considerSelectableFlag: Boolean
-    ) {
+    fun select(adapter: IAdapter<Item>, item: Item, position: Int, fireEvent: Boolean, considerSelectableFlag: Boolean) {
         if (considerSelectableFlag && !item.isSelectable) {
             return
         }
@@ -330,12 +317,7 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
      */
     fun selectByIdentifier(identifier: Long, fireEvent: Boolean, considerSelectableFlag: Boolean) {
         fastAdapter.recursive(object : AdapterPredicate<Item> {
-            override fun apply(
-                    lastParentAdapter: IAdapter<Item>,
-                    lastParentPosition: Int,
-                    item: Item,
-                    position: Int
-            ): Boolean {
+            override fun apply(lastParentAdapter: IAdapter<Item>, lastParentPosition: Int, item: Item, position: Int): Boolean {
                 if (item.identifier == identifier) {
                     select(lastParentAdapter, item, position, fireEvent, considerSelectableFlag)
                     return true
@@ -350,18 +332,9 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
      * @param fireEvent              true if the onClick listener should be called
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
-    fun selectByIdentifiers(
-            identifiers: Set<Long>,
-            fireEvent: Boolean,
-            considerSelectableFlag: Boolean
-    ) {
+    fun selectByIdentifiers(identifiers: Set<Long>, fireEvent: Boolean, considerSelectableFlag: Boolean) {
         fastAdapter.recursive(object : AdapterPredicate<Item> {
-            override fun apply(
-                    lastParentAdapter: IAdapter<Item>,
-                    lastParentPosition: Int,
-                    item: Item,
-                    position: Int
-            ): Boolean {
+            override fun apply(lastParentAdapter: IAdapter<Item>, lastParentPosition: Int, item: Item, position: Int): Boolean {
                 if (identifiers.contains(item.identifier)) {
                     select(lastParentAdapter, item, position, fireEvent, considerSelectableFlag)
                 }
@@ -375,12 +348,7 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
      */
     fun deselect() {
         fastAdapter.recursive(object : AdapterPredicate<Item> {
-            override fun apply(
-                    lastParentAdapter: IAdapter<Item>,
-                    lastParentPosition: Int,
-                    item: Item,
-                    position: Int
-            ): Boolean {
+            override fun apply(lastParentAdapter: IAdapter<Item>, lastParentPosition: Int, item: Item, position: Int): Boolean {
                 deselect(item)
                 return false
             }
@@ -440,12 +408,7 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
      */
     fun deselectByIdentifier(identifier: Long) {
         fastAdapter.recursive(object : AdapterPredicate<Item> {
-            override fun apply(
-                    lastParentAdapter: IAdapter<Item>,
-                    lastParentPosition: Int,
-                    item: Item,
-                    position: Int
-            ): Boolean {
+            override fun apply(lastParentAdapter: IAdapter<Item>, lastParentPosition: Int, item: Item, position: Int): Boolean {
                 if (item.identifier == identifier) {
                     deselect(item, position, null)
                     return true
@@ -460,12 +423,7 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
      */
     fun deselectByIdentifiers(identifiers: Set<Long>) {
         fastAdapter.recursive(object : AdapterPredicate<Item> {
-            override fun apply(
-                    lastParentAdapter: IAdapter<Item>,
-                    lastParentPosition: Int,
-                    item: Item,
-                    position: Int
-            ): Boolean {
+            override fun apply(lastParentAdapter: IAdapter<Item>, lastParentPosition: Int, item: Item, position: Int): Boolean {
                 if (identifiers.contains(item.identifier)) {
                     deselect(item, position, null)
                 }
@@ -479,12 +437,7 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
      */
     fun deselectByItems(items: Set<Item>) {
         fastAdapter.recursive(object : AdapterPredicate<Item> {
-            override fun apply(
-                    lastParentAdapter: IAdapter<Item>,
-                    lastParentPosition: Int,
-                    item: Item,
-                    position: Int
-            ): Boolean {
+            override fun apply(lastParentAdapter: IAdapter<Item>, lastParentPosition: Int, item: Item, position: Int): Boolean {
                 if (items.contains(item)) {
                     deselect(item, position, null)
                 }
@@ -503,12 +456,7 @@ class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fas
 
         val positions = ArrayList<Int>()
         fastAdapter.recursive(object : AdapterPredicate<Item> {
-            override fun apply(
-                    lastParentAdapter: IAdapter<Item>,
-                    lastParentPosition: Int,
-                    item: Item,
-                    position: Int
-            ): Boolean {
+            override fun apply(lastParentAdapter: IAdapter<Item>, lastParentPosition: Int, item: Item, position: Int): Boolean {
                 if (item.isSelected) {
                     //if it's a subitem remove it from the parent
                     (item as? IExpandable<*>?)?.let { expandable ->

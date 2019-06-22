@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem
@@ -19,7 +19,7 @@ import java.security.SecureRandom
  * This is a FastAdapter adapter implementation for the awesome Sticky-Headers lib by timehop
  * https://github.com/timehop/sticky-headers-recyclerview
  */
-class StickyHeaderAdapter<Item : IItem<out RecyclerView.ViewHolder>> : RecyclerView.Adapter<RecyclerView.ViewHolder>(), StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
+class StickyHeaderAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.ViewHolder>(), StickyRecyclerHeadersAdapter<RecyclerView.ViewHolder> {
 
     //just to prettify things a bit
     private val randomColor: Int

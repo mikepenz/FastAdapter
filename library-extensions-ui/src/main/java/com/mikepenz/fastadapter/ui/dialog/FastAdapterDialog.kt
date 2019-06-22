@@ -8,11 +8,11 @@ import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 
-class FastAdapterDialog<Item : IItem<out RecyclerView.ViewHolder>> : AlertDialog {
+class FastAdapterDialog<Item : GenericItem> : AlertDialog {
 
     var recyclerView: RecyclerView? = null
         private set

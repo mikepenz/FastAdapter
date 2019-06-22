@@ -3,7 +3,7 @@ package com.mikepenz.fastadapter.app.adapters
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
 import com.mikepenz.fastadapter.app.model.ModelIconItem
 import com.turingtechnologies.materialscrollbar.ICustomAdapter
@@ -14,7 +14,7 @@ import com.turingtechnologies.materialscrollbar.INameableAdapter
  * This is a FastAdapter adapter implementation for the awesome Sticky-Headers lib by timehop
  * https://github.com/timehop/sticky-headers-recyclerview
  */
-class FastScrollIndicatorAdapter<Item : IItem<out RecyclerView.ViewHolder>> : RecyclerView.Adapter<RecyclerView.ViewHolder>(), INameableAdapter, ICustomAdapter {
+class FastScrollIndicatorAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.ViewHolder>(), INameableAdapter, ICustomAdapter {
     /*
      * GENERAL CODE NEEDED TO WRAP AN ADAPTER
      */

@@ -3,7 +3,7 @@ package com.mikepenz.fastadapter.utils
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.R
 import com.mikepenz.fastadapter.listeners.*
 
@@ -12,7 +12,7 @@ import com.mikepenz.fastadapter.listeners.*
  *
  * @param viewHolder the viewHolder of the item
  */
-internal fun List<EventHook<out IItem<out RecyclerView.ViewHolder>>>.bind(viewHolder: RecyclerView.ViewHolder) {
+internal fun List<EventHook<out GenericItem>>.bind(viewHolder: RecyclerView.ViewHolder) {
     for (event in this) {
         val view = event.onBind(viewHolder)
         if (view != null) {
@@ -33,10 +33,7 @@ internal fun List<EventHook<out IItem<out RecyclerView.ViewHolder>>>.bind(viewHo
  * @param viewHolder the viewHolder containing this view
  * @param view       the view to attach to
  */
-internal fun <Item : IItem<out RecyclerView.ViewHolder>> EventHook<Item>.attachToView(
-        viewHolder: RecyclerView.ViewHolder,
-        view: View
-) {
+internal fun <Item : GenericItem> EventHook<Item>.attachToView(viewHolder: RecyclerView.ViewHolder, view: View) {
     when (this) {
         is ClickEventHook<*> -> view.setOnClickListener { v ->
             //get the adapter for this view
