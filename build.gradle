@@ -22,7 +22,7 @@ buildscript {
                 drawerlayout    : '1.1.0-alpha01',
                 constraintLayout: '2.0.0-beta1',
                 cardview        : '1.0.0',
-                kotlin          : '1.3.31',
+                kotlin          : '1.3.40',
                 materialize     : '1.2.1',
                 iconics         : '4.0.0',
                 materialdrawer  : '7.0.0-rc01',
