@@ -36,7 +36,7 @@ object FastAdapterDiffUtil {
      * @param <Item>      The item type kept in the adapter
      * @return the [androidx.recyclerview.widget.DiffUtil.DiffResult] computed.
     </Item></Model></A> */
-    fun <A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> calculateDiff(adapter: A, items: List<Item>, callback: DiffCallback<Item>, detectMoves: Boolean): DiffUtil.DiffResult {
+    fun <A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> calculateDiff(adapter: A, items: List<Item>, callback: DiffCallback<Item> = DiffCallbackImpl(), detectMoves: Boolean = true): DiffUtil.DiffResult {
         if (adapter.isUseIdDistributor) {
             adapter.idDistributor.checkIds(items)
         }
@@ -54,7 +54,7 @@ object FastAdapterDiffUtil {
 
         //remember the old items
         val adapterItems = adapter.adapterItems
-        val oldItems = ArrayList(adapterItems)
+        val oldItems = adapterItems.toList()
 
         //pass in the oldItem list copy as we will update the one in the adapter itself
         val result = DiffUtil.calculateDiff(FastAdapterCallback(oldItems, items, callback), detectMoves)
@@ -62,7 +62,7 @@ object FastAdapterDiffUtil {
         //make sure the new items list is not a reference of the already mItems list
         if (items !== adapterItems) {
             //remove all previous items
-            if (!adapterItems.isEmpty()) {
+            if (adapterItems.isNotEmpty()) {
                 adapterItems.clear()
             }
 
@@ -90,7 +90,6 @@ object FastAdapterDiffUtil {
         } catch (ignored: Exception) {
             //
         }
-
     }
 
     /**
@@ -106,7 +105,7 @@ object FastAdapterDiffUtil {
     }
 
     /**
-     * convenient function for [.calculateDiff]
+     * convenient function for [calculateDiff]
      *
      * @return the [androidx.recyclerview.widget.DiffUtil.DiffResult] computed.
      */
@@ -115,7 +114,7 @@ object FastAdapterDiffUtil {
     }
 
     /**
-     * convenient function for [.calculateDiff]
+     * convenient function for [calculateDiff]
      *
      * @return the [androidx.recyclerview.widget.DiffUtil.DiffResult] computed.
      */
@@ -124,7 +123,7 @@ object FastAdapterDiffUtil {
     }
 
     /**
-     * convenient function for [.calculateDiff]
+     * convenient function for [calculateDiff]
      *
      * @return the [androidx.recyclerview.widget.DiffUtil.DiffResult] computed.
      */
@@ -210,24 +209,23 @@ object FastAdapterDiffUtil {
      */
     private class FastAdapterListUpdateCallback<A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> internal constructor(private val adapter: A) : ListUpdateCallback {
 
+        private val preItemCountByOrder: Int
+            get() = adapter.fastAdapter?.getPreItemCountByOrder(adapter.order) ?: 0
+
         override fun onInserted(position: Int, count: Int) {
-            adapter.fastAdapter?.notifyAdapterItemRangeInserted((adapter.fastAdapter?.getPreItemCountByOrder(adapter.order)
-                    ?: 0) + position, count)
+            adapter.fastAdapter?.notifyAdapterItemRangeInserted(preItemCountByOrder + position, count)
         }
 
         override fun onRemoved(position: Int, count: Int) {
-            adapter.fastAdapter?.notifyAdapterItemRangeRemoved((adapter.fastAdapter?.getPreItemCountByOrder(adapter.order)
-                    ?: 0) + position, count)
+            adapter.fastAdapter?.notifyAdapterItemRangeRemoved(preItemCountByOrder + position, count)
         }
 
         override fun onMoved(fromPosition: Int, toPosition: Int) {
-            adapter.fastAdapter?.notifyAdapterItemMoved((adapter.fastAdapter?.getPreItemCountByOrder(adapter.order)
-                    ?: 0) + fromPosition, toPosition)
+            adapter.fastAdapter?.notifyAdapterItemMoved(preItemCountByOrder + fromPosition, toPosition)
         }
 
         override fun onChanged(position: Int, count: Int, payload: Any?) {
-            adapter.fastAdapter?.notifyAdapterItemRangeChanged((adapter.fastAdapter?.getPreItemCountByOrder(adapter.order)
-                    ?: 0) + position, count, payload)
+            adapter.fastAdapter?.notifyAdapterItemRangeChanged(preItemCountByOrder + position, count, payload)
         }
     }
 }

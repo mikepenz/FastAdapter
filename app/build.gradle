@@ -72,10 +72,10 @@ dependencies {
     implementation project(':library-extensions-ui')
     implementation project(':library-extensions-utils')
 
-    implementation "androidx.appcompat:appcompat:${versions.androidX}"
-    implementation "androidx.recyclerview:recyclerview:${versions.androidX}"
-    implementation "androidx.cardview:cardview:${versions.androidX}"
-    implementation "com.google.android.material:material:${versions.androidX}"
+    implementation "androidx.appcompat:appcompat:${versions.appcompat}"
+    implementation "androidx.recyclerview:recyclerview:${versions.recyclerView}"
+    implementation "androidx.cardview:cardview:${versions.cardview}"
+    implementation "com.google.android.material:material:${versions.material}"
 
     // view binding lib?
     implementation 'com.android.support:support-annotations:28.0.0'
@@ -110,7 +110,7 @@ dependencies {
     //used to display the icons in the drawer
     //https://github.com/mikepenz/Android-Iconics
     implementation 'com.mikepenz:material-design-iconic-typeface:2.2.0.6-kotlin@aar'
-    implementation 'com.mikepenz:community-material-typeface:2.7.94.2-kotlin@aar'
+    implementation 'com.mikepenz:community-material-typeface:3.5.95.1-kotlin@aar'
     implementation 'com.mikepenz:google-material-typeface:3.0.1.4.original-kotlin@aar'
     implementation 'com.mikepenz:fontawesome-typeface:5.3.1.2-kotlin@aar'
 
@@ -154,11 +154,12 @@ dependencies {
     configurations.all {
         resolutionStrategy.force "com.mikepenz:materialize:${versions.materialize}"
         resolutionStrategy.force "com.mikepenz:iconics-core:${versions.iconics}"
+        resolutionStrategy.force "com.mikepenz:iconics-views:${versions.iconics}"
         resolutionStrategy.force "com.mikepenz:aboutlibraries:${versions.aboutlib}"
         resolutionStrategy.force "androidx.appcompat:appcompat:${versions.appcompat}"
-        resolutionStrategy.force "androidx.recyclerview:recyclerview:${versions.androidX}"
-        resolutionStrategy.force "androidx.cardview:cardview:${versions.androidX}"
-        resolutionStrategy.force "com.google.android.material:material:${versions.androidX}"
+        resolutionStrategy.force "androidx.recyclerview:recyclerview:${versions.recyclerView}"
+        resolutionStrategy.force "androidx.cardview:cardview:${versions.cardview}"
+        resolutionStrategy.force "com.google.android.material:material:${versions.material}"
     }
 }
 

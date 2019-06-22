@@ -99,14 +99,14 @@ class CheckBoxSampleItem : AbstractItem<CheckBoxSampleItem.ViewHolder>() {
 
     class CheckBoxClickEvent : ClickEventHook<CheckBoxSampleItem>() {
         override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {
-            return if (viewHolder is CheckBoxSampleItem.ViewHolder) {
+            return if (viewHolder is ViewHolder) {
                 viewHolder.checkBox
             } else null
         }
 
         override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<CheckBoxSampleItem>, item: CheckBoxSampleItem) {
-            val selectExtension = fastAdapter.getExtension<SelectExtension<CheckBoxSampleItem>>(SelectExtension::class.java)
-            selectExtension?.toggleSelection(position)
+            val selectExtension: SelectExtension<CheckBoxSampleItem> = fastAdapter.requireExtension()
+            selectExtension.toggleSelection(position)
         }
     }
 }

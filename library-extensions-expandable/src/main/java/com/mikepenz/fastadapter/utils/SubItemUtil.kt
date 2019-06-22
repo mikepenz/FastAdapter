@@ -6,6 +6,7 @@ import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.expandable.ExpandableExtension
 import com.mikepenz.fastadapter.select.SelectExtension
+import com.mikepenz.fastadapter.select.getSelectExtension
 import java.util.*
 
 
@@ -105,9 +106,9 @@ object SubItemUtil {
                     if (countHeaders && predicate.apply(item)) {
                         res.add(item)
                     }
-                    temp = subItems?.size ?: 0
+                    temp = subItems.size
                     for (j in 0 until temp) {
-                        subItems?.get(j)?.let {
+                        subItems[j].let {
                             if (predicate.apply(it)) {
                                 res.add(it)
                             }
@@ -120,9 +121,9 @@ object SubItemUtil {
                 } else if (predicate.apply(item)) {
                     res.add(item)
                 }
-            }// in some cases, we must manually check, if the item is a sub item, process is optimised as much as possible via the subItemsOnly parameter already
+            }
+            // in some cases, we must manually check, if the item is a sub item, process is optimised as much as possible via the subItemsOnly parameter already
             // sub items will be counted in above if statement!
-
         }
         return res
     }
@@ -145,7 +146,7 @@ object SubItemUtil {
 
     fun <T> countSelectedSubItems(selections: Set<IItem<*>>, header: T): Int where T : IItem<*>, T : IExpandable<*> {
         var count = 0
-        val subItems = header.subItems ?: emptyList<IItem<*>>()
+        val subItems = header.subItems
         val items = if (header.subItems != null) subItems.size else 0
         for (i in 0 until items) {
             if (selections.contains(subItems[i])) {
@@ -180,13 +181,13 @@ object SubItemUtil {
      */
     fun <T, Adapter> selectAllSubItems(adapter: Adapter, header: T, select: Boolean, notifyParent: Boolean, payload: Any?) where T : IItem<*>, Adapter : FastAdapter<T> {
         if (header is IExpandable<*>) {
-            val subItems = header.subItems ?: return
+            val subItems = header.subItems
             val subItemsCount = subItems.size
             val position = adapter.getPosition(header)
             if (header.isExpanded) {
                 for (i in 0 until subItemsCount) {
                     if ((subItems[i] as IItem<*>).isSelectable) {
-                        val extension: SelectExtension<T>? = adapter.getOrCreateExtension(SelectExtension::class.java)
+                        val extension: SelectExtension<T>? = adapter.getSelectExtension()
                         if (extension != null) {
                             if (select) {
                                 extension.select(position + i + 1)
@@ -195,9 +196,9 @@ object SubItemUtil {
                             }
                         }
                     }
-                    if (subItems[i] is IExpandable<*>)
+                    if (subItems[i] is IExpandable<*>) {
                         selectAllSubItems(adapter, header, select, notifyParent, payload)
-
+                    }
                 }
             } else {
                 for (i in 0 until subItemsCount) {
@@ -256,7 +257,7 @@ object SubItemUtil {
                 parentPos = fastAdapter.getPosition(parent)
                 val subItems = parent.subItems
 
-                subItems?.let { subItems ->
+                subItems.let { subItems ->
                     subItems.remove(item)
                     // check if parent is expanded and notify the adapter about the removed item, if necessary (only if parent is visible)
                     if (parentPos != -1 && parent.isExpanded) {
@@ -331,7 +332,7 @@ object SubItemUtil {
             parent = getParent(item)
             if (parent != null) {
                 parentPos = fastAdapter.getPosition(parent)
-                val subItems = parent.subItems ?: emptyList<IItem<*>>()
+                val subItems = parent.subItems
                 // check if parent is expanded and notify the adapter about the removed item, if necessary (only if parent is visible)
                 if (parentPos != -1 && parent.isExpanded) {
                     expandableExtension.notifyAdapterSubItemsChanged(parentPos, subItems.size + 1)
@@ -401,7 +402,7 @@ object SubItemUtil {
      * @param restoreExpandedState true, if expanded headers should stay expanded
      */
     fun <Item> notifyItemsChanged(adapter: FastAdapter<IItem<*>>, expandableExtension: ExpandableExtension<*>, header: Item, identifiers: Set<Long>, checkSubItems: Boolean, restoreExpandedState: Boolean) where Item : IItem<*>, Item : IExpandable<*> {
-        val subItems = header.subItems ?: return
+        val subItems = header.subItems
         val subItemsCount = subItems.size
         val position = adapter.getPosition(header)
         val expanded = header.isExpanded

@@ -15,15 +15,14 @@ import java.util.*
  * This will return a non null variant and fail if something terrible happens.
  */
 fun <Item : IItem<*>> FastAdapter<Item>.getSelectExtension(): SelectExtension<Item> {
-    SelectExtension.Companion.toString() // enforces the vm to lead in the companion object
-    return this.getOrCreateExtension(SelectExtension::class.java as Class<IAdapterExtension<Item>>) as SelectExtension<Item>
+    SelectExtension.toString() // enforces the vm to lead in the companion object
+    return requireOrCreateExtension()
 }
 
 /**
  * Created by mikepenz on 04/06/2017.
  */
-class SelectExtension<Item : IItem<out  RecyclerView.ViewHolder>>(private val fastAdapter: FastAdapter<Item>) :
-        IAdapterExtension<Item> {
+class SelectExtension<Item : IItem<out RecyclerView.ViewHolder>>(private val fastAdapter: FastAdapter<Item>) : IAdapterExtension<Item> {
 
     // if enabled we will select the item via a notifyItemChanged -> will animate with the Animator
     // you can also use this if you have any custom logic for selections, and do not depend on the "selected" state of the view
@@ -161,13 +160,9 @@ class SelectExtension<Item : IItem<out  RecyclerView.ViewHolder>>(private val fa
 
     override fun notifyAdapterItemRangeChanged(position: Int, itemCount: Int, payload: Any?) {}
 
-    override fun set(items: List<Item>, resetFilter: Boolean) {
+    override fun set(items: List<Item>, resetFilter: Boolean) {}
 
-    }
-
-    override fun performFiltering(constraint: CharSequence?) {
-
-    }
+    override fun performFiltering(constraint: CharSequence?) {}
 
     /**
      * toggles the selection of the item at the given position

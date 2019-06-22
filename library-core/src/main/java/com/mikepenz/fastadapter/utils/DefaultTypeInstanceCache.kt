@@ -11,7 +11,7 @@ import com.mikepenz.fastadapter.ITypeInstanceCache
  */
 
 class DefaultTypeInstanceCache<Item : IItem<out RecyclerView.ViewHolder>> :
-    ITypeInstanceCache<Item> {
+        ITypeInstanceCache<Item> {
 
     // we remember all possible types so we can create a new view efficiently
     private val mTypeInstances = SparseArray<Item>()

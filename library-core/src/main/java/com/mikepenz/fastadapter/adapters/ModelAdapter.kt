@@ -32,7 +32,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
 
     open var reverseInterceptor: ((element: Item) -> Model?)? = null
 
-    open var idDistributor: IIdDistributor<Item> = IIdDistributor.DEFAULT as IIdDistributor<Item>
+    override var idDistributor: IIdDistributor<Item> = IIdDistributor.DEFAULT as IIdDistributor<Item>
 
     /**
      * Defines if the DefaultIdDistributor is used to provide an ID to all added items which do not yet define an id
@@ -121,7 +121,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      *
      * @param constraint the string used to filter the list
      */
-    open fun filter(constraint: CharSequence?) {
+    override fun filter(constraint: CharSequence?) {
         itemFilter.filter(constraint)
     }
 
@@ -187,7 +187,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @param adapterNotifier a `IAdapterNotifier` allowing to modify the notify logic for the adapter (keep null for default)
      * @return this
      */
-    operator fun set(
+    open operator fun set(
             list: List<Model>,
             resetFilter: Boolean,
             adapterNotifier: IAdapterNotifier?
@@ -205,7 +205,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @param adapterNotifier a `IAdapterNotifier` allowing to modify the notify logic for the adapter (keep null for default)
      * @return this
      */
-    fun setInternal(
+    open fun setInternal(
             items: List<Item>,
             resetFilter: Boolean,
             adapterNotifier: IAdapterNotifier?
@@ -236,20 +236,11 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
     /**
      * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
      *
-     * @param items the new items to set
-     */
-    override fun setNewList(items: List<Model>): ModelAdapter<Model, Item> {
-        return setNewList(items, false)
-    }
-
-    /**
-     * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
-     *
      * @param list         the new items to set
      * @param retainFilter set to true if you want to keep the filter applied
      * @return this
      */
-    fun setNewList(list: List<Model>, retainFilter: Boolean): ModelAdapter<Model, Item> {
+    override fun setNewList(list: List<Model>, retainFilter: Boolean): ModelAdapter<Model, Item> {
         val items = intercept(list)
 
         if (isUseIdDistributor) {
@@ -279,7 +270,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
     /**
      * forces to remap all possible types for the RecyclerView
      */
-    fun remapMappedTypes() {
+    open fun remapMappedTypes() {
         fastAdapter?.clearTypeInstance()
         mapPossibleTypes(itemList.items)
     }
@@ -297,11 +288,10 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
     /**
      * add a list of items to the end of the existing items
      *
-     * @param list the items to add
+     * @param items the items to add
      */
-    override fun add(list: List<Model>): ModelAdapter<Model, Item> {
-        val items = intercept(list)
-        return addInternal(items)
+    override fun add(items: List<Model>): ModelAdapter<Model, Item> {
+        return addInternal(intercept(items))
     }
 
     override fun addInternal(items: List<Item>): ModelAdapter<Model, Item> {
@@ -378,7 +368,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @param toPosition   the global position to which to move
      * @return this
      */
-    fun move(fromPosition: Int, toPosition: Int): ModelAdapter<Model, Item> {
+    override fun move(fromPosition: Int, toPosition: Int): ModelAdapter<Model, Item> {
         itemList.move(fromPosition, toPosition, fastAdapter?.getPreItemCount(fromPosition) ?: 0)
         return this
     }
@@ -418,7 +408,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @param identifier the identifier to search for
      * @return this
      */
-    fun removeByIdentifier(identifier: Long): ModelAdapter<Model, Item> {
+    open fun removeByIdentifier(identifier: Long): ModelAdapter<Model, Item> {
         recursive(object : AdapterPredicate<Item> {
             override fun apply(
                     lastParentAdapter: IAdapter<Item>,
@@ -452,7 +442,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @param stopOnMatch defines if we should stop iterating after the first match
      * @return Triple&lt;Boolean, IItem, Integer&gt; The first value is true (it is always not null), the second contains the item and the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
      */
-    fun recursive(
+    open fun recursive(
             predicate: AdapterPredicate<Item>,
             stopOnMatch: Boolean
     ): Triple<Boolean, Item, Int> {

@@ -146,7 +146,6 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
                             .withDescription("ID: " + ((i + 1) * 100 + ii))
                             .identifier = ((i + 1) * 100 + ii).toLong()
                     subItems.add(sampleItem)
-
                 }
                 expandableItem.subItems = subItems
 
@@ -189,7 +188,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
             mActionModeHelper?.checkActionMode(this)
     }
 
-    override fun onSaveInstanceState(_outState: Bundle?) {
+    override fun onSaveInstanceState(_outState: Bundle) {
         var outState = _outState
         //add the values which need to be saved from the adapter to the bundle
         outState = fastItemAdapter.saveInstanceState(outState)

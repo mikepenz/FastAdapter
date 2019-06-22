@@ -13,7 +13,7 @@ import java.util.Arrays.asList
  * This calls automatically all required methods, just overwrite the filterItems method
  */
 open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private val mItemAdapter: ModelAdapter<Model, Item>) :
-    Filter() {
+        Filter() {
     private var originalItems: MutableList<Item>? = null
     var constraint: CharSequence? = null
         private set
@@ -35,13 +35,13 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
             return originalItems?.let { originalItems ->
                 val selections = HashSet<Int>()
                 mItemAdapter.fastAdapter?.getPreItemCountByOrder(mItemAdapter.order)
-                    ?.let { adapterOffset ->
-                        originalItems.forEachIndexed { index, item ->
-                            if (item.isSelected) {
-                                selections.add(index + adapterOffset)
+                        ?.let { adapterOffset ->
+                            originalItems.forEachIndexed { index, item ->
+                                if (item.isSelected) {
+                                    selections.add(index + adapterOffset)
+                                }
                             }
                         }
-                    }
                 return selections
             }
                     ?: mItemAdapter.fastAdapter?.getExtension<SelectExtension<Item>>(SelectExtension::class.java)?.selections
@@ -68,8 +68,8 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
                     ?: emptySet()
         }
 
-    override fun performFiltering(constraint: CharSequence?): Filter.FilterResults {
-        val results = Filter.FilterResults()
+    override fun performFiltering(constraint: CharSequence?): FilterResults {
+        val results = FilterResults()
 
         //return nothing
         if (originalItems == null && (constraint == null || constraint.isEmpty())) {
@@ -114,7 +114,7 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
         return results
     }
 
-    override fun publishResults(constraint: CharSequence?, results: Filter.FilterResults) {
+    override fun publishResults(constraint: CharSequence?, results: FilterResults) {
         // Now we have to inform the adapter about the new list filtered
         if (results.values != null) {
             mItemAdapter.setInternal(results.values as List<Item>, false, null)
@@ -217,9 +217,9 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
             }
             mItemAdapter.fastAdapter?.let { fastAdapter ->
                 originalItems.addAll(
-                    getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(
-                        position
-                    ), items
+                        getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(
+                                position
+                        ), items
                 )
             }
             publishResults(constraint, performFiltering(constraint))
@@ -240,7 +240,7 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
             }
             mItemAdapter.fastAdapter?.let { fastAdapter ->
                 originalItems[getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(
-                    position
+                        position
                 )] = item
             }
             publishResults(constraint, performFiltering(constraint))
@@ -278,9 +278,9 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
         return originalItems?.let { originalItems ->
             mItemAdapter.fastAdapter?.let { fastAdapter ->
                 originalItems.removeAt(
-                    getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(
-                        position
-                    )
+                        getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(
+                                position
+                        )
                 )
             }
             publishResults(constraint, performFiltering(constraint))

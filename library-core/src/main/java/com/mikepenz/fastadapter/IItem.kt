@@ -8,6 +8,11 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 
 /**
+ * Kotlin type alias to simplify usage for an all accepting item
+ */
+typealias GenericItem = IItem<out RecyclerView.ViewHolder>
+
+/**
  * Created by mikepenz on 03.02.15.
  */
 interface IItem<VH : RecyclerView.ViewHolder> : IIdentifyable {

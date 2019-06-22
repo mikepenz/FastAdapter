@@ -1,9 +1,9 @@
 package com.mikepenz.fastadapter;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import androidx.annotation.NonNull;
 
 /**
  * Created by fabianterhorst on 29.03.16.

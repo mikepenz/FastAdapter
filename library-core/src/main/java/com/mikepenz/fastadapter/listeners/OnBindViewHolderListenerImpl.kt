@@ -70,7 +70,6 @@ class OnBindViewHolderListenerImpl<Item : IItem<out RecyclerView.ViewHolder>> : 
             } catch (e: AbstractMethodError) {
                 Log.e("FastAdapter", e.toString())
             }
-
         }
     }
 

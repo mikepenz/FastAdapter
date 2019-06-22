@@ -89,8 +89,8 @@ open class SimpleSubItem : AbstractExpandableItem<SimpleSubItem.ViewHolder>(), I
 
     override fun unbindView(holder: ViewHolder) {
         super.unbindView(holder)
-        holder.name?.text = null
-        holder.description?.text = null
+        holder.name.text = null
+        holder.description.text = null
     }
 
     override fun getViewHolder(v: View): ViewHolder {

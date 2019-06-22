@@ -20,7 +20,7 @@ import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
-import com.mikepenz.iconics.typeface.library.communitymaterial.CommunityMaterial
+import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
 import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialdrawer.Drawer
@@ -120,7 +120,6 @@ class SampleActivity : AppCompatActivity() {
                         }
                         return false
                     }
-
                 })
                 .withSelectedItemByPosition(-1)
                 .build()
@@ -209,7 +208,7 @@ class SampleActivity : AppCompatActivity() {
         }
     }
 
-    override fun onSaveInstanceState(_outState: Bundle?) {
+    override fun onSaveInstanceState(_outState: Bundle) {
         var outState = _outState
         //add the values which need to be saved from the drawer to the bundle
         outState = mResult.saveInstanceState(outState)

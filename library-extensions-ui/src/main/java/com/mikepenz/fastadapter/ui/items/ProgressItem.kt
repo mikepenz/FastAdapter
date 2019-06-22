@@ -7,7 +7,6 @@ import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.ui.R
 import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils
 
-
 class ProgressItem : AbstractItem<ProgressItem.ViewHolder>() {
 
     override val type: Int
@@ -24,7 +23,6 @@ class ProgressItem : AbstractItem<ProgressItem.ViewHolder>() {
     }
 
     override fun unbindView(holder: ViewHolder) {
-
     }
 
     override fun getViewHolder(v: View): ViewHolder {

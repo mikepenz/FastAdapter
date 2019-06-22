@@ -17,7 +17,6 @@ import com.timehop.stickyheadersrecyclerview.util.OrientationProvider
 /**
  * Created by Gagan on 5/3/2017.
  */
-
 class CustomStickyRecyclerHeadersDecoration private constructor(private val mAdapter: StickyRecyclerHeadersAdapter<*>, private val mRenderer: HeaderRenderer,
                                                                 private val mOrientationProvider: OrientationProvider, private val mDimensionCalculator: DimensionCalculator, private val mHeaderProvider: HeaderProvider,
                                                                 private val mHeaderPositionCalculator: HeaderPositionCalculator) : RecyclerView.ItemDecoration() {
@@ -29,14 +28,13 @@ class CustomStickyRecyclerHeadersDecoration private constructor(private val mAda
      */
     private val mTempRect = Rect()
 
-    // TODO: Consider passing in orientation to simplify orientation accounting within calculation
-    constructor(adapter: StickyRecyclerHeadersAdapter<*>, moPubRecyclerAdapter: MoPubRecyclerAdapter) : this(adapter, moPubRecyclerAdapter, LinearLayoutOrientationProvider(), DimensionCalculator()) {}
+    // TODO Consider passing in orientation to simplify orientation accounting within calculation
+    constructor(adapter: StickyRecyclerHeadersAdapter<*>, moPubRecyclerAdapter: MoPubRecyclerAdapter) : this(adapter, moPubRecyclerAdapter, LinearLayoutOrientationProvider(), DimensionCalculator())
 
     private constructor(adapter: StickyRecyclerHeadersAdapter<*>, moPubRecyclerAdapter: MoPubRecyclerAdapter, orientationProvider: OrientationProvider,
                         dimensionCalculator: DimensionCalculator, headerRenderer: HeaderRenderer = HeaderRenderer(orientationProvider), headerProvider: HeaderProvider = CustomHeaderViewCache(adapter, moPubRecyclerAdapter, orientationProvider)) : this(adapter, headerRenderer, orientationProvider, dimensionCalculator, headerProvider,
             HeaderPositionCalculator(adapter, moPubRecyclerAdapter, headerProvider, orientationProvider,
-                    dimensionCalculator)) {
-    }
+                    dimensionCalculator))
 
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)

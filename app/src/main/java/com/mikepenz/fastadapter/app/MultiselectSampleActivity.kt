@@ -133,7 +133,7 @@ class MultiselectSampleActivity : AppCompatActivity() {
         Toast.makeText(this, "LongClick to enable Multi-Selection", Toast.LENGTH_LONG).show()
     }
 
-    override fun onSaveInstanceState(_outState: Bundle?) {
+    override fun onSaveInstanceState(_outState: Bundle) {
         var outState = _outState
         //add the values which need to be saved from the adapter to the bundle
         outState = mFastAdapter.saveInstanceState(outState)

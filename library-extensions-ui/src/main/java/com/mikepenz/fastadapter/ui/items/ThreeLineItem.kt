@@ -116,11 +116,9 @@ class ThreeLineItem : AbstractItem<ThreeLineItem.ViewHolder>() {
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-
         var name: TextView = view.findViewById<View>(R.id.name) as TextView
         var description: TextView = view.findViewById<View>(R.id.description) as TextView
         var avatar: ImageView = view.findViewById<View>(R.id.avatar) as ImageView
         var icon: ImageView = view.findViewById<View>(R.id.icon) as ImageView
-
     }
 }

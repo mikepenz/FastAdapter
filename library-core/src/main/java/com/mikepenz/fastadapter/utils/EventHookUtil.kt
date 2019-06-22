@@ -30,13 +30,12 @@ internal fun List<EventHook<out IItem<out RecyclerView.ViewHolder>>>.bind(viewHo
 /**
  * attaches the specific event to a view
  *
- * @param event      the event to attach
  * @param viewHolder the viewHolder containing this view
  * @param view       the view to attach to
  */
 internal fun <Item : IItem<out RecyclerView.ViewHolder>> EventHook<Item>.attachToView(
-    viewHolder: RecyclerView.ViewHolder,
-    view: View
+        viewHolder: RecyclerView.ViewHolder,
+        view: View
 ) {
     when (this) {
         is ClickEventHook<*> -> view.setOnClickListener { v ->
@@ -48,7 +47,7 @@ internal fun <Item : IItem<out RecyclerView.ViewHolder>> EventHook<Item>.attachT
                 val pos = adapter.getHolderAdapterPosition(viewHolder)
                 //make sure the click was done on a valid item
                 if (pos != RecyclerView.NO_POSITION) {
-                    val item = adapter.getItem(pos)
+                    val item: Item? = FastAdapter.getHolderAdapterItemTag(viewHolder)
                     if (item != null) {
                         //we update our item with the changed property
                         (this as ClickEventHook<Item>).onClick(v, pos, adapter, item)
@@ -65,15 +64,10 @@ internal fun <Item : IItem<out RecyclerView.ViewHolder>> EventHook<Item>.attachT
                 val pos = adapter.getHolderAdapterPosition(viewHolder)
                 //make sure the click was done on a valid item
                 if (pos != RecyclerView.NO_POSITION) {
-                    val item = adapter.getItem(pos)
+                    val item: Item? = FastAdapter.getHolderAdapterItemTag(viewHolder)
                     if (item != null) {
                         //we update our item with the changed property
-                        return@OnLongClickListener (this as LongClickEventHook<Item>).onLongClick(
-                            v,
-                            pos,
-                            adapter,
-                            item
-                        )
+                        return@OnLongClickListener (this as LongClickEventHook<Item>).onLongClick(v, pos, adapter, item)
                     }
                 }
             }
@@ -88,16 +82,10 @@ internal fun <Item : IItem<out RecyclerView.ViewHolder>> EventHook<Item>.attachT
                 val pos = adapter.getHolderAdapterPosition(viewHolder)
                 //make sure the click was done on a valid item
                 if (pos != RecyclerView.NO_POSITION) {
-                    val item = adapter.getItem(pos)
+                    val item: Item? = FastAdapter.getHolderAdapterItemTag(viewHolder)
                     if (item != null) {
                         //we update our item with the changed property
-                        return@OnTouchListener (this as TouchEventHook<Item>).onTouch(
-                            v,
-                            e,
-                            pos,
-                            adapter,
-                            item
-                        )
+                        return@OnTouchListener (this as TouchEventHook<Item>).onTouch(v, e, pos, adapter, item)
                     }
                 }
             }

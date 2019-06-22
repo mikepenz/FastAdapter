@@ -89,27 +89,27 @@ class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable, IDra
         //set the text for the description or hide
         StringHolder.applyToOrHide(description, holder.description)
 
-        holder.swipeResultContent?.visibility = if (swipedDirection != 0) View.VISIBLE else View.GONE
-        holder.itemContent?.visibility = if (swipedDirection != 0) View.GONE else View.VISIBLE
+        holder.swipeResultContent.visibility = if (swipedDirection != 0) View.VISIBLE else View.GONE
+        holder.itemContent.visibility = if (swipedDirection != 0) View.GONE else View.VISIBLE
 
         var swipedAction: CharSequence? = null
         var swipedText: CharSequence? = null
         if (swipedDirection != 0) {
             swipedAction = holder.itemView.context.getString(R.string.action_undo)
             swipedText = if (swipedDirection == ItemTouchHelper.LEFT) "Removed" else "Archived"
-            holder.swipeResultContent?.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, if (swipedDirection == ItemTouchHelper.LEFT) R.color.md_red_900 else R.color.md_blue_900))
+            holder.swipeResultContent.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, if (swipedDirection == ItemTouchHelper.LEFT) R.color.md_red_900 else R.color.md_blue_900))
         }
-        holder.swipedAction?.text = swipedAction ?: ""
-        holder.swipedText?.text = swipedText ?: ""
+        holder.swipedAction.text = swipedAction ?: ""
+        holder.swipedText.text = swipedText ?: ""
         holder.swipedActionRunnable = this.swipedAction
     }
 
     override fun unbindView(holder: ViewHolder) {
         super.unbindView(holder)
-        holder.name?.text = null
-        holder.description?.text = null
-        holder.swipedAction?.text = null
-        holder.swipedText?.text = null
+        holder.name.text = null
+        holder.description.text = null
+        holder.swipedAction.text = null
+        holder.swipedText.text = null
         holder.swipedActionRunnable = null
     }
 
@@ -125,7 +125,7 @@ class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable, IDra
         var description: TextView = view.findViewById(R.id.material_drawer_description)
         var swipeResultContent: View = view.findViewById(R.id.swipe_result_content)
         var itemContent: View = view.findViewById(R.id.item_content)
-        var swipedText: TextView= view.findViewById(R.id.swiped_text)
+        var swipedText: TextView = view.findViewById(R.id.swiped_text)
         var swipedAction: TextView = view.findViewById(R.id.swiped_action)
 
         var swipedActionRunnable: Runnable? = null

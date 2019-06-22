@@ -100,7 +100,7 @@ class RealmActivity : AppCompatActivity() {
         return true
     }
 
-    override fun onSaveInstanceState(_outState: Bundle?) {
+    override fun onSaveInstanceState(_outState: Bundle) {
         var outState = _outState
         //add the values which need to be saved from the adapter to the bundle
         outState = mFastItemAdapter.saveInstanceState(outState)

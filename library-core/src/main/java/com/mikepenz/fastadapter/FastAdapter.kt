@@ -41,16 +41,13 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
     // we remember all adapters
     //priority queue...
     private val adapters = ArrayList<IAdapter<Item>>()
-    // we remember all possible types so we can create a new view efficiently
-    /**
-     * @return the current type instance cache
-     */
+
     /**
      * Sets an type instance cache to this fast adapter instance.
      * The cache will manage the type instances to create new views more efficient.
      * Normally an shared cache is used over all adapter instances.
      *
-     * @param mTypeInstanceCache a custom `TypeInstanceCache` implementation
+     * typeInstanceCache a custom `TypeInstanceCache` implementation
      */
     open var typeInstanceCache: ITypeInstanceCache<Item> = DefaultTypeInstanceCache()
     // cache the sizes of the different adapters so we can access the items more performant
@@ -206,21 +203,30 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @param clazz the extension class, to retrieve its instance
      * @return the found IAdapterExtension or null if it is not found
      */
+    @Suppress("UNCHECKED_CAST")
     fun <T : IAdapterExtension<Item>> getExtension(clazz: Class<in T>): T? {
-        return extensionsCache[clazz] as T
+        return extensionsCache[clazz] as T?
     }
 
+
+    inline fun <reified T : IAdapterExtension<Item>> getExtension(): T? = getExtension(T::class.java)
+
+    inline fun <reified T : IAdapterExtension<Item>> requireExtension(): T = getExtension()!!
+
+    @Suppress("UNCHECKED_CAST")
     fun <T : IAdapterExtension<Item>> getOrCreateExtension(clazz: Class<in T>): T? {
         if (extensionsCache.containsKey(clazz)) {
             return extensionsCache[clazz] as T
         }
-        val extension = ExtensionsFactories.create(
-                this,
-                clazz as Class<out IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>
-        ) as? T? ?: return null
+        val extension = ExtensionsFactories.create(this, clazz as Class<out IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>>) as? T
+                ?: return null
         extensionsCache[clazz] = extension
         return extension
     }
+
+    inline fun <reified T : IAdapterExtension<Item>> getOrCreateExtension(): T? = getOrCreateExtension(T::class.java)
+
+    inline fun <reified T : IAdapterExtension<Item>> requireOrCreateExtension(): T = getOrCreateExtension(T::class.java)!!
 
     /**
      * adds a new event hook for an item
@@ -643,7 +649,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
      * @return the passed bundle with the newly added data
      */
     @JvmOverloads
-    open fun saveInstanceState(savedInstanceState: Bundle?, prefix: String = ""): Bundle? {
+    open fun saveInstanceState(savedInstanceState: Bundle, prefix: String = ""): Bundle {
         // handle our extensions
         for (ext in extensionsCache.values) {
             ext.saveInstanceState(savedInstanceState, prefix)
@@ -824,7 +830,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                         return Triple(true, item, i)
                     }
                     (item as? IExpandable<*>)?.let { expandableItem ->
-                        val res = FastAdapter.recursiveSub(
+                        val res = recursiveSub(
                                 adapter,
                                 i,
                                 expandableItem,
@@ -943,10 +949,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             if (adapters == null) {
                 fastAdapter.adapters.add(items<IItem<out RecyclerView.ViewHolder>>() as IAdapter<Item>)
             } else {
-                val adapters = adapters as Collection<IAdapter<Item>>?
-                if (adapters != null) {
-                    fastAdapter.adapters.addAll(adapters)
-                }
+                fastAdapter.adapters.addAll(adapters as Collection<IAdapter<Item>>)
             }
             for (i in fastAdapter.adapters.indices) {
                 fastAdapter.adapters[i].apply {
@@ -956,10 +959,8 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
             }
             fastAdapter.cacheSizes()
 
-            if (extensions != null) {
-                for (extension in extensions) {
-                    fastAdapter.addExtension(extension)
-                }
+            extensions?.forEach {
+                fastAdapter.addExtension(it)
             }
 
             return fastAdapter
@@ -975,7 +976,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         fun <Item : IItem<*>> getHolderAdapterItem(holder: RecyclerView.ViewHolder?): Item? {
             if (holder != null) {
                 val tag =
-                        holder.itemView.getTag(com.mikepenz.fastadapter.R.id.fastadapter_item_adapter)
+                        holder.itemView.getTag(R.id.fastadapter_item_adapter)
                 if (tag is FastAdapter<*>) {
                     val pos = tag.getHolderAdapterPosition(holder)
                     if (pos != RecyclerView.NO_POSITION) {
@@ -1000,7 +1001,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         ): Item? {
             if (holder != null) {
                 val tag =
-                        holder.itemView.getTag(com.mikepenz.fastadapter.R.id.fastadapter_item_adapter)
+                        holder.itemView.getTag(R.id.fastadapter_item_adapter)
                 if (tag is FastAdapter<*>) {
                     return tag.getItem(position) as? Item?
                 }
@@ -1017,7 +1018,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         @JvmStatic
         fun <Item : IItem<*>> getHolderAdapterItemTag(holder: RecyclerView.ViewHolder?): Item? {
             if (holder != null) {
-                val item = holder.itemView.getTag(com.mikepenz.fastadapter.R.id.fastadapter_item)
+                val item = holder.itemView.getTag(R.id.fastadapter_item)
                 if (item is IItem<*>) {
                     return item as? Item?
                 }
@@ -1047,7 +1048,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
         ): Triple<Boolean, Item, Int> {
             //in case it's expanded it can be selected via the normal way
             if (!parent.isExpanded) {
-                parent.subItems?.forEach { sub ->
+                parent.subItems.forEach { sub ->
                     (sub as Item).let { subItem ->
                         if (predicate.apply(
                                         lastParentAdapter,
@@ -1060,7 +1061,7 @@ open class FastAdapter<Item : IItem<out RecyclerView.ViewHolder>> :
                         }
                     }
                     if (sub is IExpandable<*>) {
-                        val res = FastAdapter.recursiveSub(
+                        val res = recursiveSub(
                                 lastParentAdapter,
                                 lastParentPosition,
                                 sub,

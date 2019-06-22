@@ -7,9 +7,13 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 
 /**
+ * Kotlin type alias to simplify usage for an all accepting AdapterExtension
+ */
+typealias GenericAdapterExtension = IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>
+
+/**
  * Created by mikepenz on 04/06/2017.
  */
-
 interface IAdapterExtension<Item : IItem<out RecyclerView.ViewHolder>> {
     fun withSavedInstanceState(savedInstanceState: Bundle?, prefix: String)
 
@@ -20,11 +24,11 @@ interface IAdapterExtension<Item : IItem<out RecyclerView.ViewHolder>> {
     fun onLongClick(v: View, pos: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean
 
     fun onTouch(
-        v: View,
-        event: MotionEvent,
-        position: Int,
-        fastAdapter: FastAdapter<Item>,
-        item: Item
+            v: View,
+            event: MotionEvent,
+            position: Int,
+            fastAdapter: FastAdapter<Item>,
+            item: Item
     ): Boolean
 
     fun notifyAdapterDataSetChanged()

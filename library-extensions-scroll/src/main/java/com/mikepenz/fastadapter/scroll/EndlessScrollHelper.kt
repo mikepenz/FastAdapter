@@ -35,18 +35,18 @@ class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
     private var mOnLoadMoreHandler: OnLoadMoreHandler<Model>? = null
     private var mOnNewItemsListener: OnNewItemsListener<Model>? = null
 
-    constructor() {}
+    constructor()
 
-    constructor(layoutManager: LayoutManager) : super(layoutManager) {}
+    constructor(layoutManager: LayoutManager) : super(layoutManager)
 
-    constructor(layoutManager: LayoutManager, visibleThreshold: Int) : super(layoutManager, visibleThreshold) {}
+    constructor(layoutManager: LayoutManager, visibleThreshold: Int) : super(layoutManager, visibleThreshold)
 
     /**
      * @param layoutManager
      * @param visibleThreshold
      * @param footerAdapter    the itemAdapter used to host Footer items
      */
-    constructor(layoutManager: LayoutManager, visibleThreshold: Int, footerAdapter: ItemAdapter<*>) : super(layoutManager, visibleThreshold, footerAdapter) {}
+    constructor(layoutManager: LayoutManager, visibleThreshold: Int, footerAdapter: ItemAdapter<*>) : super(layoutManager, visibleThreshold, footerAdapter)
 
     fun addTo(recyclerView: RecyclerView): EndlessScrollHelper<Model> {
         recyclerView.addOnScrollListener(this)
@@ -214,7 +214,6 @@ class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
             else
                 NullPointerException("You must provide an `OnLoadMoreHandler`")
         }
-
     }
 
     /**
@@ -236,7 +235,6 @@ class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
             else
                 NullPointerException("You must provide an `OnNewItemsListener`")
         }
-
     }
 
     //-------------------------
