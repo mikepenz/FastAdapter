@@ -10,15 +10,15 @@ import com.mikepenz.fastadapter.adapters.ModelAdapter
 @DslMarker
 annotation class FastAdapterDsl
 
-fun genericfastadapter(block: (FastAdapter<GenericItem>).() -> Unit): FastAdapter<GenericItem> {
+inline fun genericfastadapter(block: (FastAdapter<GenericItem>).() -> Unit): FastAdapter<GenericItem> {
     return FastAdapter<GenericItem>().apply(block)
 }
 
-fun <Item : GenericItem> fastadapter(block: (FastAdapter<Item>).() -> Unit): FastAdapter<Item> {
+inline fun <Item : GenericItem> fastadapter(block: (FastAdapter<Item>).() -> Unit): FastAdapter<Item> {
     return FastAdapter<Item>().apply(block)
 }
 
-fun <ParentItem : GenericItem, ChildItem : ParentItem> FastAdapter<ParentItem>.itemAdapter(block: ItemAdapter<ChildItem>.() -> Unit) {
+inline fun <ParentItem : GenericItem, ChildItem : ParentItem> FastAdapter<ParentItem>.itemAdapter(block: ItemAdapter<ChildItem>.() -> Unit) {
     addAdapters(listOf(ItemAdapter<ChildItem>().apply(block) as IAdapter<ParentItem>))
 }
 
