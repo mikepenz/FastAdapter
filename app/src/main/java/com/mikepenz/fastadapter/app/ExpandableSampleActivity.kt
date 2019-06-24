@@ -54,7 +54,7 @@ class ExpandableSampleActivity : AppCompatActivity() {
         rv.adapter = fastItemAdapter
 
         //fill with some sample data
-        val items = ArrayList<IItem<out RecyclerView.ViewHolder>>()
+        val items = ArrayList<GenericItem>()
         val identifier = AtomicLong(1)
         for (i in 1..100) {
             if (i % 3 != 0) {

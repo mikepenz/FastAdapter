@@ -40,7 +40,7 @@ class AdvancedSampleActivity : AppCompatActivity() {
     private lateinit var mHeaderAdapter: ItemAdapter<SimpleItem>
     private lateinit var mItemAdapter: GenericItemAdapter
 
-    private var mActionModeHelper: ActionModeHelper<IItem<out RecyclerView.ViewHolder>>? = null
+    private var mActionModeHelper: ActionModeHelper<GenericItem>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -60,12 +60,12 @@ class AdvancedSampleActivity : AppCompatActivity() {
         //create our adapters
         mHeaderAdapter = items()
         mItemAdapter = items()
-        val stickyHeaderAdapter = StickyHeaderAdapter<IItem<out RecyclerView.ViewHolder>>()
+        val stickyHeaderAdapter = StickyHeaderAdapter<GenericItem>()
 
         //we also want the expandable feature
 
         //create our FastAdapter
-        val adapters: Collection<ItemAdapter<out IItem<out RecyclerView.ViewHolder>>> = Arrays.asList(mHeaderAdapter, mItemAdapter)
+        val adapters: Collection<ItemAdapter<out GenericItem>> = Arrays.asList(mHeaderAdapter, mItemAdapter)
         mFastAdapter = FastAdapter.with(adapters)
 
         mFastAdapter.getExpandableExtension()
@@ -77,13 +77,13 @@ class AdvancedSampleActivity : AppCompatActivity() {
         selectExtension.multiSelect = true
         selectExtension.selectOnLongClick = true
 
-        mFastAdapter.onPreClickListener = { _: View?, _: GenericAdapter, item: IItem<out RecyclerView.ViewHolder>, _: Int ->
+        mFastAdapter.onPreClickListener = { _: View?, _: GenericAdapter, item: GenericItem, _: Int ->
             //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
             val res = mActionModeHelper?.onClick(item)
             res ?: false
         }
 
-        mFastAdapter.onPreLongClickListener = { _: View, _: GenericAdapter, item: IItem<out RecyclerView.ViewHolder>, position: Int ->
+        mFastAdapter.onPreLongClickListener = { _: View, _: GenericAdapter, item: GenericItem, position: Int ->
             //we do not want expandable items to be selected
             if (item is IExpandable<*> && item.subItems != null) {
                 true

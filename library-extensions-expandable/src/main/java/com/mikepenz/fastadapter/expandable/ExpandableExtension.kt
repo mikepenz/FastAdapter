@@ -254,7 +254,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
             if (adapter != null && adapter is IItemAdapter<*, *>) {
                 (adapter as? IItemAdapter<*, *>)?.removeRange(position + 1, previousCount)
                 expandable?.subItems?.let { subItems ->
-                    (adapter as? IItemAdapter<IItem<out RecyclerView.ViewHolder>, *>?)?.add(
+                    (adapter as? IItemAdapter<GenericItem, *>?)?.add(
                             position + 1,
                             subItems
                     )

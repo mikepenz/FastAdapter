@@ -10,7 +10,7 @@ class ExpandableExtensionFactory : ExtensionFactory<ExpandableExtension<*>> {
     override val clazz = ExpandableExtension::class.java
 
     override fun create(
-        fastAdapter: FastAdapter<out IItem<out RecyclerView.ViewHolder>>
+        fastAdapter: FastAdapter<out GenericItem>
     ): ExpandableExtension<*>? {
         return ExpandableExtension(fastAdapter)
     }

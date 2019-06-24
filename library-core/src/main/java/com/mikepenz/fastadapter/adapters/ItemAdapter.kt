@@ -9,7 +9,7 @@ import com.mikepenz.fastadapter.utils.InterceptorUtil
 /**
  * Kotlin type alias to simplify usage for an all accepting ItemAdapter
  */
-typealias GenericItemAdapter = ItemAdapter<IItem<out RecyclerView.ViewHolder>>
+typealias GenericItemAdapter = ItemAdapter<GenericItem>
 
 /**
  * Created by mikepenz on 27.12.15.

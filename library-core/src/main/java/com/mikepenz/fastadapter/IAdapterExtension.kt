@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 /**
  * Kotlin type alias to simplify usage for an all accepting AdapterExtension
  */
-typealias GenericAdapterExtension = IAdapterExtension<out IItem<out RecyclerView.ViewHolder>>
+typealias GenericAdapterExtension = IAdapterExtension<out GenericItem>
 
 /**
  * Created by mikepenz on 04/06/2017.
