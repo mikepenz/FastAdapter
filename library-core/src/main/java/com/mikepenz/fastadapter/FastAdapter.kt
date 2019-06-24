@@ -929,6 +929,10 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
             return fastAdapter
         }
 
+        @JvmStatic
+        fun <Item : GenericItem> getFromHolderTag(holder: RecyclerView.ViewHolder?): FastAdapter<Item>? =
+                holder?.itemView?.getTag(R.id.fastadapter_item_adapter) as? FastAdapter<Item>
+
         /**
          * convenient helper method to get the Item from a holder
          *
@@ -937,16 +941,11 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
          */
         @JvmStatic
         fun <Item : GenericItem> getHolderAdapterItem(holder: RecyclerView.ViewHolder?): Item? {
-            if (holder != null) {
-                val tag = holder.itemView.getTag(R.id.fastadapter_item_adapter)
-                if (tag is FastAdapter<*>) {
-                    val pos = tag.getHolderAdapterPosition(holder)
-                    if (pos != RecyclerView.NO_POSITION) {
-                        return tag.getItem(pos) as? Item?
-                    }
-                }
-            }
-            return null
+            holder ?: return null
+            val adapter = getFromHolderTag<Item>(holder) ?: return null
+            val pos = adapter.getHolderAdapterPosition(holder).takeIf { it != RecyclerView.NO_POSITION }
+                    ?: return null
+            return adapter.getItem(pos)
         }
 
         /**
@@ -957,15 +956,8 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
          * @return the Item found for the given position and that ViewHolder
          */
         @JvmStatic
-        fun <Item : GenericItem> getHolderAdapterItem(holder: RecyclerView.ViewHolder?, position: Int): Item? {
-            if (holder != null) {
-                val tag = holder.itemView.getTag(R.id.fastadapter_item_adapter)
-                if (tag is FastAdapter<*>) {
-                    return tag.getItem(position) as? Item?
-                }
-            }
-            return null
-        }
+        fun <Item : GenericItem> getHolderAdapterItem(holder: RecyclerView.ViewHolder?, position: Int): Item? =
+                getFromHolderTag<Item>(holder)?.getItem(position)
 
         /**
          * convenient helper method to get the Item from a holder via the defined tag
@@ -974,15 +966,8 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
          * @return the Item found for the given position and that ViewHolder
          */
         @JvmStatic
-        fun <Item : GenericItem> getHolderAdapterItemTag(holder: RecyclerView.ViewHolder?): Item? {
-            if (holder != null) {
-                val item = holder.itemView.getTag(R.id.fastadapter_item)
-                if (item is GenericItem) {
-                    return item as? Item?
-                }
-            }
-            return null
-        }
+        fun <Item : GenericItem> getHolderAdapterItemTag(holder: RecyclerView.ViewHolder?): Item? =
+                holder?.itemView?.getTag(R.id.fastadapter_item) as? Item
 
         /**
          * Util function which recursively iterates over all items of a `IExpandable` parent if and only if it is `expanded` and has `subItems`

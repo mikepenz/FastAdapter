@@ -4,7 +4,6 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.R
 
 abstract class CustomEventHook<Item : GenericItem> : EventHook<Item> {
     /**
@@ -21,12 +20,8 @@ abstract class CustomEventHook<Item : GenericItem> : EventHook<Item> {
      * @param viewHolder
      * @return
      */
-    fun getFastAdapter(viewHolder: RecyclerView.ViewHolder): FastAdapter<Item>? {
-        val tag = viewHolder.itemView.getTag(R.id.fastadapter_item_adapter)
-        return if (tag is FastAdapter<*>) {
-            tag as FastAdapter<Item>
-        } else null
-    }
+    fun getFastAdapter(viewHolder: RecyclerView.ViewHolder): FastAdapter<Item>? =
+            FastAdapter.getFromHolderTag(viewHolder)
 
     /**
      * helper method to get the item for this ViewHolder
