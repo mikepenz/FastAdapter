@@ -29,14 +29,6 @@ abstract class CustomEventHook<Item : GenericItem> : EventHook<Item> {
      * @param viewHolder
      * @return
      */
-    fun getItem(viewHolder: RecyclerView.ViewHolder): Item? {
-        val adapter = getFastAdapter(viewHolder) ?: return null
-        //we get the adapterPosition from the viewHolder
-        val pos = adapter.getHolderAdapterPosition(viewHolder)
-        //make sure the click was done on a valid item
-        return if (pos != RecyclerView.NO_POSITION) {
-            //we update our item with the changed property
-            adapter.getItem(pos)
-        } else null
-    }
+    fun getItem(viewHolder: RecyclerView.ViewHolder): Item? =
+            FastAdapter.getHolderAdapterItem(viewHolder)
 }
