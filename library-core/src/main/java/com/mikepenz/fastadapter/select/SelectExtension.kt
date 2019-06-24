@@ -476,9 +476,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
         for (i in positions.indices.reversed()) {
             val ri = fastAdapter.getRelativeInfo(positions[i])
             if (ri.item != null && ri.item!!.isSelected) { //double verify
-                if (ri.adapter != null && ri.adapter is IItemAdapter<*, *>) {
-                    (ri.adapter as IItemAdapter<*, *>).remove(positions[i])
-                }
+                (ri.adapter as? IItemAdapter<*, *>)?.remove(positions[i])
             }
         }
         return deletedItems
