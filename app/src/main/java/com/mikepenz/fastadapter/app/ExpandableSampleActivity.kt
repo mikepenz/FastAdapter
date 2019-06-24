@@ -6,8 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.LayoutInflaterCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem

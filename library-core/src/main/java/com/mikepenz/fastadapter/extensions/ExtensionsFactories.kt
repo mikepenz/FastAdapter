@@ -1,9 +1,8 @@
 package com.mikepenz.fastadapter.extensions
 
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapterExtension
-import com.mikepenz.fastadapter.IItem
 
 object ExtensionsFactories {
 
