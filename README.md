@@ -48,31 +48,31 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-implementation 'com.mikepenz:fastadapter:${latestFastAdapterRelease}'
+implementation "com.mikepenz:fastadapter:${latestFastAdapterRelease}"
 implementation "androidx.appcompat:appcompat:${androidX}"
 implementation "androidx.recyclerview:recyclerview:${androidX}"
 ```
 
 Expandable support is included and can be added via this
 ```gradle
-implementation 'com.mikepenz:fastadapter-extensions-expandable:${latestFastAdapterRelease}'
+implementation "com.mikepenz:fastadapter-extensions-expandable:${latestFastAdapterRelease}"
 //The tiny Materialize library used for its useful helper classes
-implementation 'com.mikepenz:materialize:${latestVersion}' // at least 1.2.0
+implementation "com.mikepenz:materialize:${latestVersion}" // at least 1.2.0
 ```
 
 Many helper classes are included in the following dependency.
 ```gradle
-implementation 'com.mikepenz:fastadapter-extensions-diff:${latestFastAdapterRelease}' // diff util helpers
-implementation 'com.mikepenz:fastadapter-extensions-drag:${latestFastAdapterRelease}' // drag support
-implementation 'com.mikepenz:fastadapter-extensions-scroll${latestFastAdapterRelease}' // scroll helpers
-implementation 'com.mikepenz:fastadapter-extensions-swipe:${latestFastAdapterRelease}' // swipe support
-implementation 'com.mikepenz:fastadapter-extensions-ui:${latestFastAdapterRelease}' // pre-defined ui components
-implementation 'com.mikepenz:fastadapter-extensions-utils:${latestFastAdapterRelease}' // needs the `expandable`, `drag` and `scroll` extension.
+implementation "com.mikepenz:fastadapter-extensions-diff:${latestFastAdapterRelease}" // diff util helpers
+implementation "com.mikepenz:fastadapter-extensions-drag:${latestFastAdapterRelease}" // drag support
+implementation "com.mikepenz:fastadapter-extensions-scroll${latestFastAdapterRelease}" // scroll helpers
+implementation "com.mikepenz:fastadapter-extensions-swipe:${latestFastAdapterRelease}" // swipe support
+implementation "com.mikepenz:fastadapter-extensions-ui:${latestFastAdapterRelease}" // pre-defined ui components
+implementation "com.mikepenz:fastadapter-extensions-utils:${latestFastAdapterRelease}" // needs the `expandable`, `drag` and `scroll` extension.
 
 // required for the ui components and the utils
 implementation "com.google.android.material:material:${androidX}"
 //The tiny Materialize library used for its useful helper classes
-implementation 'com.mikepenz:materialize:${latestVersion}' // at least 1.2.0
+implementation "com.mikepenz:materialize:${latestVersion}" // at least 1.2.0
 ```
 
 ## v4.x.y
