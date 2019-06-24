@@ -4,8 +4,6 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 
-import androidx.recyclerview.widget.RecyclerView
-
 /**
  * Kotlin type alias to simplify usage for an all accepting AdapterExtension
  */

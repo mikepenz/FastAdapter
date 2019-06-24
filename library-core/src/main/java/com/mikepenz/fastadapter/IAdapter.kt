@@ -1,7 +1,5 @@
 package com.mikepenz.fastadapter
 
-import androidx.recyclerview.widget.RecyclerView
-
 /**
  * Kotlin type alias to simplify usage for an all accepting IAdapter
  */

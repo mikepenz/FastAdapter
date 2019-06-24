@@ -9,7 +9,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.view.LayoutInflaterCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.michaelflisar.dragselectrecyclerview.DragSelectTouchListener
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.adapters.FastItemAdapter

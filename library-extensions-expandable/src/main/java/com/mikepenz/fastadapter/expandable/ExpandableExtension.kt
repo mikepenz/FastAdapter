@@ -5,7 +5,6 @@ import android.util.SparseIntArray
 import android.view.MotionEvent
 import android.view.View
 import androidx.collection.ArraySet
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.utils.AdapterPredicate
