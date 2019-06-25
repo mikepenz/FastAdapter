@@ -13,8 +13,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter
@@ -34,7 +33,7 @@ import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
-class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilterListener<IItem<out RecyclerView.ViewHolder>> {
+class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilterListener<GenericItem> {
 
     //save our FastAdapter
     private lateinit var fastItemAdapter: GenericFastItemAdapter
@@ -76,7 +75,7 @@ class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFi
         }
 
         //configure the itemAdapter
-        fastItemAdapter.itemFilter.filterPredicate = { item: IItem<out RecyclerView.ViewHolder>, constraint: CharSequence? ->
+        fastItemAdapter.itemFilter.filterPredicate = { item: GenericItem, constraint: CharSequence? ->
             if (item is SimpleItem) {
                 //return true if we should filter it out
                 item.name?.text.toString().toLowerCase().contains(constraint.toString().toLowerCase())
@@ -186,7 +185,7 @@ class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFi
         // save the new item order, i.e. in your database
     }
 
-    override fun itemsFiltered(constraint: CharSequence?, results: List<IItem<out RecyclerView.ViewHolder>>?) {
+    override fun itemsFiltered(constraint: CharSequence?, results: List<GenericItem>?) {
         endlessRecyclerOnScrollListener.disable()
         Toast.makeText(this@EndlessScrollListActivity, "filtered items count: " + fastItemAdapter.itemCount, Toast.LENGTH_SHORT).show()
     }

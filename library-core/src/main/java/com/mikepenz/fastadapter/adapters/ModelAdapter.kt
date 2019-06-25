@@ -1,6 +1,5 @@
 package com.mikepenz.fastadapter.adapters
 
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.utils.AdapterPredicate
 import com.mikepenz.fastadapter.utils.DefaultItemList
@@ -12,7 +11,7 @@ import java.util.Arrays.asList
 /**
  * Kotlin type alias to simplify usage for an all accepting ModelAdapter
  */
-typealias GenericModelAdapter<Model> = ModelAdapter<Model, IItem<out RecyclerView.ViewHolder>>
+typealias GenericModelAdapter<Model> = ModelAdapter<Model, GenericItem>
 
 /**
  * Created by mikepenz on 27.12.15.
