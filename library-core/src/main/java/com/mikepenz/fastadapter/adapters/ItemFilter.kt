@@ -6,6 +6,7 @@ import com.mikepenz.fastadapter.listeners.ItemFilterListener
 import com.mikepenz.fastadapter.select.SelectExtension
 import java.util.*
 import java.util.Arrays.asList
+import kotlin.collections.HashSet
 import kotlin.math.min
 
 /**
@@ -34,7 +35,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
         get() {
             val fastAdapter = mItemAdapter.fastAdapter ?: return emptySet()
             val adapterOffset = fastAdapter.getPreItemCountByOrder(mItemAdapter.order)
-            return originalItems?.mapIndexedNotNull { index, item -> if (item.isSelected) index + adapterOffset else null }?.toSet()
+            return originalItems?.mapIndexedNotNullTo(HashSet()) { index, item -> if (item.isSelected) index + adapterOffset else null }
                     ?: fastAdapter.getExtension<SelectExtension<Item>>(SelectExtension::class.java)?.selections
                     ?: emptySet()
         }
@@ -46,7 +47,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
      */
     open val selectedItems: Set<Item>
         get() {
-            return originalItems?.filter { it.isSelected }?.toSet()
+            return originalItems?.filterTo(HashSet()) { it.isSelected }
                     ?: mItemAdapter.fastAdapter?.getExtension<SelectExtension<Item>>(SelectExtension::class.java)?.selectedItems
                     ?: emptySet()
         }
