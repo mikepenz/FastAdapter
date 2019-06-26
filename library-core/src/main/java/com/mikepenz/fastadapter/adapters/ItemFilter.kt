@@ -216,11 +216,8 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
                 mItemAdapter.idDistributor.checkIds(items)
             }
             mItemAdapter.fastAdapter?.let { fastAdapter ->
-                originalItems.addAll(
-                        getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(
-                                position
-                        ), items
-                )
+                val origPosition = getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(position)
+                originalItems.addAll(origPosition, items)
             }
             publishResults(constraint, performFiltering(constraint))
             mItemAdapter
@@ -239,9 +236,8 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
                 mItemAdapter.idDistributor.checkId(item)
             }
             mItemAdapter.fastAdapter?.let { fastAdapter ->
-                originalItems[getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(
-                        position
-                )] = item
+                val origPosition = getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(position)
+                originalItems[origPosition] = item
             }
             publishResults(constraint, performFiltering(constraint))
             mItemAdapter
@@ -277,11 +273,8 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
     fun remove(position: Int): ModelAdapter<*, Item> {
         return originalItems?.let { originalItems ->
             mItemAdapter.fastAdapter?.let { fastAdapter ->
-                originalItems.removeAt(
-                        getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(
-                                position
-                        )
-                )
+                val origPosition = getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(position)
+                originalItems.removeAt(origPosition)
             }
             publishResults(constraint, performFiltering(constraint))
             mItemAdapter
