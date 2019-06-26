@@ -55,11 +55,14 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
     // the total size
     private var globalSize = 0
 
+    private var _eventHooks: MutableList<EventHook<out Item>>? = null
+
     /**
      * The eventHooks handled by this FastAdapter
      */
-    var eventHooks: MutableList<EventHook<out Item>>? = null
-        private set
+    val eventHooks: MutableList<EventHook<out Item>>
+        get() = _eventHooks ?: LinkedList<EventHook<out Item>>().also { _eventHooks = it }
+
     // the extensions we support
     private val extensionsCache = ArrayMap<Class<*>, IAdapterExtension<Item>>()
 
@@ -229,10 +232,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      * @return this
      */
     fun addEventHook(eventHook: EventHook<out Item>): FastAdapter<Item> {
-        if (eventHooks == null) {
-            eventHooks = LinkedList()
-        }
-        eventHooks?.add(eventHook)
+        eventHooks.add(eventHook)
         return this
     }
 
@@ -244,10 +244,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      * @return this
      */
     fun addEventHooks(eventHooks: Collection<EventHook<out Item>>): FastAdapter<Item> {
-        if (this.eventHooks == null) {
-            this.eventHooks = LinkedList()
-        }
-        this.eventHooks?.addAll(eventHooks)
+        this.eventHooks.addAll(eventHooks)
         return this
     }
 
