@@ -81,8 +81,8 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
     var verboseLoggingEnabled = false
 
     // the listeners which can be hooked on an item
-    var onPreClickListener: ((v: View?, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean)? = null
-    var onClickListener: ((v: View?, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean)? = null
+    var onPreClickListener: ClickListener<Item>? = null
+    var onClickListener: ClickListener<Item>? = null
     var onPreLongClickListener: ((v: View, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean)? = null
     var onLongClickListener: ((v: View, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean)? = null
     var onTouchListener: ((v: View, event: MotionEvent, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean)? = null
