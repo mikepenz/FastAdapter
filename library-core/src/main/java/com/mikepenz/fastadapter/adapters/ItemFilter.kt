@@ -32,19 +32,10 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
      */
     open val selections: Set<Int>
         get() {
-            return originalItems?.let { originalItems ->
-                val selections = HashSet<Int>()
-                mItemAdapter.fastAdapter?.getPreItemCountByOrder(mItemAdapter.order)
-                        ?.let { adapterOffset ->
-                            originalItems.forEachIndexed { index, item ->
-                                if (item.isSelected) {
-                                    selections.add(index + adapterOffset)
-                                }
-                            }
-                        }
-                return selections
-            }
-                    ?: mItemAdapter.fastAdapter?.getExtension<SelectExtension<Item>>(SelectExtension::class.java)?.selections
+            val fastAdapter = mItemAdapter.fastAdapter ?: return emptySet()
+            val adapterOffset = fastAdapter.getPreItemCountByOrder(mItemAdapter.order)
+            return originalItems?.mapIndexedNotNull { index, item -> if (item.isSelected) index + adapterOffset else null }?.toSet()
+                    ?: fastAdapter.getExtension<SelectExtension<Item>>(SelectExtension::class.java)?.selections
                     ?: emptySet()
         }
 
@@ -55,15 +46,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
      */
     open val selectedItems: Set<Item>
         get() {
-            return originalItems?.let { originalItems ->
-                val selections = HashSet<Item>()
-                originalItems.forEach { item ->
-                    if (item.isSelected) {
-                        selections.add(item)
-                    }
-                }
-                return@let selections
-            }
+            return originalItems?.filter { it.isSelected }?.toSet()
                     ?: mItemAdapter.fastAdapter?.getExtension<SelectExtension<Item>>(SelectExtension::class.java)?.selectedItems
                     ?: emptySet()
         }
@@ -72,7 +55,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
         val results = FilterResults()
 
         //return nothing
-        if (originalItems == null && (constraint == null || constraint.isEmpty())) {
+        if (originalItems == null && constraint.isNullOrEmpty()) {
             return results
         }
 
@@ -99,13 +82,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
         } else {
             // We perform filtering operation
             val filteredItems = filterPredicate?.let { filterPredicate ->
-                val filteredItems: MutableList<Item> = ArrayList()
-                originalItems?.forEach { item ->
-                    if (filterPredicate.invoke(item, constraint)) {
-                        filteredItems.add(item)
-                    }
-                }
-                filteredItems
+                originalItems?.mapNotNull { item -> item.takeIf { filterPredicate(item, constraint) } }
             } ?: mItemAdapter.adapterItems
 
             results.values = filteredItems
@@ -152,12 +129,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
      * @return the relative position
      */
     fun getAdapterPosition(identifier: Long): Int {
-        originalItems?.forEachIndexed { index, item ->
-            if (item.identifier == identifier) {
-                return index
-            }
-        }
-        return -1
+        return originalItems?.indexOfFirst { it.identifier == identifier } ?: -1
     }
 
     /**
