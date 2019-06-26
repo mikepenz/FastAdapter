@@ -72,7 +72,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
         }
 
         // We implement here the filter logic
-        if (constraint == null || constraint.isEmpty()) {
+        if (constraint.isNullOrEmpty()) {
             // No filter implemented we return all the list
             results.values = originalItems
             results.count = originalItems?.size ?: 0
