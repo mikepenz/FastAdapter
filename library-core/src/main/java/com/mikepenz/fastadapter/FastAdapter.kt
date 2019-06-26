@@ -102,16 +102,15 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      */
     open val viewClickListener: ClickEventHook<Item> = object : ClickEventHook<Item>() {
         override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<Item>, item: Item) {
-            val adapter = fastAdapter.getAdapter(position)
-            if (adapter != null && item.isEnabled) {
-                if ((item as? IClickable<Item>?)?.onPreItemClickListener?.invoke(v, adapter, item, position) == true) return
-                if (fastAdapter.onPreClickListener?.invoke(v, adapter, item, position) == true) return
-                for (ext in fastAdapter.extensionsCache.values) {
-                    if (ext.onClick(v, position, fastAdapter, item)) return
-                }
-                if ((item as? IClickable<Item>?)?.onItemClickListener?.invoke(v, adapter, item, position) == true) return
-                if (fastAdapter.onClickListener?.invoke(v, adapter, item, position) == true) return
+            if (!item.isEnabled) return
+            val adapter = fastAdapter.getAdapter(position) ?: return
+            if ((item as? IClickable<Item>)?.onPreItemClickListener?.invoke(v, adapter, item, position) == true) return
+            if (fastAdapter.onPreClickListener?.invoke(v, adapter, item, position) == true) return
+            for (ext in fastAdapter.extensionsCache.values) {
+                if (ext.onClick(v, position, fastAdapter, item)) return
             }
+            if ((item as? IClickable<Item>)?.onItemClickListener?.invoke(v, adapter, item, position) == true) return
+            if (fastAdapter.onClickListener?.invoke(v, adapter, item, position) == true) return
         }
     }
 
@@ -120,14 +119,13 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      */
     open val viewLongClickListener: LongClickEventHook<Item> = object : LongClickEventHook<Item>() {
         override fun onLongClick(v: View, position: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean {
-            val adapter = fastAdapter.getAdapter(position)
-            if (adapter != null && item.isEnabled) {
-                if (fastAdapter.onPreLongClickListener?.invoke(v, adapter, item, position) == true) return true
-                for (ext in fastAdapter.extensionsCache.values) {
-                    if (ext.onLongClick(v, position, fastAdapter, item)) return true
-                }
-                if (fastAdapter.onLongClickListener?.invoke(v, adapter, item, position) == true) return true
+            if (!item.isEnabled) return false
+            val adapter = fastAdapter.getAdapter(position) ?: return false
+            if (fastAdapter.onPreLongClickListener?.invoke(v, adapter, item, position) == true) return true
+            for (ext in fastAdapter.extensionsCache.values) {
+                if (ext.onLongClick(v, position, fastAdapter, item)) return true
             }
+            if (fastAdapter.onLongClickListener?.invoke(v, adapter, item, position) == true) return true
             return false
         }
     }
@@ -168,9 +166,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
         adapters.add(index, adapter)
         adapter.fastAdapter = this
         adapter.mapPossibleTypes(adapter.adapterItems)
-        for (i in adapters.indices) {
-            adapters[i].order = i
-        }
+        adapters.forEachIndexed { i, item -> item.order = i }
         cacheSizes()
         return this
     }
@@ -182,9 +178,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      * @return the IAdapter if found
      */
     open fun adapter(order: Int): IAdapter<Item>? {
-        return if (adapters.size <= order) {
-            null
-        } else adapters[order]
+        return adapters.getOrNull(order)
     }
 
     /**
