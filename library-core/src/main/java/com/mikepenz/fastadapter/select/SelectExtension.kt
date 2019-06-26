@@ -62,16 +62,9 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
      */
     val selections: Set<Int>
         get() {
-            val selections = ArraySet<Int>()
-            var i = 0
-            val size = fastAdapter.itemCount
-            while (i < size) {
-                if (fastAdapter.getItem(i)?.isSelected == true) {
-                    selections.add(i)
-                }
-                i++
+            return (0 until fastAdapter.itemCount).mapNotNullTo(ArraySet<Int>()) { i ->
+                i.takeIf { fastAdapter.getItem(i)?.isSelected == true }
             }
-            return selections
         }
 
     /**
@@ -261,9 +254,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
      * @param positions the global positions to select
      */
     fun select(positions: Iterable<Int>) {
-        for (position in positions) {
-            select(position)
-        }
+        positions.forEach { select(it) }
     }
 
     /**
