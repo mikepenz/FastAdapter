@@ -20,6 +20,7 @@ abstract class CustomEventHook<Item : GenericItem> : EventHook<Item> {
      * @param viewHolder
      * @return
      */
+    @Deprecated("Replaced with the new helper inside the FastAdapter class", ReplaceWith("FastAdapter.getFromHolderTag(viewHolder)", "com.mikepenz.fastadapter.FastAdapter"))
     fun getFastAdapter(viewHolder: RecyclerView.ViewHolder): FastAdapter<Item>? =
             FastAdapter.getFromHolderTag(viewHolder)
 
@@ -29,6 +30,7 @@ abstract class CustomEventHook<Item : GenericItem> : EventHook<Item> {
      * @param viewHolder
      * @return
      */
+    @Deprecated("Replaced with the new helper inside the FastAdapter class", ReplaceWith("FastAdapter.getHolderAdapterItem(viewHolder)", "com.mikepenz.fastadapter.FastAdapter"))
     fun getItem(viewHolder: RecyclerView.ViewHolder): Item? =
             FastAdapter.getHolderAdapterItem(viewHolder)
 }
