@@ -16,18 +16,12 @@ class OnBindViewHolderListenerImpl<Item : GenericItem> : OnBindViewHolderListene
      * @param payloads   the payloads provided by the adapter
      */
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
-        val tag = viewHolder.itemView.getTag(R.id.fastadapter_item_adapter)
-        if (tag is FastAdapter<*>) {
-            val item = tag.getItem(position) as? IItem<RecyclerView.ViewHolder>?
-            if (item != null) {
-                item.bindView(viewHolder, payloads)
-                if (viewHolder is FastAdapter.ViewHolder<*>) {
-                    (viewHolder as FastAdapter.ViewHolder<Item>).bindView(item as Item, payloads)
-                }
-                //set the R.id.fastadapter_item tag of this item to the item object (can be used when retrieving the view)
-                viewHolder.itemView.setTag(R.id.fastadapter_item, item)
-            }
-        }
+        val adapter = FastAdapter.getFromHolderTag<Item>(viewHolder) ?: return
+        val item = adapter.getItem(position) ?: return
+        (item as? IItem<RecyclerView.ViewHolder>)?.bindView(viewHolder, payloads)
+        (viewHolder as? FastAdapter.ViewHolder<Item>)?.bindView(item, payloads)
+        //set the R.id.fastadapter_item tag of this item to the item object (can be used when retrieving the view)
+        viewHolder.itemView.setTag(R.id.fastadapter_item, item)
     }
 
     /**
@@ -40,9 +34,7 @@ class OnBindViewHolderListenerImpl<Item : GenericItem> : OnBindViewHolderListene
         val item = FastAdapter.getHolderAdapterItemTag<IItem<RecyclerView.ViewHolder>>(viewHolder)
         if (item != null) {
             item.unbindView(viewHolder)
-            if (viewHolder is FastAdapter.ViewHolder<*>) {
-                (viewHolder as FastAdapter.ViewHolder<Item>).unbindView(item as Item)
-            }
+            (viewHolder as? FastAdapter.ViewHolder<Item>)?.unbindView(item as Item)
             //remove set tag's
             viewHolder.itemView.setTag(R.id.fastadapter_item, null)
             viewHolder.itemView.setTag(R.id.fastadapter_item_adapter, null)
@@ -65,9 +57,7 @@ class OnBindViewHolderListenerImpl<Item : GenericItem> : OnBindViewHolderListene
         if (item != null) {
             try {
                 item.attachToWindow(viewHolder)
-                if (viewHolder is FastAdapter.ViewHolder<*>) {
-                    (viewHolder as FastAdapter.ViewHolder<Item>).attachToWindow(item as Item)
-                }
+                (viewHolder as? FastAdapter.ViewHolder<Item>)?.attachToWindow(item as Item)
             } catch (e: AbstractMethodError) {
                 Log.e("FastAdapter", e.toString())
             }
@@ -82,12 +72,9 @@ class OnBindViewHolderListenerImpl<Item : GenericItem> : OnBindViewHolderListene
      */
     override fun onViewDetachedFromWindow(viewHolder: RecyclerView.ViewHolder, position: Int) {
         val item = FastAdapter.getHolderAdapterItemTag<IItem<RecyclerView.ViewHolder>>(viewHolder)
-        if (item != null) {
-            item.detachFromWindow(viewHolder)
-            if (viewHolder is FastAdapter.ViewHolder<*>) {
-                (viewHolder as FastAdapter.ViewHolder<Item>).detachFromWindow(item as Item)
-            }
-        }
+                ?: return
+        item.detachFromWindow(viewHolder)
+        (viewHolder as? FastAdapter.ViewHolder<Item>)?.detachFromWindow(item as Item)
     }
 
     /**
@@ -103,13 +90,11 @@ class OnBindViewHolderListenerImpl<Item : GenericItem> : OnBindViewHolderListene
             position: Int
     ): Boolean {
         val item = FastAdapter.getHolderAdapterItemTag<IItem<RecyclerView.ViewHolder>>(viewHolder)
-        if (item != null) {
-            var recycle = item.failedToRecycle(viewHolder)
-            if (viewHolder is FastAdapter.ViewHolder<*>) {
-                recycle = recycle || (viewHolder as FastAdapter.ViewHolder<Item>).failedToRecycle(item as Item)
-            }
-            return recycle
+                ?: return false
+        var recycle = item.failedToRecycle(viewHolder)
+        if (viewHolder is FastAdapter.ViewHolder<*>) {
+            recycle = recycle || (viewHolder as FastAdapter.ViewHolder<Item>).failedToRecycle(item as Item)
         }
-        return false
+        return recycle
     }
 }
