@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.adapters
 
 import com.mikepenz.fastadapter.*
+import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.utils.AdapterPredicate
 import com.mikepenz.fastadapter.utils.DefaultItemList
 import com.mikepenz.fastadapter.utils.DefaultItemListImpl
@@ -17,6 +18,7 @@ typealias GenericModelAdapter<Model> = ModelAdapter<Model, GenericItem>
  * Created by mikepenz on 27.12.15.
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  */
+@FastAdapterDsl
 open class ModelAdapter<Model, Item : GenericItem>(
         val itemList: IItemList<Item>, var interceptor: (element: Model) -> Item?
 ) : AbstractAdapter<Item>(), IItemAdapter<Model, Item> {

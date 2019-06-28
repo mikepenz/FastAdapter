@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.collection.ArrayMap
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
+import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.listeners.*
 import com.mikepenz.fastadapter.utils.AdapterPredicate
@@ -36,6 +37,7 @@ typealias GenericFastAdapter = FastAdapter<GenericItem>
  *
  * @param <Item> Defines the type of items this `FastAdapter` manages (in case of multiple different types, use `IItem`)</Item>
  */
+@FastAdapterDsl
 open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     // we remember all adapters
@@ -167,11 +169,33 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      */
     open fun <A : IAdapter<Item>> addAdapter(index: Int, adapter: A): FastAdapter<Item> {
         adapters.add(index, adapter)
+        prepareAdapters(adapter)
+        return this
+    }
+
+    /**
+     * adds all new adapters at the end of the adapter list
+     *
+     * @param newAdapters the new adapters to be added
+     * @return this
+     */
+    open fun <A : IAdapter<Item>> addAdapters(newAdapters: List<A>): FastAdapter<Item> {
+        adapters.addAll(newAdapters as Collection<IAdapter<Item>>)
+        newAdapters.forEach {
+            prepareAdapters(it)
+        }
+        return this
+    }
+
+    /**
+     * prepares all adapters for their usage. update the fastAdapter, ensure all types are mapped, and update the order for the adapter.
+     * It also updates the cached sizes.
+     */
+    private fun prepareAdapters(adapter: IAdapter<Item>) {
         adapter.fastAdapter = this
         adapter.mapPossibleTypes(adapter.adapterItems)
         adapters.forEachIndexed { i, item -> item.order = i }
         cacheSizes()
-        return this
     }
 
     /**

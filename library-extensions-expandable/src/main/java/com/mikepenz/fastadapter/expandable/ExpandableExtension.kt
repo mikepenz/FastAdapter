@@ -14,9 +14,17 @@ import java.util.*
  * Extension method to retrieve or create the ExpandableExtension from the current FastAdapter
  * This will return a non null variant and fail
  */
-fun <Item : IItem<*>> FastAdapter<Item>.getExpandableExtension(): ExpandableExtension<Item> {
+fun <Item : GenericItem> FastAdapter<Item>.getExpandableExtension(): ExpandableExtension<Item> {
     ExpandableExtension.toString() // enforces the vm to lead in the companion object
     return requireOrCreateExtension()
+}
+
+/**
+ * Extension method to retrieve or create the ExpandableExtension from the current FastAdapter
+ * This will return a non null variant and fail
+ */
+fun <Item : GenericItem> FastAdapter<Item>.expandableExtension(block: ExpandableExtension<Item>.() -> Unit) {
+    getExpandableExtension().apply(block)
 }
 
 /**

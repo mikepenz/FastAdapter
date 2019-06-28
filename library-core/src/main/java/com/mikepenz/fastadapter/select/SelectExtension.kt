@@ -5,6 +5,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.collection.ArraySet
 import com.mikepenz.fastadapter.*
+import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.utils.AdapterPredicate
 import java.util.*
@@ -19,8 +20,17 @@ fun <Item : GenericItem> FastAdapter<Item>.getSelectExtension(): SelectExtension
 }
 
 /**
+ * Extension method to retrieve or create the SelectExtension from the current FastAdapter.
+ * This will return a non null variant and fail if something terrible happens.
+ */
+fun <Item : GenericItem> FastAdapter<Item>.selectExtension(block: SelectExtension<Item>.() -> Unit) {
+    getSelectExtension().apply(block)
+}
+
+/**
  * Created by mikepenz on 04/06/2017.
  */
+@FastAdapterDsl
 class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<Item>) : IAdapterExtension<Item> {
 
     // if enabled we will select the item via a notifyItemChanged -> will animate with the Animator
