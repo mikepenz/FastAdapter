@@ -41,40 +41,31 @@ class StickyHeaderAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerVie
         private set
 
     override fun getHeaderId(position: Int): Long {
-        val item = getItem(position)
-
         //in our sample we want a separate header per first letter of our items
         //this if is not necessary for your code, we only use it as this sticky header is reused for different item implementations
-        if (item is SimpleItem && item.header != null) {
-            return item.header?.get(0)?.toLong() ?: 0
-        } else if (item is SimpleSubItem && item.header != null) {
-            return item.header?.get(0)?.toLong() ?: 0
-        } else if (item is SimpleSubExpandableItem && item.header != null) {
-            return item.header?.get(0)?.toLong() ?: 0
+        return when (val item = getItem(position)) {
+            is SimpleItem -> item.header?.getOrNull(0)?.toLong() ?: 0
+            is SimpleSubItem -> item.header?.getOrNull(0)?.toLong() ?: 0
+            is SimpleSubExpandableItem -> item.header?.getOrNull(0)?.toLong() ?: 0
+            else -> -1
         }
-        return -1
     }
 
     override fun onCreateHeaderViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         //we create the view for the header
         val view = LayoutInflater.from(parent.context).inflate(R.layout.view_header, parent, false)
-        return object : RecyclerView.ViewHolder(view) {
-        }
+        return object : RecyclerView.ViewHolder(view) {}
     }
 
     override fun onBindHeaderViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val textView = holder.itemView as TextView
 
-        val item = getItem(position)
-        if (item is SimpleItem && item.header != null) {
-            //based on the position we set the headers text
-            textView.text = item.header?.get(0)?.toString()
-        } else if (item is SimpleSubItem && item.header != null) {
-            //based on the position we set the headers text
-            textView.text = item.header?.get(0)?.toString()
-        } else if (item is SimpleSubExpandableItem && item.header != null) {
-            //based on the position we set the headers text
-            textView.text = item.header?.get(0)?.toString()
+        textView.text = when (val item = getItem(position)) {
+            is SimpleItem -> item.header?.getOrNull(0)?.toString()
+            is SimpleSubItem -> item.header?.getOrNull(0)?.toString()
+            is SimpleSubExpandableItem -> item.header?.getOrNull(0)?.toString()
+            // Fallback to same value
+            else -> textView.text
         }
         holder.itemView.setBackgroundColor(randomColor)
     }
