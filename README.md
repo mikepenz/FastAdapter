@@ -324,8 +324,9 @@ This free, open source software was also made possible by a group of volunteers 
 
 ## Special mentions
 
-I want to give say thanks to some special contributors who provided some huge PRs and many changes to improve this great library. 
+A special thanks to the very active contributors who added many improvements to this library.
 
+* **[Allan Wang](https://github.com/AllanWang)** 
 * **[MFlisar](https://github.com/MFlisar)**
 
 # License
