@@ -142,7 +142,7 @@ object FastAdapterDiffUtil {
      * @param <Item>      The item type kept in the adapter
      * @return the adapter to allow chaining
     </Item></Model></A> */
-    operator fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> set(adapter: A, items: List<Item>, callback: DiffCallback<Item>, detectMoves: Boolean): A {
+    fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> set(adapter: A, items: List<Item>, callback: DiffCallback<Item>, detectMoves: Boolean): A {
         val result = calculateDiff(adapter, items, callback, detectMoves)
         return set(adapter, result)
     }
@@ -152,7 +152,7 @@ object FastAdapterDiffUtil {
      *
      * @return the adapter to allow chaining
      */
-    operator fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> set(adapter: A, items: List<Item>, callback: DiffCallback<Item>): A {
+    fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> set(adapter: A, items: List<Item>, callback: DiffCallback<Item>): A {
         return set(adapter, items, callback, true)
     }
 
@@ -161,7 +161,7 @@ object FastAdapterDiffUtil {
      *
      * @return the adapter to allow chaining
      */
-    operator fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> set(adapter: A, items: List<Item>, detectMoves: Boolean): A {
+    fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> set(adapter: A, items: List<Item>, detectMoves: Boolean): A {
         return set(adapter, items, DiffCallbackImpl(), detectMoves)
     }
 
