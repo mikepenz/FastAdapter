@@ -166,7 +166,7 @@ class ImageItem : AbstractItem<ImageItem.ViewHolder>() {
             item.animateHeart((v as ViewGroup).getChildAt(0), v.getChildAt(1), item.mStarred)
 
             //we display the info about the click
-            Toast.makeText(v.getContext(), item.mImageUrl + " - " + item.mStarred, Toast.LENGTH_SHORT).show()
+            Toast.makeText(v.context, item.mImageUrl + " - " + item.mStarred, Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -109,7 +109,7 @@ class SimpleImageItem : AbstractItem<SimpleImageItem.ViewHolder>() {
             this.view = view as FrameLayout
 
             //optimization to preset the correct height for our device
-            val screenWidth = view.getContext().resources.displayMetrics.widthPixels
+            val screenWidth = view.context.resources.displayMetrics.widthPixels
             val finalHeight = (screenWidth / 1.5).toInt() / 2
             imageView.minimumHeight = finalHeight
             imageView.maxHeight = finalHeight
