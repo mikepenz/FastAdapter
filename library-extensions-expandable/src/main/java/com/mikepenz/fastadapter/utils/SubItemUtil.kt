@@ -254,30 +254,27 @@ object SubItemUtil {
             if (parent != null) {
                 parentPos = fastAdapter.getPosition(parent)
                 val subItems = parent.subItems
+                subItems.remove(item)
+                // check if parent is expanded and notify the adapter about the removed item, if necessary (only if parent is visible)
+                if (parentPos != -1 && parent.isExpanded) {
+                    expandableExtension.notifyAdapterSubItemsChanged(parentPos, subItems.size + 1)
+                }
 
-                subItems.let { subItems ->
-                    subItems.remove(item)
-                    // check if parent is expanded and notify the adapter about the removed item, if necessary (only if parent is visible)
-                    if (parentPos != -1 && parent.isExpanded) {
-                        expandableExtension.notifyAdapterSubItemsChanged(parentPos, subItems.size + 1)
+                // if desired, notify the parent about its changed items (only if parent is visible!)
+                if (parentPos != -1 && notifyParent) {
+                    expanded = parent.isExpanded
+                    fastAdapter.notifyAdapterItemChanged(parentPos)
+                    // expand the item again if it was expanded before calling notifyAdapterItemChanged
+                    if (expanded) {
+                        expandableExtension.expand(parentPos)
                     }
+                }
 
-                    // if desired, notify the parent about its changed items (only if parent is visible!)
-                    if (parentPos != -1 && notifyParent) {
-                        expanded = parent.isExpanded
-                        fastAdapter.notifyAdapterItemChanged(parentPos)
-                        // expand the item again if it was expanded before calling notifyAdapterItemChanged
-                        if (expanded) {
-                            expandableExtension.expand(parentPos)
-                        }
-                    }
+                deleted.add(item)
 
-                    deleted.add(item)
-
-                    if (deleteEmptyHeaders && subItems.size == 0) {
-                        it.add(parent)
-                        it.previous()
-                    }
+                if (deleteEmptyHeaders && subItems.size == 0) {
+                    it.add(parent)
+                    it.previous()
                 }
             } else if (pos != -1) {
                 // if we did not find a parent, we remove the item from the adapter
