@@ -116,9 +116,7 @@ object SubItemUtil {
                     }
                 }
             } else if (!subItemsOnly && getParent<IExpandable<*>>(item) == null) {
-                if (predicate == null) {
-                    res.add(item)
-                } else if (predicate.apply(item)) {
+                if (predicate?.apply(item) != false) {
                     res.add(item)
                 }
             }
