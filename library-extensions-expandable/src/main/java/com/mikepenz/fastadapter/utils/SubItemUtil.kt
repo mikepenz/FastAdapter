@@ -145,12 +145,12 @@ object SubItemUtil {
     fun <T> countSelectedSubItems(selections: Set<IItem<*>>, header: T): Int where T : IItem<*>, T : IExpandable<*> {
         var count = 0
         val subItems = header.subItems
-        val items = if (header.subItems != null) subItems.size else 0
+        val items = subItems.size
         for (i in 0 until items) {
             if (selections.contains(subItems[i])) {
                 count++
             }
-            if (subItems[i] is IExpandable<*> && (subItems[i] as IExpandable<*>).subItems != null) {
+            if (subItems[i] is IExpandable<*>) {
                 count += countSelectedSubItems(selections, subItems[i] as T)
             }
         }
