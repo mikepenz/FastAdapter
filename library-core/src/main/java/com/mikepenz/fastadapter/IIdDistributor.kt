@@ -16,6 +16,7 @@ interface IIdDistributor<Identifiable : IIdentifyable> {
     fun nextId(identifiable: Identifiable): Long
 
     companion object {
+        @JvmField
         val DEFAULT: IIdDistributor<out IIdentifyable> = DefaultIdDistributorImpl()
     }
 }

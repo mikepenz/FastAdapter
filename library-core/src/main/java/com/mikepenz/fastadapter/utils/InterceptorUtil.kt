@@ -7,6 +7,7 @@ import com.mikepenz.fastadapter.GenericItem
  */
 interface InterceptorUtil {
     companion object {
+        @JvmField
         val DEFAULT: (element: GenericItem) -> GenericItem? = { it }
     }
 }

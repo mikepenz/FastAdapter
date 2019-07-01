@@ -9,7 +9,7 @@ interface IAdapterNotifier {
     fun notify(fastAdapter: FastAdapter<*>, newItemsCount: Int, previousItemsCount: Int, itemsBeforeThisAdapter: Int): Boolean
 
     companion object {
-
+        @JvmField
         val DEFAULT: IAdapterNotifier = object : IAdapterNotifier {
             override fun notify(fastAdapter: FastAdapter<*>, newItemsCount: Int, previousItemsCount: Int, itemsBeforeThisAdapter: Int): Boolean {
                 //now properly notify the adapter about the changes
@@ -34,6 +34,7 @@ interface IAdapterNotifier {
             }
         }
 
+        @JvmField
         val LEGACY_DEFAULT: IAdapterNotifier = object : IAdapterNotifier {
             override fun notify(fastAdapter: FastAdapter<*>, newItemsCount: Int, previousItemsCount: Int, itemsBeforeThisAdapter: Int): Boolean {
                 //now properly notify the adapter about the changes
