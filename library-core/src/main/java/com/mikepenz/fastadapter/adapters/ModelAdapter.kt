@@ -106,16 +106,8 @@ open class ModelAdapter<Model, Item : GenericItem>(
      * @param models the List of Model which will be used to create the List of Item
      * @return the generated List of Item
      */
-    open fun intercept(models: List<Model>): List<Item> {
-        val items = ArrayList<Item>(models.size)
-        models.forEach { model ->
-            val item = intercept(model)
-            if (item != null) {
-                items.add(item)
-            }
-        }
-        return items
-    }
+    open fun intercept(models: List<Model>): List<Item> =
+        models.mapNotNull { intercept(it) }
 
     /**
      * filters the items with the constraint using the provided Predicate
