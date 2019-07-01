@@ -92,13 +92,13 @@ object SubItemUtil {
 
         for (i in 0 until itemCount) {
             item = items[i]
-            if (item is IExpandable<*> && item.subItems != null) {
+            if (item is IExpandable<*>) {
                 subItems = item.subItems
                 if (predicate == null) {
                     if (countHeaders) {
                         res.add(item)
                     }
-                    if (subItems != null && subItems.isNotEmpty()) {
+                    if (subItems.isNotEmpty()) {
                         res.addAll(subItems)
                     }
                     res.addAll(getAllItems(subItems, countHeaders, true, predicate))
