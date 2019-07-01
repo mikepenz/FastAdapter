@@ -155,9 +155,7 @@ class ImageItem : AbstractItem<ImageItem.ViewHolder>() {
     class ImageItemHeartClickEvent : ClickEventHook<ImageItem>() {
         override fun onBindMany(viewHolder: RecyclerView.ViewHolder): List<View>? {
             if (viewHolder is ViewHolder) {
-                val views = ArrayList<View>()
-                views.add(viewHolder.imageLovedContainer)
-                return views
+                return listOf(viewHolder.imageLovedContainer)
             }
             return super.onBindMany(viewHolder)
         }
