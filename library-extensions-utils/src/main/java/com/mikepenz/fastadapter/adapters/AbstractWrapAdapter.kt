@@ -10,7 +10,7 @@ import java.util.*
  */
 abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolder>(items: List<Item>) : RecyclerView.Adapter<VH>() {
     //the items handled and managed by this item
-    open var items: List<Item> = ArrayList()
+    open var items: List<Item> = emptyList()
 
     //private AbstractAdapter mParentAdapter;
     //keep a reference to the FastAdapter which contains the base logic
@@ -132,12 +132,10 @@ abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolde
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         //TODO OPTIMIZE
-        for (item in items) {
-            if (item.type == viewType) {
-                return item.getViewHolder(parent)
-            }
+        val vh = items.firstOrNull { it.type == viewType }?.getViewHolder(parent)
+        if (vh != null) {
+            return vh
         }
-
         val adapter = this.adapter ?: throw RuntimeException("A adapter needs to be wrapped")
         return adapter.onCreateViewHolder(parent, viewType)
     }
