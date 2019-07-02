@@ -142,17 +142,11 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
         if (savedInstanceState == null) {
             return
         }
-        val expandedItems = ArrayList<Long>()
-        var item: Item?
-        var i = 0
-        val size = fastAdapter.itemCount
-        while (i < size) {
-            item = fastAdapter.getItem(i)
-            if ((item as? IExpandable<*>?)?.isExpanded == true) {
-                expandedItems.add(item.identifier)
-            }
-            i++
-        }
+        val expandedItems = (0 until fastAdapter.itemCount).asSequence()
+                .mapNotNull { fastAdapter.getItem(it) }
+                .filter { (it as? IExpandable<*>)?.isExpanded == true }
+                .map { it.identifier }
+                .toList()
         //remember the collapsed states
         savedInstanceState.putLongArray(BUNDLE_EXPANDED + prefix, expandedItems.toLongArray())
     }
