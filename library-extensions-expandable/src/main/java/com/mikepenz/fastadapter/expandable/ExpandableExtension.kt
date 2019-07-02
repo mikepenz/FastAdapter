@@ -118,27 +118,9 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
      */
     val expandedItems: IntArray
         get() {
-            val expandedItems: IntArray
-            val expandedItemsList = ArrayList<Int>()
-            var item: Item?
-            run {
-                var i = 0
-                val size = fastAdapter.itemCount
-                while (i < size) {
-                    item = fastAdapter.getItem(i)
-                    if ((item as? IExpandable<*>?)?.isExpanded == true) {
-                        expandedItemsList.add(i)
-                    }
-                    i++
-                }
-            }
-
-            val expandedItemsListLength = expandedItemsList.size
-            expandedItems = IntArray(expandedItemsListLength)
-            for (i in 0 until expandedItemsListLength) {
-                expandedItems[i] = expandedItemsList[i]
-            }
-            return expandedItems
+            return (0 until fastAdapter.itemCount).filter {
+                (fastAdapter.getItem(it) as? IExpandable<*>)?.isExpanded == true
+            }.toIntArray()
         }
 
     override fun withSavedInstanceState(savedInstanceState: Bundle?, prefix: String) {
