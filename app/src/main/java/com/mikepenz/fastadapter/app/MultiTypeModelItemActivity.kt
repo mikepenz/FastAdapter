@@ -17,9 +17,7 @@ import com.mikepenz.iconics.Iconics
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sample.*
-import java.util.ArrayList
-import java.util.Arrays
-import kotlin.Comparator
+import java.util.*
 
 class MultiTypeModelItemActivity : AppCompatActivity() {
     //save our FastAdapter
