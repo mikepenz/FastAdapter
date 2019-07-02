@@ -407,20 +407,12 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
      * @return the count of expandable items before a given position
      */
     fun getExpandedItemsCount(from: Int, position: Int): Int {
-        var totalAddedItems = 0
-        //first we find out how many items were added in total
-        //also counting subItems
-        var tmp: Item?
-        for (i in from until position) {
-            tmp = fastAdapter.getItem(i)
-            if (tmp is IExpandable<*>) {
-                val tmpExpandable = tmp
-                if (tmpExpandable.isExpanded) {
-                    totalAddedItems += tmpExpandable.subItems.size
-                }
-            }
-        }
-        return totalAddedItems
+        return (from until position)
+                .asSequence()
+                .mapNotNull { fastAdapter.getItem(it) as? IExpandable<*> }
+                .filter { it.isExpanded }
+                .map { it.subItems.size }
+                .sum()
     }
 
     companion object {
