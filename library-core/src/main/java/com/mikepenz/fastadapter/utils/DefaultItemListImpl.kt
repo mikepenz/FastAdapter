@@ -34,9 +34,8 @@ open class DefaultItemListImpl<Item : GenericItem> @JvmOverloads constructor(
     override fun removeRange(position: Int, itemCount: Int, preItemCount: Int) {
         //global position to relative
         val length = mItems.size
-        //make sure we do not delete to many items
+        //make sure we do not delete too many items
         val saveItemCount = min(itemCount, length - position + preItemCount)
-
         for (i in 0 until saveItemCount) {
             mItems.removeAt(position - preItemCount)
         }
