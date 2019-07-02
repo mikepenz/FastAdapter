@@ -257,7 +257,6 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
         (item as? IExpandable<*>?)?.let { expandable ->
             expandable.parent?.let { parent ->
                 //if it is a SubItem and has a parent, only return the expanded items on the same level
-                val expandedItems: IntArray
                 val expandedItemsList = ArrayList<Int>()
                 parent.subItems.forEach { subItem ->
                     if ((subItem as? IExpandable<*>)?.isExpanded == true && subItem !== item) {
@@ -266,12 +265,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
                         }
                     }
                 }
-                val expandedItemsListLength = expandedItemsList.size
-                expandedItems = IntArray(expandedItemsListLength)
-                for (i in 0 until expandedItemsListLength) {
-                    expandedItems[i] = expandedItemsList[i]
-                }
-                return expandedItems
+                return expandedItemsList.toIntArray()
             }
         }
         return getExpandedItemsRootLevel(position)
@@ -320,8 +314,8 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
      * @param position the global position
      */
     fun toggleExpandable(position: Int) {
-        val item = fastAdapter.getItem(position)
-        if ((item as? IExpandable<*>)?.isExpanded == true) {
+        val item = fastAdapter.getItem(position) as? IExpandable<*> ?: return
+        if (item.isExpanded) {
             collapse(position)
         } else {
             expand(position)
@@ -382,27 +376,25 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
      */
     @JvmOverloads
     fun expand(position: Int, notifyItemChanged: Boolean = false) {
-        val item = fastAdapter.getItem(position)
-        (item as? IExpandable<*>?)?.let { expandable ->
-            //if this item is not already expanded and has sub items we go on
-            if (!expandable.isExpanded && expandable.subItems.isNotEmpty()) {
-                val adapter = fastAdapter.getAdapter(position)
-                if (adapter != null && adapter is IItemAdapter<*, *>) {
-                    (expandable.subItems as? List<Item>?)?.let { subItems ->
-                        (adapter as IItemAdapter<*, Item>).addInternal(
-                                position + 1,
-                                subItems
-                        )
-                    }
+        val expandable = fastAdapter.getItem(position) as? IExpandable<*> ?: return
+        //if this item is not already expanded and has sub items we go on
+        if (!expandable.isExpanded && expandable.subItems.isNotEmpty()) {
+            val adapter = fastAdapter.getAdapter(position)
+            if (adapter != null && adapter is IItemAdapter<*, *>) {
+                (expandable.subItems as? List<Item>?)?.let { subItems ->
+                    (adapter as IItemAdapter<*, Item>).addInternal(
+                            position + 1,
+                            subItems
+                    )
                 }
+            }
 
-                //remember that this item is now opened (not collapsed)
-                expandable.isExpanded = true
+            //remember that this item is now opened (not collapsed)
+            expandable.isExpanded = true
 
-                //we need to notify to get the correct drawable if there is one showing the current state
-                if (notifyItemChanged) {
-                    fastAdapter.notifyItemChanged(position)
-                }
+            //we need to notify to get the correct drawable if there is one showing the current state
+            if (notifyItemChanged) {
+                fastAdapter.notifyItemChanged(position)
             }
         }
     }
