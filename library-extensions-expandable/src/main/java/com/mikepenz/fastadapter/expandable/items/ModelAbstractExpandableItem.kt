@@ -4,13 +4,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IExpandable
 import com.mikepenz.fastadapter.IParentItem
 import com.mikepenz.fastadapter.ISubItem
+import com.mikepenz.fastadapter.MutableSubItemList
 import com.mikepenz.fastadapter.items.ModelAbstractItem
 
 abstract class ModelAbstractExpandableItem<Model, Parent, SubItem, VH : RecyclerView.ViewHolder>(model: Model) : ModelAbstractItem<Model, VH>(model),
         IExpandable<VH> where Parent : IExpandable<VH>, SubItem : IExpandable<VH> {
     override var isExpanded: Boolean = false
     override var parent: IParentItem<*>? = null
-    private var _subItems: MutableList<ISubItem<*>> = mutableListOf()
+    private var _subItems: MutableList<ISubItem<*>> = MutableSubItemList(this)
     override var subItems: MutableList<ISubItem<*>>
         set(value) {
             _subItems = value

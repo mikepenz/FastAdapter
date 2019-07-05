@@ -1,10 +1,7 @@
 package com.mikepenz.fastadapter.expandable.items
 
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.IExpandable
-import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.IParentItem
-import com.mikepenz.fastadapter.ISubItem
+import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.items.AbstractItem
 
 abstract class AbstractExpandableItem<VH : RecyclerView.ViewHolder> :
@@ -14,7 +11,7 @@ abstract class AbstractExpandableItem<VH : RecyclerView.ViewHolder> :
     override var isExpanded: Boolean = false
     override var parent: IParentItem<*>? = null
 
-    override var subItems: MutableList<ISubItem<*>> = mutableListOf()
+    override var subItems: MutableList<ISubItem<*>> = MutableSubItemList(this)
         set(value) {
             field = value
             for (item in value) {
