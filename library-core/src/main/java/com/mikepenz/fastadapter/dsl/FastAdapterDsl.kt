@@ -7,6 +7,8 @@ import com.mikepenz.fastadapter.IItemList
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.adapters.ModelAdapter
 
+// Notify user that the DSL is currently experimental
+@Experimental(level = Experimental.Level.WARNING)
 @DslMarker
 annotation class FastAdapterDsl
 
