@@ -8,7 +8,6 @@ import androidx.collection.ArraySet
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.utils.AdapterPredicate
-import java.util.*
 
 /**
  * Extension method to retrieve or create the ExpandableExtension from the current FastAdapter
@@ -254,19 +253,12 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
      */
     fun getExpandedItemsSameLevel(position: Int): IntArray {
         val item = fastAdapter.getItem(position)
-        (item as? IExpandable<*>?)?.let { expandable ->
-            expandable.parent?.let { parent ->
-                //if it is a SubItem and has a parent, only return the expanded items on the same level
-                val expandedItemsList = ArrayList<Int>()
-                parent.subItems.forEach { subItem ->
-                    if ((subItem as? IExpandable<*>)?.isExpanded == true && subItem !== item) {
-                        (subItem as? Item?)?.let { adapterItem ->
-                            expandedItemsList.add(fastAdapter.getPosition(adapterItem))
-                        }
-                    }
-                }
-                return expandedItemsList.toIntArray()
-            }
+        (item as? IExpandable<*>?)?.parent?.let { parent ->
+            //if it is a SubItem and has a parent, only return the expanded items on the same level
+            return parent.subItems.filter { (it as? IExpandable<*>)?.isExpanded == true && it !== item }
+                    .mapNotNull { it as? Item? }
+                    .map { fastAdapter.getPosition(it) }
+                    .toIntArray()
         }
         return getExpandedItemsRootLevel(position)
     }
@@ -276,36 +268,23 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
      * @return a set with the global positions of all expanded items on the root level
      */
     fun getExpandedItemsRootLevel(position: Int): IntArray {
-        val expandedItems: IntArray
         val expandedItemsList = ArraySet<Int>()
         val item = fastAdapter.getItem(position)
+
         var i = 0
         val size = fastAdapter.itemCount
         while (i < size) {
-            val currItem = fastAdapter.getItem(i)
-            (currItem as? IExpandable<*>?)?.let { expandable ->
-                expandable.parent?.let { parent ->
-                    if (parent is IExpandable<*> && parent.isExpanded) {
-                        i += parent.subItems.size
-                        if (parent !== item) {
-                            (parent as? Item?)?.let { adapterItem ->
-                                expandedItemsList.add(fastAdapter.getPosition(adapterItem))
-                            }
-                        }
+            (fastAdapter.getItem(i) as? IExpandable<*>?)?.parent?.let { parent ->
+                if (parent is IExpandable<*> && parent.isExpanded) {
+                    i += parent.subItems.size
+                    if (parent !== item && parent as? Item != null) {
+                        expandedItemsList.add(fastAdapter.getPosition(parent))
                     }
                 }
             }
             i++
         }
-
-        val expandedItemsListLength = expandedItemsList.size
-        expandedItems = IntArray(expandedItemsListLength)
-        for (i in 0 until expandedItemsListLength) {
-            expandedItemsList.valueAt(i)?.let { value ->
-                expandedItems[i] = value
-            }
-        }
-        return expandedItems
+        return expandedItemsList.toIntArray()
     }
 
     /**
