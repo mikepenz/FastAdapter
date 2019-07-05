@@ -23,17 +23,8 @@ open class DefaultItemListImpl<Item : GenericItem> @JvmOverloads constructor(
         return mItems[position]
     }
 
-    override fun getAdapterPosition(identifier: Long): Int {
-        var i = 0
-        val size = mItems.size
-        while (i < size) {
-            if (mItems[i].identifier == identifier) {
-                return i
-            }
-            i++
-        }
-        return -1
-    }
+    override fun getAdapterPosition(identifier: Long): Int =
+            mItems.indexOfFirst { it.identifier == identifier }
 
     override fun remove(position: Int, preItemCount: Int) {
         mItems.removeAt(position - preItemCount)
@@ -43,9 +34,8 @@ open class DefaultItemListImpl<Item : GenericItem> @JvmOverloads constructor(
     override fun removeRange(position: Int, itemCount: Int, preItemCount: Int) {
         //global position to relative
         val length = mItems.size
-        //make sure we do not delete to many items
+        //make sure we do not delete too many items
         val saveItemCount = min(itemCount, length - position + preItemCount)
-
         for (i in 0 until saveItemCount) {
             mItems.removeAt(position - preItemCount)
         }

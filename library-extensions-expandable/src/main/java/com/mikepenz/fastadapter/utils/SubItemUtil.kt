@@ -92,13 +92,13 @@ object SubItemUtil {
 
         for (i in 0 until itemCount) {
             item = items[i]
-            if (item is IExpandable<*> && item.subItems != null) {
+            if (item is IExpandable<*>) {
                 subItems = item.subItems
                 if (predicate == null) {
                     if (countHeaders) {
                         res.add(item)
                     }
-                    if (subItems != null && subItems.isNotEmpty()) {
+                    if (subItems.isNotEmpty()) {
                         res.addAll(subItems)
                     }
                     res.addAll(getAllItems(subItems, countHeaders, true, predicate))
@@ -116,9 +116,7 @@ object SubItemUtil {
                     }
                 }
             } else if (!subItemsOnly && getParent<IExpandable<*>>(item) == null) {
-                if (predicate == null) {
-                    res.add(item)
-                } else if (predicate.apply(item)) {
+                if (predicate?.apply(item) != false) {
                     res.add(item)
                 }
             }
@@ -147,12 +145,12 @@ object SubItemUtil {
     fun <T> countSelectedSubItems(selections: Set<IItem<*>>, header: T): Int where T : IItem<*>, T : IExpandable<*> {
         var count = 0
         val subItems = header.subItems
-        val items = if (header.subItems != null) subItems.size else 0
+        val items = subItems.size
         for (i in 0 until items) {
             if (selections.contains(subItems[i])) {
                 count++
             }
-            if (subItems[i] is IExpandable<*> && (subItems[i] as IExpandable<*>).subItems != null) {
+            if (subItems[i] is IExpandable<*>) {
                 count += countSelectedSubItems(selections, subItems[i] as T)
             }
         }
@@ -256,30 +254,27 @@ object SubItemUtil {
             if (parent != null) {
                 parentPos = fastAdapter.getPosition(parent)
                 val subItems = parent.subItems
+                subItems.remove(item)
+                // check if parent is expanded and notify the adapter about the removed item, if necessary (only if parent is visible)
+                if (parentPos != -1 && parent.isExpanded) {
+                    expandableExtension.notifyAdapterSubItemsChanged(parentPos, subItems.size + 1)
+                }
 
-                subItems.let { subItems ->
-                    subItems.remove(item)
-                    // check if parent is expanded and notify the adapter about the removed item, if necessary (only if parent is visible)
-                    if (parentPos != -1 && parent.isExpanded) {
-                        expandableExtension.notifyAdapterSubItemsChanged(parentPos, subItems.size + 1)
+                // if desired, notify the parent about its changed items (only if parent is visible!)
+                if (parentPos != -1 && notifyParent) {
+                    expanded = parent.isExpanded
+                    fastAdapter.notifyAdapterItemChanged(parentPos)
+                    // expand the item again if it was expanded before calling notifyAdapterItemChanged
+                    if (expanded) {
+                        expandableExtension.expand(parentPos)
                     }
+                }
 
-                    // if desired, notify the parent about its changed items (only if parent is visible!)
-                    if (parentPos != -1 && notifyParent) {
-                        expanded = parent.isExpanded
-                        fastAdapter.notifyAdapterItemChanged(parentPos)
-                        // expand the item again if it was expanded before calling notifyAdapterItemChanged
-                        if (expanded) {
-                            expandableExtension.expand(parentPos)
-                        }
-                    }
+                deleted.add(item)
 
-                    deleted.add(item)
-
-                    if (deleteEmptyHeaders && subItems.size == 0) {
-                        it.add(parent)
-                        it.previous()
-                    }
+                if (deleteEmptyHeaders && subItems.size == 0) {
+                    it.add(parent)
+                    it.previous()
                 }
             } else if (pos != -1) {
                 // if we did not find a parent, we remove the item from the adapter

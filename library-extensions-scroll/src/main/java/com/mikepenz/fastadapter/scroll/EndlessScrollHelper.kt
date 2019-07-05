@@ -296,12 +296,7 @@ open class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
     private open class DeliverToIItemAdapter<Model, Item : GenericItem> internal constructor(private val mItemAdapter: IItemAdapter<*, Item>, private val mItemFactory: (element: Model) -> Item?) : OnNewItemsListener<Model> {
 
         override fun onNewItems(newItems: List<Model>, page: Int) {
-            val size = newItems.size
-            val items = ArrayList<Item>(size)
-            for (i in 0 until size) {
-                val item = mItemFactory.invoke(newItems[i]) ?: continue
-                items.add(item)
-            }
+            val items = newItems.mapNotNull(mItemFactory)
             mItemAdapter.addInternal(items)
         }
     }

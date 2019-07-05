@@ -4,9 +4,7 @@ import android.widget.Filter
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.listeners.ItemFilterListener
 import com.mikepenz.fastadapter.select.SelectExtension
-import java.util.*
 import java.util.Arrays.asList
-import kotlin.collections.HashSet
 import kotlin.math.min
 
 /**
@@ -67,15 +65,17 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
 
         this.constraint = constraint
 
-        if (originalItems == null) {
-            originalItems = ArrayList(mItemAdapter.adapterItems)
+        // Gets original items or adapter items (set to original items)
+        // Result is always nonnull
+        val items: List<Item> = originalItems ?: ArrayList(mItemAdapter.adapterItems).also {
+            originalItems = it
         }
 
         // We implement here the filter logic
         if (constraint.isNullOrEmpty()) {
             // No filter implemented we return all the list
-            results.values = originalItems
-            results.count = originalItems?.size ?: 0
+            results.values = items
+            results.count = items.size
             //our filter was cleared we can now forget the old OriginalItems
             originalItems = null
 
@@ -83,7 +83,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
         } else {
             // We perform filtering operation
             val filteredItems = filterPredicate?.let { filterPredicate ->
-                originalItems?.mapNotNull { item -> item.takeIf { filterPredicate(item, constraint) } }
+                items.filter { filterPredicate(it, constraint) }
             } ?: mItemAdapter.adapterItems
 
             results.values = filteredItems

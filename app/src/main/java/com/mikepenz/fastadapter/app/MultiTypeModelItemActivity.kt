@@ -17,9 +17,7 @@ import com.mikepenz.iconics.Iconics
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sample.*
-import java.util.ArrayList
-import java.util.Arrays
-import kotlin.Comparator
+import java.util.*
 
 class MultiTypeModelItemActivity : AppCompatActivity() {
     //save our FastAdapter
@@ -59,8 +57,7 @@ class MultiTypeModelItemActivity : AppCompatActivity() {
         rv.adapter = fastAdapter
 
         //order fonts by their name
-        val mFonts = ArrayList(Iconics.getRegisteredFonts(this))
-        mFonts.sortWith(Comparator { object1, object2 -> object1.fontName.compareTo(object2.fontName) })
+        val mFonts = Iconics.getRegisteredFonts(this).sortedBy { it.fontName }
 
         //add all icons of all registered Fonts to the list
         val models = ArrayList<IconModel>()

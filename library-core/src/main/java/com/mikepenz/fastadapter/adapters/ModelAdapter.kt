@@ -106,16 +106,8 @@ open class ModelAdapter<Model, Item : GenericItem>(
      * @param models the List of Model which will be used to create the List of Item
      * @return the generated List of Item
      */
-    open fun intercept(models: List<Model>): List<Item> {
-        val items = ArrayList<Item>(models.size)
-        models.forEach { model ->
-            val item = intercept(model)
-            if (item != null) {
-                items.add(item)
-            }
-        }
-        return items
-    }
+    open fun intercept(models: List<Model>): List<Item> =
+        models.mapNotNull { intercept(it) }
 
     /**
      * filters the items with the constraint using the provided Predicate
@@ -237,15 +229,15 @@ open class ModelAdapter<Model, Item : GenericItem>(
     /**
      * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
      *
-     * @param list         the new items to set
+     * @param items         the new items to set
      * @param retainFilter set to true if you want to keep the filter applied
      * @return this
      */
-    override fun setNewList(list: List<Model>, retainFilter: Boolean): ModelAdapter<Model, Item> {
-        val items = intercept(list)
+    override fun setNewList(items: List<Model>, retainFilter: Boolean): ModelAdapter<Model, Item> {
+        val newItems = intercept(items)
 
         if (isUseIdDistributor) {
-            idDistributor.checkIds(items)
+            idDistributor.checkIds(newItems)
         }
 
         //reset the filter
@@ -255,7 +247,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
             itemFilter.resetFilter()
         }
 
-        mapPossibleTypes(items)
+        mapPossibleTypes(newItems)
 
         val publishResults = filter != null && retainFilter
         if (retainFilter) {
@@ -263,7 +255,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
                 itemFilter.filterItems(filterText)
             }
         }
-        itemList.setNewList(items, !publishResults)
+        itemList.setNewList(newItems, !publishResults)
 
         return this
     }
@@ -324,7 +316,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
      * add a list of items at the given position within the existing items
      *
      * @param position the global position
-     * @param list     the items to add
+     * @param items     the items to add
      */
     override fun add(position: Int, items: List<Model>): ModelAdapter<Model, Item> {
         val interceptedItems = intercept(items)
@@ -346,7 +338,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
      * sets an item at the given position, overwriting the previous item
      *
      * @param position the global position
-     * @param element  the item to set
+     * @param item  the item to set
      */
     override fun set(position: Int, item: Model): ModelAdapter<Model, Item> {
         val interceptedItem = intercept(item) ?: return this
