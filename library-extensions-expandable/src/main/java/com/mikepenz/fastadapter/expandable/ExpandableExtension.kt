@@ -253,14 +253,15 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
      * @param position the global position of the current item
      * @return a set with the global positions of all expanded items on the same level as the current item
      */
-    fun getExpandedItemsSameLevel(position: Int): IntArray {
+    fun getExpandedItemsSameLevel(position: Int): List<Int> {
         val item = fastAdapter.getItem(position)
         (item as? IExpandable<*>?)?.parent?.let { parent ->
             //if it is a SubItem and has a parent, only return the expanded items on the same level
-            return parent.subItems.filter { (it as? IExpandable<*>)?.isExpanded == true && it !== item }
+            return parent.subItems.asSequence()
+                    .filter { (it as? IExpandable<*>)?.isExpanded == true && it !== item }
                     .mapNotNull { it as? Item? }
                     .map { fastAdapter.getPosition(it) }
-                    .toIntArray()
+                    .toList()
         }
         return getExpandedItemsRootLevel(position)
     }
@@ -269,8 +270,8 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
      * @param position the global position of the current item
      * @return a set with the global positions of all expanded items on the root level
      */
-    fun getExpandedItemsRootLevel(position: Int): IntArray {
-        val expandedItemsList = ArraySet<Int>()
+    fun getExpandedItemsRootLevel(position: Int): List<Int> {
+        val expandedItemsList = mutableListOf<Int>()
         val item = fastAdapter.getItem(position)
 
         var i = 0
@@ -286,7 +287,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
             }
             i++
         }
-        return expandedItemsList.toIntArray()
+        return expandedItemsList
     }
 
     /**
