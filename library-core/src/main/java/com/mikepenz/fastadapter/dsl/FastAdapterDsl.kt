@@ -1,22 +1,25 @@
 package com.mikepenz.fastadapter.dsl
 
-import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IItemList
+import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.adapters.ModelAdapter
 
 // Notify user that the DSL is currently experimental
 @Experimental(level = Experimental.Level.WARNING)
+annotation class ExperimentalFADSL
+
 @DslMarker
 annotation class FastAdapterDsl
 
-inline fun genericfastadapter(block: (FastAdapter<GenericItem>).() -> Unit): FastAdapter<GenericItem> {
-    return FastAdapter<GenericItem>().apply(block)
+@FastAdapterDsl
+@ExperimentalFADSL
+inline fun genericFastAdapter(block: (GenericFastAdapter).() -> Unit): GenericFastAdapter {
+    return GenericFastAdapter().apply(block)
 }
 
-inline fun <Item : GenericItem> fastadapter(block: (FastAdapter<Item>).() -> Unit): FastAdapter<Item> {
+@FastAdapterDsl
+@ExperimentalFADSL
+inline operator fun <Item : GenericItem> FastAdapter.Companion.invoke(block: (FastAdapter<Item>).() -> Unit): FastAdapter<Item> {
     return FastAdapter<Item>().apply(block)
 }
 

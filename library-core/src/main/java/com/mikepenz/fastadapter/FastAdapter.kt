@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.collection.ArrayMap
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
+import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.listeners.*
 import com.mikepenz.fastadapter.utils.AdapterPredicate
@@ -36,6 +37,7 @@ typealias GenericFastAdapter = FastAdapter<GenericItem>
  *
  * @param <Item> Defines the type of items this `FastAdapter` manages (in case of multiple different types, use `IItem`)</Item>
  */
+@FastAdapterDsl
 open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     // we remember all adapters

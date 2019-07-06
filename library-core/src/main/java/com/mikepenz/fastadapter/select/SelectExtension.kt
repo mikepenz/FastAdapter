@@ -23,7 +23,7 @@ fun <Item : GenericItem> FastAdapter<Item>.getSelectExtension(): SelectExtension
  * Extension method to retrieve or create the SelectExtension from the current FastAdapter.
  * This will return a non null variant and fail if something terrible happens.
  */
-fun <Item : GenericItem> FastAdapter<Item>.selectExtension(block: SelectExtension<Item>.() -> Unit) {
+inline fun <Item : GenericItem> FastAdapter<Item>.selectExtension(block: SelectExtension<Item>.() -> Unit) {
     getSelectExtension().apply(block)
 }
 

@@ -6,6 +6,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.collection.ArraySet
 import com.mikepenz.fastadapter.*
+import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.utils.AdapterPredicate
 
@@ -22,13 +23,14 @@ fun <Item : GenericItem> FastAdapter<Item>.getExpandableExtension(): ExpandableE
  * Extension method to retrieve or create the ExpandableExtension from the current FastAdapter
  * This will return a non null variant and fail
  */
-fun <Item : GenericItem> FastAdapter<Item>.expandableExtension(block: ExpandableExtension<Item>.() -> Unit) {
+inline fun <Item : GenericItem> FastAdapter<Item>.expandableExtension(block: ExpandableExtension<Item>.() -> Unit) {
     getExpandableExtension().apply(block)
 }
 
 /**
  * Created by mikepenz on 04/06/2017.
  */
+@FastAdapterDsl
 class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<Item>) :
         IAdapterExtension<Item> {
 
