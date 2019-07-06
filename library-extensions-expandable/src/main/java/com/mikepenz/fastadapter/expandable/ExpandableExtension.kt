@@ -191,7 +191,6 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
                     }
                 }
             }
-
         }
         return false
     }
