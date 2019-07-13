@@ -31,7 +31,7 @@ inline fun <Item : GenericItem> FastAdapter<Item>.expandableExtension(block: Exp
 /**
  * internal helper function to check if an item is expanded.
  */
-val IItem<out RecyclerView.ViewHolder>?.isExpanded: Boolean
+internal val IItem<out RecyclerView.ViewHolder>?.isExpanded: Boolean
     get() = (this as? IExpandable<*>)?.isExpanded == true
 
 /**
