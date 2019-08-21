@@ -34,7 +34,7 @@ object DragDropUtil {
      * This functions handles the default drag and drop move event
      * It takes care to move all items one by one within the passed in positions
      *
-     * @param fastAdapter the adapter
+     * @param itemAdapter the adapter
      * @param oldPosition the start position of the move
      * @param newPosition the end position of the move
      */
