@@ -57,7 +57,7 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
     override//this might not be true for your application
     var isSelectable: Boolean
         get() = subItems == null
-        set(value: Boolean) {
+        set(value) {
             super.isSelectable = value
         }
 

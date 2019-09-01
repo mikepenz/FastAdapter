@@ -9,12 +9,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.core.view.LayoutInflaterCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.michaelflisar.dragselectrecyclerview.DragSelectTouchListener
-import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.ISelectionListener
-import com.mikepenz.fastadapter.ISubItem
+import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
 import com.mikepenz.fastadapter.app.items.HeaderSelectionItem
@@ -40,7 +36,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
     private lateinit var mSelectExtension: SelectExtension<IItem<*>>
     private lateinit var mRangeSelectorHelper: RangeSelectorHelper<*>
     private lateinit var mDragSelectTouchListener: DragSelectTouchListener
-    private var mActionModeHelper: ActionModeHelper<IItem<out RecyclerView.ViewHolder>>? = null
+    private var mActionModeHelper: ActionModeHelper<GenericItem>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
@@ -64,7 +60,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
         mSelectExtension.multiSelect = true
         mSelectExtension.selectOnLongClick = true
 
-        fastItemAdapter.onPreClickListener = { _: View?, _: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, _: Int ->
+        fastItemAdapter.onPreClickListener = { _: View?, _: IAdapter<GenericItem>, item: GenericItem, _: Int ->
             //we handle the default onClick behavior for the actionMode. This will return null if it didn't do anything and you can handle a normal onClick
             val res = mActionModeHelper?.onClick(this@ExpandableMultiselectDeleteSampleActivity, item)
             // in this example, we want to consume a click, if the ActionModeHelper will remove the ActionMode
@@ -73,7 +69,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
         }
 
 
-        fastItemAdapter.onClickListener = { _: View?, _: IAdapter<IItem<out RecyclerView.ViewHolder>>, item: IItem<out RecyclerView.ViewHolder>, _: Int ->
+        fastItemAdapter.onClickListener = { _: View?, _: IAdapter<GenericItem>, item: GenericItem, _: Int ->
             // check if the actionMode consumes the click. This returns true, if it does, false if not
             if (mActionModeHelper?.isActive == false) {
                 Toast.makeText(this@ExpandableMultiselectDeleteSampleActivity, (item as SimpleSubItem).name.toString() + " clicked!", Toast.LENGTH_SHORT).show()
@@ -82,7 +78,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
             false
         }
 
-        fastItemAdapter.onPreLongClickListener = { _: View, _: IAdapter<IItem<out RecyclerView.ViewHolder>>, _: IItem<out RecyclerView.ViewHolder>, position: Int ->
+        fastItemAdapter.onPreLongClickListener = { _: View, _: IAdapter<GenericItem>, _: GenericItem, position: Int ->
             val actionModeWasActive = mActionModeHelper?.isActive ?: false
             val actionMode = mActionModeHelper?.onLongClick(this@ExpandableMultiselectDeleteSampleActivity, position)
             mRangeSelectorHelper.onLongClick(position)
@@ -126,7 +122,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
         rv.adapter = fastItemAdapter
 
         //fill with some sample data
-        val items = ArrayList<IItem<out RecyclerView.ViewHolder>>()
+        val items = ArrayList<GenericItem>()
         for (i in 0..19) {
             if (i % 2 == 0) {
                 val expandableItem = HeaderSelectionItem()

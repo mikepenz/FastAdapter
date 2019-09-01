@@ -1,11 +1,9 @@
 package com.mikepenz.fastadapter
 
-import androidx.recyclerview.widget.RecyclerView
-
 /**
  * Created by mikepenz on 30.12.15.
  */
-interface IItemAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>> : IAdapter<Item> {
+interface IItemAdapter<Model, Item : GenericItem> : IAdapter<Item> {
 
     /**
      * The [IIdDistributor] used to provide identifiers to added items (if no identifier was specified prior)

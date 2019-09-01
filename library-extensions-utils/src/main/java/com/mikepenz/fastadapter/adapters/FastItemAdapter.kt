@@ -1,21 +1,20 @@
 package com.mikepenz.fastadapter.adapters
 
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
 
 /**
  * Kotlin type alias to simplify usage for an all accepting FastItemAdapter
  */
-typealias GenericFastItemAdapter = FastItemAdapter<IItem<out RecyclerView.ViewHolder>>
+typealias GenericFastItemAdapter = FastItemAdapter<GenericItem>
 
 /**
  * Created by mikepenz on 18.01.16.
  */
-open class FastItemAdapter<Item : IItem<out RecyclerView.ViewHolder>>(
+open class FastItemAdapter<Item : GenericItem>(
         /**
          * returns the internal created [ItemAdapter]
          */

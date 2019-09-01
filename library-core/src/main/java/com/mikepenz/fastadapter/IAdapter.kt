@@ -1,16 +1,14 @@
 package com.mikepenz.fastadapter
 
-import androidx.recyclerview.widget.RecyclerView
-
 /**
  * Kotlin type alias to simplify usage for an all accepting IAdapter
  */
-typealias GenericAdapter = IAdapter<IItem<out RecyclerView.ViewHolder>>
+typealias GenericAdapter = IAdapter<GenericItem>
 
 /**
  * Created by mikepenz on 27.12.15.
  */
-interface IAdapter<Item : IItem<out RecyclerView.ViewHolder>> {
+interface IAdapter<Item : GenericItem> {
     /**
      * defines the FastAdapter which manages all the core logic
      *

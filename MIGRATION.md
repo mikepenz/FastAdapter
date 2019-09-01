@@ -5,7 +5,7 @@
 v4 is a huge release changing most of the codebase to Kotlin. This comes with many refactors, and as a result of that with many breaking API changes. 
 We put a lot of focus on type safety with this release, as such this release is a lot more strict and tries to prevent as many potential bad type mixups as possible.
 
-* As a result of the Kotlin migration the static methods can now be accessed via `FastAdapter.Companion`. E.g.: `FastAdapter.Companion.with(...)`
+* For compatibility, most existing static fields and functions remain static in Java. For newer functions, accessing from Java may require using the `Companion` class. For instance, `FastAdapter.example()` becomes `FastAdapter.Companion.example()`
 * The `IItem` interface now requires a type specification. E.g. `IItem<RecyclerView.ViewHolder>`
 * The `SelectExtension` is no longer default enabled and wrapped in the `FastAdapter` use its API standalone. E.g.: `selectExtension.setSelectable(true)`, ...
 * Extensions can be retrieved via `getOrCreateExtension`. `SelectExtension<?> selectExtension = (SelectExtension<?>) mFastAdapter.getOrCreateExtension(SelectExtension.class)`

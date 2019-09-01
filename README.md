@@ -9,25 +9,25 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 ## A quick overview:
 - Core module 100% in Kotlin
 - Click / Long-Click listeners
-- Selection / Multi-Selection ([MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java), [CheckBoxSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/CheckBoxSampleActivity.java), [RadioButtonSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/RadioButtonSampleActivity.java))
-- Expandable items ([ExpandableSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/ExpandableSampleActivity.java), [IconGridSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/IconGridActivity.java) ,[AdvancedSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/AdvancedSampleActivity.java))
+- Selection / Multi-Selection ([MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.kt), [CheckBoxSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/CheckBoxSampleActivity.kt), [RadioButtonSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/RadioButtonSampleActivity.kt))
+- Expandable items ([ExpandableSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/ExpandableSampleActivity.kt), [IconGridSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/IconGridActivity.kt) ,[AdvancedSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/AdvancedSampleActivity.kt))
 - Write less code, get better results
 - Highly optimized code
-- Simple Drag & Drop ([SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java))
-- Headers ([StickyHeaderSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/StickyHeaderSampleActivity.java), [AdvancedSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/AdvancedSampleActivity.java))
+- Simple Drag & Drop ([SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.kt))
+- Headers ([StickyHeaderSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/StickyHeaderSampleActivity.kt), [AdvancedSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/AdvancedSampleActivity.kt))
 - Footers
-- Filter ([SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java))
+- Filter ([SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.kt))
 - Includes suggestions from the Android Team
 - Easily extensible
-- Endless Scroll ([EndlessScrollSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/EndlessScrollListActivity.java))
-- "Leave-Behind"-Pattern ([SwipeListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SwipeListActivity.java))
-- Split item view and model ([ModelItem](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/ModelItemActivity.java), [MultiTypeModelItem](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiTypeModelItemActivity.java))
-- Chain other Adapters ([SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java), [StickyHeaderSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/StickyHeaderSampleActivity.java))
+- Endless Scroll ([EndlessScrollSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/EndlessScrollListActivity.kt))
+- "Leave-Behind"-Pattern ([SwipeListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SwipeListActivity.kt))
+- Split item view and model ([ModelItem](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/ModelItemActivity.kt), [MultiTypeModelItem](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiTypeModelItemActivity.kt))
+- Chain other Adapters ([SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.kt), [StickyHeaderSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/StickyHeaderSampleActivity.kt))
 - Comes with useful Helpers
- - ActionModeHelper ([MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java))
- - UndoHelper ([MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.java))
+ - ActionModeHelper ([MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.kt))
+ - UndoHelper ([MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.kt))
  - More to come...
-- FastScroller (external lib) ([SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.java))
+- FastScroller (external lib) ([SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.kt))
 
 # Preview
 ## Demo
@@ -40,7 +40,7 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 # Include in your project
 ## Latest releases
 
-- Kotlin | [v4.0.0](https://github.com/mikepenz/FastAdapter/tree/v4.0.0)
+- Kotlin | [v4.1.0-b02](https://github.com/mikepenz/FastAdapter/tree/v4.1.0-b02)
 - Java && AndroidX | [v3.3.1](https://github.com/mikepenz/FastAdapter/tree/v3.3.1)
 - Java && AppCompat | [v3.2.9](https://github.com/mikepenz/FastAdapter/tree/v3.2.9)
 
@@ -48,31 +48,31 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
-implementation 'com.mikepenz:fastadapter:${latestFastAdapterRelease}'
+implementation "com.mikepenz:fastadapter:${latestFastAdapterRelease}"
 implementation "androidx.appcompat:appcompat:${androidX}"
 implementation "androidx.recyclerview:recyclerview:${androidX}"
 ```
 
 Expandable support is included and can be added via this
 ```gradle
-implementation 'com.mikepenz:fastadapter-extensions-expandable:${latestFastAdapterRelease}'
+implementation "com.mikepenz:fastadapter-extensions-expandable:${latestFastAdapterRelease}"
 //The tiny Materialize library used for its useful helper classes
-implementation 'com.mikepenz:materialize:${latestVersion}' // at least 1.2.0
+implementation "com.mikepenz:materialize:${latestVersion}" // at least 1.2.0
 ```
 
 Many helper classes are included in the following dependency.
 ```gradle
-implementation 'com.mikepenz:fastadapter-extensions-diff:${latestFastAdapterRelease}' // diff util helpers
-implementation 'com.mikepenz:fastadapter-extensions-drag:${latestFastAdapterRelease}' // drag support
-implementation 'com.mikepenz:fastadapter-extensions-scroll${latestFastAdapterRelease}' // scroll helpers
-implementation 'com.mikepenz:fastadapter-extensions-swipe:${latestFastAdapterRelease}' // swipe support
-implementation 'com.mikepenz:fastadapter-extensions-ui:${latestFastAdapterRelease}' // pre-defined ui components
-implementation 'com.mikepenz:fastadapter-extensions-utils:${latestFastAdapterRelease}' // needs the `expandable`, `drag` and `scroll` extension.
+implementation "com.mikepenz:fastadapter-extensions-diff:${latestFastAdapterRelease}" // diff util helpers
+implementation "com.mikepenz:fastadapter-extensions-drag:${latestFastAdapterRelease}" // drag support
+implementation "com.mikepenz:fastadapter-extensions-scroll${latestFastAdapterRelease}" // scroll helpers
+implementation "com.mikepenz:fastadapter-extensions-swipe:${latestFastAdapterRelease}" // swipe support
+implementation "com.mikepenz:fastadapter-extensions-ui:${latestFastAdapterRelease}" // pre-defined ui components
+implementation "com.mikepenz:fastadapter-extensions-utils:${latestFastAdapterRelease}" // needs the `expandable`, `drag` and `scroll` extension.
 
 // required for the ui components and the utils
 implementation "com.google.android.material:material:${androidX}"
 //The tiny Materialize library used for its useful helper classes
-implementation 'com.mikepenz:materialize:${latestVersion}' // at least 1.2.0
+implementation "com.mikepenz:materialize:${latestVersion}" // at least 1.2.0
 ```
 
 ## v4.x.y
@@ -287,7 +287,7 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
      */
 }
 ```
-// See the `SimpleSubExpandableItem.java` of the sample application for more details.
+// See the `SimpleSubExpandableItem.kt` of the sample application for more details.
 
 
 ## Articles
@@ -324,8 +324,9 @@ This free, open source software was also made possible by a group of volunteers 
 
 ## Special mentions
 
-I want to give say thanks to some special contributors who provided some huge PRs and many changes to improve this great library. 
+A special thanks to the very active contributors who added many improvements to this library.
 
+* **[Allan Wang](https://github.com/AllanWang)** 
 * **[MFlisar](https://github.com/MFlisar)**
 
 # License

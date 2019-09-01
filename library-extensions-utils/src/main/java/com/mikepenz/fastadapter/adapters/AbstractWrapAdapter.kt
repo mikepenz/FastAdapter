@@ -3,15 +3,11 @@ package com.mikepenz.fastadapter.adapters
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IItem
-import java.util.*
 
 /**
  * Created by mikepenz on 03.03.16.
  */
-abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolder>(items: List<Item>) : RecyclerView.Adapter<VH>() {
-    //the items handled and managed by this item
-    open var items: List<Item> = ArrayList()
-
+abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolder>(open var items: List<Item>) : RecyclerView.Adapter<VH>() {
     //private AbstractAdapter mParentAdapter;
     //keep a reference to the FastAdapter which contains the base logic
     /**
@@ -20,9 +16,6 @@ abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolde
     var adapter: RecyclerView.Adapter<VH>? = null
         private set
 
-    init {
-        this.items = items
-    }
 
     /**
      * Wrap the FastAdapter with this AbstractAdapter and keep its reference to forward all events correctly
@@ -132,12 +125,10 @@ abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolde
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         //TODO OPTIMIZE
-        for (item in items) {
-            if (item.type == viewType) {
-                return item.getViewHolder(parent)
-            }
+        val vh = items.firstOrNull { it.type == viewType }?.getViewHolder(parent)
+        if (vh != null) {
+            return vh
         }
-
         val adapter = this.adapter ?: throw RuntimeException("A adapter needs to be wrapped")
         return adapter.onCreateViewHolder(parent, viewType)
     }

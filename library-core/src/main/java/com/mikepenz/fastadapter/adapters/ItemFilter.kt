@@ -1,18 +1,17 @@
 package com.mikepenz.fastadapter.adapters
 
 import android.widget.Filter
-import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.listeners.ItemFilterListener
 import com.mikepenz.fastadapter.select.SelectExtension
-import java.util.*
 import java.util.Arrays.asList
+import kotlin.math.min
 
 /**
  * ItemFilter which extends the Filter api provided by Android
  * This calls automatically all required methods, just overwrite the filterItems method
  */
-open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private val mItemAdapter: ModelAdapter<Model, Item>) :
+open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: ModelAdapter<Model, Item>) :
         Filter() {
     private var originalItems: MutableList<Item>? = null
     var constraint: CharSequence? = null
@@ -32,19 +31,10 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
      */
     open val selections: Set<Int>
         get() {
-            return originalItems?.let { originalItems ->
-                val selections = HashSet<Int>()
-                mItemAdapter.fastAdapter?.getPreItemCountByOrder(mItemAdapter.order)
-                        ?.let { adapterOffset ->
-                            originalItems.forEachIndexed { index, item ->
-                                if (item.isSelected) {
-                                    selections.add(index + adapterOffset)
-                                }
-                            }
-                        }
-                return selections
-            }
-                    ?: mItemAdapter.fastAdapter?.getExtension<SelectExtension<Item>>(SelectExtension::class.java)?.selections
+            val fastAdapter = mItemAdapter.fastAdapter ?: return emptySet()
+            val adapterOffset = fastAdapter.getPreItemCountByOrder(mItemAdapter.order)
+            return originalItems?.mapIndexedNotNullTo(HashSet()) { index, item -> if (item.isSelected) index + adapterOffset else null }
+                    ?: fastAdapter.getExtension<SelectExtension<Item>>(SelectExtension::class.java)?.selections
                     ?: emptySet()
         }
 
@@ -55,15 +45,7 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
      */
     open val selectedItems: Set<Item>
         get() {
-            return originalItems?.let { originalItems ->
-                val selections = HashSet<Item>()
-                originalItems.forEach { item ->
-                    if (item.isSelected) {
-                        selections.add(item)
-                    }
-                }
-                return@let selections
-            }
+            return originalItems?.filterTo(HashSet()) { it.isSelected }
                     ?: mItemAdapter.fastAdapter?.getExtension<SelectExtension<Item>>(SelectExtension::class.java)?.selectedItems
                     ?: emptySet()
         }
@@ -72,7 +54,7 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
         val results = FilterResults()
 
         //return nothing
-        if (originalItems == null && (constraint == null || constraint.isEmpty())) {
+        if (originalItems == null && constraint.isNullOrEmpty()) {
             return results
         }
 
@@ -83,15 +65,17 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
 
         this.constraint = constraint
 
-        if (originalItems == null) {
-            originalItems = ArrayList(mItemAdapter.adapterItems)
+        // Gets original items or adapter items (set to original items)
+        // Result is always nonnull
+        val items: List<Item> = originalItems ?: ArrayList(mItemAdapter.adapterItems).also {
+            originalItems = it
         }
 
         // We implement here the filter logic
-        if (constraint == null || constraint.isEmpty()) {
+        if (constraint.isNullOrEmpty()) {
             // No filter implemented we return all the list
-            results.values = originalItems
-            results.count = originalItems?.size ?: 0
+            results.values = items
+            results.count = items.size
             //our filter was cleared we can now forget the old OriginalItems
             originalItems = null
 
@@ -99,13 +83,7 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
         } else {
             // We perform filtering operation
             val filteredItems = filterPredicate?.let { filterPredicate ->
-                val filteredItems: MutableList<Item> = ArrayList()
-                originalItems?.forEach { item ->
-                    if (filterPredicate.invoke(item, constraint)) {
-                        filteredItems.add(item)
-                    }
-                }
-                filteredItems
+                items.filter { filterPredicate(it, constraint) }
             } ?: mItemAdapter.adapterItems
 
             results.values = filteredItems
@@ -152,12 +130,7 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
      * @return the relative position
      */
     fun getAdapterPosition(identifier: Long): Int {
-        originalItems?.forEachIndexed { index, item ->
-            if (item.identifier == identifier) {
-                return index
-            }
-        }
-        return -1
+        return originalItems?.indexOfFirst { it.identifier == identifier } ?: -1
     }
 
     /**
@@ -216,11 +189,8 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
                 mItemAdapter.idDistributor.checkIds(items)
             }
             mItemAdapter.fastAdapter?.let { fastAdapter ->
-                originalItems.addAll(
-                        getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(
-                                position
-                        ), items
-                )
+                val origPosition = getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(position)
+                originalItems.addAll(origPosition, items)
             }
             publishResults(constraint, performFiltering(constraint))
             mItemAdapter
@@ -239,9 +209,8 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
                 mItemAdapter.idDistributor.checkId(item)
             }
             mItemAdapter.fastAdapter?.let { fastAdapter ->
-                originalItems[getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(
-                        position
-                )] = item
+                val origPosition = getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(position)
+                originalItems[origPosition] = item
             }
             publishResults(constraint, performFiltering(constraint))
             mItemAdapter
@@ -277,11 +246,8 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
     fun remove(position: Int): ModelAdapter<*, Item> {
         return originalItems?.let { originalItems ->
             mItemAdapter.fastAdapter?.let { fastAdapter ->
-                originalItems.removeAt(
-                        getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(
-                                position
-                        )
-                )
+                val origPosition = getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(position)
+                originalItems.removeAt(origPosition)
             }
             publishResults(constraint, performFiltering(constraint))
             mItemAdapter
@@ -300,7 +266,7 @@ open class ItemFilter<Model, Item : IItem<out RecyclerView.ViewHolder>>(private 
             val length = originalItems.size
             mItemAdapter.fastAdapter?.getPreItemCount(position)?.let { preItemCount ->
                 //make sure we do not delete to many items
-                val saveItemCount = Math.min(itemCount, length - position + preItemCount)
+                val saveItemCount = min(itemCount, length - position + preItemCount)
                 for (i in 0 until saveItemCount) {
                     originalItems.removeAt(position - preItemCount)
                 }

@@ -1,15 +1,13 @@
 package com.mikepenz.fastadapter.utils
 
-import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 import java.util.*
 
 /**
  * The default item list implementation
  */
 
-class ComparableItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> :
-        DefaultItemListImpl<Item> {
+class ComparableItemListImpl<Item : GenericItem> : DefaultItemListImpl<Item> {
 
     /**
      * @return the defined Comparator used for this ItemAdaper
@@ -45,7 +43,7 @@ class ComparableItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> :
         //we directly sort the list with the defined comparator
         if (this.comparator != null && sortNow) {
             Collections.sort(mItems, this.comparator)
-            fastAdapter!!.notifyAdapterDataSetChanged()
+            fastAdapter?.notifyAdapterDataSetChanged()
         }
 
         return this
@@ -58,7 +56,7 @@ class ComparableItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> :
         if (comparator != null) {
             Collections.sort(mItems, comparator)
         }
-        fastAdapter!!.notifyAdapterDataSetChanged()
+        fastAdapter?.notifyAdapterDataSetChanged()
     }
 
     override fun addAll(items: List<Item>, preItemCount: Int) {
@@ -66,7 +64,7 @@ class ComparableItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> :
         if (comparator != null) {
             Collections.sort(mItems, comparator)
         }
-        fastAdapter!!.notifyAdapterDataSetChanged()
+        fastAdapter?.notifyAdapterDataSetChanged()
     }
 
     override fun addAll(position: Int, items: List<Item>, preItemCount: Int) {
@@ -74,7 +72,7 @@ class ComparableItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> :
         if (comparator != null) {
             Collections.sort(mItems, comparator)
         }
-        fastAdapter!!.notifyAdapterDataSetChanged()
+        fastAdapter?.notifyAdapterDataSetChanged()
     }
 
     override fun setNewList(items: List<Item>, notify: Boolean) {
@@ -83,14 +81,7 @@ class ComparableItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> :
             Collections.sort(mItems, comparator)
         }
         if (notify) {
-            fastAdapter!!.notifyAdapterDataSetChanged()
+            fastAdapter?.notifyAdapterDataSetChanged()
         }
     }
 }
-/**
- * define a comparator which will be used to sort the list "everytime" it is altered
- * NOTE this will only sort if you "set" a new list or "add" new items (not if you provide a position for the add function)
- *
- * @param comparator used to sort the list
- * @return this
- */

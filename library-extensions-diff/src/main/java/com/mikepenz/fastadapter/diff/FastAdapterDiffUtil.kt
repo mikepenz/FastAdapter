@@ -2,10 +2,9 @@ package com.mikepenz.fastadapter.diff
 
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListUpdateCallback
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapterExtension
-import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ModelAdapter
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl
 import java.util.*
@@ -36,7 +35,7 @@ object FastAdapterDiffUtil {
      * @param <Item>      The item type kept in the adapter
      * @return the [androidx.recyclerview.widget.DiffUtil.DiffResult] computed.
     </Item></Model></A> */
-    fun <A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> calculateDiff(adapter: A, items: List<Item>, callback: DiffCallback<Item> = DiffCallbackImpl(), detectMoves: Boolean = true): DiffUtil.DiffResult {
+    fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> calculateDiff(adapter: A, items: List<Item>, callback: DiffCallback<Item> = DiffCallbackImpl(), detectMoves: Boolean = true): DiffUtil.DiffResult {
         if (adapter.isUseIdDistributor) {
             adapter.idDistributor.checkIds(items)
         }
@@ -46,7 +45,7 @@ object FastAdapterDiffUtil {
 
         //if we have a comparator then sort
         if (adapter.itemList is ComparableItemListImpl<*>) {
-            Collections.sort<Item>(items, (adapter.itemList as ComparableItemListImpl<Item>).comparator)
+            Collections.sort(items, (adapter.itemList as ComparableItemListImpl<Item>).comparator)
         }
 
         //map the types
@@ -78,7 +77,7 @@ object FastAdapterDiffUtil {
      *
      * @param fastAdapter
      */
-    private fun <Item : IItem<out RecyclerView.ViewHolder>> collapseIfPossible(fastAdapter: FastAdapter<Item>?) {
+    private fun <Item : GenericItem> collapseIfPossible(fastAdapter: FastAdapter<Item>?) {
         fastAdapter ?: return
         try {
             val c: Class<IAdapterExtension<Item>> = Class.forName("com.mikepenz.fastadapter.expandable.ExpandableExtension") as Class<IAdapterExtension<Item>>
@@ -99,7 +98,7 @@ object FastAdapterDiffUtil {
      * @param result  the computed [androidx.recyclerview.widget.DiffUtil.DiffResult]
      * @return the adapter to allow chaining
      */
-    operator fun <A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> set(adapter: A, result: DiffUtil.DiffResult): A {
+    operator fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> set(adapter: A, result: DiffUtil.DiffResult): A {
         result.dispatchUpdatesTo(FastAdapterListUpdateCallback(adapter))
         return adapter
     }
@@ -109,7 +108,7 @@ object FastAdapterDiffUtil {
      *
      * @return the [androidx.recyclerview.widget.DiffUtil.DiffResult] computed.
      */
-    fun <A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> calculateDiff(adapter: A, items: List<Item>, callback: DiffCallback<Item>): DiffUtil.DiffResult {
+    fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> calculateDiff(adapter: A, items: List<Item>, callback: DiffCallback<Item>): DiffUtil.DiffResult {
         return calculateDiff(adapter, items, callback, true)
     }
 
@@ -118,7 +117,7 @@ object FastAdapterDiffUtil {
      *
      * @return the [androidx.recyclerview.widget.DiffUtil.DiffResult] computed.
      */
-    fun <A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> calculateDiff(adapter: A, items: List<Item>, detectMoves: Boolean): DiffUtil.DiffResult {
+    fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> calculateDiff(adapter: A, items: List<Item>, detectMoves: Boolean): DiffUtil.DiffResult {
         return calculateDiff(adapter, items, DiffCallbackImpl(), detectMoves)
     }
 
@@ -127,7 +126,7 @@ object FastAdapterDiffUtil {
      *
      * @return the [androidx.recyclerview.widget.DiffUtil.DiffResult] computed.
      */
-    fun <A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> calculateDiff(adapter: A, items: List<Item>): DiffUtil.DiffResult {
+    fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> calculateDiff(adapter: A, items: List<Item>): DiffUtil.DiffResult {
         return calculateDiff(adapter, items, DiffCallbackImpl(), true)
     }
 
@@ -143,7 +142,7 @@ object FastAdapterDiffUtil {
      * @param <Item>      The item type kept in the adapter
      * @return the adapter to allow chaining
     </Item></Model></A> */
-    operator fun <A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> set(adapter: A, items: List<Item>, callback: DiffCallback<Item>, detectMoves: Boolean): A {
+    fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> set(adapter: A, items: List<Item>, callback: DiffCallback<Item>, detectMoves: Boolean): A {
         val result = calculateDiff(adapter, items, callback, detectMoves)
         return set(adapter, result)
     }
@@ -153,7 +152,7 @@ object FastAdapterDiffUtil {
      *
      * @return the adapter to allow chaining
      */
-    operator fun <A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> set(adapter: A, items: List<Item>, callback: DiffCallback<Item>): A {
+    fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> set(adapter: A, items: List<Item>, callback: DiffCallback<Item>): A {
         return set(adapter, items, callback, true)
     }
 
@@ -162,7 +161,7 @@ object FastAdapterDiffUtil {
      *
      * @return the adapter to allow chaining
      */
-    operator fun <A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> set(adapter: A, items: List<Item>, detectMoves: Boolean): A {
+    fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> set(adapter: A, items: List<Item>, detectMoves: Boolean): A {
         return set(adapter, items, DiffCallbackImpl(), detectMoves)
     }
 
@@ -171,7 +170,7 @@ object FastAdapterDiffUtil {
      *
      * @return the adapter to allow chaining
      */
-    operator fun <A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> set(adapter: A, items: List<Item>): A {
+    operator fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> set(adapter: A, items: List<Item>): A {
         return set(adapter, items, DiffCallbackImpl())
     }
 
@@ -180,7 +179,7 @@ object FastAdapterDiffUtil {
      *
      * @param <Item> the item type in the adapter
     </Item> */
-    private class FastAdapterCallback<Item : IItem<out RecyclerView.ViewHolder>> internal constructor(private val oldItems: List<Item>, private val newItems: List<Item>, private val callback: DiffCallback<Item>) : DiffUtil.Callback() {
+    private class FastAdapterCallback<Item : GenericItem> internal constructor(private val oldItems: List<Item>, private val newItems: List<Item>, private val callback: DiffCallback<Item>) : DiffUtil.Callback() {
 
         override fun getOldListSize(): Int {
             return oldItems.size
@@ -207,7 +206,7 @@ object FastAdapterDiffUtil {
     /**
      * Default implementation of the [ListUpdateCallback] to apply changes to the adapter and notify about the changes.
      */
-    private class FastAdapterListUpdateCallback<A : ModelAdapter<Model, Item>, Model, Item : IItem<out RecyclerView.ViewHolder>> internal constructor(private val adapter: A) : ListUpdateCallback {
+    private class FastAdapterListUpdateCallback<A : ModelAdapter<Model, Item>, Model, Item : GenericItem> internal constructor(private val adapter: A) : ListUpdateCallback {
 
         private val preItemCountByOrder: Int
             get() = adapter.fastAdapter?.getPreItemCountByOrder(adapter.order) ?: 0

@@ -3,7 +3,7 @@ package com.mikepenz.fastadapter.utils
 import android.view.MotionEvent
 import androidx.core.view.MotionEventCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.drag.IExtendedDraggable
 
 /**
@@ -34,11 +34,11 @@ object DragDropUtil {
      * This functions handles the default drag and drop move event
      * It takes care to move all items one by one within the passed in positions
      *
-     * @param fastAdapter the adapter
+     * @param itemAdapter the adapter
      * @param oldPosition the start position of the move
      * @param newPosition the end position of the move
      */
-    fun onMove(itemAdapter: ItemAdapter<*>, oldPosition: Int, newPosition: Int) {
+    fun onMove(itemAdapter: IItemAdapter<*, *>, oldPosition: Int, newPosition: Int) {
         // necessary, because the positions passed to this function may be jumping in case of that the recycler view is scrolled while holding an item outside of the recycler view
         if (oldPosition < newPosition) {
             for (i in oldPosition + 1..newPosition) {

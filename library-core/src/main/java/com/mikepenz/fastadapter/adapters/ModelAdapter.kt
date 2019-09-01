@@ -1,7 +1,7 @@
 package com.mikepenz.fastadapter.adapters
 
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.*
+import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.utils.AdapterPredicate
 import com.mikepenz.fastadapter.utils.DefaultItemList
 import com.mikepenz.fastadapter.utils.DefaultItemListImpl
@@ -12,13 +12,14 @@ import java.util.Arrays.asList
 /**
  * Kotlin type alias to simplify usage for an all accepting ModelAdapter
  */
-typealias GenericModelAdapter<Model> = ModelAdapter<Model, IItem<out RecyclerView.ViewHolder>>
+typealias GenericModelAdapter<Model> = ModelAdapter<Model, GenericItem>
 
 /**
  * Created by mikepenz on 27.12.15.
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  */
-open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
+@FastAdapterDsl
+open class ModelAdapter<Model, Item : GenericItem>(
         val itemList: IItemList<Item>, var interceptor: (element: Model) -> Item?
 ) : AbstractAdapter<Item>(), IItemAdapter<Model, Item> {
     override var fastAdapter: FastAdapter<Item>?
@@ -105,16 +106,8 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * @param models the List of Model which will be used to create the List of Item
      * @return the generated List of Item
      */
-    open fun intercept(models: List<Model>): List<Item> {
-        val items = ArrayList<Item>(models.size)
-        models.forEach { model ->
-            val item = intercept(model)
-            if (item != null) {
-                items.add(item)
-            }
-        }
-        return items
-    }
+    open fun intercept(models: List<Model>): List<Item> =
+        models.mapNotNull { intercept(it) }
 
     /**
      * filters the items with the constraint using the provided Predicate
@@ -236,15 +229,15 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
     /**
      * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
      *
-     * @param list         the new items to set
+     * @param items         the new items to set
      * @param retainFilter set to true if you want to keep the filter applied
      * @return this
      */
-    override fun setNewList(list: List<Model>, retainFilter: Boolean): ModelAdapter<Model, Item> {
-        val items = intercept(list)
+    override fun setNewList(items: List<Model>, retainFilter: Boolean): ModelAdapter<Model, Item> {
+        val newItems = intercept(items)
 
         if (isUseIdDistributor) {
-            idDistributor.checkIds(items)
+            idDistributor.checkIds(newItems)
         }
 
         //reset the filter
@@ -254,7 +247,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
             itemFilter.resetFilter()
         }
 
-        mapPossibleTypes(items)
+        mapPossibleTypes(newItems)
 
         val publishResults = filter != null && retainFilter
         if (retainFilter) {
@@ -262,7 +255,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
                 itemFilter.filterItems(filterText)
             }
         }
-        itemList.setNewList(items, !publishResults)
+        itemList.setNewList(newItems, !publishResults)
 
         return this
     }
@@ -323,7 +316,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * add a list of items at the given position within the existing items
      *
      * @param position the global position
-     * @param list     the items to add
+     * @param items     the items to add
      */
     override fun add(position: Int, items: List<Model>): ModelAdapter<Model, Item> {
         val interceptedItems = intercept(items)
@@ -345,7 +338,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
      * sets an item at the given position, overwriting the previous item
      *
      * @param position the global position
-     * @param element  the item to set
+     * @param item  the item to set
      */
     override fun set(position: Int, item: Model): ModelAdapter<Model, Item> {
         val interceptedItem = intercept(item) ?: return this
@@ -495,7 +488,7 @@ open class ModelAdapter<Model, Item : IItem<out RecyclerView.ViewHolder>>(
          * @return a new ItemAdapter
          */
         @JvmStatic
-        fun <Model, Item : IItem<out RecyclerView.ViewHolder>> models(interceptor: (element: Model) -> Item?): ModelAdapter<Model, Item> {
+        fun <Model, Item : GenericItem> models(interceptor: (element: Model) -> Item?): ModelAdapter<Model, Item> {
             return ModelAdapter(interceptor)
         }
     }

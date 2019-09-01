@@ -5,8 +5,7 @@ import com.mikepenz.fastadapter.IItem
 /**
  * Created by mikepenz on 24.08.16.
  */
-
-class DiffCallbackImpl<Item : IItem<*>> : DiffCallback<Item> {
+internal class DiffCallbackImpl<Item : IItem<*>> : DiffCallback<Item> {
     override fun areItemsTheSame(oldItem: Item, newItem: Item): Boolean {
         return oldItem.identifier == newItem.identifier
     }

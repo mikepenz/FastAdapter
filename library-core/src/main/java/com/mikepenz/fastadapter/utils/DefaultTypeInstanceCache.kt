@@ -1,16 +1,14 @@
 package com.mikepenz.fastadapter.utils
 
 import android.util.SparseArray
-import androidx.recyclerview.widget.RecyclerView
-
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.ITypeInstanceCache
 
 /**
  * Created by fabianterhorst on 24.08.17.
  */
 
-class DefaultTypeInstanceCache<Item : IItem<out RecyclerView.ViewHolder>> :
+class DefaultTypeInstanceCache<Item : GenericItem> :
         ITypeInstanceCache<Item> {
 
     // we remember all possible types so we can create a new view efficiently

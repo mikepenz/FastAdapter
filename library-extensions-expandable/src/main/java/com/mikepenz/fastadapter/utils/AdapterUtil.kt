@@ -1,9 +1,8 @@
 package com.mikepenz.fastadapter.utils
 
-import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IExpandable
-import com.mikepenz.fastadapter.IItem
 import java.util.*
 
 /**
@@ -16,7 +15,7 @@ object AdapterUtil {
      * @param item          the parent item
      * @param selectedItems the list of selectedItems from the savedInstanceState
      */
-    fun <Item> restoreSubItemSelectionStatesForAlternativeStateManagement(item: Item, selectedItems: List<String>?) where Item : IItem<out RecyclerView.ViewHolder>, Item : IExpandable<*> {
+    fun <Item> restoreSubItemSelectionStatesForAlternativeStateManagement(item: Item, selectedItems: List<String>?) where Item : GenericItem, Item : IExpandable<*> {
         if (!item.isExpanded) {
             val subItems = (item as IExpandable<*>).subItems
             var i = 0
@@ -39,7 +38,7 @@ object AdapterUtil {
      * @param item       the parent item
      * @param selections the ArrayList which will be stored in the savedInstanceState
      */
-    fun <Item> findSubItemSelections(item: Item, selections: MutableList<String>) where Item : IItem<out RecyclerView.ViewHolder>, Item : IExpandable<*> {
+    fun <Item> findSubItemSelections(item: Item, selections: MutableList<String>) where Item : GenericItem, Item : IExpandable<*> {
         if (!item.isExpanded) {
             val subItems = (item as IExpandable<*>).subItems
             var i = 0
@@ -62,7 +61,7 @@ object AdapterUtil {
      * @param fastAdapter the FastAdapter
      * @return a list of all items including the whole subItem hirachy
      */
-    fun <Item> getAllItems(fastAdapter: FastAdapter<Item>): List<Item> where Item : IItem<out RecyclerView.ViewHolder>, Item : IExpandable<*> {
+    fun <Item> getAllItems(fastAdapter: FastAdapter<Item>): List<Item> where Item : GenericItem, Item : IExpandable<*> {
         val size = fastAdapter.itemCount
         val items = ArrayList<Item>(size)
         for (i in 0 until size) {
@@ -80,7 +79,7 @@ object AdapterUtil {
      * @param item  the parent from which we add all items
      * @param items the list in which we add the subItems
      */
-    fun <Item> addAllSubItems(item: Item?, items: MutableList<Item>) where Item : IItem<out RecyclerView.ViewHolder>, Item : IExpandable<*> {
+    fun <Item> addAllSubItems(item: Item?, items: MutableList<Item>) where Item : GenericItem, Item : IExpandable<*> {
         if (item is IExpandable<*> && !item.isExpanded) {
             val subItems = (item as IExpandable<*>).subItems
             var subItem: Item

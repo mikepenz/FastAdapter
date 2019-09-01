@@ -1,15 +1,15 @@
 package com.mikepenz.fastadapter.utils
 
-import androidx.recyclerview.widget.RecyclerView
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapterNotifier
-import com.mikepenz.fastadapter.IItem
 import java.util.*
+import kotlin.math.min
 
 /**
  * The default item list implementation
  */
 
-open class DefaultItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> @JvmOverloads constructor(
+open class DefaultItemListImpl<Item : GenericItem> @JvmOverloads constructor(
         protected var mItems: MutableList<Item> = ArrayList()
 ) : DefaultItemList<Item>() {
 
@@ -23,17 +23,8 @@ open class DefaultItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> @JvmOv
         return mItems[position]
     }
 
-    override fun getAdapterPosition(identifier: Long): Int {
-        var i = 0
-        val size = mItems.size
-        while (i < size) {
-            if (mItems[i].identifier == identifier) {
-                return i
-            }
-            i++
-        }
-        return -1
-    }
+    override fun getAdapterPosition(identifier: Long): Int =
+            mItems.indexOfFirst { it.identifier == identifier }
 
     override fun remove(position: Int, preItemCount: Int) {
         mItems.removeAt(position - preItemCount)
@@ -43,9 +34,8 @@ open class DefaultItemListImpl<Item : IItem<out RecyclerView.ViewHolder>> @JvmOv
     override fun removeRange(position: Int, itemCount: Int, preItemCount: Int) {
         //global position to relative
         val length = mItems.size
-        //make sure we do not delete to many items
-        val saveItemCount = Math.min(itemCount, length - position + preItemCount)
-
+        //make sure we do not delete too many items
+        val saveItemCount = min(itemCount, length - position + preItemCount)
         for (i in 0 until saveItemCount) {
             mItems.removeAt(position - preItemCount)
         }

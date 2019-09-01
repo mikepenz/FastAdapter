@@ -6,15 +6,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 
 /**
  * Created by fabianterhorst on 04.07.16.
  */
 
-class FastAdapterBottomSheetDialog<Item : IItem<out RecyclerView.ViewHolder>> : BottomSheetDialog {
+class FastAdapterBottomSheetDialog<Item : GenericItem> : BottomSheetDialog {
 
     var recyclerView: RecyclerView? = null
         private set

@@ -3,7 +3,7 @@ package com.mikepenz.fastadapter.app.adapters
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
 import com.mikepenz.fastadapter.app.model.ModelIconItem
 import com.turingtechnologies.materialscrollbar.ICustomAdapter
@@ -14,7 +14,7 @@ import com.turingtechnologies.materialscrollbar.INameableAdapter
  * This is a FastAdapter adapter implementation for the awesome Sticky-Headers lib by timehop
  * https://github.com/timehop/sticky-headers-recyclerview
  */
-class FastScrollIndicatorAdapter<Item : IItem<out RecyclerView.ViewHolder>> : RecyclerView.Adapter<RecyclerView.ViewHolder>(), INameableAdapter, ICustomAdapter {
+class FastScrollIndicatorAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.ViewHolder>(), INameableAdapter, ICustomAdapter {
     /*
      * GENERAL CODE NEEDED TO WRAP AN ADAPTER
      */
@@ -27,7 +27,7 @@ class FastScrollIndicatorAdapter<Item : IItem<out RecyclerView.ViewHolder>> : Re
 
     override fun getCharacterForElement(position: Int): Char? {
         val item = getItem(position)
-        return if (item is SimpleSubItem && (item as SimpleSubItem).name != null) {
+        return if (item is SimpleSubItem && item.name != null) {
             //based on the position we set the headers text
             item.name?.text?.get(0) ?: ' '
         } else ' '
@@ -35,7 +35,7 @@ class FastScrollIndicatorAdapter<Item : IItem<out RecyclerView.ViewHolder>> : Re
 
     override fun getCustomStringForElement(position: Int): String {
         val item = getItem(position)
-        return if (item is ModelIconItem && (item as ModelIconItem).model.icon.name != null) {
+        return if (item is ModelIconItem && item.model.icon.name != null) {
             //based on the position we set the headers text
             item.model.icon.name
         } else ""

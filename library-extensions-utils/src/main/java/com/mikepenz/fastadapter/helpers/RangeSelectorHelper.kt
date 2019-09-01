@@ -1,7 +1,7 @@
 package com.mikepenz.fastadapter.helpers
 
 import android.os.Bundle
-import androidx.recyclerview.widget.RecyclerView
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IExpandable
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
@@ -11,7 +11,7 @@ import com.mikepenz.fastadapter.utils.SubItemUtil
 /**
  * Created by Michael on 15.09.2016.
  */
-class RangeSelectorHelper<Item : IItem<out RecyclerView.ViewHolder>>(private val mFastAdapter: FastItemAdapter<Item>) {
+open class RangeSelectorHelper<Item : GenericItem>(private val mFastAdapter: FastItemAdapter<Item>) {
     private var mActionModeHelper: ActionModeHelper<*>? = null
     private var mSupportSubItems = false
     private var mPayload: Any? = null

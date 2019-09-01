@@ -2,10 +2,9 @@ package com.mikepenz.fastadapter.helpers
 
 import android.view.View
 import android.widget.TextView
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.select.SelectExtension
 import java.util.*
@@ -14,7 +13,7 @@ import java.util.Arrays.asList
 /**
  * Created by mikepenz on 04.01.16.
  */
-class UndoHelper<Item : IItem<out RecyclerView.ViewHolder>>
+class UndoHelper<Item : GenericItem>
 /**
  * Constructor to create the UndoHelper
  *
@@ -162,7 +161,7 @@ class UndoHelper<Item : IItem<out RecyclerView.ViewHolder>>
         history = null
     }
 
-    interface UndoListener<Item : IItem<out RecyclerView.ViewHolder>> {
+    interface UndoListener<Item : GenericItem> {
         fun commitRemove(positions: Set<Int>, removed: ArrayList<FastAdapter.RelativeInfo<Item>>)
     }
 

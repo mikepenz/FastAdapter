@@ -6,8 +6,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.LayoutInflaterCompat
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem
@@ -54,7 +53,7 @@ class ExpandableSampleActivity : AppCompatActivity() {
         rv.adapter = fastItemAdapter
 
         //fill with some sample data
-        val items = ArrayList<IItem<out RecyclerView.ViewHolder>>()
+        val items = ArrayList<GenericItem>()
         val identifier = AtomicLong(1)
         for (i in 1..100) {
             if (i % 3 != 0) {

@@ -51,7 +51,7 @@ class MultiselectSampleActivity : AppCompatActivity() {
         val itemAdapter = ItemAdapter<SimpleItem>()
 
         //create our FastAdapter
-        mFastAdapter = FastAdapter.with(Arrays.asList(headerAdapter, itemAdapter))
+        mFastAdapter = FastAdapter.with(listOf(headerAdapter, itemAdapter))
 
         //configure our mFastAdapter
         //as we provide id's for the items we want the hasStableIds enabled to speed up things

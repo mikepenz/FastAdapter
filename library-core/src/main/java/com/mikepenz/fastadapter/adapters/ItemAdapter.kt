@@ -1,20 +1,21 @@
 package com.mikepenz.fastadapter.adapters
 
-import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IItemList
+import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.utils.InterceptorUtil
 
 /**
  * Kotlin type alias to simplify usage for an all accepting ItemAdapter
  */
-typealias GenericItemAdapter = ItemAdapter<IItem<out RecyclerView.ViewHolder>>
+typealias GenericItemAdapter = ItemAdapter<GenericItem>
 
 /**
  * Created by mikepenz on 27.12.15.
  * A general ItemAdapter implementation based on the AbstractAdapter to speed up development for general items
  */
-open class ItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : ModelAdapter<Item, Item> {
+@FastAdapterDsl
+open class ItemAdapter<Item : GenericItem> : ModelAdapter<Item, Item> {
 
     constructor() : super(InterceptorUtil.DEFAULT as (element: Item) -> Item?)
 
@@ -28,7 +29,7 @@ open class ItemAdapter<Item : IItem<out RecyclerView.ViewHolder>> : ModelAdapter
          * @return a new ItemAdapter
          */
         @JvmStatic
-        fun <Item : IItem<out RecyclerView.ViewHolder>> items(): ItemAdapter<Item> {
+        fun <Item : GenericItem> items(): ItemAdapter<Item> {
             return ItemAdapter()
         }
     }
