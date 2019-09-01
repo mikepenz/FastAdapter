@@ -13,6 +13,9 @@ def getRepositoryPassword() {
     return hasProperty('NEXUS_PASSWORD') ? NEXUS_PASSWORD : ""
 }
 
+// specify the artifactId as module-name for kotlin
+android.kotlinOptions.freeCompilerArgs += ["-module-name", POM_ARTIFACT_ID]
+
 apply plugin: "com.jfrog.bintray"
 
 afterEvaluate { project ->
