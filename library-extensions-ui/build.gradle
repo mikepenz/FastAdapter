@@ -24,6 +24,8 @@ android {
     lintOptions {
         abortOnError false
     }
+    // specify the artifactId as module-name for kotlin
+    kotlinOptions.freeCompilerArgs += ["-module-name", POM_ARTIFACT_ID]
 }
 
 dependencies {
