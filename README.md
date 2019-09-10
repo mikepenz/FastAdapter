@@ -75,6 +75,17 @@ implementation "com.google.android.material:material:${androidX}"
 implementation "com.mikepenz:materialize:${latestVersion}" // at least 1.2.0
 ```
 
+If unable to use Android Extensions to access views in ViewHolder, add line below in app gradle.
+```gradle
+android{
+    ...
+    androidExtensions {
+        experimental = true
+    }
+}
+
+```
+
 ## v4.x.y
 > Major release, migrates fully to Kotlin. Check out the changelog or the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md for more details
 

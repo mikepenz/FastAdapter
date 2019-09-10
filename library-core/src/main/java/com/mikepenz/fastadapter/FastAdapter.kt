@@ -16,6 +16,7 @@ import com.mikepenz.fastadapter.utils.AdapterPredicate
 import com.mikepenz.fastadapter.utils.DefaultTypeInstanceCache
 import com.mikepenz.fastadapter.utils.Triple
 import com.mikepenz.fastadapter.utils.attachToView
+import kotlinx.android.extensions.LayoutContainer
 import java.util.*
 import kotlin.math.min
 
@@ -845,7 +846,13 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      *
      * @param <Item>
     </Item> */
-    abstract class ViewHolder<Item : GenericItem>(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    abstract class ViewHolder<Item : GenericItem>(itemView: View) : RecyclerView.ViewHolder(itemView), LayoutContainer {
+
+        /**
+         * The container view that contains cached Ids.
+         * */
+        override val containerView: View?
+            get() = itemView
 
         /**
          * binds the data of this item onto the viewHolder

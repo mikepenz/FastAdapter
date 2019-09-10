@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 
 android {
     compileSdkVersion setup.compileSdk
@@ -30,6 +31,9 @@ android {
         unitTests {
             includeAndroidResources = true
         }
+    }
+    androidExtensions {
+        experimental = true
     }
     // specify the artifactId as module-name for kotlin
     kotlinOptions.freeCompilerArgs += ["-module-name", POM_ARTIFACT_ID]
