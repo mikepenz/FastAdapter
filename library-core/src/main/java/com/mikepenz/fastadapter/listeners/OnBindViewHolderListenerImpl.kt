@@ -7,7 +7,7 @@ import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.R
 
-class OnBindViewHolderListenerImpl<Item : GenericItem> : OnBindViewHolderListener {
+open class OnBindViewHolderListenerImpl<Item : GenericItem> : OnBindViewHolderListener {
     /**
      * is called in onBindViewHolder to bind the data on the ViewHolder
      *
