@@ -12,8 +12,14 @@ abstract class TouchEventHook<Item : GenericItem> : EventHook<Item> {
 
 /**
  * Convenient extension function to simplify adding a [TouchEventHook] to the [FastAdapter]
+ *
+ * A sample implementation may look like:
+ * mFastAdapter.addTouchListener({ vh: SimpleImageItem.ViewHolder -> vh.imageView }) { _, _, _, _ ->
+ *    // do something
+ *    true
+ * }
  */
-inline fun <reified VH : RecyclerView.ViewHolder, reified Item : GenericItem> FastAdapter<GenericItem>.addLongClickListener(crossinline resolveView: (VH) -> View?, crossinline resolveViews: ((VH) -> List<View>?) = { null }, crossinline onTouch: (v: View, event: MotionEvent, position: Int, fastAdapter: FastAdapter<Item>, item: Item) -> Boolean) {
+inline fun <reified VH : RecyclerView.ViewHolder, reified Item : GenericItem> FastAdapter<Item>.addTouchListener(crossinline resolveView: (VH) -> View?, crossinline resolveViews: ((VH) -> List<View>?) = { null }, crossinline onTouch: (v: View, event: MotionEvent, position: Int, fastAdapter: FastAdapter<Item>, item: Item) -> Boolean) {
     addEventHook(object : TouchEventHook<Item>() {
         override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {
             return if (viewHolder is VH) resolveView.invoke(viewHolder) else null
