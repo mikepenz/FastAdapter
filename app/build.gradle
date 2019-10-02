@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
+
 //wrap with try and catch so the build is working even if the signing stuff is missing
 try {
     apply from: '../../../signing.gradle'
@@ -71,6 +72,7 @@ dependencies {
     implementation project(':library-extensions-swipe')
     implementation project(':library-extensions-ui')
     implementation project(':library-extensions-utils')
+    implementation project(':library-extensions-paged')
 
     implementation "androidx.appcompat:appcompat:${versions.appcompat}"
     implementation "androidx.recyclerview:recyclerview:${versions.recyclerView}"
@@ -150,6 +152,16 @@ dependencies {
     implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
 
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+
+    def paging_version = "1.0.0"
+    implementation "android.arch.paging:runtime:$paging_version"
+
+    def lifecycle_version = "1.1.1"
+    implementation "android.arch.lifecycle:extensions:$lifecycle_version"
+
+    def room_version = "1.1.1"
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    kapt "android.arch.persistence.room:compiler:$room_version"
 
     configurations.all {
         resolutionStrategy.force "com.mikepenz:materialize:${versions.materialize}"

@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">FastAdapter</string>
 
+    <string name="sample_paged_list">PagedList Sample</string>
+    <string name="sample_paged_list_descr">PageListAdapter</string>
     <string name="sample_simple_item_list">SimpleItemList Sample</string>
     <string name="sample_simple_item_list_descr">Filter, Drag&amp;Drop</string>
     <string name="sample_swipe_list">SwipeList Sample</string>

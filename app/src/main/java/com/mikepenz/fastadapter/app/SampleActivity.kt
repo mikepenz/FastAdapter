@@ -60,6 +60,7 @@ class SampleActivity : AppCompatActivity() {
                 .withSavedInstance(savedInstanceState)
                 .withShowDrawerOnFirstLaunch(true)
                 .addDrawerItems(
+                        PrimaryDrawerItem().withName(R.string.sample_paged_list).withDescription(R.string.sample_paged_list_descr).withSelectable(false).withIdentifier(20).withIcon(MaterialDesignIconic.Icon.gmi_grid),
                         PrimaryDrawerItem().withName(R.string.sample_icon_grid).withDescription(R.string.sample_icon_grid_descr).withSelectable(false).withIdentifier(8).withIcon(MaterialDesignIconic.Icon.gmi_grid),
                         PrimaryDrawerItem().withName(R.string.sample_simple_item_list).withDescription(R.string.sample_simple_item_list_descr).withSelectable(false).withIdentifier(6).withIcon(MaterialDesignIconic.Icon.gmi_format_align_justify),
                         PrimaryDrawerItem().withName(R.string.sample_image_list).withDescription(R.string.sample_image_list_descr).withSelectable(false).withIdentifier(5).withIcon(MaterialDesignIconic.Icon.gmi_wallpaper),
@@ -105,6 +106,7 @@ class SampleActivity : AppCompatActivity() {
                             drawerItem.identifier == 17L -> intent = Intent(this@SampleActivity, ExpandableMultiselectDeleteSampleActivity::class.java)
                             drawerItem.identifier == 18L -> intent = Intent(this@SampleActivity, StickyHeaderMopubAdsActivity::class.java)
                             drawerItem.identifier == 19L -> intent = Intent(this@SampleActivity, DiffUtilActivity::class.java)
+                            drawerItem.identifier == 20L -> intent = Intent(this@SampleActivity, PagedActivity::class.java)
                             drawerItem.identifier == 100L -> intent = LibsBuilder()
                                     .withFields(R.string::class.java.fields)
                                     .withActivityTitle(getString(R.string.open_source))
