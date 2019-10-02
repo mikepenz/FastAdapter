@@ -23,7 +23,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
         val itemList: IItemList<Item>,
         var interceptor: (element: Model) -> Item?
 ) : AbstractAdapter<Item>(), IItemAdapter<Model, Item> {
-    override var fastAdapter: FastAdapter<Item>?
+    override var fastAdapter: IFastAdapter<Item>?
         get() = super.fastAdapter
         set(fastAdapter) {
             if (itemList is DefaultItemList<*>) {

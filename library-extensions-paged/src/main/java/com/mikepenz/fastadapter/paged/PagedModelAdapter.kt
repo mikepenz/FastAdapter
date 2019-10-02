@@ -40,7 +40,7 @@ open class PagedModelAdapter<Model, Item : GenericItem>(
         itemList.idDistributor = idDistributor
     }
 
-    override var fastAdapter: FastAdapter<Item>?
+    override var fastAdapter: IFastAdapter<Item>?
         get() = super.fastAdapter
         set(fastAdapter) {
             (itemList as DefaultItemList<Item>).fastAdapter = fastAdapter

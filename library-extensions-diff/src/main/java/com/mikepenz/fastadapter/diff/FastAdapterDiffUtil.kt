@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.ListUpdateCallback
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapterExtension
+import com.mikepenz.fastadapter.IFastAdapter
 import com.mikepenz.fastadapter.adapters.ModelAdapter
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl
 import java.util.*
@@ -77,7 +78,7 @@ object FastAdapterDiffUtil {
      *
      * @param fastAdapter
      */
-    private fun <Item : GenericItem> collapseIfPossible(fastAdapter: FastAdapter<Item>?) {
+    private fun <Item : GenericItem> collapseIfPossible(fastAdapter: IFastAdapter<Item>?) {
         fastAdapter ?: return
         try {
             val c: Class<IAdapterExtension<Item>> = Class.forName("com.mikepenz.fastadapter.expandable.ExpandableExtension") as Class<IAdapterExtension<Item>>

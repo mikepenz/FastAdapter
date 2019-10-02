@@ -2,8 +2,8 @@ package com.mikepenz.fastadapter.listeners
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
+import com.mikepenz.fastadapter.IFastAdapter
 
 interface OnCreateViewHolderListener<Item : GenericItem> {
     /**
@@ -14,7 +14,7 @@ interface OnCreateViewHolderListener<Item : GenericItem> {
      * @param viewType the type of the ViewHolder we want to create
      * @return the generated ViewHolder based on the given viewType
      */
-    fun onPreCreateViewHolder(fastAdapter: FastAdapter<Item>, parent: ViewGroup, viewType: Int, typeInstance: Item): RecyclerView.ViewHolder
+    fun onPreCreateViewHolder(fastAdapter: IFastAdapter<Item>, parent: ViewGroup, viewType: Int, typeInstance: Item): RecyclerView.ViewHolder
 
     /**
      * is called after the viewHolder was created and the default listeners were added
@@ -23,5 +23,5 @@ interface OnCreateViewHolderListener<Item : GenericItem> {
      * @param viewHolder the created viewHolder after all listeners were set
      * @return the viewHolder given as param
      */
-    fun onPostCreateViewHolder(fastAdapter: FastAdapter<Item>, viewHolder: RecyclerView.ViewHolder, typeInstance: Item): RecyclerView.ViewHolder
+    fun onPostCreateViewHolder(fastAdapter: IFastAdapter<Item>, viewHolder: RecyclerView.ViewHolder, typeInstance: Item): RecyclerView.ViewHolder
 }

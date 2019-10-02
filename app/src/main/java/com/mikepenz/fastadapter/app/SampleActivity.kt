@@ -57,7 +57,6 @@ class SampleActivity : AppCompatActivity() {
                 .withActivity(this)
                 .withToolbar(toolbar)
                 .withHasStableIds(true)
-                .withSavedInstance(savedInstanceState)
                 .withShowDrawerOnFirstLaunch(true)
                 .addDrawerItems(
                         PrimaryDrawerItem().withName(R.string.sample_icon_grid).withDescription(R.string.sample_icon_grid_descr).withSelectable(false).withIdentifier(8).withIcon(MaterialDesignIconic.Icon.gmi_grid),
@@ -212,8 +211,6 @@ class SampleActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(_outState: Bundle) {
         var outState = _outState
-        //add the values which need to be saved from the drawer to the bundle
-        outState = mResult.saveInstanceState(outState)
         //add the values which need to be saved from the adapter to the bundle
         outState = mFastAdapter.saveInstanceState(outState)
         super.onSaveInstanceState(outState)

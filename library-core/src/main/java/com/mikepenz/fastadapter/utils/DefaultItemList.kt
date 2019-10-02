@@ -1,7 +1,7 @@
 package com.mikepenz.fastadapter.utils
 
-import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
+import com.mikepenz.fastadapter.IFastAdapter
 import com.mikepenz.fastadapter.IItemList
 
 /**
@@ -10,5 +10,5 @@ import com.mikepenz.fastadapter.IItemList
 
 abstract class DefaultItemList<Item : GenericItem> : IItemList<Item> {
 
-    var fastAdapter: FastAdapter<Item>? = null
+    var fastAdapter: IFastAdapter<Item>? = null
 }

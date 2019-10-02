@@ -31,7 +31,7 @@ inline fun <Item : GenericItem> FastAdapter<Item>.selectExtension(block: SelectE
  * Created by mikepenz on 04/06/2017.
  */
 @FastAdapterDsl
-class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<Item>) : IAdapterExtension<Item> {
+class SelectExtension<Item : GenericItem>(private val fastAdapter: IFastAdapter<Item>) : IAdapterExtension<Item> {
 
     // if enabled we will select the item via a notifyItemChanged -> will animate with the Animator
     // you can also use this if you have any custom logic for selections, and do not depend on the "selected" state of the view
@@ -72,7 +72,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
      */
     val selections: Set<Int>
         get() {
-            return (0 until fastAdapter.itemCount).mapNotNullTo(ArraySet<Int>()) { i ->
+            return (0 until fastAdapter.getItemCount()).mapNotNullTo(ArraySet<Int>()) { i ->
                 i.takeIf { fastAdapter.getItem(i)?.isSelected == true }
             }
         }
@@ -120,7 +120,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
         savedInstanceState.putLongArray(BUNDLE_SELECTIONS + prefix, selectionsArray)
     }
 
-    override fun onClick(v: View, pos: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean {
+    override fun onClick(v: View, pos: Int, fastAdapter: IFastAdapter<Item>, item: Item): Boolean {
         //handle the selection if the event was not yet consumed, and we are allowed to select an item (only occurs when we select with long click only)
         //this has to happen before expand or collapse. otherwise the position is wrong which is used to select
         if (!selectOnLongClick && isSelectable) {
@@ -129,12 +129,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
         return false
     }
 
-    override fun onLongClick(
-            v: View,
-            pos: Int,
-            fastAdapter: FastAdapter<Item>,
-            item: Item
-    ): Boolean {
+    override fun onLongClick(v: View, pos: Int, fastAdapter: IFastAdapter<Item>, item: Item): Boolean {
         //now handle the selection if we are in multiSelect mode and allow selecting on longClick
         if (selectOnLongClick && isSelectable) {
             handleSelection(v, item, pos)
@@ -142,13 +137,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
         return false
     }
 
-    override fun onTouch(
-            v: View,
-            event: MotionEvent,
-            position: Int,
-            fastAdapter: FastAdapter<Item>,
-            item: Item
-    ): Boolean {
+    override fun onTouch(v: View, event: MotionEvent, position: Int, fastAdapter: IFastAdapter<Item>, item: Item): Boolean {
         return false
     }
 
@@ -241,7 +230,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
                 return false
             }
         }, false)
-        fastAdapter.notifyDataSetChanged()
+        fastAdapter.asRecyclerViewAdapter().notifyDataSetChanged()
     }
 
     /**
@@ -300,7 +289,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
 
         item.isSelected = true
 
-        fastAdapter.notifyItemChanged(position)
+        fastAdapter.asRecyclerViewAdapter().notifyItemChanged(position)
 
         selectionListener?.onSelectionChanged(item, true)
 
@@ -354,7 +343,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
                 return false
             }
         }, false)
-        fastAdapter.notifyDataSetChanged()
+        fastAdapter.asRecyclerViewAdapter().notifyDataSetChanged()
     }
 
     /**
@@ -396,7 +385,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
         item.isSelected = false
         entries?.remove()
         if (position >= 0) {
-            fastAdapter.notifyItemChanged(position)
+            fastAdapter.asRecyclerViewAdapter().notifyItemChanged(position)
         }
         selectionListener?.onSelectionChanged(item, false)
     }

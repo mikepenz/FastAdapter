@@ -14,7 +14,7 @@ interface IAdapter<Item : GenericItem> {
      *
      * @return the FastAdapter specified for this IAdapter
      */
-    var fastAdapter: FastAdapter<Item>?
+    var fastAdapter: IFastAdapter<Item>?
 
     /**
      * returs the position of this Adapter in the FastAdapter

@@ -17,11 +17,11 @@ interface IAdapterExtension<Item : GenericItem> {
 
     fun saveInstanceState(savedInstanceState: Bundle?, prefix: String)
 
-    fun onClick(v: View, pos: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean
+    fun onClick(v: View, pos: Int, fastAdapter: IFastAdapter<Item>, item: Item): Boolean
 
-    fun onLongClick(v: View, pos: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean
+    fun onLongClick(v: View, pos: Int, fastAdapter: IFastAdapter<Item>, item: Item): Boolean
 
-    fun onTouch(v: View, event: MotionEvent, position: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean
+    fun onTouch(v: View, event: MotionEvent, position: Int, fastAdapter: IFastAdapter<Item>, item: Item): Boolean
 
     fun notifyAdapterDataSetChanged()
 

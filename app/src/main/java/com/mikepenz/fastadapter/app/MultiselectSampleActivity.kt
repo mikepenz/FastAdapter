@@ -14,6 +14,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.ISelectionListener
+import com.mikepenz.fastadapter.RelativeInfo
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.helpers.ActionModeHelper
@@ -93,7 +94,7 @@ class MultiselectSampleActivity : AppCompatActivity() {
 
         //
         mUndoHelper = UndoHelper(mFastAdapter, object : UndoHelper.UndoListener<SimpleItem> {
-            override fun commitRemove(positions: Set<Int>, removed: ArrayList<FastAdapter.RelativeInfo<SimpleItem>>) {
+            override fun commitRemove(positions: Set<Int>, removed: ArrayList<RelativeInfo<SimpleItem>>) {
                 Log.e("UndoHelper", "Positions: " + positions.toString() + " Removed: " + removed.size)
             }
         })

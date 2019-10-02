@@ -6,6 +6,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IItemAdapter
+import com.mikepenz.fastadapter.RelativeInfo
 import com.mikepenz.fastadapter.select.SelectExtension
 import java.util.*
 import java.util.Arrays.asList
@@ -162,12 +163,12 @@ class UndoHelper<Item : GenericItem>
     }
 
     interface UndoListener<Item : GenericItem> {
-        fun commitRemove(positions: Set<Int>, removed: ArrayList<FastAdapter.RelativeInfo<Item>>)
+        fun commitRemove(positions: Set<Int>, removed: ArrayList<RelativeInfo<Item>>)
     }
 
     private inner class History {
         var action: Int = 0
-        var items = ArrayList<FastAdapter.RelativeInfo<Item>>()
+        var items = ArrayList<RelativeInfo<Item>>()
     }
 
     companion object {

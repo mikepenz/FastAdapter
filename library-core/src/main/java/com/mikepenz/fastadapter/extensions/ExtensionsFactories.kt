@@ -3,6 +3,7 @@ package com.mikepenz.fastadapter.extensions
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapterExtension
+import com.mikepenz.fastadapter.IFastAdapter
 
 object ExtensionsFactories {
 
@@ -13,7 +14,7 @@ object ExtensionsFactories {
     }
 
     fun create(
-            fastAdapter: FastAdapter<out GenericItem>,
+            fastAdapter: IFastAdapter<out GenericItem>,
             clazz: Class<out IAdapterExtension<out GenericItem>>
     ): IAdapterExtension<out GenericItem>? =
             factories[clazz]?.create(fastAdapter)

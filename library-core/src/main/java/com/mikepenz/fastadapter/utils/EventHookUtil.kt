@@ -4,6 +4,7 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
+import com.mikepenz.fastadapter.IFastAdapter
 import com.mikepenz.fastadapter.R
 import com.mikepenz.fastadapter.listeners.*
 
@@ -38,7 +39,7 @@ internal fun <Item : GenericItem> EventHook<Item>.attachToView(viewHolder: Recyc
         is ClickEventHook<*> -> view.setOnClickListener { v ->
             //get the adapter for this view
             val tagAdapter = viewHolder.itemView.getTag(R.id.fastadapter_item_adapter)
-            val adapter = tagAdapter as? FastAdapter<Item> ?: return@setOnClickListener
+            val adapter = tagAdapter as? IFastAdapter<Item> ?: return@setOnClickListener
             //we get the adapterPosition from the viewHolder
             val pos = adapter.getHolderAdapterPosition(viewHolder)
             //make sure the click was done on a valid item
@@ -53,7 +54,7 @@ internal fun <Item : GenericItem> EventHook<Item>.attachToView(viewHolder: Recyc
         is LongClickEventHook<*> -> view.setOnLongClickListener(View.OnLongClickListener { v ->
             //get the adapter for this view
             val tagAdapter = viewHolder.itemView.getTag(R.id.fastadapter_item_adapter)
-            val adapter = tagAdapter as? FastAdapter<Item> ?: return@OnLongClickListener false
+            val adapter = tagAdapter as? IFastAdapter<Item> ?: return@OnLongClickListener false
             //we get the adapterPosition from the viewHolder
             val pos = adapter.getHolderAdapterPosition(viewHolder)
             //make sure the click was done on a valid item
@@ -69,7 +70,7 @@ internal fun <Item : GenericItem> EventHook<Item>.attachToView(viewHolder: Recyc
         is TouchEventHook<*> -> view.setOnTouchListener(View.OnTouchListener { v, e ->
             //get the adapter for this view
             val tagAdapter = viewHolder.itemView.getTag(R.id.fastadapter_item_adapter)
-            val adapter = tagAdapter as? FastAdapter<Item> ?: return@OnTouchListener false
+            val adapter = tagAdapter as? IFastAdapter<Item> ?: return@OnTouchListener false
             //we get the adapterPosition from the viewHolder
             val pos = adapter.getHolderAdapterPosition(viewHolder)
             //make sure the click was done on a valid item

@@ -5,7 +5,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.IFastAdapter
 import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.listeners.ClickEventHook
@@ -104,8 +104,8 @@ class CheckBoxSampleItem : AbstractItem<CheckBoxSampleItem.ViewHolder>() {
             } else null
         }
 
-        override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<CheckBoxSampleItem>, item: CheckBoxSampleItem) {
-            val selectExtension: SelectExtension<CheckBoxSampleItem> = fastAdapter.requireExtension()
+        override fun onClick(v: View, position: Int, fastAdapter: IFastAdapter<CheckBoxSampleItem>, item: CheckBoxSampleItem) {
+            val selectExtension: SelectExtension<CheckBoxSampleItem> = fastAdapter.getExtension(SelectExtension::class.java)!!
             selectExtension.toggleSelection(position)
         }
     }

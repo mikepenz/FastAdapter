@@ -7,7 +7,7 @@ import android.view.ViewPropertyAnimator
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.IFastAdapter
 import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.listeners.ClickEventHook
@@ -159,7 +159,7 @@ class ImageItem : AbstractItem<ImageItem.ViewHolder>() {
             return super.onBindMany(viewHolder)
         }
 
-        override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<ImageItem>, item: ImageItem) {
+        override fun onClick(v: View, position: Int, fastAdapter: IFastAdapter<ImageItem>, item: ImageItem) {
             item.withStarred(!item.mStarred)
             //we animate the heart
             item.animateHeart((v as ViewGroup).getChildAt(0), v.getChildAt(1), item.mStarred)

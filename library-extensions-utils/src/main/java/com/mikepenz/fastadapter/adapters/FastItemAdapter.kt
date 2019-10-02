@@ -31,7 +31,7 @@ open class FastItemAdapter<Item : GenericItem>(
      */
     init {
         addAdapter<IAdapter<Item>>(0, itemAdapter)
-        cacheSizes()
+        engine.cacheSizes()
     }
 
     /**

@@ -5,7 +5,7 @@ import android.widget.RadioButton
 import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.IFastAdapter
 import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.listeners.ClickEventHook
@@ -104,14 +104,14 @@ class RadioButtonSampleItem : AbstractItem<RadioButtonSampleItem.ViewHolder>() {
             } else null
         }
 
-        override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<RadioButtonSampleItem>, item: RadioButtonSampleItem) {
+        override fun onClick(v: View, position: Int, fastAdapter: IFastAdapter<RadioButtonSampleItem>, item: RadioButtonSampleItem) {
             if (!item.isSelected) {
-                val selectExtension: SelectExtension<RadioButtonSampleItem> = fastAdapter.requireExtension()
+                val selectExtension: SelectExtension<RadioButtonSampleItem> = fastAdapter.getExtension(SelectExtension::class.java)!!
                 val selections = selectExtension.selections
                 if (selections.isNotEmpty()) {
                     val selectedPosition = selections.iterator().next()
                     selectExtension.deselect()
-                    fastAdapter.notifyItemChanged(selectedPosition)
+                    fastAdapter.asRecyclerViewAdapter().notifyItemChanged(selectedPosition)
                 }
                 selectExtension.select(position)
             }

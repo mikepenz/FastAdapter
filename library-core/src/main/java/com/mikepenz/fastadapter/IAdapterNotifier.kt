@@ -6,12 +6,12 @@ package com.mikepenz.fastadapter
 
 interface IAdapterNotifier {
 
-    fun notify(fastAdapter: FastAdapter<*>, newItemsCount: Int, previousItemsCount: Int, itemsBeforeThisAdapter: Int): Boolean
+    fun notify(fastAdapter: IFastAdapter<*>, newItemsCount: Int, previousItemsCount: Int, itemsBeforeThisAdapter: Int): Boolean
 
     companion object {
         @JvmField
         val DEFAULT: IAdapterNotifier = object : IAdapterNotifier {
-            override fun notify(fastAdapter: FastAdapter<*>, newItemsCount: Int, previousItemsCount: Int, itemsBeforeThisAdapter: Int): Boolean {
+            override fun notify(fastAdapter: IFastAdapter<*>, newItemsCount: Int, previousItemsCount: Int, itemsBeforeThisAdapter: Int): Boolean {
                 //now properly notify the adapter about the changes
                 when {
                     newItemsCount > previousItemsCount -> {
@@ -36,7 +36,7 @@ interface IAdapterNotifier {
 
         @JvmField
         val LEGACY_DEFAULT: IAdapterNotifier = object : IAdapterNotifier {
-            override fun notify(fastAdapter: FastAdapter<*>, newItemsCount: Int, previousItemsCount: Int, itemsBeforeThisAdapter: Int): Boolean {
+            override fun notify(fastAdapter: IFastAdapter<*>, newItemsCount: Int, previousItemsCount: Int, itemsBeforeThisAdapter: Int): Boolean {
                 //now properly notify the adapter about the changes
                 when {
                     newItemsCount > previousItemsCount -> {
