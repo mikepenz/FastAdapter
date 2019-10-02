@@ -33,10 +33,7 @@ open class FastAdapter<Item : GenericItem>(
 
     init {
         @Suppress("LeakingThis")
-        engine.rvAdapter = this
-        @Suppress("LeakingThis")
-        engine.superDelegate = this // allows to call the super methods from the [RecyclerView.Adapter] this is required as we would otherwise end in a endless recursion
-        this.setHasStableIds(true)
+        engine.delegateFor(this)
     }
 
     override fun getItemId(position: Int): Long {

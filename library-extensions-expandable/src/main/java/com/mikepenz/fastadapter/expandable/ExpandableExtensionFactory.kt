@@ -1,6 +1,5 @@
 package com.mikepenz.fastadapter.expandable
 
-import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IFastAdapter
 import com.mikepenz.fastadapter.extensions.ExtensionFactory

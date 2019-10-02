@@ -34,8 +34,18 @@ import kotlin.math.min
 @FastAdapterDsl
 open class FastAdapterEngine<Item : GenericItem> : IFastAdapter<Item> {
 
-    lateinit var rvAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
-    lateinit var superDelegate: ISuperDelegate
+    private lateinit var delegateFor: IFastAdapter<Item>
+    private lateinit var rvAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>
+    private lateinit var superDelegate: ISuperDelegate
+
+    fun delegateFor(parent: IFastAdapter<Item>) {
+        delegateFor = parent
+        rvAdapter = parent as? RecyclerView.Adapter<RecyclerView.ViewHolder> ?: throw RuntimeException("The parent is expected to be a RecyclerView.Adapter")
+        superDelegate = parent as? ISuperDelegate ?: throw RuntimeException("The parent is expected to be a ISuperDelegate")
+
+        // set the default
+        rvAdapter.setHasStableIds(true)
+    }
 
     // we remember all adapters
     //priority queue...
@@ -191,7 +201,7 @@ open class FastAdapterEngine<Item : GenericItem> : IFastAdapter<Item> {
      * It also updates the cached sizes.
      */
     private fun prepareAdapters(adapter: IAdapter<Item>) {
-        adapter.fastAdapter = this
+        adapter.fastAdapter = delegateFor
         adapter.mapPossibleTypes(adapter.adapterItems)
         adapters.forEachIndexed { i, item -> item.order = i }
         cacheSizes()
