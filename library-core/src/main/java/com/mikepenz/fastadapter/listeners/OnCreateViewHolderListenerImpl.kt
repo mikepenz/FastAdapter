@@ -10,7 +10,7 @@ import com.mikepenz.fastadapter.utils.bind
 /**
  * default implementation of the OnCreateViewHolderListener
  */
-class OnCreateViewHolderListenerImpl<Item : GenericItem> : OnCreateViewHolderListener<Item> {
+open class OnCreateViewHolderListenerImpl<Item : GenericItem> : OnCreateViewHolderListener<Item> {
     /**
      * is called inside the onCreateViewHolder method and creates the viewHolder based on the provided viewTyp
      *
@@ -29,7 +29,7 @@ class OnCreateViewHolderListenerImpl<Item : GenericItem> : OnCreateViewHolderLis
      * @return the viewHolder given as param
      */
     override fun onPostCreateViewHolder(fastAdapter: FastAdapter<Item>, viewHolder: RecyclerView.ViewHolder, typeInstance: Item): RecyclerView.ViewHolder {
-        fastAdapter.eventHooks?.bind(viewHolder)
+        fastAdapter.eventHooks.bind(viewHolder)
         //check if the item implements hookable and contains event hooks
         (typeInstance as? IHookable<*>)?.eventHooks?.bind(viewHolder)
         return viewHolder
