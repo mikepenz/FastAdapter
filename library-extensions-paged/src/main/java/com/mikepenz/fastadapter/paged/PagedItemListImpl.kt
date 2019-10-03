@@ -27,7 +27,7 @@ open class PagedItemListImpl<Model, Item : GenericItem> @JvmOverloads constructo
         get() = differ.currentList!!.isEmpty()
 
     override fun get(position: Int): Item {
-        return interceptor.invoke(differ.currentList!![position]!!)!!
+        return interceptor.invoke(differ.getItem(position)!!)!!
     }
 
     override fun getAdapterPosition(identifier: Long): Int =
