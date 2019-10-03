@@ -15,7 +15,6 @@ import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem
 import com.mikepenz.fastadapter.app.paged.Coupon
 import com.mikepenz.fastadapter.app.paged.CouponViewModel
 import com.mikepenz.fastadapter.paged.PagedModelAdapter
-import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -49,7 +48,9 @@ class PagedActivity : AppCompatActivity() {
 
         //create our ItemAdapter which will host our items
         mItemAdapter = PagedModelAdapter<Coupon, SimpleSubExpandableItem>(asyncDifferConfig) {
-            SimpleSubExpandableItem().withName(it.offer)
+            SimpleSubExpandableItem().withName(it.offer).apply {
+                identifier = it._id.toLong()
+            }
         }
 
         //create our FastAdapter which will manage everything
@@ -61,10 +62,6 @@ class PagedActivity : AppCompatActivity() {
         //rv.setLayoutManager(new GridLayoutManager(this, 3));
         rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = mFastAdapter
-        rv.itemAnimator = SlideDownAlphaAnimator().apply {
-            addDuration = 500
-            removeDuration = 500
-        }
 
         val viewModel = ViewModelProviders.of(this,
                 CouponViewModel.CouponViewModelFactory(this.application))

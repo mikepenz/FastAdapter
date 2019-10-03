@@ -53,13 +53,6 @@ public class CouponsDataSource extends PageKeyedDataSource<Integer, Coupon> {
                           @NonNull LoadCallback<Integer, Coupon> callback) {
         List<Coupon> cpns = couponDAO.getCouponsBySize(params.key, params.requestedLoadSize);
         int nextKey = params.key + cpns.size();
-
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
         callback.onResult(cpns, nextKey);
     }
 }
