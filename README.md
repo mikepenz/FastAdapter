@@ -28,6 +28,7 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
  - UndoHelper ([MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.kt))
  - More to come...
 - FastScroller (external lib) ([SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.kt))
+- Paging (via Jetpack paging lib) ([PagedActivity](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/PagedActivity.kt))
 
 # Preview
 ## Demo
@@ -40,7 +41,7 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 # Include in your project
 ## Latest releases
 
-- Kotlin | [v4.1.0-b02](https://github.com/mikepenz/FastAdapter/tree/v4.1.0-b02)
+- Kotlin | [v4.1.0](https://github.com/mikepenz/FastAdapter/tree/v4.1.0)
 - Java && AndroidX | [v3.3.1](https://github.com/mikepenz/FastAdapter/tree/v3.3.1)
 - Java && AppCompat | [v3.2.9](https://github.com/mikepenz/FastAdapter/tree/v3.2.9)
 
@@ -64,6 +65,7 @@ Many helper classes are included in the following dependency.
 ```gradle
 implementation "com.mikepenz:fastadapter-extensions-diff:${latestFastAdapterRelease}" // diff util helpers
 implementation "com.mikepenz:fastadapter-extensions-drag:${latestFastAdapterRelease}" // drag support
+implementation "com.mikepenz:fastadapter-extensions-paged:${latestFastAdapterRelease}" // paging support
 implementation "com.mikepenz:fastadapter-extensions-scroll${latestFastAdapterRelease}" // scroll helpers
 implementation "com.mikepenz:fastadapter-extensions-swipe:${latestFastAdapterRelease}" // swipe support
 implementation "com.mikepenz:fastadapter-extensions-ui:${latestFastAdapterRelease}" // pre-defined ui components
