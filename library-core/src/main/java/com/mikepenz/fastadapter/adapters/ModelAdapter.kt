@@ -20,7 +20,8 @@ typealias GenericModelAdapter<Model> = ModelAdapter<Model, GenericItem>
  */
 @FastAdapterDsl
 open class ModelAdapter<Model, Item : GenericItem>(
-        val itemList: IItemList<Item>, var interceptor: (element: Model) -> Item?
+        val itemList: IItemList<Item>,
+        var interceptor: (element: Model) -> Item?
 ) : AbstractAdapter<Item>(), IItemAdapter<Model, Item> {
     override var fastAdapter: FastAdapter<Item>?
         get() = super.fastAdapter
@@ -107,7 +108,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
      * @return the generated List of Item
      */
     open fun intercept(models: List<Model>): List<Item> =
-        models.mapNotNull { intercept(it) }
+            models.mapNotNull { intercept(it) }
 
     /**
      * filters the items with the constraint using the provided Predicate

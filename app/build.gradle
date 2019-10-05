@@ -1,8 +1,9 @@
 apply plugin: 'com.android.application'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
+
 //wrap with try and catch so the build is working even if the signing stuff is missing
 try {
     apply from: '../../../signing.gradle'
@@ -71,6 +72,7 @@ dependencies {
     implementation project(':library-extensions-swipe')
     implementation project(':library-extensions-ui')
     implementation project(':library-extensions-utils')
+    implementation project(':library-extensions-paged')
 
     implementation "androidx.appcompat:appcompat:${versions.appcompat}"
     implementation "androidx.recyclerview:recyclerview:${versions.recyclerView}"
@@ -112,7 +114,7 @@ dependencies {
     implementation 'com.mikepenz:material-design-iconic-typeface:2.2.0.6-kotlin@aar'
     implementation 'com.mikepenz:community-material-typeface:3.5.95.1-kotlin@aar'
     implementation 'com.mikepenz:google-material-typeface:3.0.1.4.original-kotlin@aar'
-    implementation 'com.mikepenz:fontawesome-typeface:5.3.1.2-kotlin@aar'
+    implementation 'com.mikepenz:fontawesome-typeface:5.9.0.0-kotlin@aar'
 
     //Used for the StickyHeaderSample
     //https://github.com/timehop/sticky-headers-recyclerview
@@ -122,11 +124,11 @@ dependencies {
 
     //Used to provide the FastScrollBar
     //https://github.com/krimin-killr21/MaterialScrollBar
-    implementation 'com.github.turing-tech:MaterialScrollBar:13.3.1'
+    implementation 'com.github.turing-tech:MaterialScrollBar:13.3.2'
 
     //https://github.com/JakeWharton/butterknife
-    implementation 'com.jakewharton:butterknife:10.0.0'
-    kapt 'com.jakewharton:butterknife-compiler:10.0.0'
+    implementation 'com.jakewharton:butterknife:10.2.0'
+    kapt 'com.jakewharton:butterknife-compiler:10.2.0'
 
     //used to load the images in the ImageListSample
     //https://github.com/bumptech/glide
@@ -146,10 +148,16 @@ dependencies {
     }
 
     //Used to async operations
-    implementation 'io.reactivex.rxjava2:rxandroid:2.1.0'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.0'
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.13'
 
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
+
+    implementation "android.arch.persistence.room:runtime:${versions.room}"
+    kapt "android.arch.persistence.room:compiler:${versions.room}"
+
+    implementation "android.arch.lifecycle:extensions:${versions.lifecycle}"
+
 
     configurations.all {
         resolutionStrategy.force "com.mikepenz:materialize:${versions.materialize}"

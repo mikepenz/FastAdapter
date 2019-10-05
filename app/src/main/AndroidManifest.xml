@@ -28,6 +28,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name="com.mikepenz.fastadapter.app.PagedActivity"
+            android:label="@string/sample_paged_list" />
+        <activity
             android:name="com.mikepenz.fastadapter.app.SimpleItemListActivity"
             android:label="@string/sample_simple_item_list" />
         <activity
