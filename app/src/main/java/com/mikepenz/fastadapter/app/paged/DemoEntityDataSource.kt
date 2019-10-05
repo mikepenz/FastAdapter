@@ -27,23 +27,18 @@ class DemoEntityDataSource(ctx: Context) : PageKeyedDataSource<Int, DemoEntity>(
             try {
                 Thread.sleep(500)
             } catch (e: InterruptedException) {
+                // no action
             }
-
         }
 
-        callback.onResult(cpns, null,
-                cpns.size + 1)
-
+        callback.onResult(cpns, null, cpns.size + 1)
     }
 
-    override fun loadBefore(params: PageKeyedDataSource.LoadParams<Int>,
-                            callback: PageKeyedDataSource.LoadCallback<Int, DemoEntity>) {
-
+    override fun loadBefore(params: PageKeyedDataSource.LoadParams<Int>, callback: PageKeyedDataSource.LoadCallback<Int, DemoEntity>) {
     }
 
     //is called to load pages of data using key passed in params
-    override fun loadAfter(params: PageKeyedDataSource.LoadParams<Int>,
-                           callback: PageKeyedDataSource.LoadCallback<Int, DemoEntity>) {
+    override fun loadAfter(params: PageKeyedDataSource.LoadParams<Int>, callback: PageKeyedDataSource.LoadCallback<Int, DemoEntity>) {
         val cpns = demoEntityDAO.getDemoEntitiesBySize(params.key, params.requestedLoadSize)
 
         Thread.sleep(500)

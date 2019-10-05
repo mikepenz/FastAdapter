@@ -35,7 +35,6 @@ object LocalRepository {
                             DemoEntitiesDB::class.java, "DemoEntities Database")
                             .fallbackToDestructiveMigration()
                             .addCallback(dbCallback).build()
-
                 }
             }
         }

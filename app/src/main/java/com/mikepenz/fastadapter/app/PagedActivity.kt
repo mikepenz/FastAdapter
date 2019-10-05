@@ -39,18 +39,18 @@ class PagedActivity : AppCompatActivity() {
 
         val asyncDifferConfig = AsyncDifferConfig.Builder<DemoEntity>(object : DiffUtil.ItemCallback<DemoEntity>() {
             override fun areItemsTheSame(oldItem: DemoEntity, newItem: DemoEntity): Boolean {
-                return oldItem._id == newItem._id;
+                return oldItem.identifier == newItem.identifier
             }
 
             override fun areContentsTheSame(oldItem: DemoEntity, newItem: DemoEntity): Boolean {
-                return oldItem == newItem;
+                return oldItem == newItem
             }
         }).build()
 
         //create our ItemAdapter which will host our items
         mItemAdapter = PagedModelAdapter<DemoEntity, SimpleImageItem>(asyncDifferConfig) {
             SimpleImageItem().withName(it.data1 ?: "").withDescription(it.data2 ?: "").apply {
-                identifier = it._id.toLong()
+                identifier = it.identifier.toLong()
                 isSelectable = true
                 withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/yang_zhuo_yong_cuo,_tibet-china-63.jpg")
             }
