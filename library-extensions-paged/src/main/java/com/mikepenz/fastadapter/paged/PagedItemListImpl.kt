@@ -6,88 +6,121 @@ import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.ListUpdateCallback
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapterNotifier
+import com.mikepenz.fastadapter.IIdDistributor
 import com.mikepenz.fastadapter.utils.DefaultItemList
-import kotlin.math.min
 
 /**
- * The default item list implementation
+ * A item list implementation to support the PagedList from the `androidx.paging:paging-runtime` jetpack library
  */
-
+@ExperimentalPagedSupport
 open class PagedItemListImpl<Model, Item : GenericItem> @JvmOverloads constructor(
-        internal val listUpdateCallback: ListUpdateCallback,
-        internal var differConfig: AsyncDifferConfig<Model>,
+        listUpdateCallback: ListUpdateCallback,
+        differConfig: AsyncDifferConfig<Model>,
         var interceptor: (element: Model) -> Item?
 ) : DefaultItemList<Item>() {
+
     val differ: AsyncPagedListDiffer<Model> = AsyncPagedListDiffer<Model>(listUpdateCallback, differConfig)
 
+    var idDistributor: IIdDistributor<Item> = IIdDistributor.DEFAULT as IIdDistributor<Item>
+
+    private val cache: HashMap<Model, Item> = hashMapOf()
+
+    /**
+     * Defines if the DefaultIdDistributor is used to provide an ID to all added items which do not yet define an id
+     */
+    var isUseIdDistributor = true
+
     override val items: MutableList<Item>
-        get() = differ.currentList!!.mapNotNull { interceptor.invoke(it) }.toMutableList() // Note this is not efficient
+        get() = differ.currentList?.mapNotNull { getItem(it) }?.toMutableList() ?: mutableListOf()// Note this is not efficient
 
     override val isEmpty: Boolean
-        get() = differ.currentList!!.isEmpty()
+        get() = differ.currentList?.isEmpty() == true
 
     override fun get(position: Int): Item {
-        return interceptor.invoke(differ.getItem(position)!!)!!
+        return differ.getItem(position)?.let { getItem(it) } ?: throw RuntimeException("No item found at position")
     }
 
-    override fun getAdapterPosition(identifier: Long): Int =
-            differ.currentList!!.indexOfFirst { interceptor.invoke(it)?.identifier == identifier }
-
-    override fun remove(position: Int, preItemCount: Int) {
-        differ.currentList!!.removeAt(position - preItemCount)
-        fastAdapter?.notifyAdapterItemRemoved(position)
-    }
-
-    override fun removeRange(position: Int, itemCount: Int, preItemCount: Int) {
-        //global position to relative
-        val length = differ.currentList!!.size
-        //make sure we do not delete too many items
-        val saveItemCount = min(itemCount, length - position + preItemCount)
-        for (i in 0 until saveItemCount) {
-            differ.currentList!!.removeAt(position - preItemCount)
+    private fun getItem(model: Model): Item? {
+        return cache[model] ?: run {
+            return interceptor.invoke(model)?.let {
+                if (isUseIdDistributor) {
+                    idDistributor.checkId(it)
+                }
+                cache[model] = it
+                it
+            }
         }
-        fastAdapter?.notifyAdapterItemRangeRemoved(position, saveItemCount)
     }
 
+    override fun getAdapterPosition(identifier: Long): Int = differ.currentList?.indexOfFirst { getItem(it)?.identifier == identifier }
+            ?: throw RuntimeException("No item found at position")
+
+    /**
+     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
+     */
+    override fun remove(position: Int, preItemCount: Int) {
+        throw UnsupportedOperationException("Not supported")
+    }
+
+    /**
+     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
+     */
+    override fun removeRange(position: Int, itemCount: Int, preItemCount: Int) {
+        throw UnsupportedOperationException("Not supported")
+    }
+
+    /**
+     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
+     */
     override fun move(fromPosition: Int, toPosition: Int, preItemCount: Int) {
-        val item = differ.currentList!![fromPosition - preItemCount]
-        differ.currentList!!.removeAt(fromPosition - preItemCount)
-        differ.currentList!!.add(toPosition - preItemCount, item)
-        fastAdapter?.notifyAdapterItemMoved(fromPosition, toPosition)
+        throw UnsupportedOperationException("Not supported")
     }
 
     override fun size(): Int {
         return differ.currentList?.size ?: 0
     }
 
+    /**
+     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
+     */
     override fun clear(preItemCount: Int) {
-        TODO("Not supported")
+        throw UnsupportedOperationException("Not supported")
     }
 
+    /**
+     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
+     */
     override fun set(position: Int, item: Item, preItemCount: Int) {
-        TODO("Not supported")
+        throw UnsupportedOperationException("Not supported")
     }
 
+    /**
+     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
+     */
     override fun addAll(items: List<Item>, preItemCount: Int) {
-        TODO("Not supported")
+        throw UnsupportedOperationException("Not supported")
     }
 
+    /**
+     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
+     */
     override fun addAll(position: Int, items: List<Item>, preItemCount: Int) {
-        TODO("Not supported")
+        throw UnsupportedOperationException("Not supported")
     }
 
+    /**
+     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
+     */
     override fun set(items: List<Item>, preItemCount: Int, adapterNotifier: IAdapterNotifier?) {
-        TODO("Not supported")
+        throw UnsupportedOperationException("Not supported")
     }
 
+    /**
+     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
+     */
     override fun setNewList(items: List<Item>, notify: Boolean) {
-        // TODO
-        // mItems = ArrayList(items)
-        if (notify) {
-            fastAdapter?.notifyAdapterDataSetChanged()
-        }
+        throw UnsupportedOperationException("Not supported")
     }
-
 
     /**
      * Set the new list to be displayed.
@@ -122,14 +155,42 @@ open class PagedItemListImpl<Model, Item : GenericItem> @JvmOverloads constructo
         differ.submitList(pagedList, commitCallback)
     }
 
+    /**
+     * Get the item from the current PagedList at the specified index.
+     * <p>
+     * Note that this operates on both loaded items and null padding within the PagedList.
+     *
+     * @param position Index of item to get, must be >= 0, and &lt; {@link #getItemCount()}.
+     * @return The item, or null, if a null placeholder is at the specified position.
+     */
     fun getItem(position: Int): Model? {
         return differ.getItem(position)
     }
 
+    /**
+     * Returns the PagedList currently being displayed by the Adapter.
+     *
+     *
+     * This is not necessarily the most recent list passed to [.submitList],
+     * because a diff is computed asynchronously between the new list and the current list before
+     * updating the currentList value. May be null if no PagedList is being presented.
+     *
+     * @return The list currently being displayed.
+     *
+     * @see .onCurrentListChanged
+     */
     fun getCurrentList(): PagedList<Model>? {
         return differ.currentList
     }
 
+    /**
+     * Add a PagedListListener to receive updates when the current PagedList changes.
+     *
+     * @param listener Listener to receive updates.
+     *
+     * @see #getCurrentList()
+     * @see #removePagedListListener(PagedListListener)
+     */
     fun addPagedListListener(listener: AsyncPagedListDiffer.PagedListListener<Model>) {
         differ.addPagedListListener(listener)
     }

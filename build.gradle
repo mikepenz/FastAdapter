@@ -8,14 +8,13 @@ buildscript {
 
         setup = [
                 compileSdk: 29,
-                buildTools: "29.0.0",
+                buildTools: "29.0.2",
                 minSdk    : 14,
                 targetSdk : 28
         ]
 
         versions = [
                 androidX        : '1.0.0',
-                appcompat       : '1.0.2',
                 recyclerView    : '1.1.0-beta04',
                 material        : '1.1.0-alpha10',
                 appcompat       : '1.1.0',
@@ -28,8 +27,10 @@ buildscript {
                 materialdrawer  : '7.0.0-rc07',
                 aboutlib        : '7.0.1',
                 roboelectric    : '4.3',
-                detekt          : '1.0.0-RC15',
-                paging          : "2.1.0"
+                detekt          : '1.0.1',
+                paging          : "2.1.0",
+                room            : "1.1.1",
+                lifecycle       : "1.1.1"
         ]
     }
 
@@ -41,7 +42,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.0'
+        classpath 'com.android.tools.build:gradle:3.5.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
