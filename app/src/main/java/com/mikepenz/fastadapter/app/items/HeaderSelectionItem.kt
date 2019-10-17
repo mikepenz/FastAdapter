@@ -18,17 +18,17 @@ open class HeaderSelectionItem : SimpleSubExpandableItem() {
         this.mSubSelectionProvider = subSelectionProvider
     }
 
-    override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any>) {
-        super.bindView(viewHolder, payloads)
+    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+        super.bindView(holder, payloads)
 
         //get the context
-        val ctx = viewHolder.itemView.context
+        val ctx = holder.itemView.context
 
         //set the background for the item
-        viewHolder.view.clearAnimation()
-        ViewCompat.setBackground(viewHolder.view, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true))
+        holder.view.clearAnimation()
+        ViewCompat.setBackground(holder.view, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true))
         //set the text for the name
-        StringHolder.applyTo(name, viewHolder.name)
+        StringHolder.applyTo(name, holder.name)
         //set the text for the description or hide
 
         var selectedSubItems = 0
@@ -37,8 +37,8 @@ open class HeaderSelectionItem : SimpleSubExpandableItem() {
         val descr = StringHolder(description?.text)
         if (selectedSubItems > 0)
             descr.setText("Selected children: " + selectedSubItems + "/" + subItems.size)
-        StringHolder.applyToOrHide(descr, viewHolder.description)
+        StringHolder.applyToOrHide(descr, holder.description)
 
-        viewHolder.description.setTextColor(if (selectedSubItems == 0) Color.BLACK else Color.RED)
+        holder.description.setTextColor(if (selectedSubItems == 0) Color.BLACK else Color.RED)
     }
 }

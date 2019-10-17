@@ -85,7 +85,7 @@ class AdvancedSampleActivity : AppCompatActivity() {
 
         mFastAdapter.onPreLongClickListener = { _: View, _: GenericAdapter, item: GenericItem, position: Int ->
             //we do not want expandable items to be selected
-            if (item is IExpandable<*> && item.subItems != null) {
+            if (item is IExpandable<*> && item.subItems.isNotEmpty()) {
                 true
             } else {
                 //handle the longclick actions

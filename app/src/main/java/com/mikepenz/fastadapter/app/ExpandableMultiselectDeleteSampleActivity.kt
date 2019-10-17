@@ -23,6 +23,7 @@ import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.fastadapter.utils.SubItemUtil
 import com.mikepenz.iconics.context.IconicsLayoutInflater
+import com.mikepenz.iconics.utils.setIconicsFactory
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialize.MaterializeBuilder
 import com.mikepenz.materialize.util.UIUtils
@@ -42,7 +43,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
         findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         //as we use an icon from Android-Iconics via xml we add the IconicsLayoutInflater
         //https://github.com/mikepenz/Android-Iconics
-        LayoutInflaterCompat.setFactory(layoutInflater, IconicsLayoutInflater(delegate))
+        layoutInflater.setIconicsFactory(delegate)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
