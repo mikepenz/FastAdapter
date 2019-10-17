@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter.utils
 
 import android.view.MotionEvent
-import androidx.core.view.MotionEventCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.drag.IExtendedDraggable
