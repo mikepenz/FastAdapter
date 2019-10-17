@@ -29,7 +29,7 @@ object DragDropUtil {
         }
     }
 
-    /*
+    /**
      * This functions handles the default drag and drop move event
      * It takes care to move all items one by one within the passed in positions
      *
