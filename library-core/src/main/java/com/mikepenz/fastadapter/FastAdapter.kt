@@ -92,8 +92,8 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
     // the listeners which can be hooked on an item
     var onPreClickListener: ClickListener<Item>? = null
     var onClickListener: ClickListener<Item>? = null
-    var onPreLongClickListener: ClickListener<Item>? = null
-    var onLongClickListener: ClickListener<Item>? = null
+    var onPreLongClickListener: LongClickListener<Item>? = null
+    var onLongClickListener: LongClickListener<Item>? = null
     var onTouchListener: TouchListener<Item>? = null
 
     //the listeners for onCreateViewHolder or onBindViewHolder

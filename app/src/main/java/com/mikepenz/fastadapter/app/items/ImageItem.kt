@@ -128,7 +128,7 @@ class ImageItem : AbstractItem<ImageItem.ViewHolder>() {
     /**
      * our ViewHolder
      */
-    class ViewHolder(protected var view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(var view: View) : RecyclerView.ViewHolder(view) {
         var imageView: ImageView = view.findViewById(R.id.item_image_img)
         var imageName: TextView = view.findViewById(R.id.item_image_name)
         var imageDescription: TextView = view.findViewById(R.id.item_image_description)

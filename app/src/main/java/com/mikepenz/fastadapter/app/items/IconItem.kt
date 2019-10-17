@@ -83,7 +83,7 @@ class IconItem : AbstractItem<IconItem.ViewHolder>(), IExpandable<IconItem.ViewH
     /**
      * our ViewHolder
      */
-    class ViewHolder(protected var view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(var view: View) : RecyclerView.ViewHolder(view) {
         var name: TextView = view.findViewById(R.id.name)
         var image: IconicsImageView = view.findViewById(R.id.icon)
     }

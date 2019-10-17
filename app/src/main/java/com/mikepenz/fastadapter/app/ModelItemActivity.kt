@@ -45,7 +45,7 @@ class ModelItemActivity : AppCompatActivity() {
         }
 
         //create our FastAdapter which will manage everything
-        fastAdapter = FastAdapter.with(Arrays.asList(itemAdapter))
+        fastAdapter = FastAdapter.with(listOf(itemAdapter))
         val selectExtension = fastAdapter.getSelectExtension()
         selectExtension.isSelectable = true
 

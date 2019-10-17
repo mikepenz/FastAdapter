@@ -52,8 +52,7 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
 
     override var onPreItemClickListener: ClickListener<SimpleSubExpandableItem>?
         get() = null
-        set(_) {
-        }
+        set(_) {}
 
     //this might not be true for your application
     override var isSelectable: Boolean

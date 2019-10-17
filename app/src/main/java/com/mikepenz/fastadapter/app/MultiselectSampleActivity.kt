@@ -62,7 +62,7 @@ class MultiselectSampleActivity : AppCompatActivity() {
             multiSelect = true
             selectOnLongClick = true
             selectionListener = object : ISelectionListener<SimpleItem> {
-                override fun onSelectionChanged(item: SimpleItem?, selected: Boolean) {
+                override fun onSelectionChanged(item: SimpleItem, selected: Boolean) {
                     Log.i("FastAdapter", "SelectedCount: " + selectExtension.selections.size + " ItemsCount: " + selectExtension.selectedItems.size)
                 }
             }

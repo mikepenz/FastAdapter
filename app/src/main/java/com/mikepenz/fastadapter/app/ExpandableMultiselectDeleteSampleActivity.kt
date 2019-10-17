@@ -160,7 +160,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
         mExpandableExtension.expand()
 
         mSelectExtension.selectionListener = object : ISelectionListener<IItem<*>> {
-            override fun onSelectionChanged(item: IItem<*>?, selected: Boolean) {
+            override fun onSelectionChanged(item: IItem<*>, selected: Boolean) {
                 if (item is SimpleSubItem) {
                     val headerItem = item.parent
                     if (headerItem != null) {
@@ -214,7 +214,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
 
             // delete the selected items with the SubItemUtil to correctly handle sub items
             // this will even delete empty headers if you want to
-            SubItemUtil.deleteSelected(fastItemAdapter, mSelectExtension, mExpandableExtension, true, true)
+            SubItemUtil.deleteSelected(fastItemAdapter, mSelectExtension, mExpandableExtension, notifyParent = true, deleteEmptyHeaders = true)
             //as we no longer have a selection so the actionMode can be finished
             mode.finish()
             //we consume the event

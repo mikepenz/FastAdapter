@@ -11,5 +11,5 @@ interface ISelectionListener<Item : GenericItem> {
      * @param item the item who's selection state changed
      * param selected the new selection state of the item
      */
-    fun onSelectionChanged(item: Item?, selected: Boolean)
+    fun onSelectionChanged(item: Item, selected: Boolean)
 }
