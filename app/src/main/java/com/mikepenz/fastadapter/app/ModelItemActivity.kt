@@ -17,9 +17,9 @@ import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialize.MaterializeBuilder
 import com.turingtechnologies.materialscrollbar.CustomIndicator
 import com.turingtechnologies.materialscrollbar.DragScrollBar
-import kotlinx.android.synthetic.main.activity_sample.*
+import kotlinx.android.synthetic.main.activity_sample.rv
+import kotlinx.android.synthetic.main.activity_sample.toolbar
 import java.util.ArrayList
-import java.util.Arrays
 import kotlin.Comparator
 
 class ModelItemActivity : AppCompatActivity() {
