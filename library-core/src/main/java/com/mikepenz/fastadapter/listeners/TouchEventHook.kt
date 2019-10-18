@@ -5,6 +5,9 @@ import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
+import com.mikepenz.fastadapter.IAdapter
+
+typealias TouchListener<Item> = (v: View, event: MotionEvent, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean
 
 abstract class TouchEventHook<Item : GenericItem> : EventHook<Item> {
     abstract fun onTouch(v: View, event: MotionEvent, position: Int, fastAdapter: FastAdapter<Item>, item: Item): Boolean

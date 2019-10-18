@@ -55,7 +55,7 @@ open class ModelIconItem(icon: IconModel) : ModelAbstractItem<IconModel, ModelIc
     /**
      * our ViewHolder
      */
-    class ViewHolder(protected var view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         var name: TextView = view.findViewById(R.id.name)
         var image: IconicsImageView = view.findViewById(R.id.icon)
     }

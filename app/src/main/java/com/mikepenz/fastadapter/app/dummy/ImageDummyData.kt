@@ -90,10 +90,10 @@ object ImageDummyData {
         )
 
     private fun toList(vararg imageItems: ImageItem): List<ImageItem> {
-        return listOf(*imageItems)
+        return imageItems.toList()
     }
 
     private fun toList(vararg imageItems: SimpleImageItem): List<SimpleImageItem> {
-        return listOf(*imageItems)
+        return imageItems.toList()
     }
 }

@@ -27,5 +27,5 @@ abstract class ModelAbstractExpandableItem<Model, Parent, SubItem, VH : Recycler
     override val isAutoExpanding: Boolean = true
     override var isSelectable: Boolean
         get() = _subItems.isNotEmpty()
-        set(value) {}
+        set(_) {}
 }

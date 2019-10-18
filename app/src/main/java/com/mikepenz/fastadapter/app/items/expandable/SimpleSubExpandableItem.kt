@@ -7,6 +7,7 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.mikepenz.fastadapter.ClickListener
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.IClickable
 import com.mikepenz.fastadapter.ISubItem
@@ -24,7 +25,7 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
     var name: StringHolder? = null
     var description: StringHolder? = null
 
-    private var mOnClickListener: ((v: View?, adapter: IAdapter<SimpleSubExpandableItem>, item: SimpleSubExpandableItem, position: Int) -> Boolean)? = null
+    private var mOnClickListener: ClickListener<SimpleSubExpandableItem>? = null
 
     //we define a clickListener in here so we can directly animate
     /**
@@ -33,8 +34,8 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
      * @return
      */
     @Suppress("SetterBackingFieldAssignment")
-    override var onItemClickListener: ((v: View?, adapter: IAdapter<SimpleSubExpandableItem>, item: SimpleSubExpandableItem, position: Int) -> Boolean)? = { v: View?, adapter: IAdapter<SimpleSubExpandableItem>, item: SimpleSubExpandableItem, position: Int ->
-        if (item.subItems != null) {
+    override var onItemClickListener: ClickListener<SimpleSubExpandableItem>? = { v: View?, adapter: IAdapter<SimpleSubExpandableItem>, item: SimpleSubExpandableItem, position: Int ->
+        if (item.subItems.isNotEmpty()) {
             v?.findViewById<View>(R.id.material_drawer_icon)?.let {
                 if (!item.isExpanded) {
                     ViewCompat.animate(it).rotation(180f).start()
@@ -49,14 +50,13 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
             this.mOnClickListener = onClickListener // on purpose
         }
 
-    override var onPreItemClickListener: ((v: View?, adapter: IAdapter<SimpleSubExpandableItem>, item: SimpleSubExpandableItem, position: Int) -> Boolean)?
+    override var onPreItemClickListener: ClickListener<SimpleSubExpandableItem>?
         get() = null
-        set(onClickListener) {
-        }
+        set(_) {}
 
-    override//this might not be true for your application
-    var isSelectable: Boolean
-        get() = subItems == null
+    //this might not be true for your application
+    override var isSelectable: Boolean
+        get() = subItems.isEmpty()
         set(value) {
             super.isSelectable = value
         }
@@ -121,7 +121,7 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
         //set the text for the description or hide
         StringHolder.applyToOrHide(description, holder.description)
 
-        if (subItems == null || subItems.size == 0) {
+        if (subItems.isEmpty()) {
             holder.icon.visibility = View.GONE
         } else {
             holder.icon.visibility = View.VISIBLE
