@@ -310,13 +310,15 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
      * toggles the expanded state of the given expandable item at the given position
      *
      * @param position the global position
+     * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
      */
-    fun toggleExpandable(position: Int) {
+    @JvmOverloads
+    fun toggleExpandable(position: Int, notifyItemChanged: Boolean = true) {
         val item = fastAdapter.getItem(position) as? IExpandable<*> ?: return
         if (item.isExpanded) {
-            collapse(position)
+            collapse(position, notifyItemChanged)
         } else {
-            expand(position)
+            expand(position, notifyItemChanged)
         }
     }
 
@@ -346,6 +348,24 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
                 position + 1,
                 collapseAdapterPredicate.collapse(position, fastAdapter)
         )
+        //we need to notify to get the correct drawable if there is one showing the current state
+        if (notifyItemChanged) {
+            fastAdapter.notifyItemChanged(position)
+        }
+    }
+
+    /**
+     * collapses (closes) the given collapsible item at the given position with parents who contains this item
+     *
+     * @param position          the global position
+     * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
+     */
+    @JvmOverloads
+    fun collapseIncludeParents(position: Int, notifyItemChanged: Boolean = false) {
+        val parents = getExpandableParents(position)
+
+        parents.forEach { collapse(fastAdapter.getPosition(it.identifier)) }
+
         //we need to notify to get the correct drawable if there is one showing the current state
         if (notifyItemChanged) {
             fastAdapter.notifyItemChanged(position)
@@ -398,7 +418,25 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     }
 
     /**
-     * calculates the count of expandable items before a given position
+     * opens the expandable item at the given position with parents who contains this item
+     *
+     * @param position          the global position
+     * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
+     */
+    @JvmOverloads
+    fun expandIncludeParents(position: Int, notifyItemChanged: Boolean = false) {
+        val parents = getExpandableParents(position)
+
+        parents.forEach { expand(fastAdapter.getPosition(it.identifier)) }
+
+        //we need to notify to get the correct drawable if there is one showing the current state
+        if (notifyItemChanged) {
+            fastAdapter.notifyItemChanged(position)
+        }
+    }
+
+    /**
+     * calculates the count of expanded items before a given position
      *
      * @param from     the global start position you should pass here the count of items of the previous adapters (or 0 if you want to start from the beginning)
      * @param position the global position
@@ -411,6 +449,25 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
                 .filter { it.isExpanded }
                 .map { it.subItems.size }
                 .sum()
+    }
+
+    /**
+     * Walks through the parents tree while parents are non-null and parents are IExpandable
+     */
+    private fun getExpandableParents(position: Int): List<IExpandable<*>> {
+        val expandable = fastAdapter.getItem(position) as? IExpandable<*> ?: return emptyList()
+
+        // walk through the parents tree
+        val parents = mutableListOf<IExpandable<*>>()
+
+        var element: IExpandable<*>? = expandable
+        while (element != null) {
+            parents.add(element)
+            element = element.parent as? IExpandable<*>
+        }
+
+        // we need to reverse parents for going from root to provided item
+        return parents.reversed()
     }
 
     companion object {

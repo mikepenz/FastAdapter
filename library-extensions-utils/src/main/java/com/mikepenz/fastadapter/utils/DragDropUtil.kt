@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter.utils
 
 import android.view.MotionEvent
-import androidx.core.view.MotionEventCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.drag.IExtendedDraggable
@@ -20,8 +19,8 @@ object DragDropUtil {
     fun bindDragHandle(holder: RecyclerView.ViewHolder, item: IExtendedDraggable<RecyclerView.ViewHolder>) {
         // if necessary, init the drag handle, which will start the drag when touched
         if (item.touchHelper != null) {
-            item.getDragView(holder)?.setOnTouchListener { v, event ->
-                if (MotionEventCompat.getActionMasked(event) == MotionEvent.ACTION_DOWN) {
+            item.getDragView(holder)?.setOnTouchListener { _, event ->
+                if (event.actionMasked == MotionEvent.ACTION_DOWN) {
                     if (item.isDraggable)
                         item.touchHelper!!.startDrag(holder)
                 }
@@ -30,7 +29,7 @@ object DragDropUtil {
         }
     }
 
-    /*
+    /**
      * This functions handles the default drag and drop move event
      * It takes care to move all items one by one within the passed in positions
      *

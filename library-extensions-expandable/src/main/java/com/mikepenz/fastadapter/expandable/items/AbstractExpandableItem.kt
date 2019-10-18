@@ -22,5 +22,5 @@ abstract class AbstractExpandableItem<VH : RecyclerView.ViewHolder> :
     override val isAutoExpanding: Boolean = true
     override var isSelectable: Boolean
         get() = subItems.isNullOrEmpty()
-        set(value) {}
+        set(_) {}
 }

@@ -223,9 +223,7 @@ open class RealmSampleUserItem : RealmObject(), IItem<RealmSampleUserItem.ViewHo
      *
      * @return
      */
-    override fun hashCode(): Int {
-        return java.lang.Long.valueOf(identifier).hashCode()
-    }
+    override fun hashCode(): Int = identifier.hashCode()
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var name: TextView = view.findViewById<View>(R.id.text) as TextView

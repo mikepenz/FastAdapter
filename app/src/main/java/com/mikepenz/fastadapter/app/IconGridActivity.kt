@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.LayoutInflaterCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
@@ -12,10 +11,11 @@ import com.mikepenz.fastadapter.app.items.IconItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem
 import com.mikepenz.fastadapter.expandable.getExpandableExtension
 import com.mikepenz.iconics.Iconics
-import com.mikepenz.iconics.context.IconicsLayoutInflater2
+import com.mikepenz.iconics.utils.setIconicsFactory
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialize.MaterializeBuilder
-import kotlinx.android.synthetic.main.activity_sample.*
+import kotlinx.android.synthetic.main.activity_sample.rv
+import kotlinx.android.synthetic.main.activity_sample.toolbar
 import java.util.ArrayList
 import kotlin.Comparator
 
@@ -27,7 +27,7 @@ class IconGridActivity : AppCompatActivity() {
         findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         //as we use an icon from Android-Iconics via xml we add the IconicsLayoutInflater
         //https://github.com/mikepenz/Android-Iconics
-        LayoutInflaterCompat.setFactory2(layoutInflater, IconicsLayoutInflater2(delegate))
+        layoutInflater.setIconicsFactory(delegate)
 
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)

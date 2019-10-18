@@ -35,7 +35,7 @@ typealias GenericFastAdapter = FastAdapter<GenericItem>
  *
  * See the sample application for more details
  *
- * @param <Item> Defines the type of items this `FastAdapter` manages (in case of multiple different types, use `IItem`)</Item>
+ * @param Item Defines the type of items this `FastAdapter` manages (in case of multiple different types, use `IItem`)
  */
 @FastAdapterDsl
 open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -80,17 +80,21 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
     // if set to `false` will not attach any listeners to the list. click events will have to be handled manually
     var attachDefaultListeners = true
 
+    private val logger = VerboseLogger(TAG)
+
     /**
      * enables the verbose log for the adapter
      **/
-    var verboseLoggingEnabled = false
+    var verboseLoggingEnabled: Boolean
+        get() = logger.isEnabled
+        set(value) { logger.isEnabled = value }
 
     // the listeners which can be hooked on an item
     var onPreClickListener: ClickListener<Item>? = null
     var onClickListener: ClickListener<Item>? = null
-    var onPreLongClickListener: ((v: View, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean)? = null
-    var onLongClickListener: ((v: View, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean)? = null
-    var onTouchListener: ((v: View, event: MotionEvent, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean)? = null
+    var onPreLongClickListener: LongClickListener<Item>? = null
+    var onLongClickListener: LongClickListener<Item>? = null
+    var onTouchListener: TouchListener<Item>? = null
 
     //the listeners for onCreateViewHolder or onBindViewHolder
     var onCreateViewHolderListener: OnCreateViewHolderListener<Item> = OnCreateViewHolderListenerImpl()
@@ -105,6 +109,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
     /**
      * the ClickEventHook to hook onto the itemView of a viewholder
      */
+    @Suppress("UNCHECKED_CAST")
     open val viewClickListener: ClickEventHook<Item> = object : ClickEventHook<Item>() {
         override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<Item>, item: Item) {
             if (!item.isEnabled) return
@@ -336,7 +341,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      * @return the ViewHolder with the bound data
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        if (verboseLoggingEnabled) Log.v(TAG, "onCreateViewHolder: $viewType")
+        logger.log("onCreateViewHolder: $viewType")
 
         val typeInstance = getTypeInstance(viewType)
 
@@ -398,7 +403,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      * @param holder the viewHolder we unbind the data from
      */
     override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
-        if (verboseLoggingEnabled) Log.v(TAG, "onViewRecycled: " + holder.itemViewType)
+        logger.log("onViewRecycled: " + holder.itemViewType)
         super.onViewRecycled(holder)
         onBindViewHolderListener.unBindViewHolder(holder, holder.adapterPosition)
     }
@@ -409,7 +414,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      * @param holder the viewHolder for the view which got detached
      */
     override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        if (verboseLoggingEnabled) Log.v(TAG, "onViewDetachedFromWindow: " + holder.itemViewType)
+        logger.log("onViewDetachedFromWindow: " + holder.itemViewType)
         super.onViewDetachedFromWindow(holder)
         onBindViewHolderListener.onViewDetachedFromWindow(holder, holder.adapterPosition)
     }
@@ -420,7 +425,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      * @param holder the viewHolder for the view which got detached
      */
     override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
-        if (verboseLoggingEnabled) Log.v(TAG, "onViewAttachedToWindow: " + holder.itemViewType)
+        logger.log("onViewAttachedToWindow: " + holder.itemViewType)
         super.onViewAttachedToWindow(holder)
         onBindViewHolderListener.onViewAttachedToWindow(holder, holder.adapterPosition)
     }
@@ -433,17 +438,17 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      * @return true if we want to recycle anyways (false - it get's destroyed)
      */
     override fun onFailedToRecycleView(holder: RecyclerView.ViewHolder): Boolean {
-        if (verboseLoggingEnabled) Log.v(TAG, "onFailedToRecycleView: " + holder.itemViewType)
+        logger.log("onFailedToRecycleView: " + holder.itemViewType)
         return onBindViewHolderListener.onFailedToRecycleView(holder, holder.adapterPosition) || super.onFailedToRecycleView(holder)
     }
 
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
-        if (verboseLoggingEnabled) Log.v(TAG, "onAttachedToRecyclerView")
+        logger.log("onAttachedToRecyclerView")
         super.onAttachedToRecyclerView(recyclerView)
     }
 
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
-        if (verboseLoggingEnabled) Log.v(TAG, "onDetachedFromRecyclerView")
+        logger.log("onDetachedFromRecyclerView")
         super.onDetachedFromRecyclerView(recyclerView)
     }
 
@@ -455,7 +460,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      */
     open fun getPosition(item: Item): Int {
         if (item.identifier == -1L) {
-            Log.e("FastAdapter", "You have to define an identifier for your item to retrieve the position via this method")
+            Log.e(TAG, "You have to define an identifier for your item to retrieve the position via this method")
             return -1
         }
         return getPosition(item.identifier)
@@ -561,7 +566,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
         if (position < 0 || position >= globalSize) {
             return null
         }
-        if (verboseLoggingEnabled) Log.v(TAG, "getAdapter")
+        logger.log("getAdapter")
         //now get the adapter which is responsible for the given position
         return adapterSizes.valueAt(floorIndex(adapterSizes, position))
     }
@@ -843,8 +848,8 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      * A ViewHolder provided from the FastAdapter to allow handling the important event's within the ViewHolder
      * instead of the item
      *
-     * @param <Item>
-    </Item> */
+     * @param Item
+     */
     abstract class ViewHolder<Item : GenericItem>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         /**
