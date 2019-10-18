@@ -20,7 +20,6 @@ import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
 import com.mikepenz.fastadapter.expandable.getExpandableExtension
 import com.mikepenz.fastadapter.helpers.ActionModeHelper
 import com.mikepenz.fastadapter.select.getSelectExtension
-import com.mikepenz.iconics.utils.setIconicsFactory
 import com.mikepenz.materialize.MaterializeBuilder
 import com.mikepenz.materialize.util.UIUtils
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
@@ -43,9 +42,6 @@ class AdvancedSampleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        //as we use an icon from Android-Iconics via xml we add the IconicsLayoutInflater
-        //https://github.com/mikepenz/Android-Iconics
-        layoutInflater.setIconicsFactory(delegate)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
