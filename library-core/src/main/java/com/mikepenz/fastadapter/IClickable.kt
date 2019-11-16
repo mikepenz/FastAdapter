@@ -7,6 +7,8 @@ import android.view.View
  */
 typealias ClickListener<Item> = (v: View?, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean
 
+typealias LongClickListener<Item> = (v: View, adapter: IAdapter<Item>, item: Item, position: Int) -> Boolean
+
 interface IClickable<Item : GenericItem> {
 
     /**

@@ -11,8 +11,8 @@ class DemoEntityDataSource(ctx: Context) : PageKeyedDataSource<Int, DemoEntity>(
     private val demoEntityDAO: DemoEntityLocalDAO = LocalRepository.getDemoEntityDB(ctx).demoEntityDAO()
 
     //is called too load initial data
-    override fun loadInitial(params: PageKeyedDataSource.LoadInitialParams<Int>,
-                             callback: PageKeyedDataSource.LoadInitialCallback<Int, DemoEntity>) {
+    override fun loadInitial(params: LoadInitialParams<Int>,
+                             callback: LoadInitialCallback<Int, DemoEntity>) {
 
         var cpns = demoEntityDAO.getDemoEntitiesBySize(0, params.requestedLoadSize)
 
@@ -34,11 +34,11 @@ class DemoEntityDataSource(ctx: Context) : PageKeyedDataSource<Int, DemoEntity>(
         callback.onResult(cpns, null, cpns.size + 1)
     }
 
-    override fun loadBefore(params: PageKeyedDataSource.LoadParams<Int>, callback: PageKeyedDataSource.LoadCallback<Int, DemoEntity>) {
+    override fun loadBefore(params: LoadParams<Int>, callback: LoadCallback<Int, DemoEntity>) {
     }
 
     //is called to load pages of data using key passed in params
-    override fun loadAfter(params: PageKeyedDataSource.LoadParams<Int>, callback: PageKeyedDataSource.LoadCallback<Int, DemoEntity>) {
+    override fun loadAfter(params: LoadParams<Int>, callback: LoadCallback<Int, DemoEntity>) {
         val cpns = demoEntityDAO.getDemoEntitiesBySize(params.key, params.requestedLoadSize)
 
         Thread.sleep(500)

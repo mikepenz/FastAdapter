@@ -76,7 +76,7 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
 
         //configure the itemAdapter
         fastItemAdapter.itemFilter.filterPredicate = { item: SwipeableItem, constraint: CharSequence? ->
-            item.name?.text.toString().toLowerCase().contains(constraint.toString().toLowerCase())
+            item.name?.text.toString().contains(constraint.toString(), ignoreCase = true)
         }
 
         //get our recyclerView and do basic setup

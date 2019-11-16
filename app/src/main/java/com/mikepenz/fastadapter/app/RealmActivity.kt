@@ -45,9 +45,7 @@ class RealmActivity : AppCompatActivity() {
 
         //configure our fastAdapter
         mFastItemAdapter.onClickListener = { v: View?, _: IAdapter<RealmSampleUserItem>, item: RealmSampleUserItem, _: Int ->
-            v?.let { v ->
-                Toast.makeText(v.context, item.name, Toast.LENGTH_SHORT).show()
-            }
+            v?.let { Toast.makeText(it.context, item.name, Toast.LENGTH_SHORT).show() }
             false
         }
 

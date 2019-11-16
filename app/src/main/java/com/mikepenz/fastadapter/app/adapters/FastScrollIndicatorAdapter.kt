@@ -35,7 +35,7 @@ class FastScrollIndicatorAdapter<Item : GenericItem> : RecyclerView.Adapter<Recy
 
     override fun getCustomStringForElement(position: Int): String {
         val item = getItem(position)
-        return if (item is ModelIconItem && item.model.icon.name != null) {
+        return if (item is ModelIconItem && item.model.icon.name.isNotEmpty()) {
             //based on the position we set the headers text
             item.model.icon.name
         } else ""

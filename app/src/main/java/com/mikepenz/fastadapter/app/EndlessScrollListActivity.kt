@@ -78,7 +78,7 @@ class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFi
         fastItemAdapter.itemFilter.filterPredicate = { item: GenericItem, constraint: CharSequence? ->
             if (item is SimpleItem) {
                 //return true if we should filter it out
-                item.name?.text.toString().toLowerCase().contains(constraint.toString().toLowerCase())
+                item.name?.text.toString().contains(constraint.toString(), ignoreCase = true)
             } else {
                 //return false to keep it
                 false

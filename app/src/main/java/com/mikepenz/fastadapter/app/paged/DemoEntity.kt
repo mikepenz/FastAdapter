@@ -23,10 +23,10 @@ class DemoEntity {
     }
 
 
-    override fun equals(obj: Any?): Boolean {
-        if (obj === this)
+    override fun equals(other: Any?): Boolean {
+        if (other === this)
             return true
-        val demoEntity = obj as DemoEntity?
+        val demoEntity = other as DemoEntity?
         return demoEntity!!.identifier == this.identifier &&
                 demoEntity.data1 === demoEntity.data1 &&
                 demoEntity.data2 === demoEntity.data2

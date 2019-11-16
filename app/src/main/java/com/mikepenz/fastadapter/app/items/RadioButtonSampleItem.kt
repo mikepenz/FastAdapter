@@ -91,7 +91,7 @@ class RadioButtonSampleItem : AbstractItem<RadioButtonSampleItem.ViewHolder>() {
     /**
      * our ViewHolder
      */
-    class ViewHolder(protected var view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(var view: View) : RecyclerView.ViewHolder(view) {
         var radioButton: RadioButton = view.findViewById(R.id.radiobutton)
         internal var name: TextView = view.findViewById(R.id.material_drawer_name)
         internal var description: TextView = view.findViewById(R.id.material_drawer_description)

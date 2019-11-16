@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/material_drawer_item_primary"
     android:orientation="horizontal"
-    android:paddingEnd="@dimen/material_drawer_vertical_padding"
+    android:paddingStart="@dimen/material_drawer_vertical_padding"
     android:paddingLeft="@dimen/material_drawer_vertical_padding"
-    android:paddingRight="@dimen/material_drawer_vertical_padding"
-    android:paddingStart="@dimen/material_drawer_vertical_padding">
+    android:paddingEnd="@dimen/material_drawer_vertical_padding"
+    android:paddingRight="@dimen/material_drawer_vertical_padding">
 
     <LinearLayout
         android:layout_width="0dp"
@@ -42,12 +42,12 @@
             tools:text="Some drawer text" />
     </LinearLayout>
 
-    <ImageView
+    <com.mikepenz.iconics.view.IconicsImageView
         android:id="@+id/material_drawer_icon"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginTop="@dimen/material_drawer_vertical_padding"
-        app:ico_color="@color/md_black_1000"
-        app:ico_icon="gmd-keyboard-arrow-up"
-        app:ico_size="16dp" />
+        app:iiv_color="@color/md_black_1000"
+        app:iiv_icon="gmd-keyboard-arrow-up"
+        app:iiv_size="16dp" />
 </LinearLayout>

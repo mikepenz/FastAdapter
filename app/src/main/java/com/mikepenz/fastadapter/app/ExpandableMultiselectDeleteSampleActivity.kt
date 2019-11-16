@@ -7,7 +7,6 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
-import androidx.core.view.LayoutInflaterCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.michaelflisar.dragselectrecyclerview.DragSelectTouchListener
 import com.mikepenz.fastadapter.*
@@ -22,7 +21,6 @@ import com.mikepenz.fastadapter.helpers.RangeSelectorHelper
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.fastadapter.utils.SubItemUtil
-import com.mikepenz.iconics.context.IconicsLayoutInflater
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialize.MaterializeBuilder
 import com.mikepenz.materialize.util.UIUtils
@@ -40,9 +38,6 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        //as we use an icon from Android-Iconics via xml we add the IconicsLayoutInflater
-        //https://github.com/mikepenz/Android-Iconics
-        LayoutInflaterCompat.setFactory(layoutInflater, IconicsLayoutInflater(delegate))
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
@@ -159,7 +154,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
         mExpandableExtension.expand()
 
         mSelectExtension.selectionListener = object : ISelectionListener<IItem<*>> {
-            override fun onSelectionChanged(item: IItem<*>?, selected: Boolean) {
+            override fun onSelectionChanged(item: IItem<*>, selected: Boolean) {
                 if (item is SimpleSubItem) {
                     val headerItem = item.parent
                     if (headerItem != null) {
@@ -213,7 +208,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
 
             // delete the selected items with the SubItemUtil to correctly handle sub items
             // this will even delete empty headers if you want to
-            SubItemUtil.deleteSelected(fastItemAdapter, mSelectExtension, mExpandableExtension, true, true)
+            SubItemUtil.deleteSelected(fastItemAdapter, mSelectExtension, mExpandableExtension, notifyParent = true, deleteEmptyHeaders = true)
             //as we no longer have a selection so the actionMode can be finished
             mode.finish()
             //we consume the event

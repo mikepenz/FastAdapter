@@ -24,10 +24,8 @@ import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
 import com.mikepenz.materialize.MaterializeBuilder
-import kotlinx.android.synthetic.main.activity_sort.*
+import kotlinx.android.synthetic.main.activity_sort.toolbar
 import java.io.Serializable
-import java.lang.annotation.Retention
-import java.lang.annotation.RetentionPolicy
 import java.util.*
 
 /**
@@ -128,7 +126,6 @@ class SortActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.sort, menu)
@@ -216,7 +213,7 @@ class SortActivity : AppCompatActivity() {
         return result.withDescription("$description letter in the alphabet")
     }
 
-    @Retention(RetentionPolicy.SOURCE)
+    @Retention(AnnotationRetention.SOURCE)
     @IntDef(SORT_NONE, SORT_ASCENDING, SORT_DESCENDING)
     annotation class SortingStrategy
 

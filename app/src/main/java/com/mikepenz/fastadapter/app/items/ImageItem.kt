@@ -12,7 +12,6 @@ import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.listeners.ClickEventHook
 import com.mikepenz.iconics.view.IconicsImageView
-import java.util.*
 
 /**
  * Created by mikepenz on 28.12.15.
@@ -68,25 +67,25 @@ class ImageItem : AbstractItem<ImageItem.ViewHolder>() {
     /**
      * binds the data of this item onto the viewHolder
      *
-     * @param viewHolder the viewHolder of this item
+     * @param holder the viewHolder of this item
      */
-    override fun bindView(viewHolder: ViewHolder, payloads: MutableList<Any>) {
-        super.bindView(viewHolder, payloads)
+    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+        super.bindView(holder, payloads)
 
         //get the context
-        val ctx = viewHolder.itemView.context
+        val ctx = holder.itemView.context
 
         //define our data for the view
-        viewHolder.imageName.text = mName
-        viewHolder.imageDescription.text = mDescription
-        viewHolder.imageView.setImageBitmap(null)
+        holder.imageName.text = mName
+        holder.imageDescription.text = mDescription
+        holder.imageView.setImageBitmap(null)
 
         //we pre-style our heart :D
-        style(viewHolder.imageLovedOn, if (mStarred) 1 else 0)
-        style(viewHolder.imageLovedOff, if (mStarred) 0 else 1)
+        style(holder.imageLovedOn, if (mStarred) 1 else 0)
+        style(holder.imageLovedOff, if (mStarred) 0 else 1)
 
         //load glide
-        Glide.with(ctx).load(mImageUrl).animate(R.anim.alpha_on).into(viewHolder.imageView)
+        Glide.with(ctx).load(mImageUrl).animate(R.anim.alpha_on).into(holder.imageView)
     }
 
     override fun unbindView(holder: ViewHolder) {
@@ -129,7 +128,7 @@ class ImageItem : AbstractItem<ImageItem.ViewHolder>() {
     /**
      * our ViewHolder
      */
-    class ViewHolder(protected var view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(var view: View) : RecyclerView.ViewHolder(view) {
         var imageView: ImageView = view.findViewById(R.id.item_image_img)
         var imageName: TextView = view.findViewById(R.id.item_image_name)
         var imageDescription: TextView = view.findViewById(R.id.item_image_description)

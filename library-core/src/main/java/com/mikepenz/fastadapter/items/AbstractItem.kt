@@ -156,9 +156,7 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
      * @param id identifier
      * @return true if identifier equals id, false otherwise
      */
-    override fun equals(id: Int): Boolean {
-        return id.toLong() == identifier
-    }
+    override fun equals(id: Int): Boolean = id.toLong() == identifier
 
     /**
      * If this item equals to the given object
@@ -178,7 +176,5 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
      *
      * @return
      */
-    override fun hashCode(): Int {
-        return java.lang.Long.valueOf(identifier).hashCode()
-    }
+    override fun hashCode(): Int = identifier.hashCode()
 }
