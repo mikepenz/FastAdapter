@@ -9,11 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.michaelflisar.dragselectrecyclerview.DragSelectTouchListener
-import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.ISelectionListener
-import com.mikepenz.fastadapter.ISubItem
+import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
 import com.mikepenz.fastadapter.app.items.HeaderSelectionItem
@@ -25,12 +21,10 @@ import com.mikepenz.fastadapter.helpers.RangeSelectorHelper
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.fastadapter.utils.SubItemUtil
-import com.mikepenz.iconics.utils.setIconicsFactory
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialize.MaterializeBuilder
 import com.mikepenz.materialize.util.UIUtils
-import kotlinx.android.synthetic.main.activity_sample.rv
-import kotlinx.android.synthetic.main.activity_sample.toolbar
+import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
 class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {

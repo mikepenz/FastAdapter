@@ -2,8 +2,8 @@
 buildscript {
     ext {
         release = [
-                versionName: "4.1.0",
-                versionCode: 4100
+                versionName: "4.1.1",
+                versionCode: 4101
         ]
 
         setup = [
@@ -16,10 +16,10 @@ buildscript {
         versions = [
                 androidX        : '1.0.0',
                 recyclerView    : '1.1.0-beta05',
-                material        : '1.1.0-beta01',
+                material        : '1.1.0-beta02',
                 appcompat       : '1.1.0',
                 drawerlayout    : '1.1.0-alpha03',
-                constraintLayout: '2.0.0-beta2',
+                constraintLayout: '2.0.0-beta3',
                 cardview        : '1.0.0',
                 kotlin          : '1.3.50',
                 materialize     : '1.2.1',
