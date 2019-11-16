@@ -76,7 +76,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
             //this is the entrance parent
             if (allowedParents.size > 0) {
                 // Go on until we hit an item with a parent which was not in our expandable hierarchy
-                val parent = (item as ISubItem<*>).parent
+                val parent = (item as? ISubItem<*>)?.parent
                 if (parent == null || !allowedParents.contains(parent)) {
                     return true
                 }
