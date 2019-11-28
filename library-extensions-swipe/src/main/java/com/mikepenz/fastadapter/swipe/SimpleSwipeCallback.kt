@@ -57,11 +57,13 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
 
     fun withBackgroundSwipeLeft(@ColorInt bgColor: Int): SimpleSwipeCallback {
         bgColorLeft = bgColor
+        setDefaultSwipeDirs(swipeDirs or ItemTouchHelper.LEFT)
         return this
     }
 
     fun withBackgroundSwipeRight(@ColorInt bgColor: Int): SimpleSwipeCallback {
         bgColorRight = bgColor
+        setDefaultSwipeDirs(swipeDirs or ItemTouchHelper.RIGHT)
         return this
     }
 
