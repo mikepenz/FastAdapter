@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 
 class FastAdapterDialog<Item : GenericItem> : AlertDialog {
@@ -77,7 +76,7 @@ class FastAdapterDialog<Item : GenericItem> : AlertDialog {
     private fun initAdapterIfNeeded() {
         if (fastAdapter == null || recyclerView!!.adapter == null) {
             itemAdapter = ItemAdapter.items()
-            fastAdapter = FastAdapter.with<Item, IAdapter<Item>>(itemAdapter!!)
+            fastAdapter = FastAdapter.with(itemAdapter!!)
             recyclerView!!.adapter = fastAdapter
         }
     }
