@@ -165,20 +165,22 @@ For further details scroll down to the `ExpandableItems` (under advanced usage) 
 ### 3. Click listener
 ```kotlin
 fastAdapter.onClickListener = { view, adapter, item, position ->
-       // Handle click here
+    // Handle click here
     false
-    }
+}
 ```
 
 ### 4. Click listeners for views inside your item
 ```kotlin
-//just add an `EventHook` to your `FastAdapter` by implementing either a `ClickEventHook`, `LongClickEventHook`, `TouchEventHook`, `CustomEventHook`
+// just add an `EventHook` to your `FastAdapter` by implementing either a `ClickEventHook`, `LongClickEventHook`, `TouchEventHook`, `CustomEventHook`
 fastAdapter.addEventHook(object : ClickEventHook<SimpleImageItem>() {
     override fun onBind(viewHolder: RecyclerView.ViewHolder): View? {
         //return the views on which you want to bind this event
         return if (viewHolder is SimpleImageItem.ViewHolder) {
             viewHolder.viewWhichReactsOnClick
-        } else null
+        } else {
+	    null
+	}
     }
 
     override fun onClick(v: View, position: Int, fastAdapter: FastAdapter<SimpleImageItem>, item: SimpleImageItem) {
@@ -193,8 +195,8 @@ fastAdapter.addEventHook(object : ClickEventHook<SimpleImageItem>() {
 // Call this in onQueryTextSubmit() & onQueryTextChange() when using SearchView
 itemAdapter.filter("yourSearchTerm")
 itemAdapter.itemFilter.filterPredicate = { item: SimpleItem, constraint: CharSequence? ->
-    item.name?.text.toString().toLowerCase().contains(constraint.toString().toLowerCase())
-    }
+    item.name?.text.toString().contains(constraint.toString(), ignoreCase = true)
+}
 ```
 `filter()` should return true for items to be retained and false for items to be removed.
 
@@ -216,7 +218,7 @@ Implement `ItemTouchCallback` interface in your Activity, and override the `item
 override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
     DragDropUtil.onMove(fastItemAdapter.itemAdapter, oldPosition, newPosition) // change position
     return true
-   }
+}
 ```
 
 ### 7. Using different ViewHolders (like HeaderView)
@@ -256,7 +258,7 @@ recyclerView.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footer
          footerAdapter.clear()
          footerAdapter.add(ProgressItem())
          
-	// Load your items here and add it to FastAdapter
+	 // Load your items here and add it to FastAdapter
          itemAdapter.add(NEWITEMS)
     }
 })
