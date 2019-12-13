@@ -54,8 +54,15 @@ class DiffUtilActivity : AppCompatActivity() {
         rv.itemAnimator = AlphaInAnimator()
         rv.adapter = fastItemAdapter
 
+        fastItemAdapter.itemFilter.filterPredicate = { item: SimpleItem, constraint: CharSequence? ->
+            //return true if we should filter it out
+            item.name?.text.toString().contains(constraint!!, ignoreCase = true)
+        }
+
         //fill with some sample data
         setData()
+
+        fastItemAdapter.filter("1")
 
         //set the back arrow in the toolbar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -113,7 +120,7 @@ class DiffUtilActivity : AppCompatActivity() {
 
     private fun setDataAsync() {
         disposables.add(Single.fromCallable { createData() }
-                .map<DiffUtil.DiffResult> { simpleItems -> FastAdapterDiffUtil.calculateDiff(fastItemAdapter.itemAdapter, simpleItems) }.subscribeOn(Schedulers.io())
+                .map<DiffUtil.DiffResult> { simpleItems -> FastAdapterDiffUtil.calculateDiff(fastItemAdapter.itemAdapter, simpleItems, respectFilter = true) }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { result -> FastAdapterDiffUtil[fastItemAdapter.itemAdapter] = result })
     }

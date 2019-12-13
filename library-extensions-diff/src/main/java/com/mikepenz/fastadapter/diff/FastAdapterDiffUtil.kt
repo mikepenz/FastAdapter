@@ -30,12 +30,13 @@ object FastAdapterDiffUtil {
      * @param items       the new set of items we want to put into the adapter
      * @param callback    the callback used to implement the required checks to identify changes of items.
      * @param detectMoves configuration for the [DiffUtil.calculateDiff] method
+     * @param respectFilter ensures the filter is re-applied on the new set of items
      * @param <A>         The adapter type, whereas A extends [ModelAdapter]
      * @param <Model>     The model type we work with
      * @param <Item>      The item type kept in the adapter
      * @return the [androidx.recyclerview.widget.DiffUtil.DiffResult] computed.
     </Item></Model></A> */
-    fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> calculateDiff(adapter: A, items: List<Item>, callback: DiffCallback<Item> = DiffCallbackImpl(), detectMoves: Boolean = true): DiffUtil.DiffResult {
+    fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> calculateDiff(adapter: A, items: List<Item>, callback: DiffCallback<Item> = DiffCallbackImpl(), detectMoves: Boolean = true, respectFilter: Boolean = true): DiffUtil.DiffResult {
         if (adapter.isUseIdDistributor) {
             adapter.idDistributor.checkIds(items)
         }
@@ -55,8 +56,15 @@ object FastAdapterDiffUtil {
         val adapterItems = adapter.adapterItems
         val oldItems = adapterItems.toList()
 
+        val filterConstraint = adapter.itemFilter.constraint
+        val preparedItems = if (respectFilter && filterConstraint != null) {
+            items.filter { adapter.itemFilter.filterPredicate?.invoke(it, filterConstraint) ?: false }
+        } else {
+            items
+        }
+
         //pass in the oldItem list copy as we will update the one in the adapter itself
-        val result = DiffUtil.calculateDiff(FastAdapterCallback(oldItems, items, callback), detectMoves)
+        val result = DiffUtil.calculateDiff(FastAdapterCallback(oldItems, preparedItems, callback), detectMoves)
 
         //make sure the new items list is not a reference of the already mItems list
         if (items !== adapterItems) {
@@ -66,7 +74,12 @@ object FastAdapterDiffUtil {
             }
 
             //add all new items to the list
-            adapterItems.addAll(items)
+            adapterItems.addAll(preparedItems)
+
+            // we added all items, now apply filter again.
+            if (respectFilter && filterConstraint != null) {
+                adapter.itemFilter.originalItems = items.toMutableList()
+            }
         }
 
         return result

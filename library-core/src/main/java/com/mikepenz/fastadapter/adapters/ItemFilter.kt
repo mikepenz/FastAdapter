@@ -13,7 +13,7 @@ import kotlin.math.min
  */
 open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: ModelAdapter<Model, Item>) :
         Filter() {
-    private var originalItems: MutableList<Item>? = null
+    var originalItems: MutableList<Item>? = null
     var constraint: CharSequence? = null
         private set
 
