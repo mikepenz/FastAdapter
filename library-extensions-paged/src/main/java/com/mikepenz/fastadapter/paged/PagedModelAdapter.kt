@@ -298,7 +298,7 @@ open class PagedModelAdapter<Model, Item : GenericItem>(
      *
      * @param pagedList The new list to be displayed.
      */
-    fun submitList(pagedList: PagedList<Model>) {
+    fun submitList(pagedList: PagedList<Model>?) {
         itemList.submitList(pagedList)
     }
 
