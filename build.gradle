@@ -2,8 +2,8 @@
 buildscript {
     ext {
         release = [
-                versionName: "4.1.1",
-                versionCode: 4101
+                versionName: "v4.1.2-rc01",
+                versionCode: 4102
         ]
 
         setup = [
@@ -15,7 +15,7 @@ buildscript {
 
         versions = [
                 androidX        : '1.0.0',
-                recyclerView    : '1.1.0-beta05',
+                recyclerView    : '1.1.0',
                 material        : '1.1.0-beta02',
                 appcompat       : '1.1.0',
                 drawerlayout    : '1.1.0-alpha03',
@@ -42,7 +42,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.5.1'
+        classpath 'com.android.tools.build:gradle:3.5.3'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:${versions.kotlin}"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.4'
