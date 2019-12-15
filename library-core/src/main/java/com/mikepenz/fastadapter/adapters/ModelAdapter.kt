@@ -154,7 +154,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
      * @return the item inside this adapter
      */
     override fun getAdapterItem(position: Int): Item {
-        return itemList[position]
+        return itemList[position] ?: throw java.lang.RuntimeException("A normal ModelAdapter does not allow null items.")
     }
 
     /**

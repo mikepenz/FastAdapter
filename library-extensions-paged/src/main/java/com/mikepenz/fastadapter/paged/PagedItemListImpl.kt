@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter.paged
 
+import android.util.Log
 import androidx.paging.AsyncPagedListDiffer
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.AsyncDifferConfig
@@ -16,9 +17,9 @@ import com.mikepenz.fastadapter.utils.DefaultItemList
 open class PagedItemListImpl<Model, Item : GenericItem> @JvmOverloads constructor(
         listUpdateCallback: ListUpdateCallback,
         differConfig: AsyncDifferConfig<Model>,
+        var placeholderInterceptor: (position: Int) -> Item = getDefaultPlaceholderInterceptor(),
         var interceptor: (element: Model) -> Item?
 ) : DefaultItemList<Item>() {
-
     val differ: AsyncPagedListDiffer<Model> = AsyncPagedListDiffer<Model>(listUpdateCallback, differConfig)
 
     var idDistributor: IIdDistributor<Item> = IIdDistributor.DEFAULT as IIdDistributor<Item>
@@ -37,7 +38,10 @@ open class PagedItemListImpl<Model, Item : GenericItem> @JvmOverloads constructo
         get() = differ.currentList?.isEmpty() == true
 
     override fun get(position: Int): Item {
-        return differ.getItem(position)?.let { getItem(it) } ?: throw RuntimeException("No item found at position")
+        return differ.getItem(position)?.let { getItem(it) } ?: run {
+            Log.w(TAG, "Position currently contains a placeholder")
+            placeholderInterceptor.invoke(position)
+        }
     }
 
     private fun getItem(model: Model): Item? {
@@ -193,5 +197,18 @@ open class PagedItemListImpl<Model, Item : GenericItem> @JvmOverloads constructo
      */
     fun addPagedListListener(listener: AsyncPagedListDiffer.PagedListListener<Model>) {
         differ.addPagedListListener(listener)
+    }
+
+    companion object {
+        private const val TAG = "PagedItemListImpl"
+
+        /**
+         * Returns the default placeholder interceptor
+         *
+         * Note if your PagedItemList should contain placeholder, you have to provide a logic what the adapter should show while in placeholding state
+         */
+        internal fun <Item : GenericItem> getDefaultPlaceholderInterceptor(): (Int) -> Item {
+            return { throw RuntimeException("No item found at position") }
+        }
     }
 }
