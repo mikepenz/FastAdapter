@@ -20,7 +20,7 @@ class SimpleImageItem : AbstractItem<SimpleImageItem.ViewHolder>() {
     private var mImageUrl: String? = null
     private var mName: String? = null
     private var mDescription: String? = null
-    private var isEmpty: Boolean = false
+    private var isPlaceholder: Boolean = false // True when used as placeholderInterceptor by PagedModelAdapter
 
     /**
      * defines the type defining this item. must be unique. preferably an id
@@ -58,8 +58,8 @@ class SimpleImageItem : AbstractItem<SimpleImageItem.ViewHolder>() {
         return this
     }
 
-    fun setEmpty(): SimpleImageItem {
-        this.isEmpty = true
+    fun setPlaceholder(): SimpleImageItem {
+        this.isPlaceholder = true
         return this
     }
 
@@ -74,7 +74,7 @@ class SimpleImageItem : AbstractItem<SimpleImageItem.ViewHolder>() {
         //get the context
         val ctx = holder.itemView.context
 
-        if (isEmpty) {
+        if (isPlaceholder) { // Nothing to display at all; may also display placeholder resources
             holder.view.visibility = View.GONE
             return
         } else holder.view.visibility = View.VISIBLE
