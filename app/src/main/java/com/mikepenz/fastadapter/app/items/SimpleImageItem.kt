@@ -20,6 +20,7 @@ class SimpleImageItem : AbstractItem<SimpleImageItem.ViewHolder>() {
     private var mImageUrl: String? = null
     private var mName: String? = null
     private var mDescription: String? = null
+    private var isEmpty: Boolean = false
 
     /**
      * defines the type defining this item. must be unique. preferably an id
@@ -57,6 +58,11 @@ class SimpleImageItem : AbstractItem<SimpleImageItem.ViewHolder>() {
         return this
     }
 
+    fun setEmpty(): SimpleImageItem {
+        this.isEmpty = true
+        return this
+    }
+
     /**
      * binds the data of this item onto the viewHolder
      *
@@ -67,6 +73,11 @@ class SimpleImageItem : AbstractItem<SimpleImageItem.ViewHolder>() {
 
         //get the context
         val ctx = holder.itemView.context
+
+        if (isEmpty) {
+            holder.view.visibility = View.GONE
+            return
+        } else holder.view.visibility = View.VISIBLE
 
         //define our data for the view
         holder.imageName.text = mName
