@@ -124,7 +124,7 @@ public class FastAdapterTest {
         List<TestItem> items = TestDataGenerator.genTestItemList(100);
         itemAdapter.set(items);
 
-        assertThat(adapter.getItemViewType(40)).isEqualTo(-1);
+        assertThat(adapter.getItemViewType(40)).isEqualTo(RecyclerView.NO_POSITION);
     }
 
     @Test

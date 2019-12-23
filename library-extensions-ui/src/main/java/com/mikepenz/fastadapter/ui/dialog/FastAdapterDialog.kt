@@ -258,7 +258,7 @@ class FastAdapterDialog<Item : GenericItem> : AlertDialog {
      * Start the dialog and display it on screen.  The window is placed in the
      * application layer and opaque.  Note that you should not override this
      * method to do initialization when the dialog is shown, instead implement
-     * that in [.onStart].
+     * that in [onStart].
      */
     override fun show() {
         if (recyclerView!!.layoutManager == null) {

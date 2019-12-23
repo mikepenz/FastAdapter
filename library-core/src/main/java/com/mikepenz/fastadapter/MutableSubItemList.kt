@@ -43,4 +43,14 @@ class MutableSubItemList<E : ISubItem<*>>(val parent: IParentItem<*>, val list: 
         element.parent = parent
         return list.set(index, element).also { oldElement -> oldElement.parent = null }
     }
+
+    override fun clear() {
+        list.forEach { it.parent = null }
+        list.clear()
+    }
+
+    fun setNewList(newList: List<E>) {
+        clear()
+        addAll(newList)
+    }
 }

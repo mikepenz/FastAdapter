@@ -7,7 +7,7 @@ import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapterExtension
 import com.mikepenz.fastadapter.adapters.ModelAdapter
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl
-import java.util.*
+import java.util.Collections
 
 /**
  * Created by mikepenz on 28.10.16.
@@ -16,13 +16,11 @@ import java.util.*
 object FastAdapterDiffUtil {
 
     /**
-     * This method will compute a [androidx.recyclerview.widget.DiffUtil.DiffResult] based on the given adapter, and the list of new items.
-     *
+     * This method will compute a [DiffUtil.DiffResult] based on the given adapter, and the list of new items.
      *
      * It automatically collapses all expandables (if enabled) as they are not supported by the diff util,
      * pre sort the items based on the comparator if available,
-     * map the new item types for the FastAdapter then calculates the [androidx.recyclerview.widget.DiffUtil.DiffResult] using the [DiffUtil].
-     *
+     * map the new item types for the FastAdapter then calculates the [DiffUtil.DiffResult] using the [DiffUtil].
      *
      * As the last step it will replace the items inside the adapter with the new set of items provided.
      *
@@ -30,11 +28,11 @@ object FastAdapterDiffUtil {
      * @param items       the new set of items we want to put into the adapter
      * @param callback    the callback used to implement the required checks to identify changes of items.
      * @param detectMoves configuration for the [DiffUtil.calculateDiff] method
-     * @param <A>         The adapter type, whereas A extends [ModelAdapter]
-     * @param <Model>     The model type we work with
-     * @param <Item>      The item type kept in the adapter
-     * @return the [androidx.recyclerview.widget.DiffUtil.DiffResult] computed.
-    </Item></Model></A> */
+     * @param A           The adapter type, whereas A extends [ModelAdapter]
+     * @param Model       The model type we work with
+     * @param Item        The item type kept in the adapter
+     * @return the [DiffUtil.DiffResult] computed.
+     */
     fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> calculateDiff(adapter: A, items: List<Item>, callback: DiffCallback<Item> = DiffCallbackImpl(), detectMoves: Boolean = true): DiffUtil.DiffResult {
         if (adapter.isUseIdDistributor) {
             adapter.idDistributor.checkIds(items)
@@ -72,11 +70,7 @@ object FastAdapterDiffUtil {
         return result
     }
 
-    /**
-     * Uses Reflection to collapse all items if this adapter uses expandable items
-     *
-     * @param fastAdapter
-     */
+    /** Uses Reflection to collapse all items if this adapter uses expandable items */
     private fun <Item : GenericItem> collapseIfPossible(fastAdapter: FastAdapter<Item>?) {
         fastAdapter ?: return
         try {
@@ -92,10 +86,10 @@ object FastAdapterDiffUtil {
     }
 
     /**
-     * Dispatches a [androidx.recyclerview.widget.DiffUtil.DiffResult] to the given Adapter.
+     * Dispatches a [DiffUtil.DiffResult] to the given Adapter.
      *
      * @param adapter the adapter to dispatch the updates to
-     * @param result  the computed [androidx.recyclerview.widget.DiffUtil.DiffResult]
+     * @param result  the computed [DiffUtil.DiffResult]
      * @return the adapter to allow chaining
      */
     operator fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> set(adapter: A, result: DiffUtil.DiffResult): A {
@@ -104,51 +98,51 @@ object FastAdapterDiffUtil {
     }
 
     /**
-     * convenient function for [calculateDiff]
+     * Convenient function for [calculateDiff]
      *
-     * @return the [androidx.recyclerview.widget.DiffUtil.DiffResult] computed.
+     * @return the [DiffUtil.DiffResult] computed.
      */
     fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> calculateDiff(adapter: A, items: List<Item>, callback: DiffCallback<Item>): DiffUtil.DiffResult {
         return calculateDiff(adapter, items, callback, true)
     }
 
     /**
-     * convenient function for [calculateDiff]
+     * Convenient function for [calculateDiff]
      *
-     * @return the [androidx.recyclerview.widget.DiffUtil.DiffResult] computed.
+     * @return the [DiffUtil.DiffResult] computed.
      */
     fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> calculateDiff(adapter: A, items: List<Item>, detectMoves: Boolean): DiffUtil.DiffResult {
         return calculateDiff(adapter, items, DiffCallbackImpl(), detectMoves)
     }
 
     /**
-     * convenient function for [calculateDiff]
+     * Convenient function for [calculateDiff]
      *
-     * @return the [androidx.recyclerview.widget.DiffUtil.DiffResult] computed.
+     * @return the [DiffUtil.DiffResult] computed.
      */
     fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> calculateDiff(adapter: A, items: List<Item>): DiffUtil.DiffResult {
         return calculateDiff(adapter, items, DiffCallbackImpl(), true)
     }
 
     /**
-     * Calculates a [androidx.recyclerview.widget.DiffUtil.DiffResult] given the adapter and the items, and will directly dispatch them to the adapter.
+     * Calculates a [DiffUtil.DiffResult] given the adapter and the items, and will directly dispatch them to the adapter.
      *
      * @param adapter     the adapter containing the current items.
      * @param items       the new set of items we want to put into the adapter
      * @param callback    the callback used to implement the required checks to identify changes of items.
      * @param detectMoves configuration for the [DiffUtil.calculateDiff] method
-     * @param <A>         The adapter type, whereas A extends [ModelAdapter]
-     * @param <Model>     The model type we work with
-     * @param <Item>      The item type kept in the adapter
+     * @param A           The adapter type, whereas A extends [ModelAdapter]
+     * @param Model       The model type we work with
+     * @param Item        The item type kept in the adapter
      * @return the adapter to allow chaining
-    </Item></Model></A> */
+     */
     fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> set(adapter: A, items: List<Item>, callback: DiffCallback<Item>, detectMoves: Boolean): A {
         val result = calculateDiff(adapter, items, callback, detectMoves)
         return set(adapter, result)
     }
 
     /**
-     * convenient function for [.set]
+     * Convenient function for [set]
      *
      * @return the adapter to allow chaining
      */
@@ -157,7 +151,7 @@ object FastAdapterDiffUtil {
     }
 
     /**
-     * convenient function for [.set]
+     * Convenient function for [set]
      *
      * @return the adapter to allow chaining
      */
@@ -166,7 +160,7 @@ object FastAdapterDiffUtil {
     }
 
     /**
-     * convenient function for [.set]
+     * Convenient function for [set]
      *
      * @return the adapter to allow chaining
      */
@@ -175,10 +169,10 @@ object FastAdapterDiffUtil {
     }
 
     /**
-     * Convenient implementation for the [androidx.recyclerview.widget.DiffUtil.Callback] to simplify difference calculation using [FastAdapter] items.
+     * Convenient implementation for the [DiffUtil.Callback] to simplify difference calculation using [FastAdapter] items.
      *
-     * @param <Item> the item type in the adapter
-    </Item> */
+     * @param Item the item type in the adapter
+     */
     private class FastAdapterCallback<Item : GenericItem> internal constructor(private val oldItems: List<Item>, private val newItems: List<Item>, private val callback: DiffCallback<Item>) : DiffUtil.Callback() {
 
         override fun getOldListSize(): Int {

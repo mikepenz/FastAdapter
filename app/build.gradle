@@ -149,14 +149,14 @@ dependencies {
 
     //Used to async operations
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.13'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.16'
 
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
-    implementation "android.arch.persistence.room:runtime:${versions.room}"
-    kapt "android.arch.persistence.room:compiler:${versions.room}"
+    implementation "androidx.room:room-runtime:${versions.room}"
+    kapt "androidx.room:room-compiler:${versions.room}"
 
-    implementation "android.arch.lifecycle:extensions:${versions.lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}"
 
 
     configurations.all {

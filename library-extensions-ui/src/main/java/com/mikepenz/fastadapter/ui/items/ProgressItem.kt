@@ -22,12 +22,7 @@ class ProgressItem : AbstractItem<ProgressItem.ViewHolder>() {
         }
     }
 
-    override fun unbindView(holder: ViewHolder) {
-    }
-
-    override fun getViewHolder(v: View): ViewHolder {
-        return ViewHolder(v)
-    }
+    override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private var progressBar: ProgressBar = view.findViewById(R.id.progress_bar)

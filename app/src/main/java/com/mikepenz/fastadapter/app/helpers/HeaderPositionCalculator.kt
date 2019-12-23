@@ -81,7 +81,7 @@ class HeaderPositionCalculator(private val mAdapter: StickyRecyclerHeadersAdapte
             return false
         }
 
-        var nextItemHeaderId: Long = -1
+        var nextItemHeaderId = -1L
         val nextItemPosition = originalPosition + if (isReverseLayout) 1 else -1
         if (!indexOutOfBounds(nextItemPosition)) {
             nextItemHeaderId = mAdapter.getHeaderId(nextItemPosition)

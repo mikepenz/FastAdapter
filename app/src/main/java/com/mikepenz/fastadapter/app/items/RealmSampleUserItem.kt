@@ -26,7 +26,7 @@ open class RealmSampleUserItem : RealmObject(), IItem<RealmSampleUserItem.ViewHo
      * @return the identifier of this item
      */
     @PrimaryKey
-    override var identifier: Long = -1
+    override var identifier: Long = -1L
 
     // the tag for this item
     /**
@@ -48,7 +48,7 @@ open class RealmSampleUserItem : RealmObject(), IItem<RealmSampleUserItem.ViewHo
     /**
      * set if this item is enabled
      *
-     * @param enabled true if this item is enabled
+     * @param is true if this item is enabled
      * @return this
      */
     @Ignore

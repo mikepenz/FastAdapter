@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter.utils
 
+import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IExpandable
 import com.mikepenz.fastadapter.IItem
@@ -7,7 +8,8 @@ import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.expandable.ExpandableExtension
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
-import java.util.*
+import java.util.ArrayList
+import java.util.LinkedList
 
 
 /**
@@ -15,77 +17,85 @@ import java.util.*
  */
 object SubItemUtil {
     /**
-     * counts the items in the adapter, respecting subitems regardless of there current visibility
+     * Counts the items in the adapter, respecting subitems regardless of there current visibility
      *
      * @param adapter   the adapter instance
      * @param predicate predicate against which each item will be checked before counting it
      * @return number of items in the adapter that apply to the predicate
      */
-    fun countItems(adapter: IItemAdapter<*, *>, predicate: IPredicate<IItem<*>>): Int {
-        return countItems(adapter.adapterItems, true, false, predicate)
+    @JvmStatic fun countItems(adapter: IItemAdapter<*, *>, predicate: IPredicate<IItem<*>>): Int {
+        return countItems(
+                items = adapter.adapterItems,
+                countHeaders = true,
+                subItemsOnly = false,
+                predicate = predicate
+        )
     }
 
     /**
-     * counts the items in the adapter, respecting subitems regardless of there current visibility
+     * Counts the items in the adapter, respecting subitems regardless of there current visibility
      *
      * @param adapter      the adapter instance
      * @param countHeaders if true, headers will be counted as well
      * @return number of items in the adapter
      */
-    fun countItems(adapter: IItemAdapter<*, *>, countHeaders: Boolean): Int {
+    @JvmStatic fun countItems(adapter: IItemAdapter<*, *>, countHeaders: Boolean): Int {
         return countItems(adapter.adapterItems, countHeaders, false, null)
     }
 
-    private fun countItems(items: List<IItem<*>>, countHeaders: Boolean, subItemsOnly: Boolean, predicate: IPredicate<IItem<*>>?): Int {
+    @JvmStatic private fun countItems(items: List<IItem<*>>, countHeaders: Boolean, subItemsOnly: Boolean, predicate: IPredicate<IItem<*>>?): Int {
         return getAllItems(items, countHeaders, subItemsOnly, predicate).size
     }
 
     /**
-     * retrieves a flat list of the items in the adapter, respecting subitems regardless of there current visibility
+     * Retrieves a flat list of the items in the adapter, respecting subitems regardless of there current visibility
      *
      * @param adapter   the adapter instance
      * @param predicate predicate against which each item will be checked before adding it to the result
      * @return list of items in the adapter that apply to the predicate
      */
-    fun getAllItems(adapter: IItemAdapter<*, *>, predicate: IPredicate<IItem<*>>): List<IItem<*>> {
-        return getAllItems(adapter.adapterItems, true, false, predicate)
+    @JvmStatic fun getAllItems(adapter: IItemAdapter<*, *>, predicate: IPredicate<IItem<*>>): List<IItem<*>> {
+        return getAllItems(
+                items = adapter.adapterItems,
+                countHeaders = true,
+                subItemsOnly = false,
+                predicate = predicate
+        )
     }
 
     /**
-     * retrieves a flat list of the items in the adapter, respecting subitems regardless of there current visibility
+     * Retrieves a flat list of the items in the adapter, respecting subitems regardless of there current visibility
      *
      * @param adapter      the adapter instance
      * @param countHeaders if true, headers will be counted as well
      * @return list of items in the adapter
      */
-    fun getAllItems(adapter: IItemAdapter<*, *>, countHeaders: Boolean): List<IItem<*>> {
+    @JvmStatic fun getAllItems(adapter: IItemAdapter<*, *>, countHeaders: Boolean): List<IItem<*>> {
         return getAllItems(adapter.adapterItems, countHeaders, false, null)
     }
 
     /**
-     * retrieves a flat list of the items in the provided list, respecting subitems regardless of there current visibility
+     * Retrieves a flat list of the items in the provided list, respecting subitems regardless of there current visibility
      *
      * @param items        the list of items to process
      * @param countHeaders if true, headers will be counted as well
      * @return list of items in the adapter
      */
-    fun getAllItems(items: List<IItem<*>>, countHeaders: Boolean, predicate: IPredicate<IItem<*>>): List<IItem<*>> {
+    @JvmStatic fun getAllItems(items: List<IItem<*>>, countHeaders: Boolean, predicate: IPredicate<IItem<*>>): List<IItem<*>> {
         return getAllItems(items, countHeaders, false, predicate)
     }
 
     /**
-     * internal function!
-     *
+     * Internal function!
      *
      * Why countHeaders and subItems => because the subItemsOnly is an internal flag for the recursive call to optimise it!
      */
-    private fun getAllItems(items: List<IItem<*>>?, countHeaders: Boolean, subItemsOnly: Boolean, predicate: IPredicate<IItem<*>>?): List<IItem<*>> {
+    @JvmStatic private fun getAllItems(items: List<IItem<*>>?, countHeaders: Boolean, subItemsOnly: Boolean, predicate: IPredicate<IItem<*>>?): List<IItem<*>> {
         val res = ArrayList<IItem<*>>()
         if (items == null || items.isEmpty()) {
             return res
         }
 
-        var temp: Int
         val itemCount = items.size
         var item: IItem<*>
         var subItems: List<IItem<*>>?
@@ -106,8 +116,7 @@ object SubItemUtil {
                     if (countHeaders && predicate.apply(item)) {
                         res.add(item)
                     }
-                    temp = subItems.size
-                    for (j in 0 until temp) {
+                    for (j in subItems.indices) {
                         subItems[j].let {
                             if (predicate.apply(it)) {
                                 res.add(it)
@@ -127,13 +136,13 @@ object SubItemUtil {
     }
 
     /**
-     * counts the selected items in the adapter underneath an expandable item, recursively
+     * Counts the selected items in the adapter underneath an expandable item, recursively
      *
      * @param adapter the adapter instance
      * @param header  the header who's selected children should be counted
      * @return number of selected items underneath the header
      */
-    fun <T> countSelectedSubItems(adapter: FastAdapter<*>, header: T): Int where T : IItem<*>, T : IExpandable<*> {
+    @JvmStatic fun <T> countSelectedSubItems(adapter: FastAdapter<*>, header: T): Int where T : IItem<*>, T : IExpandable<*> {
         val extension = adapter.getExtension(SelectExtension::class.java) as SelectExtension<*>?
         if (extension != null) {
             val selections = extension.selectedItems
@@ -142,11 +151,10 @@ object SubItemUtil {
         return 0
     }
 
-    fun <T> countSelectedSubItems(selections: Set<IItem<*>>, header: T): Int where T : IItem<*>, T : IExpandable<*> {
+    @JvmStatic fun <T> countSelectedSubItems(selections: Set<IItem<*>>, header: T): Int where T : IItem<*>, T : IExpandable<*> {
         var count = 0
         val subItems = header.subItems
-        val items = subItems.size
-        for (i in 0 until items) {
+        for (i in subItems.indices) {
             if (selections.contains(subItems[i])) {
                 count++
             }
@@ -158,18 +166,18 @@ object SubItemUtil {
     }
 
     /**
-     * select or unselect all sub itmes underneath an expandable item
+     * Select or unselect all sub itmes underneath an expandable item
      *
      * @param adapter the adapter instance
      * @param header  the header who's children should be selected or deselected
      * @param select  the new selected state of the sub items
      */
-    fun <T, Adapter> selectAllSubItems(adapter: Adapter, header: T, select: Boolean) where T : IItem<*>, T : IExpandable<*>, Adapter : FastAdapter<T> {
+    @JvmStatic fun <T, Adapter> selectAllSubItems(adapter: Adapter, header: T, select: Boolean) where T : IItem<*>, T : IExpandable<*>, Adapter : FastAdapter<T> {
         selectAllSubItems(adapter, header, select, false, null)
     }
 
     /**
-     * select or unselect all sub itmes underneath an expandable item
+     * Select or unselect all sub itmes underneath an expandable item
      *
      * @param adapter      the adapter instance
      * @param header       the header who's children should be selected or deselected
@@ -177,13 +185,12 @@ object SubItemUtil {
      * @param notifyParent true, if the parent should be notified about the changes of its children selection state
      * @param payload      payload for the notifying function
      */
-    fun <T, Adapter> selectAllSubItems(adapter: Adapter, header: T, select: Boolean, notifyParent: Boolean, payload: Any?) where T : IItem<*>, Adapter : FastAdapter<T> {
+    @JvmStatic fun <T, Adapter> selectAllSubItems(adapter: Adapter, header: T, select: Boolean, notifyParent: Boolean, payload: Any?) where T : IItem<*>, Adapter : FastAdapter<T> {
         if (header is IExpandable<*>) {
             val subItems = header.subItems
-            val subItemsCount = subItems.size
             val position = adapter.getPosition(header)
             if (header.isExpanded) {
-                for (i in 0 until subItemsCount) {
+                for (i in subItems.indices) {
                     if ((subItems[i] as IItem<*>).isSelectable) {
                         val extension: SelectExtension<T>? = adapter.getSelectExtension()
                         if (extension != null) {
@@ -199,7 +206,7 @@ object SubItemUtil {
                     }
                 }
             } else {
-                for (i in 0 until subItemsCount) {
+                for (i in subItems.indices) {
                     if ((subItems[i] as IItem<*>).isSelectable) {
                         (subItems[i] as IItem<*>).isSelected = select
                     }
@@ -215,14 +222,12 @@ object SubItemUtil {
         }
     }
 
-    private fun <T> getParent(item: IItem<*>?): T? where T : IExpandable<*>, T : IItem<*> {
-        return if (item is IExpandable<*>) {
-            item.parent as T?
-        } else null
+    @JvmStatic private fun <T> getParent(item: IItem<*>?): T? where T : IExpandable<*>, T : IItem<*> {
+        return (item as? IExpandable)?.parent as? T?
     }
 
     /**
-     * deletes all selected items from the adapter respecting if the are sub items or not
+     * Deletes all selected items from the adapter respecting if the are sub items or not
      * subitems are removed from their parents sublists, main items are directly removed
      *
      * Alternatively you might consider also looking at: [SelectExtension.deleteAllSelectedItems]
@@ -230,7 +235,7 @@ object SubItemUtil {
      * @param deleteEmptyHeaders if true, empty headers will be removed from the adapter
      * @return List of items that have been removed from the adapter
      */
-    fun deleteSelected(fastAdapter: FastAdapter<IItem<*>>, selectExtension: SelectExtension<*>, expandableExtension: ExpandableExtension<*>, notifyParent: Boolean, deleteEmptyHeaders: Boolean): List<IItem<*>> {
+    @JvmStatic fun deleteSelected(fastAdapter: FastAdapter<IItem<*>>, selectExtension: SelectExtension<*>, expandableExtension: ExpandableExtension<*>, notifyParent: Boolean, deleteEmptyHeaders: Boolean): List<IItem<*>> {
         val deleted = ArrayList<IItem<*>>()
 
         // we use a LinkedList, because this has performance advantages when modifying the listIterator during iteration!
@@ -256,12 +261,12 @@ object SubItemUtil {
                 val subItems = parent.subItems
                 subItems.remove(item)
                 // check if parent is expanded and notify the adapter about the removed item, if necessary (only if parent is visible)
-                if (parentPos != -1 && parent.isExpanded) {
+                if (parentPos != RecyclerView.NO_POSITION && parent.isExpanded) {
                     expandableExtension.notifyAdapterSubItemsChanged(parentPos, subItems.size + 1)
                 }
 
                 // if desired, notify the parent about its changed items (only if parent is visible!)
-                if (parentPos != -1 && notifyParent) {
+                if (parentPos != RecyclerView.NO_POSITION && notifyParent) {
                     expanded = parent.isExpanded
                     fastAdapter.notifyAdapterItemChanged(parentPos)
                     // expand the item again if it was expanded before calling notifyAdapterItemChanged
@@ -272,11 +277,11 @@ object SubItemUtil {
 
                 deleted.add(item)
 
-                if (deleteEmptyHeaders && subItems.size == 0) {
+                if (deleteEmptyHeaders && subItems.isEmpty()) {
                     it.add(parent)
                     it.previous()
                 }
-            } else if (pos != -1) {
+            } else if (pos != RecyclerView.NO_POSITION) {
                 // if we did not find a parent, we remove the item from the adapter
                 val adapter = fastAdapter.getAdapter(pos)
                 if (adapter is IItemAdapter<*, *>) {
@@ -289,7 +294,7 @@ object SubItemUtil {
     }
 
     /**
-     * deletes all items in identifiersToDelete collection from the adapter respecting if there are sub items or not
+     * Deletes all items in identifiersToDelete collection from the adapter respecting if there are sub items or not
      * subitems are removed from their parents sublists, main items are directly removed
      *
      * @param fastAdapter         the adapter to remove the items from
@@ -298,7 +303,7 @@ object SubItemUtil {
      * @param deleteEmptyHeaders  if true, empty headers will be removed from the adapter
      * @return List of items that have been removed from the adapter
      */
-    fun delete(fastAdapter: FastAdapter<IItem<*>>, expandableExtension: ExpandableExtension<*>, identifiersToDelete: Collection<Long>?, notifyParent: Boolean, deleteEmptyHeaders: Boolean): List<IItem<*>> {
+    @JvmStatic fun delete(fastAdapter: FastAdapter<IItem<*>>, expandableExtension: ExpandableExtension<*>, identifiersToDelete: Collection<Long>?, notifyParent: Boolean, deleteEmptyHeaders: Boolean): List<IItem<*>> {
         val deleted = ArrayList<IItem<*>>()
         if (identifiersToDelete == null || identifiersToDelete.isEmpty()) {
             return deleted
@@ -329,12 +334,12 @@ object SubItemUtil {
                 parentPos = fastAdapter.getPosition(parent)
                 val subItems = parent.subItems
                 // check if parent is expanded and notify the adapter about the removed item, if necessary (only if parent is visible)
-                if (parentPos != -1 && parent.isExpanded) {
+                if (parentPos != RecyclerView.NO_POSITION && parent.isExpanded) {
                     expandableExtension.notifyAdapterSubItemsChanged(parentPos, subItems.size + 1)
                 }
 
                 // if desired, notify the parent about it's changed items (only if parent is visible!)
-                if (parentPos != -1 && notifyParent) {
+                if (parentPos != RecyclerView.NO_POSITION && notifyParent) {
                     expanded = parent.isExpanded
                     fastAdapter.notifyAdapterItemChanged(parentPos)
                     // expand the item again if it was expanded before calling notifyAdapterItemChanged
@@ -349,7 +354,7 @@ object SubItemUtil {
                     it.add(parent.identifier)
                     it.previous()
                 }
-            } else if (pos != -1) {
+            } else if (pos != RecyclerView.NO_POSITION) {
                 // if we did not find a parent, we remove the item from the adapter
                 val adapter = fastAdapter.getAdapter(pos)
                 var success: Boolean
@@ -366,29 +371,28 @@ object SubItemUtil {
     }
 
     /**
-     * notifies items (incl. sub items if they are currently extended)
+     * Notifies items (incl. sub items if they are currently extended)
      *
      * @param adapter              the adapter
      * @param identifiers          set of identifiers that should be notified
      * @param restoreExpandedState true, if expanded headers should stay expanded
      */
+    @JvmStatic
     @JvmOverloads
     fun <Item> notifyItemsChanged(adapter: FastAdapter<IItem<*>>, expandableExtension: ExpandableExtension<*>, identifiers: Set<Long>, restoreExpandedState: Boolean = false) where Item : IItem<*>, Item : IExpandable<*> {
-        var i = 0
         var item: IItem<*>?
-        while (i < adapter.itemCount) {
+        for (i in 0 until adapter.itemCount) {
             item = adapter.getItem(i)
             if (item is IExpandable<*>) {
                 notifyItemsChanged(adapter, expandableExtension, item, identifiers, true, restoreExpandedState)
             } else if (identifiers.contains(item?.identifier)) {
                 adapter.notifyAdapterItemChanged(i)
             }
-            i++
         }
     }
 
     /**
-     * notifies items (incl. sub items if they are currently extended)
+     * Notifies items (incl. sub items if they are currently extended)
      *
      * @param adapter              the adapter
      * @param header               the expandable header that should be checked (incl. sub items)
@@ -396,7 +400,7 @@ object SubItemUtil {
      * @param checkSubItems        true, if sub items of headers items should be checked recursively
      * @param restoreExpandedState true, if expanded headers should stay expanded
      */
-    fun <Item> notifyItemsChanged(adapter: FastAdapter<IItem<*>>, expandableExtension: ExpandableExtension<*>, header: Item, identifiers: Set<Long>, checkSubItems: Boolean, restoreExpandedState: Boolean) where Item : IItem<*>, Item : IExpandable<*> {
+    @JvmStatic fun <Item> notifyItemsChanged(adapter: FastAdapter<IItem<*>>, expandableExtension: ExpandableExtension<*>, header: Item, identifiers: Set<Long>, checkSubItems: Boolean, restoreExpandedState: Boolean) where Item : IItem<*>, Item : IExpandable<*> {
         val subItems = header.subItems
         val subItemsCount = subItems.size
         val position = adapter.getPosition(header)

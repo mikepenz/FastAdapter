@@ -10,6 +10,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.aboutlibraries.Libs
 import com.mikepenz.aboutlibraries.LibsBuilder
 import com.mikepenz.fastadapter.FastAdapter
@@ -28,7 +29,8 @@ import com.mikepenz.materialdrawer.DrawerBuilder
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.activity_main.rv
+import kotlinx.android.synthetic.main.activity_main.toolbar
 
 class SampleActivity : AppCompatActivity() {
 
@@ -122,7 +124,7 @@ class SampleActivity : AppCompatActivity() {
                         return false
                     }
                 })
-                .withSelectedItemByPosition(-1)
+                .withSelectedItemByPosition(RecyclerView.NO_POSITION)
                 .build()
 
         //create our ItemAdapter which will host our items
