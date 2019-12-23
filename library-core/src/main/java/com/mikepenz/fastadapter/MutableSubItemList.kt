@@ -4,7 +4,20 @@ package com.mikepenz.fastadapter
  * MutableList proxy which will properly set and remove the parent for items added/set/removed.
  * This is important as otherwise collapsing will not work properly (does not resolve parent relationships)
  */
-class MutableSubItemList<E : ISubItem<*>>(val parent: IParentItem<*>, val list: MutableList<E> = mutableListOf()) : MutableList<E> by list {
+class MutableSubItemList<E : ISubItem<*>>(val parent: IParentItem<*>, var list: MutableList<E> = mutableListOf()) : MutableList<E> {
+
+    override val size: Int get() = list.size
+    override fun contains(element: E): Boolean = list.contains(element)
+    override fun containsAll(elements: Collection<E>): Boolean = list.containsAll(elements)
+    override fun get(index: Int): E = list[index]
+    override fun indexOf(element: E): Int = list.indexOf(element)
+    override fun isEmpty(): Boolean = list.isEmpty()
+    override fun iterator(): MutableIterator<E> = list.iterator()
+    override fun lastIndexOf(element: E): Int = list.lastIndexOf(element)
+    override fun listIterator(): MutableListIterator<E> = list.listIterator()
+    override fun listIterator(index: Int): MutableListIterator<E> = list.listIterator(index)
+    override fun retainAll(elements: Collection<E>): Boolean = list.retainAll(elements)
+    override fun subList(fromIndex: Int, toIndex: Int): MutableList<E> = list.subList(fromIndex, toIndex)
 
     override fun remove(element: E): Boolean {
         return list.remove(element).also { removed -> if (removed) element.parent = null }
@@ -49,8 +62,8 @@ class MutableSubItemList<E : ISubItem<*>>(val parent: IParentItem<*>, val list: 
         list.clear()
     }
 
-    fun setNewList(newList: List<E>) {
-        clear()
-        addAll(newList)
+    fun setNewList(newList: MutableList<E>) {
+        list = newList
+        list.forEach { it.parent = parent }
     }
 }
