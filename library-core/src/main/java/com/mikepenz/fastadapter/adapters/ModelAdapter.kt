@@ -1,22 +1,13 @@
 package com.mikepenz.fastadapter.adapters
 
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.AbstractAdapter
-import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IAdapterNotifier
-import com.mikepenz.fastadapter.IExpandable
-import com.mikepenz.fastadapter.IIdDistributor
-import com.mikepenz.fastadapter.IItemAdapter
-import com.mikepenz.fastadapter.IItemList
-import com.mikepenz.fastadapter.IModelItem
+import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.utils.AdapterPredicate
 import com.mikepenz.fastadapter.utils.DefaultItemList
 import com.mikepenz.fastadapter.utils.DefaultItemListImpl
 import com.mikepenz.fastadapter.utils.Triple
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Kotlin type alias to simplify usage for an all accepting ModelAdapter
