@@ -24,7 +24,9 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
     @Suppress("EmptyDefaultConstructor")
     @IntDef(ALL, UP_DOWN, LEFT_RIGHT)
     @Retention(AnnotationRetention.SOURCE)
-    annotation class Directions {}
+    annotation class Directions {
+        // empty on purpose
+    }
 
     constructor(@Directions directions: Int = UP_DOWN) : super(directions, 0) {
         this.directions = directions

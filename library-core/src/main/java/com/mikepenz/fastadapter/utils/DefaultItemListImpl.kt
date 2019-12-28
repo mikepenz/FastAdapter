@@ -2,13 +2,14 @@ package com.mikepenz.fastadapter.utils
 
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapterNotifier
-import java.util.ArrayList
+import java.util.*
 import kotlin.math.min
 
 /**
  * The default item list implementation
  */
 open class DefaultItemListImpl<Item : GenericItem> @JvmOverloads constructor(
+        @Suppress("ConstructorParameterNaming")
         protected var _items: MutableList<Item> = ArrayList()
 ) : DefaultItemList<Item>() {
 
