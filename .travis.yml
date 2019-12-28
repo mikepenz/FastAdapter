@@ -1,3 +1,7 @@
+env:
+  global:
+    JAVA_OPTS=-Xmx2g
+    
 language: android
 android:
   components:
