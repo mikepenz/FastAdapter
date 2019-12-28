@@ -4,7 +4,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 interface OnBindViewHolderListener {
     /**
-     * is called in onBindViewHolder to bind the data on the ViewHolder
+     * Is called in onBindViewHolder to bind the data on the ViewHolder
      *
      * @param viewHolder the viewHolder for the type at this position
      * @param position   the position of this viewHolder
@@ -13,7 +13,7 @@ interface OnBindViewHolderListener {
     fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>)
 
     /**
-     * is called in onViewRecycled to unbind the data on the ViewHolder
+     * Is called in onViewRecycled to unbind the data on the ViewHolder
      *
      * @param viewHolder the viewHolder for the type at this position
      * @param position   the position of this viewHolder
@@ -21,7 +21,7 @@ interface OnBindViewHolderListener {
     fun unBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int)
 
     /**
-     * is called in onViewAttachedToWindow when the view is detached from the window
+     * Is called in onViewAttachedToWindow when the view is detached from the window
      *
      * @param viewHolder the viewHolder for the type at this position
      * @param position   the position of this viewHolder
@@ -29,7 +29,7 @@ interface OnBindViewHolderListener {
     fun onViewAttachedToWindow(viewHolder: RecyclerView.ViewHolder, position: Int)
 
     /**
-     * is called in onViewDetachedFromWindow when the view is detached from the window
+     * Is called in onViewDetachedFromWindow when the view is detached from the window
      *
      * @param viewHolder the viewHolder for the type at this position
      * @param position   the position of this viewHolder
@@ -37,7 +37,7 @@ interface OnBindViewHolderListener {
     fun onViewDetachedFromWindow(viewHolder: RecyclerView.ViewHolder, position: Int)
 
     /**
-     * is called when the ViewHolder is in a transient state. return true if you want to reuse
+     * Is called when the ViewHolder is in a transient state. return true if you want to reuse
      * that view anyways
      *
      * @param viewHolder the viewHolder for the view which failed to recycle

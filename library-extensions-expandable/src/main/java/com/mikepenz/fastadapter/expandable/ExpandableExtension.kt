@@ -6,7 +6,15 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.collection.ArraySet
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.*
+import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericItem
+import com.mikepenz.fastadapter.IAdapter
+import com.mikepenz.fastadapter.IAdapterExtension
+import com.mikepenz.fastadapter.IExpandable
+import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.IItemAdapter
+import com.mikepenz.fastadapter.IParentItem
+import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.utils.AdapterPredicate
@@ -28,22 +36,16 @@ inline fun <Item : GenericItem> FastAdapter<Item>.expandableExtension(block: Exp
     getExpandableExtension().apply(block)
 }
 
-/**
- * internal helper function to check if an item is expanded.
- */
+/** Internal helper function to check if an item is expanded. */
 internal val IItem<out RecyclerView.ViewHolder>?.isExpanded: Boolean
     get() = (this as? IExpandable<*>)?.isExpanded == true
 
-/**
- * internal helper function to execute the block if the item is expandable
- */
+/** Internal helper function to execute the block if the item is expandable */
 internal fun <R> IItem<out RecyclerView.ViewHolder>?.ifExpandable(block: (IExpandable<*>) -> R): R? {
     return (this as? IExpandable<*>)?.let(block)
 }
 
-/**
- * internal helper function to execute the block if the item is expandable
- */
+/** Internal helper function to execute the block if the item is expandable */
 internal fun <R> IItem<out RecyclerView.ViewHolder>?.ifExpandableParent(block: (IExpandable<*>, IParentItem<*>) -> R): R? {
     return (this as? IExpandable<*>)?.parent?.let {
         block.invoke(this, it)
@@ -69,12 +71,12 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
                 position: Int
         ): Boolean {
             //we do not care about non visible items
-            if (position == -1) {
+            if (position == RecyclerView.NO_POSITION) {
                 return false
             }
 
             //this is the entrance parent
-            if (allowedParents.size > 0) {
+            if (allowedParents.isNotEmpty()) {
                 // Go on until we hit an item with a parent which was not in our expandable hierarchy
                 val parent = (item as? ISubItem<*>)?.parent
                 if (parent == null || !allowedParents.contains(parent)) {
@@ -102,9 +104,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     }
 
     // only one expanded section
-    /**
-     * If there should be only one expanded, expandable item in the list
-     */
+    /** If there should be only one expanded, expandable item in the list */
     var isOnlyOneExpandedItem = false
 
     //-------------------------
@@ -114,7 +114,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     //-------------------------
 
     /**
-     * returns the expanded items this contains position and the count of items
+     * Returns the expanded items this contains position and the count of items
      * which are expanded by this position
      *
      * @return the expanded items
@@ -122,15 +122,12 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     val expanded: SparseIntArray
         get() {
             val expandedItems = SparseIntArray()
-            var i = 0
-            val size = fastAdapter.itemCount
-            while (i < size) {
+            for (i in 0 until fastAdapter.itemCount) {
                 fastAdapter.getItem(i).ifExpandable { expandableItem ->
                     if (expandableItem.isExpanded) {
                         expandedItems.put(i, expandableItem.subItems.size)
                     }
                 }
-                i++
             }
             return expandedItems
         }
@@ -139,11 +136,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
      * @return a set with the global positions of all expanded items
      */
     val expandedItems: IntArray
-        get() {
-            return (0 until fastAdapter.itemCount).filter {
-                fastAdapter.getItem(it).isExpanded
-            }.toIntArray()
-        }
+        get() = (0 until fastAdapter.itemCount).filter { fastAdapter.getItem(it).isExpanded }.toIntArray()
 
     override fun withSavedInstanceState(savedInstanceState: Bundle?, prefix: String) {
         val expandedItems = savedInstanceState?.getLongArray(BUNDLE_EXPANDED + prefix) ?: return
@@ -243,7 +236,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     }
 
     /**
-     * notifies the fastAdapter about new / removed items within a sub hierarchy
+     * Notifies the fastAdapter about new / removed items within a sub hierarchy
      * NOTE this currently only works for sub items with only 1 level
      *
      * @param position      the global position of the parent item
@@ -307,7 +300,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     }
 
     /**
-     * toggles the expanded state of the given expandable item at the given position
+     * Toggles the expanded state of the given expandable item at the given position
      *
      * @param position the global position
      * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
@@ -323,7 +316,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     }
 
     /**
-     * collapses all expanded items
+     * Collapses all expanded items
      *
      * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
      */
@@ -336,7 +329,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     }
 
     /**
-     * collapses (closes) the given collapsible item at the given position
+     * Collapses (closes) the given collapsible item at the given position
      *
      * @param position          the global position
      * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
@@ -355,7 +348,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     }
 
     /**
-     * collapses (closes) the given collapsible item at the given position with parents who contains this item
+     * Collapses (closes) the given collapsible item at the given position with parents who contains this item
      *
      * @param position          the global position
      * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
@@ -373,7 +366,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     }
 
     /**
-     * expands all expandable items
+     * Expands all expandable items
      *
      * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
      */
@@ -387,7 +380,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
 
 
     /**
-     * opens the expandable item at the given position
+     * Opens the expandable item at the given position
      *
      * @param position          the global position
      * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
@@ -418,7 +411,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     }
 
     /**
-     * opens the expandable item at the given position with parents who contains this item
+     * Opens the expandable item at the given position with parents who contains this item
      *
      * @param position          the global position
      * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
@@ -436,7 +429,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     }
 
     /**
-     * calculates the count of expanded items before a given position
+     * Calculates the count of expanded items before a given position
      *
      * @param from     the global start position you should pass here the count of items of the previous adapters (or 0 if you want to start from the beginning)
      * @param position the global position
@@ -451,9 +444,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
                 .sum()
     }
 
-    /**
-     * Walks through the parents tree while parents are non-null and parents are IExpandable
-     */
+    /** Walks through the parents tree while parents are non-null and parents are IExpandable */
     private fun getExpandableParents(position: Int): List<IExpandable<*>> {
         val expandable = fastAdapter.getItem(position) as? IExpandable<*> ?: return emptyList()
 

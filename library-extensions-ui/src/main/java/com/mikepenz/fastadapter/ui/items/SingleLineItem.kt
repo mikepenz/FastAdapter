@@ -24,6 +24,7 @@ class SingleLineItem : AbstractItem<SingleLineItem.ViewHolder>() {
 
     var avatar: ImageHolder? = null
         private set
+
     var icon: ImageHolder? = null
         private set
 
@@ -106,9 +107,7 @@ class SingleLineItem : AbstractItem<SingleLineItem.ViewHolder>() {
         holder.icon.visibility = View.VISIBLE
     }
 
-    override fun getViewHolder(v: View): ViewHolder {
-        return ViewHolder(v)
-    }
+    override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var name: TextView = view.findViewById<View>(R.id.name) as TextView

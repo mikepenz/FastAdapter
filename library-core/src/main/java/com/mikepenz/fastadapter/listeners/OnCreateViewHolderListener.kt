@@ -7,7 +7,7 @@ import com.mikepenz.fastadapter.GenericItem
 
 interface OnCreateViewHolderListener<Item : GenericItem> {
     /**
-     * is called inside the onCreateViewHolder method and creates the viewHolder based on the provided viewTyp
+     * Is called inside the onCreateViewHolder method and creates the viewHolder based on the provided viewTyp
      *
      * @param fastAdapter the fastAdapter which handles the creation of this viewHolder
      * @param parent   the parent which will host the View
@@ -17,7 +17,7 @@ interface OnCreateViewHolderListener<Item : GenericItem> {
     fun onPreCreateViewHolder(fastAdapter: FastAdapter<Item>, parent: ViewGroup, viewType: Int, typeInstance: Item): RecyclerView.ViewHolder
 
     /**
-     * is called after the viewHolder was created and the default listeners were added
+     * Is called after the viewHolder was created and the default listeners were added
      *
      * @param fastAdapter the fastAdapter which handles the creation of this viewHolder
      * @param viewHolder the created viewHolder after all listeners were set

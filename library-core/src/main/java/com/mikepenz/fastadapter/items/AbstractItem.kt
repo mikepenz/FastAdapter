@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IItem
-import java.util.*
+import java.util.Collections
 
 /**
  * Created by mikepenz on 14.07.15.
@@ -15,64 +15,37 @@ import java.util.*
  */
 abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
 
-    /**
-     * The identifier of this item
-     */
-    override var identifier: Long = -1
+    /** The identifier of this item */
+    override var identifier: Long = -1L
 
-    /**
-     * The tag of this item
-     */
+    /** The tag of this item */
     override var tag: Any? = null
 
-    /**
-     * If this item is enabled
-     */
-    override var isEnabled = true
+    /** If this item is enabled */
+    override var isEnabled: Boolean = true
 
-    /**
-     * If this item is selected
-     */
-    override var isSelected = false
+    /** If this item is selected */
+    override var isSelected: Boolean = false
 
-    /**
-     * If this item is selectable
-     */
-    override var isSelectable = true
+    /** If this item is selectable */
+    override var isSelectable: Boolean = true
 
-    /**
-     * Binds the data of this item to the given holder
-     *
-     * @param holder
-     * @param payloads
-     */
+    /** Binds the data of this item to the given holder */
     @CallSuper
     override fun bindView(holder: VH, payloads: MutableList<Any>) {
         //set the selected state of this item. force this otherwise it may is missed when implementing an item
         holder.itemView.isSelected = isSelected
     }
 
-    /**
-     * View needs to release resources when its recycled
-     *
-     * @param holder
-     */
+    /** View needs to release resources when its recycled */
     override fun unbindView(holder: VH) {
     }
 
-    /**
-     * View got attached to the window
-     *
-     * @param holder
-     */
+    /** View got attached to the window */
     override fun attachToWindow(holder: VH) {
     }
 
-    /**
-     * View got detached from the window
-     *
-     * @param holder
-     */
+    /** View got detached from the window */
     override fun detachFromWindow(holder: VH) {
     }
 
@@ -80,7 +53,6 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
      * RecyclerView was not able to recycle that viewHolder because it's in a transient state
      * Implement this and clear any animations, to allow recycling. Return true in that case
      *
-     * @param holder
      * @return true if you want it to get recycled
      */
     override fun failedToRecycle(holder: VH): Boolean {
@@ -88,23 +60,14 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
     }
 
     /**
-     * this method is called by generateView(Context ctx), generateView(Context ctx, ViewGroup parent) and getViewHolder(ViewGroup parent)
+     * This method is called by generateView(Context ctx), generateView(Context ctx, ViewGroup parent) and getViewHolder(ViewGroup parent)
      * it will generate the View from the layout, overwrite this if you want to implement your view creation programatically
-     *
-     * @param ctx
-     * @param parent
-     * @return
      */
     open fun createView(ctx: Context, parent: ViewGroup?): View {
         return LayoutInflater.from(ctx).inflate(layoutRes, parent, false)
     }
 
-    /**
-     * generates a view by the defined LayoutRes
-     *
-     * @param ctx
-     * @return
-     */
+    /** Generates a view by the defined LayoutRes */
     override fun generateView(ctx: Context): View {
         val viewHolder = getViewHolder(createView(ctx, null))
 
@@ -115,13 +78,7 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
         return viewHolder.itemView
     }
 
-    /**
-     * generates a view by the defined LayoutRes and pass the LayoutParams from the parent
-     *
-     * @param ctx
-     * @param parent
-     * @return
-     */
+    /** Generates a view by the defined LayoutRes and pass the LayoutParams from the parent */
     override fun generateView(ctx: Context, parent: ViewGroup): View {
         val viewHolder = getViewHolder(createView(ctx, parent))
 
@@ -131,12 +88,7 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
         return viewHolder.itemView
     }
 
-    /**
-     * Generates a ViewHolder from this Item with the given parent
-     *
-     * @param parent
-     * @return
-     */
+    /** Generates a ViewHolder from this Item with the given parent */
     override fun getViewHolder(parent: ViewGroup): VH {
         return getViewHolder(createView(parent.context, parent))
     }
@@ -145,7 +97,6 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
     /**
      * This method returns the ViewHolder for our item, using the provided View.
      *
-     * @param v
      * @return the ViewHolder for this Item
      */
     abstract fun getViewHolder(v: View): VH
@@ -158,12 +109,7 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
      */
     override fun equals(id: Int): Boolean = id.toLong() == identifier
 
-    /**
-     * If this item equals to the given object
-     *
-     * @param o
-     * @return
-     */
+    /** If this item equals to the given object */
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
@@ -171,10 +117,6 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
         return identifier == that?.identifier
     }
 
-    /**
-     * the hashCode implementation
-     *
-     * @return
-     */
+    /** The hashCode implementation */
     override fun hashCode(): Int = identifier.hashCode()
 }

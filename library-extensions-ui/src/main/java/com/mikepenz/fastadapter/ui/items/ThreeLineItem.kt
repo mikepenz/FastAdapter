@@ -21,11 +21,13 @@ class ThreeLineItem : AbstractItem<ThreeLineItem.ViewHolder>() {
 
     var name: StringHolder? = null
         private set
+
     var description: StringHolder? = null
         private set
 
     var avatar: ImageHolder? = null
         private set
+
     var icon: ImageHolder? = null
         private set
 
@@ -90,7 +92,6 @@ class ThreeLineItem : AbstractItem<ThreeLineItem.ViewHolder>() {
         return this
     }
 
-
     override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
         super.bindView(holder, payloads)
         if (isEnabled) {
@@ -111,9 +112,7 @@ class ThreeLineItem : AbstractItem<ThreeLineItem.ViewHolder>() {
         holder.icon.visibility = View.VISIBLE
     }
 
-    override fun getViewHolder(v: View): ViewHolder {
-        return ViewHolder(v)
-    }
+    override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var name: TextView = view.findViewById<View>(R.id.name) as TextView

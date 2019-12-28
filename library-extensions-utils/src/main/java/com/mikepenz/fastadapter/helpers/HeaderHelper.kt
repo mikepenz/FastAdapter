@@ -1,53 +1,38 @@
 package com.mikepenz.fastadapter.helpers
 
 import com.mikepenz.fastadapter.adapters.ModelAdapter
-import java.util.*
+import java.util.Collections
+import java.util.Comparator
 
 /**
  * Created by mikepenz on 17.08.16.
  */
 
 class HeaderHelper<Item, HeaderItem : Item> {
-    /**
-     * @return the ModelAdapter
-     */
-    /**
-     * @param modelAdapter the ModelAdapter
-     */
+
+    /** The ModelAdapter */
     var modelAdapter: ModelAdapter<Item, *>? = null
-    /**
-     * @return the function used to determine headers
-     */
-    /**
-     * @param groupingFunction the function used to determine headers
-     */
+
+    /** The function used to determine headers */
     var groupingFunction: GroupingFunction<Item, HeaderItem>
-    /**
-     * @return the comparator to use before adding the headers
-     */
-    /**
-     * @param comparator the comparator to use before adding the headers
-     */
+
+    /** The comparator to use before adding the headers */
     var comparator: Comparator<Item>? = null
 
-    /**
-     * @param groupingFunction
-     */
     constructor(groupingFunction: GroupingFunction<Item, HeaderItem>) {
         this.groupingFunction = groupingFunction
     }
 
-    /**
-     * @param modelAdapter
-     * @param groupingFunction
-     */
-    constructor(modelAdapter: ModelAdapter<Item, *>, groupingFunction: GroupingFunction<Item, HeaderItem>) {
+    constructor(
+            modelAdapter: ModelAdapter<Item, *>,
+            groupingFunction: GroupingFunction<Item, HeaderItem>
+    ) {
         this.modelAdapter = modelAdapter
         this.groupingFunction = groupingFunction
     }
 
     /**
-     * call this when your list order has changed or was updated, and you have to readd the headres
+     * Call this when your list order has changed or was updated, and you have to readd the headres
      *
      * @param items the list which will get the headers added inbetween
      */
@@ -71,19 +56,16 @@ class HeaderHelper<Item, HeaderItem : Item> {
 
                 if (headerItem != null) {
                     items.add(i + 1, headerItem)
-                    i += 1
-                    size += 1
+                    i++
+                    size++
                 }
                 i++
             }
         }
 
-        /**
-         * set the sorted list to the modelAdapter if provided
-         */
+        // Set the sorted list to the modelAdapter if provided
         modelAdapter?.set(items)
     }
-
 
     interface GroupingFunction<Item, HeaderItem> {
         /**

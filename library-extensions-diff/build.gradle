@@ -38,7 +38,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
 
-    implementation "androidx.recyclerview:recyclerview:${versions.androidX}"
+    implementation "androidx.recyclerview:recyclerview:${versions.recyclerView}"
     implementation "androidx.annotation:annotation:${versions.androidX}"
 
     testImplementation 'junit:junit:4.12'

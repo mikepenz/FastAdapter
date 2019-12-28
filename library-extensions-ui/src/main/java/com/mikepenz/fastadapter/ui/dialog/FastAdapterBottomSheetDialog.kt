@@ -20,6 +20,7 @@ class FastAdapterBottomSheetDialog<Item : GenericItem> : BottomSheetDialog {
         private set
 
     var fastAdapter: FastAdapter<Item>? = null
+
     lateinit var itemAdapter: ItemAdapter<Item>
 
     constructor(context: Context) : super(context) {
@@ -106,7 +107,7 @@ class FastAdapterBottomSheetDialog<Item : GenericItem> : BottomSheetDialog {
      * Start the dialog and display it on screen.  The window is placed in the
      * application layer and opaque.  Note that you should not override this
      * method to do initialization when the dialog is shown, instead implement
-     * that in [.onStart].
+     * that in [onStart].
      */
     override fun show() {
         if (recyclerView?.layoutManager == null) {

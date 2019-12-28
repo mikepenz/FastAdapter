@@ -9,7 +9,7 @@ import com.mikepenz.fastadapter.R
 
 open class OnBindViewHolderListenerImpl<Item : GenericItem> : OnBindViewHolderListener {
     /**
-     * is called in onBindViewHolder to bind the data on the ViewHolder
+     * Is called in onBindViewHolder to bind the data on the ViewHolder
      *
      * @param viewHolder the viewHolder for the type at this position
      * @param position   the position of this viewHolder
@@ -25,7 +25,7 @@ open class OnBindViewHolderListenerImpl<Item : GenericItem> : OnBindViewHolderLi
     }
 
     /**
-     * is called in onViewRecycled to unbind the data on the ViewHolder
+     * Is called in onViewRecycled to unbind the data on the ViewHolder
      *
      * @param viewHolder the viewHolder for the type at this position
      * @param position   the position of this viewHolder
@@ -41,13 +41,13 @@ open class OnBindViewHolderListenerImpl<Item : GenericItem> : OnBindViewHolderLi
         } else {
             Log.e(
                     "FastAdapter",
-                    "The bindView method of this item should set the `Tag` on its itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.java#L189)"
+                    "The bindView method of this item should set the `Tag` on its itemView (https://github.com/mikepenz/FastAdapter/blob/develop/library-core/src/main/java/com/mikepenz/fastadapter/items/AbstractItem.kt#L22)"
             )
         }
     }
 
     /**
-     * is called in onViewAttachedToWindow when the view is detached from the window
+     * Is called in onViewAttachedToWindow when the view is detached from the window
      *
      * @param viewHolder the viewHolder for the type at this position
      * @param position   the position of this viewHolder
@@ -65,7 +65,7 @@ open class OnBindViewHolderListenerImpl<Item : GenericItem> : OnBindViewHolderLi
     }
 
     /**
-     * is called in onViewDetachedFromWindow when the view is detached from the window
+     * Is called in onViewDetachedFromWindow when the view is detached from the window
      *
      * @param viewHolder the viewHolder for the type at this position
      * @param position   the position of this viewHolder
@@ -78,7 +78,7 @@ open class OnBindViewHolderListenerImpl<Item : GenericItem> : OnBindViewHolderLi
     }
 
     /**
-     * is called when the ViewHolder is in a transient state. return true if you want to reuse
+     * Is called when the ViewHolder is in a transient state. return true if you want to reuse
      * that view anyways
      *
      * @param viewHolder the viewHolder for the view which failed to recycle
