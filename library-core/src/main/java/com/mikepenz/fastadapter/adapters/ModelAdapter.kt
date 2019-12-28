@@ -46,6 +46,16 @@ open class ModelAdapter<Model, Item : GenericItem>(
             super.fastAdapter = fastAdapter
         }
 
+    /**
+     * defines if this adapter is currently activly shown in the list
+     */
+    var active: Boolean = true
+        set(value) {
+            field = value
+            itemList.active = value
+            fastAdapter?.notifyAdapterDataSetChanged() // items are gone
+        }
+
     open var reverseInterceptor: ((element: Item) -> Model?)? = null
 
     override var idDistributor: IIdDistributor<Item> = IIdDistributor.DEFAULT as IIdDistributor<Item>
@@ -94,7 +104,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
      * @return the count of items within this adapter
      */
     override val adapterItemCount: Int
-        get() = itemList.size()
+        get() = if (active) itemList.size() else 0
 
     /**
      * @return the items within this adapter

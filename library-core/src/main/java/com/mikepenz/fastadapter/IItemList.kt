@@ -6,6 +6,8 @@ package com.mikepenz.fastadapter
 
 interface IItemList<Item : GenericItem> {
 
+    var active: Boolean
+
     val isEmpty: Boolean
 
     val items: MutableList<Item>
