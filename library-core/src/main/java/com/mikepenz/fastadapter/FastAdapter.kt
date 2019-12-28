@@ -11,22 +11,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
 import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
-import com.mikepenz.fastadapter.listeners.ClickEventHook
-import com.mikepenz.fastadapter.listeners.EventHook
-import com.mikepenz.fastadapter.listeners.LongClickEventHook
-import com.mikepenz.fastadapter.listeners.OnBindViewHolderListener
-import com.mikepenz.fastadapter.listeners.OnBindViewHolderListenerImpl
-import com.mikepenz.fastadapter.listeners.OnCreateViewHolderListener
-import com.mikepenz.fastadapter.listeners.OnCreateViewHolderListenerImpl
-import com.mikepenz.fastadapter.listeners.TouchEventHook
-import com.mikepenz.fastadapter.listeners.TouchListener
+import com.mikepenz.fastadapter.listeners.*
 import com.mikepenz.fastadapter.utils.AdapterPredicate
 import com.mikepenz.fastadapter.utils.DefaultTypeInstanceCache
 import com.mikepenz.fastadapter.utils.Triple
 import com.mikepenz.fastadapter.utils.attachToView
-import java.util.ArrayList
-import java.util.Collections
-import java.util.LinkedList
+import java.util.*
 import kotlin.math.min
 
 /**
@@ -626,10 +616,11 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      */
     open fun getPreItemCount(position: Int): Int {
         //if we are empty just return 0 count
-        return position.takeIf { globalSize == 0 }
-                ?.let { adapterSizes.keyAt(floorIndex(adapterSizes, it)) }
-                ?: 0
-
+        return if (globalSize == 0) {
+            0
+        } else {
+            adapterSizes.keyAt(floorIndex(adapterSizes, position))
+        }
         //get the count of items which are before this order
     }
 

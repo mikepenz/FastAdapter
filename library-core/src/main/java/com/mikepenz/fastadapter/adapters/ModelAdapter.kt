@@ -1,22 +1,13 @@
 package com.mikepenz.fastadapter.adapters
 
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.AbstractAdapter
-import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IAdapterNotifier
-import com.mikepenz.fastadapter.IExpandable
-import com.mikepenz.fastadapter.IIdDistributor
-import com.mikepenz.fastadapter.IItemAdapter
-import com.mikepenz.fastadapter.IItemList
-import com.mikepenz.fastadapter.IModelItem
+import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.utils.AdapterPredicate
 import com.mikepenz.fastadapter.utils.DefaultItemList
 import com.mikepenz.fastadapter.utils.DefaultItemListImpl
 import com.mikepenz.fastadapter.utils.Triple
-import java.util.ArrayList
+import java.util.*
 
 /**
  * Kotlin type alias to simplify usage for an all accepting ModelAdapter
@@ -44,6 +35,16 @@ open class ModelAdapter<Model, Item : GenericItem>(
                 (itemList as DefaultItemList<Item>).fastAdapter = fastAdapter
             }
             super.fastAdapter = fastAdapter
+        }
+
+    /**
+     * defines if this adapter is currently activly shown in the list
+     */
+    var active: Boolean = true
+        set(value) {
+            field = value
+            itemList.active = value
+            fastAdapter?.notifyAdapterDataSetChanged() // items are gone
         }
 
     open var reverseInterceptor: ((element: Item) -> Model?)? = null
@@ -94,7 +95,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
      * @return the count of items within this adapter
      */
     override val adapterItemCount: Int
-        get() = itemList.size()
+        get() = if (active) itemList.size() else 0
 
     /**
      * @return the items within this adapter
