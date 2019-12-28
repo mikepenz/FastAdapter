@@ -93,7 +93,9 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
     /** Enables the verbose log for the adapter */
     var verboseLoggingEnabled: Boolean
         get() = logger.isEnabled
-        set(value) { logger.isEnabled = value }
+        set(value) {
+            logger.isEnabled = value
+        }
 
     // the listeners which can be hooked on an item
     var onPreClickListener: ClickListener<Item>? = null
@@ -881,7 +883,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
          * @return a new FastAdapter
          */
         @JvmStatic
-        fun <Item : GenericItem, A : IAdapter<Item>> with(adapter: A): FastAdapter<Item> {
+        fun <Item : GenericItem> with(adapter: IAdapter<Item>): FastAdapter<Item> {
             val fastAdapter = FastAdapter<Item>()
             fastAdapter.addAdapter(0, adapter)
             return fastAdapter
@@ -895,7 +897,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
          * @return a new FastAdapter
          */
         @JvmStatic
-        fun <Item : GenericItem, A : IAdapter<*>> with(adapters: Collection<A>?): FastAdapter<Item> {
+        fun <Item : GenericItem> with(adapters: Collection<IAdapter<out Item>>?): FastAdapter<Item> {
             return with(adapters, null)
         }
 
@@ -907,7 +909,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
          * @return a new FastAdapter
          */
         @JvmStatic
-        fun <Item : GenericItem, A : IAdapter<*>> with(adapters: Collection<A>?, extensions: Collection<IAdapterExtension<Item>>?): FastAdapter<Item> {
+        fun <Item : GenericItem> with(adapters: Collection<IAdapter<out Item>>?, extensions: Collection<IAdapterExtension<Item>>? = null): FastAdapter<Item> {
             val fastAdapter = FastAdapter<Item>()
             if (adapters == null) {
                 fastAdapter.adapters.add(items<GenericItem>() as IAdapter<Item>)

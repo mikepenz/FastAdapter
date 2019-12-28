@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 
 /**
@@ -60,7 +59,7 @@ class FastAdapterBottomSheetDialog<Item : GenericItem> : BottomSheetDialog {
     private fun initAdapterIfNeeded() {
         if (fastAdapter == null || recyclerView?.adapter == null) {
             itemAdapter = ItemAdapter.items()
-            fastAdapter = FastAdapter.with<Item, IAdapter<Item>>(itemAdapter)
+            fastAdapter = FastAdapter.with(itemAdapter)
             recyclerView?.adapter = fastAdapter
         }
     }
