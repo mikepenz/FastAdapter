@@ -11,6 +11,7 @@ import com.mikepenz.fastadapter.IAdapterNotifier
 import com.mikepenz.fastadapter.IIdDistributor
 import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.dsl.FastAdapterDsl
+import com.mikepenz.fastadapter.paged.PagedItemListImpl.Companion.getDefaultPlaceholderInterceptor
 import com.mikepenz.fastadapter.utils.DefaultItemList
 
 // Notify user that the DSL is currently experimental
@@ -30,9 +31,10 @@ typealias GenericPagedModelAdapter<Model> = PagedModelAdapter<Model, GenericItem
 @FastAdapterDsl
 open class PagedModelAdapter<Model, Item : GenericItem>(
         asyncDifferConfig: AsyncDifferConfig<Model>,
+        placeholderInterceptor: (position: Int) -> Item = getDefaultPlaceholderInterceptor(),
         var interceptor: (element: Model) -> Item?
 ) : AbstractAdapter<Item>(), IItemAdapter<Model, Item>, ListUpdateCallback {
-    val itemList: PagedItemListImpl<Model, Item> = PagedItemListImpl(this, asyncDifferConfig, interceptor)
+    val itemList: PagedItemListImpl<Model, Item> = PagedItemListImpl(this, asyncDifferConfig, placeholderInterceptor, interceptor)
 
     override var idDistributor: IIdDistributor<Item> = IIdDistributor.DEFAULT as IIdDistributor<Item>
 
@@ -270,7 +272,7 @@ open class PagedModelAdapter<Model, Item : GenericItem>(
      *
      * @param pagedList The new list to be displayed.
      */
-    fun submitList(pagedList: PagedList<Model>) {
+    fun submitList(pagedList: PagedList<Model>?) {
         itemList.submitList(pagedList)
     }
 
@@ -327,8 +329,8 @@ open class PagedModelAdapter<Model, Item : GenericItem>(
          * @return a new ItemAdapter
          */
         @JvmStatic
-        fun <Model, Item : GenericItem> models(asyncDifferConfig: AsyncDifferConfig<Model>, interceptor: (element: Model) -> Item?): PagedModelAdapter<Model, Item> {
-            return PagedModelAdapter(asyncDifferConfig, interceptor)
+        fun <Model, Item : GenericItem> models(asyncDifferConfig: AsyncDifferConfig<Model>, placeholderInterceptor: (position: Int) -> Item, interceptor: (element: Model) -> Item?): PagedModelAdapter<Model, Item> {
+            return PagedModelAdapter(asyncDifferConfig, placeholderInterceptor, interceptor)
         }
     }
 }
