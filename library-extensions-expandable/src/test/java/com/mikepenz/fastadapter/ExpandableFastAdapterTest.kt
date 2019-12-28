@@ -24,7 +24,7 @@ class ExpandableFastAdapterTest {
     @Throws(Exception::class)
     fun setUp() {
         itemAdapter = ItemAdapter()
-        adapter = FastAdapter.with<ExpandableTestItem, IAdapter<ExpandableTestItem>>(itemAdapter)
+        adapter = FastAdapter.with(itemAdapter)
         expandableExtension = adapter.getExpandableExtension()
         selectExtension = adapter.getSelectExtension()
     }
@@ -140,7 +140,7 @@ class ExpandableFastAdapterTest {
     @Throws(Exception::class)
     fun toggleNoneExpandable() {
         val itemAdapter = ItemAdapter<NoneExpandableTestItem>()
-        val fastAdapter = FastAdapter.with<NoneExpandableTestItem, IAdapter<NoneExpandableTestItem>>(itemAdapter)
+        val fastAdapter = FastAdapter.with(itemAdapter)
         val expandableExtension = fastAdapter.getExpandableExtension()
         val noneExpandableTestItems = ArrayList<NoneExpandableTestItem>()
         val item = NoneExpandableTestItem()
