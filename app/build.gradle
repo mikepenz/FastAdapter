@@ -54,6 +54,9 @@ android {
         exclude 'META-INF/library-core_release.kotlin_module'
         exclude 'META-INF/library_release.kotlin_module'
     }
+    dexOptions {
+        javaMaxHeapSize = "4G"
+    }
 }
 
 kapt {

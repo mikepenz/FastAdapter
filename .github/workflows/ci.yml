@@ -26,7 +26,7 @@ jobs:
                   key: gradle-${{ runner.os }}-${{ hashFiles('**/build.gradle') }}-${{ hashFiles('**/gradle/wrapper/gradle-wrapper.properties') }} }}
 
             - name: Configure Gradle
-              run: echo "org.gradle.jvmargs=-Xmx2G" > local.properties
+              run: echo "org.gradle.jvmargs=-Xmx4G" > local.properties
 
             - name: Build
               run: ./gradlew clean build
