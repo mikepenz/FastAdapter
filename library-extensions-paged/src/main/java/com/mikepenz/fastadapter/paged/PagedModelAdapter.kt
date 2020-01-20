@@ -4,12 +4,7 @@ import androidx.paging.AsyncPagedListDiffer
 import androidx.paging.PagedList
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.ListUpdateCallback
-import com.mikepenz.fastadapter.AbstractAdapter
-import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.IAdapterNotifier
-import com.mikepenz.fastadapter.IIdDistributor
-import com.mikepenz.fastadapter.IItemAdapter
+import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.paged.PagedItemListImpl.Companion.getDefaultPlaceholderInterceptor
 import com.mikepenz.fastadapter.utils.DefaultItemList
@@ -149,6 +144,14 @@ open class PagedModelAdapter<Model, Item : GenericItem>(
      */
     override fun getAdapterItem(position: Int): Item {
         return itemList[position]
+    }
+
+    /**
+     * @param position the relative position
+     * @return the item at the given relative position within this adapter if it has been loaded
+     */
+    override fun peekAdapterItem(position: Int): Item? {
+        return itemList.peek(position)
     }
 
     /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */

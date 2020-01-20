@@ -45,7 +45,11 @@ open class PagedItemListImpl<Model, Item : GenericItem>(
     }
 
     override fun peek(position: Int): Item? {
-        return differ.currentList?.subList(position, position)?.first()?.let { cache[it] }
+        return if (differ.itemCount > position) {
+            differ.currentList?.subList(position, position + 1)?.first()?.let { cache[it] }
+        } else {
+            null
+        }
     }
 
     private fun getItem(model: Model): Item? {
