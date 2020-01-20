@@ -12,7 +12,6 @@ import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData
 import com.mikepenz.fastadapter.app.items.ImageItem
-import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sample.*
 
 class ImageListActivity : AppCompatActivity() {
@@ -20,16 +19,12 @@ class ImageListActivity : AppCompatActivity() {
     private lateinit var fastItemAdapter: FastItemAdapter<ImageItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
         // Handle Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.sample_image_list)
-
-        //style our ui
-        MaterializeBuilder().withActivity(this).build()
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = FastItemAdapter()

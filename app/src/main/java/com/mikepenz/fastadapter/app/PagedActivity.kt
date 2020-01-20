@@ -2,7 +2,6 @@ package com.mikepenz.fastadapter.app
 
 import android.os.Bundle
 import android.os.Handler
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -27,11 +26,10 @@ class PagedActivity : AppCompatActivity() {
     private lateinit var mItemAdapter: PagedModelAdapter<DemoEntity, SimpleImageItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         //create the activity
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_sample)
 
         // Handle Toolbar
         setSupportActionBar(toolbar)

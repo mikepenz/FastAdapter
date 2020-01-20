@@ -2,18 +2,14 @@ package com.mikepenz.fastadapter.ui.utils
 
 import android.content.Context
 import android.content.res.ColorStateList
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
-import android.graphics.drawable.RippleDrawable
-import android.graphics.drawable.ShapeDrawable
-import android.graphics.drawable.StateListDrawable
+import android.graphics.drawable.*
 import android.graphics.drawable.shapes.RoundRectShape
 import android.os.Build
 import android.util.TypedValue
 import androidx.annotation.ColorInt
 import androidx.core.content.ContextCompat
 import com.mikepenz.fastadapter.R
-import java.util.Arrays
+import java.util.*
 
 /**
  * Created by mikepenz on 28.12.15.
@@ -28,7 +24,8 @@ object FastAdapterUIUtils {
      * @param animate        true if you want to fade over the states (only animates if API newer than [Build.VERSION_CODES.HONEYCOMB])
      * @return the [StateListDrawable]
      */
-    @JvmStatic fun getSelectableBackground(
+    @JvmStatic
+    fun getSelectableBackground(
             ctx: Context,
             @ColorInt selected_color: Int,
             animate: Boolean
@@ -59,7 +56,8 @@ object FastAdapterUIUtils {
      * @param animate        true if you want to fade over the states (only animates if API newer than [Build.VERSION_CODES.HONEYCOMB])
      * @return the [StateListDrawable]
      */
-    @JvmStatic fun getSelectablePressedBackground(
+    @JvmStatic
+    fun getSelectablePressedBackground(
             ctx: Context,
             @ColorInt selected_color: Int,
             pressed_alpha: Int,
@@ -78,12 +76,14 @@ object FastAdapterUIUtils {
      * @param alpha the alpha value we want to set 0-255
      * @return the adjusted color
      */
-    @JvmStatic fun adjustAlpha(@ColorInt color: Int, alpha: Int): Int {
+    @JvmStatic
+    fun adjustAlpha(@ColorInt color: Int, alpha: Int): Int {
         return alpha shl 24 or (color and 0x00ffffff)
     }
 
     /** Helper to get the system default selectable background */
-    @JvmStatic fun getSelectableBackground(ctx: Context): Int {
+    @JvmStatic
+    fun getSelectableBackground(ctx: Context): Int {
         // If we're running on Honeycomb or newer, then we can use the Theme's
         // selectableItemBackground to ensure that the View has a pressed state
         val outValue = TypedValue()
@@ -100,7 +100,8 @@ object FastAdapterUIUtils {
      * @param radius       the button radius
      * @return the ripple drawable
      */
-    @JvmStatic fun getRippleDrawable(
+    @JvmStatic
+    fun getRippleDrawable(
             @ColorInt normalColor: Int,
             @ColorInt pressedColor: Int,
             radius: Int
@@ -120,7 +121,8 @@ object FastAdapterUIUtils {
      * @param radius the radius
      * @return the mask drawable
      */
-    @JvmStatic private fun getRippleMask(color: Int, radius: Int): Drawable {
+    @JvmStatic
+    private fun getRippleMask(color: Int, radius: Int): Drawable {
         val outerRadius = FloatArray(8)
         Arrays.fill(outerRadius, radius.toFloat())
         val r = RoundRectShape(outerRadius, null, null)
@@ -136,7 +138,8 @@ object FastAdapterUIUtils {
      * @param pressedColor the pressed color
      * @return the [StateListDrawable]
      */
-    @JvmStatic private fun getStateListDrawable(
+    @JvmStatic
+    private fun getStateListDrawable(
             normalColor: Int, pressedColor: Int): StateListDrawable {
         val states = StateListDrawable()
         states.addState(intArrayOf(android.R.attr.state_pressed),
@@ -148,5 +151,19 @@ object FastAdapterUIUtils {
         states.addState(intArrayOf(),
                 ColorDrawable(normalColor))
         return states
+    }
+
+    /**
+     * helper to create a stateListDrawable for the icon
+     *
+     * @param icon
+     * @param selectedIcon
+     * @return
+     */
+    fun getIconStateList(icon: Drawable, selectedIcon: Drawable): StateListDrawable {
+        val iconStateListDrawable = StateListDrawable()
+        iconStateListDrawable.addState(intArrayOf(android.R.attr.state_selected), selectedIcon)
+        iconStateListDrawable.addState(intArrayOf(), icon)
+        return iconStateListDrawable
     }
 }

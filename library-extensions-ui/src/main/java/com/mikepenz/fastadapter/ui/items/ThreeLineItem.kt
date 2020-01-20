@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.ui.R
 import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils
-import com.mikepenz.materialize.holder.ImageHolder
-import com.mikepenz.materialize.holder.StringHolder
+import com.mikepenz.fastadapter.ui.utils.ImageHolder
+import com.mikepenz.fastadapter.ui.utils.StringHolder
 
 /**
  * Created by fabianterhorst on 30.03.16.

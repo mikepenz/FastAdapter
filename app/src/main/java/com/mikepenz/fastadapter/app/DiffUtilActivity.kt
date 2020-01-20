@@ -4,7 +4,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DiffUtil
@@ -12,11 +11,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil
-import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
+import com.mikepenz.iconics.utils.actionBar
+import com.mikepenz.iconics.utils.colorInt
 import com.mikepenz.itemanimators.AlphaInAnimator
-import com.mikepenz.materialize.MaterializeBuilder
 import io.reactivex.Single
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
@@ -35,16 +34,12 @@ class DiffUtilActivity : AppCompatActivity() {
     private val disposables = CompositeDisposable()
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
         // Handle Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.sample_diff_util)
-
-        //style our ui
-        MaterializeBuilder().withActivity(this).build()
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = FastItemAdapter()
@@ -75,8 +70,8 @@ class DiffUtilActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.refresh, menu)
-        menu.findItem(R.id.item_refresh).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_refresh).color(IconicsColor.colorInt(Color.BLACK)).actionBar()
-        menu.findItem(R.id.item_refresh_async).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_refresh_sync).color(IconicsColor.colorInt(Color.BLACK)).actionBar()
+        menu.findItem(R.id.item_refresh).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_refresh).apply { colorInt = Color.BLACK; actionBar() }
+        menu.findItem(R.id.item_refresh_async).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_refresh_sync).apply { colorInt = Color.BLACK; actionBar() }
         return true
     }
 

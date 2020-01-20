@@ -10,7 +10,6 @@ import com.mikepenz.fastadapter.drag.IDraggable
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils
 import com.mikepenz.materialdrawer.holder.StringHolder
-import com.mikepenz.materialize.util.UIUtils
 
 /**
  * Created by mikepenz on 28.12.15.
@@ -90,7 +89,7 @@ open class SimpleItem : AbstractItem<SimpleItem.ViewHolder>(), IDraggable {
             val ctx = itemView.context
 
             //set the background for the item
-            UIUtils.setBackground(view, FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true))
+            view.background = FastAdapterUIUtils.getSelectableBackground(ctx, Color.RED, true)
             //set the text for the name
             StringHolder.applyTo(item.name, name)
             //set the text for the description or hide

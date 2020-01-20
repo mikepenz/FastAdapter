@@ -23,10 +23,10 @@ import com.mikepenz.fastadapter.drag.SimpleDragCallback
 import com.mikepenz.fastadapter.listeners.ItemFilterListener
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.fastadapter.utils.DragDropUtil
-import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
-import com.mikepenz.materialize.MaterializeBuilder
+import com.mikepenz.iconics.utils.actionBar
+import com.mikepenz.iconics.utils.colorInt
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
@@ -41,15 +41,11 @@ class SimpleItemListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilte
     private lateinit var touchHelper: ItemTouchHelper
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
         // Handle Toolbar
         setSupportActionBar(toolbar)
-
-        //style our ui
-        MaterializeBuilder().withActivity(this).build()
 
         //
         val fastScrollIndicatorAdapter = FastScrollIndicatorAdapter<SimpleItem>()
@@ -70,7 +66,7 @@ class SimpleItemListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilte
 
         //configure the itemAdapter
         itemAdapter.itemFilter.filterPredicate = { item: SimpleItem, constraint: CharSequence? ->
-            item.name?.text.toString().toLowerCase().contains(constraint.toString().toLowerCase())
+            item.name?.textString.toString().toLowerCase(Locale.getDefault()).contains(constraint.toString().toLowerCase(Locale.getDefault()))
         }
 
         itemAdapter.itemFilter.itemFilterListener = this
@@ -132,7 +128,7 @@ class SimpleItemListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilte
         inflater.inflate(R.menu.search, menu)
 
         //search icon
-        menu.findItem(R.id.search).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_search).color(IconicsColor.colorInt(Color.BLACK)).actionBar()
+        menu.findItem(R.id.search).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_search).apply { colorInt = Color.BLACK; actionBar() }
 
         val searchView = menu.findItem(R.id.search).actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {

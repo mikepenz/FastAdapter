@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.michaelflisar.dragselectrecyclerview.DragSelectTouchListener
+import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
@@ -22,8 +23,6 @@ import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.fastadapter.utils.SubItemUtil
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
-import com.mikepenz.materialize.MaterializeBuilder
-import com.mikepenz.materialize.util.UIUtils
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
@@ -37,15 +36,11 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
     private var mActionModeHelper: ActionModeHelper<GenericItem>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.sample_collapsible)
-
-        //style our ui
-        MaterializeBuilder().withActivity(this).build()
 
         //create our FastAdapter
         fastItemAdapter = FastItemAdapter()
@@ -79,7 +74,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
             mRangeSelectorHelper.onLongClick(position)
             if (actionMode != null) {
                 //we want color our CAB
-                this@ExpandableMultiselectDeleteSampleActivity.findViewById<View>(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(this@ExpandableMultiselectDeleteSampleActivity, R.attr.colorPrimary, R.color.material_drawer_primary))
+                this@ExpandableMultiselectDeleteSampleActivity.findViewById<View>(R.id.action_mode_bar).setBackgroundColor(this@ExpandableMultiselectDeleteSampleActivity.getThemeColor(R.attr.colorPrimary, R.color.colorPrimary))
 
                 // start the drag selection
                 mDragSelectTouchListener.startDragSelection(position)

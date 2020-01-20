@@ -20,11 +20,11 @@ import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl
-import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
-import com.mikepenz.materialize.MaterializeBuilder
-import kotlinx.android.synthetic.main.activity_sort.toolbar
+import com.mikepenz.iconics.utils.actionBar
+import com.mikepenz.iconics.utils.colorInt
+import kotlinx.android.synthetic.main.activity_sort.*
 import java.io.Serializable
 import java.util.*
 
@@ -62,7 +62,6 @@ class SortActivity : AppCompatActivity() {
         }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sort)
 
@@ -70,9 +69,6 @@ class SortActivity : AppCompatActivity() {
 
         // Handle Toolbar
         setSupportActionBar(toolbar)
-
-        //style our ui
-        MaterializeBuilder().withActivity(this).build()
 
         //create our FastAdapter which will manage everything
         itemListImpl = ComparableItemListImpl(comparator)
@@ -129,9 +125,9 @@ class SortActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.sort, menu)
-        menu.findItem(R.id.item_sort_random).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_wrap_text).color(IconicsColor.colorInt(Color.BLACK)).actionBar()
-        menu.findItem(R.id.item_sort_asc).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_sort_asc).color(IconicsColor.colorInt(Color.BLACK)).actionBar()
-        menu.findItem(R.id.item_sort_desc).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_sort_desc).color(IconicsColor.colorInt(Color.BLACK)).actionBar()
+        menu.findItem(R.id.item_sort_random).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_wrap_text).apply { colorInt = Color.BLACK; actionBar() }
+        menu.findItem(R.id.item_sort_asc).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_sort_asc).apply { colorInt = Color.BLACK; actionBar() }
+        menu.findItem(R.id.item_sort_desc).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_sort_desc).apply { colorInt = Color.BLACK; actionBar() }
         return true
     }
 
@@ -222,7 +218,7 @@ class SortActivity : AppCompatActivity() {
      */
     private inner class AlphabetComparatorAscending : Comparator<SimpleItem>, Serializable {
         override fun compare(lhs: SimpleItem, rhs: SimpleItem): Int {
-            return lhs.name?.text.toString().compareTo(rhs.name?.text.toString())
+            return lhs.name?.textString.toString().compareTo(rhs.name?.textString.toString())
         }
     }
 
@@ -231,7 +227,7 @@ class SortActivity : AppCompatActivity() {
      */
     private inner class AlphabetComparatorDescending : Comparator<SimpleItem>, Serializable {
         override fun compare(lhs: SimpleItem, rhs: SimpleItem): Int {
-            return rhs.name?.text.toString().compareTo(lhs.name?.text.toString())
+            return rhs.name?.textString.toString().compareTo(lhs.name?.textString.toString())
         }
     }
 

@@ -58,8 +58,6 @@ implementation "androidx.recyclerview:recyclerview:${androidX}"
 Expandable support is included and can be added via this
 ```gradle
 implementation "com.mikepenz:fastadapter-extensions-expandable:${latestFastAdapterRelease}"
-//The tiny Materialize library used for its useful helper classes
-implementation "com.mikepenz:materialize:${latestVersion}" // at least 1.2.0
 ```
 
 Many helper classes are included in the following dependency.
@@ -74,8 +72,6 @@ implementation "com.mikepenz:fastadapter-extensions-utils:${latestFastAdapterRel
 
 // required for the ui components and the utils
 implementation "com.google.android.material:material:${androidX}"
-//The tiny Materialize library used for its useful helper classes
-implementation "com.mikepenz:materialize:${latestVersion}" // at least 1.2.0
 ```
 
 ## v4.x.y

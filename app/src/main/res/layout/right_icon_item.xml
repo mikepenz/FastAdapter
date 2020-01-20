@@ -28,10 +28,9 @@
         android:background="@drawable/button_rect_list_normal"
         android:clickable="false"
         android:gravity="center_vertical"
+        android:paddingStart="8dp"
         android:paddingLeft="8dp"
         android:paddingRight="56dp"
-        android:paddingStart="8dp"
-        android:textColor="@color/md_light_primary_text"
         android:textSize="14sp" />
 
     <com.mikepenz.iconics.view.IconicsImageView
