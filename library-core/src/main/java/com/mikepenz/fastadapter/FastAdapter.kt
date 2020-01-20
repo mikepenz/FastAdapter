@@ -531,10 +531,12 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
         val relativeInfo = RelativeInfo<Item>()
         val index = floorIndex(adapterSizes, position)
         if (index != -1) {
-            relativeInfo.item = adapterSizes.valueAt(index)
-                    .getAdapterItem(position - adapterSizes.keyAt(index))
-            relativeInfo.adapter = adapterSizes.valueAt(index)
-            relativeInfo.position = position
+            val peeked = adapterSizes.valueAt(index).peekAdapterItem(position - adapterSizes.keyAt(index))
+            if (peeked != null) {
+                relativeInfo.item = peeked
+                relativeInfo.adapter = adapterSizes.valueAt(index)
+                relativeInfo.position = position
+            }
         }
         return relativeInfo
     }

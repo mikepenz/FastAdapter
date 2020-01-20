@@ -168,6 +168,10 @@ open class ModelAdapter<Model, Item : GenericItem>(
         return itemList[position] ?: throw java.lang.RuntimeException("A normal ModelAdapter does not allow null items.")
     }
 
+    override fun peekAdapterItem(position: Int): Item? {
+        return itemList.peek(position)
+    }
+
     /**
      * Set a new list of items and apply it to the existing list (clear - add) for this adapter
      * NOTE may consider using setNewList if the items list is a reference to the list which is used inside the adapter

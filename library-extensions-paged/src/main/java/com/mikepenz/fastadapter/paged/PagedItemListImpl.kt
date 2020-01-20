@@ -44,6 +44,10 @@ open class PagedItemListImpl<Model, Item : GenericItem>(
         }
     }
 
+    override fun peek(position: Int): Item? {
+        return differ.currentList?.subList(position, position)?.first()?.let { cache[it] }
+    }
+
     private fun getItem(model: Model): Item? {
         return cache[model] ?: run {
             return interceptor.invoke(model)?.let {

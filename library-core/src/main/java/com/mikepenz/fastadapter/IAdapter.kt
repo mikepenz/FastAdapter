@@ -32,6 +32,14 @@ interface IAdapter<Item : GenericItem> {
     fun getAdapterItem(position: Int): Item
 
     /**
+     * @param position the relative position
+     * @return the item at the given relative position within this adapter if it has been loaded
+     */
+    fun peekAdapterItem(position: Int): Item? {
+        return getAdapterItem(position)
+    }
+
+    /**
      * Searches for the given item and calculates its relative position
      *
      * @param item the item which is searched for

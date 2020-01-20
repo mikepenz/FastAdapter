@@ -35,4 +35,8 @@ interface IItemList<Item : GenericItem> {
     fun addAll(position: Int, items: List<Item>, preItemCount: Int)
 
     operator fun get(position: Int): Item?
+
+    fun peek(position: Int): Item? {
+        return get(position)
+    }
 }
