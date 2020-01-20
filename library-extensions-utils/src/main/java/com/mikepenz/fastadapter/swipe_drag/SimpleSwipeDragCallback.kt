@@ -60,11 +60,13 @@ class SimpleSwipeDragCallback @JvmOverloads constructor(
     }
 
     fun withBackgroundSwipeLeft(@ColorInt bgColor: Int): SimpleSwipeDragCallback {
+        setDefaultSwipeDirs(defaultSwipeDirs or ItemTouchHelper.LEFT)
         simpleSwipeCallback.withBackgroundSwipeLeft(bgColor)
         return this
     }
 
     fun withBackgroundSwipeRight(@ColorInt bgColor: Int): SimpleSwipeDragCallback {
+        setDefaultSwipeDirs(defaultSwipeDirs or ItemTouchHelper.RIGHT)
         simpleSwipeCallback.withBackgroundSwipeRight(bgColor)
         return this
     }
