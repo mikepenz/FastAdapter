@@ -74,7 +74,7 @@ implementation "com.mikepenz:fastadapter-extensions-utils:${latestFastAdapterRel
 implementation "com.google.android.material:material:${androidX}"
 ```
 
-## v4.x.y
+## v5.x.y
 > Major release, migrates fully to Kotlin. Check out the changelog or the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md for more details
 
 ## How to use
