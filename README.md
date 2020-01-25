@@ -41,6 +41,7 @@ You can try it out here [Google Play](https://play.google.com/store/apps/details
 # Include in your project
 ## Latest releases
 
+- Kotlin && NEW | [v5.0.0-a03](https://github.com/mikepenz/FastAdapter/tree/v5.0.0-a03)
 - Kotlin | [v4.1.2](https://github.com/mikepenz/FastAdapter/tree/v4.1.2)
 - Java && AndroidX | [v3.3.1](https://github.com/mikepenz/FastAdapter/tree/v3.3.1)
 - Java && AppCompat | [v3.2.9](https://github.com/mikepenz/FastAdapter/tree/v3.2.9)
@@ -57,8 +58,6 @@ implementation "androidx.recyclerview:recyclerview:${androidX}"
 Expandable support is included and can be added via this
 ```gradle
 implementation "com.mikepenz:fastadapter-extensions-expandable:${latestFastAdapterRelease}"
-//The tiny Materialize library used for its useful helper classes
-implementation "com.mikepenz:materialize:${latestVersion}" // at least 1.2.0
 ```
 
 Many helper classes are included in the following dependency.
@@ -73,8 +72,6 @@ implementation "com.mikepenz:fastadapter-extensions-utils:${latestFastAdapterRel
 
 // required for the ui components and the utils
 implementation "com.google.android.material:material:${androidX}"
-//The tiny Materialize library used for its useful helper classes
-implementation "com.mikepenz:materialize:${latestVersion}" // at least 1.2.0
 ```
 
 ## v4.x.y

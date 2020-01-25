@@ -27,8 +27,8 @@ interface IAdapterNotifier {
                         }
                     }
                     newItemsCount == 0 -> fastAdapter.notifyAdapterItemRangeRemoved(itemsBeforeThisAdapter, previousItemsCount)
-                    else -> //this condition should practically never happen
-                        fastAdapter.notifyAdapterDataSetChanged()
+                    //this condition practically should never happen
+                    else -> fastAdapter.notifyAdapterDataSetChanged()
                 }
                 return false
             }
@@ -50,8 +50,8 @@ interface IAdapterNotifier {
                         fastAdapter.notifyAdapterItemRangeRemoved(itemsBeforeThisAdapter + newItemsCount, previousItemsCount - newItemsCount)
                     }
                     newItemsCount == 0 -> fastAdapter.notifyAdapterItemRangeRemoved(itemsBeforeThisAdapter, previousItemsCount)
-                    else -> //this condition should practically never happen
-                        fastAdapter.notifyAdapterDataSetChanged()
+                    //this condition practically should never happen
+                    else -> fastAdapter.notifyAdapterDataSetChanged()
                 }
                 return false
             }

@@ -7,10 +7,10 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import butterknife.ButterKnife
 import com.bumptech.glide.Glide
+import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils
-import com.mikepenz.materialize.util.UIUtils
 
 /**
  * Created by mikepenz on 28.12.15.
@@ -85,7 +85,7 @@ class SimpleImageItem : AbstractItem<SimpleImageItem.ViewHolder>() {
         holder.imageView.setImageBitmap(null)
 
         //set the background for the item
-        val color = UIUtils.getThemeColor(ctx, R.attr.colorPrimary)
+        val color = ctx.getThemeColor(R.attr.colorPrimary, R.color.colorPrimary)
 
         holder.view.clearAnimation()
         holder.view.foreground = FastAdapterUIUtils.getSelectablePressedBackground(ctx, FastAdapterUIUtils.adjustAlpha(color, 100), 50, true)

@@ -3,6 +3,7 @@ package com.mikepenz.fastadapter.app.items
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.IExpandable
 import com.mikepenz.fastadapter.IParentItem
 import com.mikepenz.fastadapter.ISubItem
@@ -10,6 +11,7 @@ import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.IIcon
+import com.mikepenz.iconics.utils.colorInt
 import com.mikepenz.iconics.view.IconicsImageView
 
 /**
@@ -66,7 +68,9 @@ class IconItem : AbstractItem<IconItem.ViewHolder>(), IExpandable<IconItem.ViewH
 
         //define our data for the view
         mIcon?.let {
-            holder.image.icon = IconicsDrawable(holder.image.context, it)
+            holder.image.icon = IconicsDrawable(holder.image.context, it).apply {
+                colorInt = holder.view.context.getThemeColor(R.attr.colorOnSurface)
+            }
         }
         holder.name.text = mIcon?.name
     }

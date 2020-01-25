@@ -7,8 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
  */
 interface IModelItem<Model, VH : RecyclerView.ViewHolder> : IItem<VH> {
 
-    /**
-     * The model of the item
-     */
+    /** The model of the item */
     var model: Model
 }

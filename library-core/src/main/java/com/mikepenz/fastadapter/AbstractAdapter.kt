@@ -5,22 +5,11 @@ package com.mikepenz.fastadapter
  */
 abstract class AbstractAdapter<Item : GenericItem> : IAdapter<Item> {
     override var fastAdapter: FastAdapter<Item>? = null
-    /**
-     * returs the position of this Adapter in the FastAdapter
-     *
-     * @return the position of this Adapter in the FastAdapter
-     */
-    /**
-     * sets the position of this Adapter in the FastAdapter
-     * @param order the position of this Adapter in the FastAdapter
-     */
-    override var order = -1
 
-    /**
-     * internal mapper to remember and add possible types for the RecyclerView
-     *
-     * @param items
-     */
+    /** The position of this Adapter in the FastAdapter */
+    override var order: Int = -1
+
+    /** Internal mapper to remember and add possible types for the RecyclerView */
     override fun mapPossibleTypes(items: Iterable<Item>?) {
         fastAdapter?.let { fastAdapter ->
             if (items != null) {

@@ -14,11 +14,9 @@ import com.mikepenz.fastadapter.app.model.ModelIconItem
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.iconics.Iconics
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
-import com.mikepenz.materialize.MaterializeBuilder
 import com.turingtechnologies.materialscrollbar.CustomIndicator
 import com.turingtechnologies.materialscrollbar.DragScrollBar
-import kotlinx.android.synthetic.main.activity_sample.rv
-import kotlinx.android.synthetic.main.activity_sample.toolbar
+import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.ArrayList
 import kotlin.Comparator
 
@@ -27,16 +25,12 @@ class ModelItemActivity : AppCompatActivity() {
     private lateinit var fastAdapter: FastAdapter<ModelIconItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
         // Handle Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.sample_model_item)
-
-        //style our ui
-        MaterializeBuilder().withActivity(this).build()
 
         //adapters
         val fastScrollIndicatorAdapter = FastScrollIndicatorAdapter<ModelIconItem>()

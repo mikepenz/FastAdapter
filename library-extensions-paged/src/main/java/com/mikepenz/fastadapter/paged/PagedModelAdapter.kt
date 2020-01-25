@@ -59,7 +59,7 @@ open class PagedModelAdapter<Model, Item : GenericItem>(
         }
 
     /**
-     * the ModelAdapter does not keep a list of input model's to get retrieve them a `reverseInterceptor` is required
+     * The ModelAdapter does not keep a list of input model's to get retrieve them a `reverseInterceptor` is required
      * usually it is used to get the `Model` from a `IModelItem`
      *
      * @return a List of initial Model's
@@ -82,25 +82,25 @@ open class PagedModelAdapter<Model, Item : GenericItem>(
         get() = itemList.items
 
     /**
-     * Generates a `Item` based on it's `Model` using the interceptor
+     * Generates a [Item] based on it's [Model] using the interceptor
      *
-     * @param model the `Model` which will be used to create the `Item`
-     * @return the generated `Item`
+     * @param model the [Model] which will be used to create the [Item]
+     * @return the generated [Item]
      */
     open fun intercept(model: Model): Item? {
         return interceptor.invoke(model)
     }
 
     /**
-     * Generates a List of Item based on it's List of Model using the interceptor
+     * Generates a [List] of [Item] based on it's [List] of [Model] using the interceptor
      *
-     * @param models the List of Model which will be used to create the List of Item
-     * @return the generated List of Item
+     * @param models the [List] of [Model] which will be used to create the [List] of [Item]
+     * @return the generated [List] of [Item]
      */
     open fun intercept(models: List<Model>): List<Item> = models.mapNotNull { intercept(it) }
 
     /**
-     * filters the items with the constraint using the provided Predicate
+     * Filters the items with the constraint using the provided Predicate
      *
      * @param constraint the string used to filter the list
      */
@@ -129,7 +129,7 @@ open class PagedModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * returns the global position if the relative position within this adapter was given
+     * Returns the global position if the relative position within this adapter was given
      *
      * @param position the relative position
      * @return the global position
@@ -147,108 +147,86 @@ open class PagedModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
+     * @param position the relative position
+     * @return the item at the given relative position within this adapter if it has been loaded
      */
+    override fun peekAdapterItem(position: Int): Item? {
+        return itemList.peek(position)
+    }
+
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     override fun set(items: List<Model>): PagedModelAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
 
-    /**
-     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
-     */
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     open operator fun set(list: List<Model>, resetFilter: Boolean, adapterNotifier: IAdapterNotifier?): PagedModelAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
 
-    /**
-     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
-     */
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     override fun setNewList(items: List<Model>, retainFilter: Boolean): PagedModelAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
 
-    /**
-     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
-     */
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     @SafeVarargs
     override fun add(vararg items: Model): PagedModelAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
 
-    /**
-     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
-     */
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     override fun add(items: List<Model>): PagedModelAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
 
-    /**
-     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
-     */
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     @SafeVarargs
     override fun add(position: Int, vararg items: Model): PagedModelAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
 
-    /**
-     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
-     */
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     override fun add(position: Int, items: List<Model>): PagedModelAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
 
-    /**
-     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
-     */
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     override fun set(position: Int, item: Model): PagedModelAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
 
-    /**
-     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
-     */
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     override fun move(fromPosition: Int, toPosition: Int): PagedModelAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
 
-    /**
-     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
-     */
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     override fun remove(position: Int): PagedModelAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
 
-    /**
-     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
-     */
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     override fun removeRange(position: Int, itemCount: Int): PagedModelAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
 
-    /**
-     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
-     */
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     override fun addInternal(items: List<Item>): IItemAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
 
-    /**
-     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
-     */
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     override fun addInternal(position: Int, items: List<Item>): IItemAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
 
-    /**
-     * Managed by the PagedList not supported to be managed via the PagedModelAdapter
-     */
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     override fun setInternal(position: Int, item: Item): IItemAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
 
-    /**
-     * removes all items of this adapter
-     */
+    /** Managed by the [PagedList] not supported to be managed via the [PagedModelAdapter] */
     override fun clear(): PagedModelAdapter<Model, Item> {
         throw UnsupportedOperationException("Not supported")
     }
@@ -272,28 +250,25 @@ open class PagedModelAdapter<Model, Item : GenericItem>(
     /**
      * Called when the current PagedList is updated.
      *
-     *
-     * This may be dispatched as part of [.submitList] if a background diff isn't
+     * This may be dispatched as part of [submitList] if a background diff isn't
      * needed (such as when the first list is passed, or the list is cleared). In either case,
      * PagedListAdapter will simply call
-     * [notifyItemRangeInserted/Removed(0, mPreviousSize)][.notifyItemRangeInserted].
+     * [notifyItemRangeInserted/Removed(0, previousSize)][FastAdapter.notifyItemRangeInserted].
      *
-     *
-     * This method will *not*be called when the Adapter switches from presenting a PagedList
-     * to a snapshot version of the PagedList during a diff. This means you cannot observe each
-     * PagedList via this method.
+     * This method will *not* be called when the Adapter switches from presenting a [PagedList]
+     * to a snapshot version of the [PagedList] during a diff. This means you cannot observe each
+     * [PagedList] via this method.
      *
      * @param previousList PagedList that was previously displayed, may be null.
      * @param currentList new PagedList being displayed, may be null.
      *
-     * @see .getCurrentList
+     * @see getCurrentList
      */
     open fun onCurrentListChanged(previousList: PagedList<Model>?, currentList: PagedList<Model>?) {
     }
 
     /**
      * Set the new list to be displayed.
-     *
      *
      * If a list is already being displayed, a diff will be computed on a background thread, which
      * will dispatch Adapter.notifyItem events on the main thread.
@@ -307,17 +282,15 @@ open class PagedModelAdapter<Model, Item : GenericItem>(
     /**
      * Set the new list to be displayed.
      *
-     *
      * If a list is already being displayed, a diff will be computed on a background thread, which
      * will dispatch Adapter.notifyItem events on the main thread.
      *
-     *
-     * The commit callback can be used to know when the PagedList is committed, but note that it
-     * may not be executed. If PagedList B is submitted immediately after PagedList A, and is
-     * committed directly, the callback associated with PagedList A will not be run.
+     * The commit callback can be used to know when the [PagedList] is committed, but note that it
+     * may not be executed. If [PagedList] B is submitted immediately after [PagedList] A, and is
+     * committed directly, the callback associated with [PagedList] A will not be run.
      *
      * @param pagedList The new list to be displayed.
-     * @param commitCallback Optional runnable that is executed when the PagedList is committed, if
+     * @param commitCallback Optional runnable that is executed when the [PagedList] is committed, if
      * it is committed.
      */
     fun submitList(pagedList: PagedList<Model>?, commitCallback: Runnable?) {
@@ -326,10 +299,10 @@ open class PagedModelAdapter<Model, Item : GenericItem>(
 
     /**
      * Get the item from the current PagedList at the specified index.
-     * <p>
-     * Note that this operates on both loaded items and null padding within the PagedList.
      *
-     * @param position Index of item to get, must be >= 0, and &lt; {@link #getItemCount()}.
+     * Note that this operates on both loaded items and null padding within the [PagedList].
+     *
+     * @param position Index of item to get, must be >= 0, and < [adapterItemCount].
      * @return The item, or null, if a null placeholder is at the specified position.
      */
     protected fun getItem(position: Int): Model? {
@@ -337,16 +310,15 @@ open class PagedModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * Returns the PagedList currently being displayed by the Adapter.
+     * Returns the [PagedList] currently being displayed by the Adapter.
      *
-     *
-     * This is not necessarily the most recent list passed to [.submitList],
+     * This is not necessarily the most recent list passed to [submitList],
      * because a diff is computed asynchronously between the new list and the current list before
      * updating the currentList value. May be null if no PagedList is being presented.
      *
      * @return The list currently being displayed.
      *
-     * @see .onCurrentListChanged
+     * @see onCurrentListChanged
      */
     fun getCurrentList(): PagedList<Model>? {
         return itemList.getCurrentList()
@@ -355,7 +327,7 @@ open class PagedModelAdapter<Model, Item : GenericItem>(
     companion object {
 
         /**
-         * static method to retrieve a new `ItemAdapter`
+         * Static method to retrieve a new `ItemAdapter`
          *
          * @return a new ItemAdapter
          */

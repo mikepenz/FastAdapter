@@ -11,6 +11,7 @@ import androidx.appcompat.view.ActionMode
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.Snackbar
+import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.ISelectionListener
@@ -21,8 +22,6 @@ import com.mikepenz.fastadapter.helpers.UndoHelper
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
-import com.mikepenz.materialize.MaterializeBuilder
-import com.mikepenz.materialize.util.UIUtils
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
@@ -34,7 +33,6 @@ class MultiselectSampleActivity : AppCompatActivity() {
     private lateinit var selectExtension: SelectExtension<SimpleItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
@@ -42,9 +40,6 @@ class MultiselectSampleActivity : AppCompatActivity() {
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.sample_multi_select)
-
-        //style our ui
-        MaterializeBuilder().withActivity(this).build()
 
         //create our adapters
         val headerAdapter = ItemAdapter<SimpleItem>()
@@ -85,7 +80,7 @@ class MultiselectSampleActivity : AppCompatActivity() {
             val actionMode = mActionModeHelper.onLongClick(this@MultiselectSampleActivity, position)
             if (actionMode != null) {
                 //we want color our CAB
-                findViewById<View>(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(this@MultiselectSampleActivity, R.attr.colorPrimary, R.color.material_drawer_primary))
+                findViewById<View>(R.id.action_mode_bar).setBackgroundColor(this@MultiselectSampleActivity.getThemeColor(R.attr.colorPrimary, R.color.colorPrimary))
             }
             //if we have no actionMode we do not consume the event
             actionMode != null

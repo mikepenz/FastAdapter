@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.ui.R
 import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils
-import com.mikepenz.materialize.holder.ImageHolder
-import com.mikepenz.materialize.holder.StringHolder
+import com.mikepenz.fastadapter.ui.utils.ImageHolder
+import com.mikepenz.fastadapter.ui.utils.StringHolder
 
 /**
  * Created by fabianterhorst on 30.03.16.
@@ -21,11 +21,13 @@ class TwoLineItem : AbstractItem<TwoLineItem.ViewHolder>() {
 
     var name: StringHolder? = null
         private set
+
     var description: StringHolder? = null
         private set
 
     var avatar: ImageHolder? = null
         private set
+
     var icon: ImageHolder? = null
         private set
 
@@ -115,9 +117,7 @@ class TwoLineItem : AbstractItem<TwoLineItem.ViewHolder>() {
         holder.icon.visibility = View.VISIBLE
     }
 
-    override fun getViewHolder(v: View): ViewHolder {
-        return ViewHolder(v)
-    }
+    override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var name: TextView = view.findViewById<View>(R.id.name) as TextView

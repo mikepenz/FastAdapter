@@ -7,21 +7,16 @@ import androidx.room.PrimaryKey
  * https://www.zoftino.com/pagination-in-android-using-paging-library
  */
 @Entity
-class DemoEntity {
+class DemoEntity() {
     @PrimaryKey(autoGenerate = true)
     var identifier: Int = 0
     var data1: String? = null
     var data2: String? = null
 
-    constructor() {
-        // required
-    }
-
-    constructor(data1: String, data2: String) {
+    constructor(data1: String, data2: String) : this() {
         this.data1 = data1
         this.data2 = data2
     }
-
 
     override fun equals(other: Any?): Boolean {
         if (other === this)

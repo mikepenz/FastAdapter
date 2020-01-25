@@ -12,8 +12,6 @@ import com.mikepenz.fastadapter.adapters.ModelAdapter
 import com.mikepenz.fastadapter.scroll.EndlessScrollHelper.OnLoadMoreHandler
 import com.mikepenz.fastadapter.scroll.EndlessScrollHelper.OnNewItemsListener
 import java.lang.ref.WeakReference
-import java.util.*
-
 
 /**
  * This is an extension of [EndlessRecyclerOnScrollListener], providing a more powerful API
@@ -26,15 +24,15 @@ import java.util.*
  * This class also takes care of other various stuffs like:
  *
  *  * Ensuring the results are delivered on the RecyclerView's handler  which also ensures
- * that the results are delivered only when the RecyclerView is attached to the window, see [ ][View.post].
- *  * Prevention of memory leaks when implemented properly (i.e. [ OnLoadMoreHandler][OnLoadMoreHandler] should be implemented via static classes or lambda expressions).
- *  * An easier way to deliver results to an [IItemAdapter][.withNewItemsDeliveredTo] or [ ModelAdapter][.withNewItemsDeliveredTo].
+ * that the results are delivered only when the RecyclerView is attached to the window, see [View.post].
+ *  * Prevention of memory leaks when implemented properly (i.e. [OnLoadMoreHandler] should be implemented via static classes or lambda expressions).
+ *  * An easier way to deliver results to an [IItemAdapter][withNewItemsDeliveredTo] or [ModelAdapter][withNewItemsDeliveredTo].
  *
  * Created by jayson on 3/26/2016.
  */
 open class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
-    private var mOnLoadMoreHandler: OnLoadMoreHandler<Model>? = null
-    private var mOnNewItemsListener: OnNewItemsListener<Model>? = null
+    private var onLoadMoreHandler: OnLoadMoreHandler<Model>? = null
+    private var onNewItemsListener: OnNewItemsListener<Model>? = null
 
     constructor()
 
@@ -55,26 +53,22 @@ open class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
     }
 
     /**
-     * A callback interface provided by the [EndlessScrollHelper] where
-     * [onLoadMore()][.onLoadMore] results are to be delivered.
+     * A callback interface provided by the [EndlessScrollHelper] where [onLoadMore]
+     * results are to be delivered.
      * The underlying implementation is safe to use by any background-thread, as long as only 1
-     * thread is using it. Results delivered via [.deliverNewItems] are automatically
+     * thread is using it. Results delivered via [deliverNewItems] are automatically
      * dispatched to the RecyclerView's message queue (i.e. to be delivered in the ui thread).
-     *
-     * @param <Model>
-    </Model> */
+     */
     interface ResultReceiver<Model> {
 
-        /**
-         * @return the current page where the results will be delivered.
-         */
+        /** @return the current page where the results will be delivered. */
         val receiverPage: Int
 
         /**
-         * Delivers the result of an [onLoadMore()][.onLoadMore] for the
-         * current [page][.getReceiverPage]. This method must be called only once.
+         * Delivers the result of an [onLoadMore] for the current [page][receiverPage].
+         * This method must be called only once.
          *
-         * @param result the result of an [onLoadMore()][.onLoadMore]
+         * @param result the result of an [onLoadMore()][onLoadMore]
          * @return whether results where delivered successfully or not, possibly because the
          * RecyclerView is no longer attached or the [EndlessScrollHelper] is no longer
          * in use (and it has been garbage collected).
@@ -85,108 +79,60 @@ open class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
 
     interface OnLoadMoreHandler<Model> {
 
-        /**
-         * Handles loading of the specified page and delivers the results to the specified
-         * [ResultReceiver].
-         *
-         * @param out
-         * @param currentPage
-         */
+        /** Handles loading of the specified page and delivers the results to the specified [ResultReceiver] */
         fun onLoadMore(out: ResultReceiver<Model>, currentPage: Int)
     }
 
     interface OnNewItemsListener<Model> {
 
-        /**
-         * Called on the RecyclerView's message queue to receive the results of a previous
-         * [onLoadMore()][.onLoadMore].
-         *
-         * @param newItems
-         * @param page
-         */
+        /** Called on the RecyclerView's message queue to receive the results of a previous [onLoadMore] */
         fun onNewItems(newItems: List<Model>, page: Int)
     }
 
-    /**
-     * Define the [OnLoadMoreHandler] which will be used for loading new
-     * items.
-     *
-     * @param onLoadMoreHandler
-     * @return
-     */
+    /** Define the [OnLoadMoreHandler] which will be used for loading new items. */
     fun withOnLoadMoreHandler(onLoadMoreHandler: OnLoadMoreHandler<Model>): EndlessScrollHelper<Model> {
-        mOnLoadMoreHandler = onLoadMoreHandler
+        this.onLoadMoreHandler = onLoadMoreHandler
         return this
     }
 
-    /**
-     * Define the [OnNewItemsListener] which will receive the new items
-     * loaded by [onLoadMore()][.onLoadMore].
-     *
-     * @param onNewItemsListener
-     * @return
-     * @see .withNewItemsDeliveredTo
-     * @see .withNewItemsDeliveredTo
-     */
+    /** Define the [OnNewItemsListener] which will receive the new items loaded by [onLoadMore] */
     fun withOnNewItemsListener(onNewItemsListener: OnNewItemsListener<Model>): EndlessScrollHelper<Model> {
-        mOnNewItemsListener = onNewItemsListener
+        this.onNewItemsListener = onNewItemsListener
         return this
     }
 
     /**
      * Registers an [OnNewItemsListener] that delivers results to the
-     * specified [IItemAdapter]. Converting each result to an [IItem] using the given
-     * `itemFactory`.
-     *
-     * @param itemAdapter
-     * @param itemFactory
-     * @param <Item>
-     * @return
-     * @see .withNewItemsDeliveredTo
-    </Item> */
+     * specified [IItemAdapter]. Converting each result to an [IItem] using the given [itemFactory].
+     */
     fun <Item : GenericItem> withNewItemsDeliveredTo(itemAdapter: IItemAdapter<*, Item>, itemFactory: (element: Model) -> Item?): EndlessScrollHelper<Model> {
-        mOnNewItemsListener = DeliverToIItemAdapter(itemAdapter, itemFactory)
+        onNewItemsListener = DeliverToIItemAdapter(itemAdapter, itemFactory)
         return this
     }
 
     /**
      * Registers an [OnNewItemsListener] that delivers results to the
      * specified [ModelAdapter] through its [ModelAdapter.add] method.
-     *
-     * @param modelItemAdapter
-     * @return
-     * @see .withNewItemsDeliveredTo
      */
     fun withNewItemsDeliveredTo(modelItemAdapter: ModelAdapter<Model, *>): EndlessScrollHelper<Model> {
-        mOnNewItemsListener = DeliverToModelAdapter(modelItemAdapter)
+        onNewItemsListener = DeliverToModelAdapter(modelItemAdapter)
         return this
     }
 
     /**
-     * An overload of [withNewItemsDeliveredTo()][.withNewItemsDeliveredTo]
+     * An overload of [withNewItemsDeliveredTo()][withNewItemsDeliveredTo]
      * that allows additional callbacks.
-     *
-     * @param itemAdapter
-     * @param itemFactory
-     * @param extraOnNewItemsListener
-     * @param <Item>
-     * @return
-    </Item> */
+     */
     fun <Item : GenericItem> withNewItemsDeliveredTo(itemAdapter: IItemAdapter<*, Item>, itemFactory: (element: Model) -> Item?, extraOnNewItemsListener: OnNewItemsListener<Model>): EndlessScrollHelper<Model> {
-        mOnNewItemsListener = DeliverToIItemAdapter2(itemAdapter, itemFactory, extraOnNewItemsListener)
+        onNewItemsListener = DeliverToIItemAdapter2(itemAdapter, itemFactory, extraOnNewItemsListener)
         return this
     }
 
     /**
-     * An overload of [withNewItemsDeliveredTo()][.withNewItemsDeliveredTo]
-     * that allows additional callbacks.
-     *
-     * @param modelItemAdapter
-     * @param extraOnNewItemsListener
-     * @return
+     * An overload of [withNewItemsDeliveredTo()][withNewItemsDeliveredTo] that allows additional callbacks.
      */
     fun withNewItemsDeliveredTo(modelItemAdapter: ModelAdapter<Model, *>, extraOnNewItemsListener: OnNewItemsListener<Model>): EndlessScrollHelper<Model> {
-        mOnNewItemsListener = DeliverToModelAdapter2(modelItemAdapter, extraOnNewItemsListener)
+        onNewItemsListener = DeliverToModelAdapter2(modelItemAdapter, extraOnNewItemsListener)
         return this
     }
 
@@ -196,16 +142,9 @@ open class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
     //-------------------------
     //-------------------------
 
-    /**
-     * The default implementation takes care of calling the previously set
-     * [OnLoadMoreHandler].
-     *
-     * @param out
-     * @param currentPage
-     * @see .withOnLoadMoreHandler
-     */
+    /** The default implementation takes care of calling the previously set [OnLoadMoreHandler] */
     protected fun onLoadMore(out: ResultReceiver<Model>, currentPage: Int) {
-        val loadMoreHandler = this.mOnLoadMoreHandler
+        val loadMoreHandler = this.onLoadMoreHandler
         try {
             loadMoreHandler?.onLoadMore(out, currentPage)
         } catch (npe: NullPointerException) {
@@ -217,16 +156,9 @@ open class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
         }
     }
 
-    /**
-     * The default implementation takes care of calling the previously set
-     * [OnNewItemsListener].
-     *
-     * @param newItems
-     * @param page
-     * @see .withOnNewItemsListener
-     */
+    /** The default implementation takes care of calling the previously set [OnNewItemsListener] */
     protected fun onNewItems(newItems: List<Model>, page: Int) {
-        val onNewItemsListener = this.mOnNewItemsListener
+        val onNewItemsListener = this.onNewItemsListener
         try {
             onNewItemsListener?.onNewItems(newItems, page)
         } catch (npe: NullPointerException) {
@@ -248,18 +180,20 @@ open class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
         onLoadMore(ResultReceiverImpl(this, currentPage), currentPage)
     }
 
-    private class ResultReceiverImpl<Model> internal constructor(helper: EndlessScrollHelper<Model>, override val receiverPage: Int)// We use WeakReferences to outer class to avoid memory leaks.
+    private class ResultReceiverImpl<Model> internal constructor(helper: EndlessScrollHelper<Model>, override val receiverPage: Int)
+        // We use WeakReferences to outer class to avoid memory leaks.
         : WeakReference<EndlessScrollHelper<Model>>(helper), ResultReceiver<Model>, Runnable {
-        private var mHelperStrongRef: EndlessScrollHelper<Model>? = null
-        private var mResult: List<Model>? = null
+        private var helperStrongRef: EndlessScrollHelper<Model>? = null
+        private var result: List<Model>? = null
 
         override fun deliverNewItems(result: List<Model>): Boolean {
-            if (mResult != null)
-            // We might also see `null` here if more than 1 thread is modifying this.
+            if (this.result != null) {
+                // We might also see `null` here if more than 1 thread is modifying this.
                 throw IllegalStateException("`result` already provided!")
-            mResult = result
-            mHelperStrongRef = super.get()
-            mHelperStrongRef?.let {
+            }
+            this.result = result
+            helperStrongRef = super.get()
+            helperStrongRef?.let {
                 return postOnRecyclerView(it.layoutManager, this)
             }
             return false
@@ -268,22 +202,20 @@ open class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
         override fun run() {
             // At this point, mHelperStrongRef != null
             try {
-                if (mHelperStrongRef?.currentPage != receiverPage) {
+                if (helperStrongRef?.currentPage != receiverPage) {
                     //                    throw new IllegalStateException("Inconsistent state! "
                     //                            + "Page might have already been loaded! "
                     //                            + "Or `loadMore(result)` might have been used by more than 1 thread!");
                     return  // Let it fail and possibly load correctly
                 }
             } catch (npe: NullPointerException) {
-                if (mHelperStrongRef == null) {
+                if (helperStrongRef == null) {
                     throw AssertionError(npe)
                 }
                 throw npe
             }
 
-            mResult?.let {
-                mHelperStrongRef?.onNewItems(it, receiverPage)
-            }
+            result?.let { helperStrongRef?.onNewItems(it, receiverPage) }
         }
     }
 
@@ -293,30 +225,30 @@ open class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
     //-----------------------------------------
     //-----------------------------------------
 
-    private open class DeliverToIItemAdapter<Model, Item : GenericItem> internal constructor(private val mItemAdapter: IItemAdapter<*, Item>, private val mItemFactory: (element: Model) -> Item?) : OnNewItemsListener<Model> {
+    private open class DeliverToIItemAdapter<Model, Item : GenericItem> internal constructor(private val itemAdapter: IItemAdapter<*, Item>, private val itemFactory: (element: Model) -> Item?) : OnNewItemsListener<Model> {
 
         override fun onNewItems(newItems: List<Model>, page: Int) {
-            val items = newItems.mapNotNull(mItemFactory)
-            mItemAdapter.addInternal(items)
+            val items = newItems.mapNotNull(itemFactory)
+            itemAdapter.addInternal(items)
         }
     }
 
-    private open class DeliverToModelAdapter<Model> internal constructor(private val mModelAdapter: ModelAdapter<Model, *>) : OnNewItemsListener<Model> {
+    private open class DeliverToModelAdapter<Model> internal constructor(private val modelAdapter: ModelAdapter<Model, *>) : OnNewItemsListener<Model> {
         override fun onNewItems(newItems: List<Model>, page: Int) {
-            mModelAdapter.add(newItems)
+            modelAdapter.add(newItems)
         }
     }
 
-    private class DeliverToIItemAdapter2<Model, Item : GenericItem> internal constructor(itemAdapter: IItemAdapter<*, Item>, itemFactory: (element: Model) -> Item?, private val mExtraOnNewItemsListener: OnNewItemsListener<Model>) : DeliverToIItemAdapter<Model, Item>(itemAdapter, itemFactory) {
+    private class DeliverToIItemAdapter2<Model, Item : GenericItem> internal constructor(itemAdapter: IItemAdapter<*, Item>, itemFactory: (element: Model) -> Item?, private val extraOnNewItemsListener: OnNewItemsListener<Model>) : DeliverToIItemAdapter<Model, Item>(itemAdapter, itemFactory) {
         override fun onNewItems(newItems: List<Model>, page: Int) {
-            mExtraOnNewItemsListener.onNewItems(newItems, page)
+            extraOnNewItemsListener.onNewItems(newItems, page)
             super.onNewItems(newItems, page)
         }
     }
 
-    private class DeliverToModelAdapter2<Model> internal constructor(modelItemAdapter: ModelAdapter<Model, *>, private val mExtraOnNewItemsListener: OnNewItemsListener<Model>) : DeliverToModelAdapter<Model>(modelItemAdapter) {
+    private class DeliverToModelAdapter2<Model> internal constructor(modelItemAdapter: ModelAdapter<Model, *>, private val extraOnNewItemsListener: OnNewItemsListener<Model>) : DeliverToModelAdapter<Model>(modelItemAdapter) {
         override fun onNewItems(newItems: List<Model>, page: Int) {
-            mExtraOnNewItemsListener.onNewItems(newItems, page)
+            extraOnNewItemsListener.onNewItems(newItems, page)
             super.onNewItems(newItems, page)
         }
     }

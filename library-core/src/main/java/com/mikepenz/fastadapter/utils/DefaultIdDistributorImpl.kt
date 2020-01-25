@@ -8,7 +8,6 @@ import java.util.concurrent.atomic.AtomicLong
  */
 class DefaultIdDistributorImpl<Identifiable : IIdentifyable> :
         DefaultIdDistributor<Identifiable>() {
-
     private val idDistributor = AtomicLong(-2L)
 
     override fun nextId(identifiable: Identifiable): Long {

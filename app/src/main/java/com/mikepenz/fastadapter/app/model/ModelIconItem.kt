@@ -3,9 +3,11 @@ package com.mikepenz.fastadapter.app.model
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.items.ModelAbstractItem
 import com.mikepenz.iconics.IconicsDrawable
+import com.mikepenz.iconics.utils.colorInt
 import com.mikepenz.iconics.view.IconicsImageView
 
 /**
@@ -38,7 +40,9 @@ open class ModelIconItem(icon: IconModel) : ModelAbstractItem<IconModel, ModelIc
         super.bindView(holder, payloads)
 
         //define our data for the view
-        holder.image.icon = IconicsDrawable(holder.image.context, model.icon)
+        holder.image.icon = IconicsDrawable(holder.image.context, model.icon).apply {
+            colorInt = holder.view.context.getThemeColor(R.attr.colorOnSurface)
+        }
         holder.name.text = model.icon.name
     }
 

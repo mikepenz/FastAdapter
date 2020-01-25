@@ -13,9 +13,11 @@ abstract class ClickEventHook<Item : GenericItem> : EventHook<Item> {
  * Convenient extension function to simplify adding a [ClickEventHook] to the [FastAdapter]
  *
  * A sample implementation may look like:
- * mFastAdapter.addClickListener({ vh: SimpleImageItem.ViewHolder -> vh.imageView }) { _, _, _, _ ->
+ * ```
+ * fastAdapter.addClickListener({ vh: SimpleImageItem.ViewHolder -> vh.imageView }) { _, _, _, _ ->
  *    // do something
  * }
+ * ```
  */
 inline fun <reified VH : RecyclerView.ViewHolder, reified Item : GenericItem> FastAdapter<Item>.addClickListener(crossinline resolveView: (VH) -> View?, crossinline resolveViews: ((VH) -> List<View>?) = { null }, crossinline onClick: (v: View, position: Int, fastAdapter: FastAdapter<Item>, item: Item) -> Unit) {
     addEventHook(object : ClickEventHook<Item>() {

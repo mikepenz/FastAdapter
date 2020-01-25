@@ -5,28 +5,28 @@
     android:layout_height="@dimen/material_drawer_item_primary">
 
     <LinearLayout
+        android:id="@+id/swipe_result_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/swipe_result_content"
-        android:paddingEnd="@dimen/material_drawer_vertical_padding"
-        android:paddingLeft="@dimen/material_drawer_vertical_padding"
-        android:paddingRight="@dimen/material_drawer_vertical_padding"
-        android:paddingStart="@dimen/material_drawer_vertical_padding"
+        android:background="#CC0000"
         android:gravity="center_vertical"
-        android:visibility="visible"
-        android:background="@color/md_red_900">
+        android:paddingStart="@dimen/material_drawer_vertical_padding"
+        android:paddingLeft="@dimen/material_drawer_vertical_padding"
+        android:paddingEnd="@dimen/material_drawer_vertical_padding"
+        android:paddingRight="@dimen/material_drawer_vertical_padding"
+        android:visibility="visible">
 
         <TextView
             android:id="@+id/swiped_text"
             android:layout_width="0dp"
-            android:layout_weight="1"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:fontFamily="sans-serif-medium"
             android:gravity="center_vertical|start"
             android:lines="1"
             android:singleLine="true"
-            android:textDirection="anyRtl"
             android:textColor="@android:color/primary_text_dark"
+            android:textDirection="anyRtl"
             android:textSize="@dimen/material_drawer_item_primary_text"
             tools:text="Removed" />
 
@@ -38,25 +38,25 @@
             android:gravity="center_vertical|start"
             android:lines="1"
             android:singleLine="true"
-            android:textDirection="anyRtl"
+            android:text="@string/action_undo"
             android:textAllCaps="true"
             android:textColor="@android:color/primary_text_dark"
-            android:textStyle="bold"
+            android:textDirection="anyRtl"
             android:textSize="@dimen/material_drawer_item_primary_description"
-            android:text="@string/action_undo" />
+            android:textStyle="bold" />
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/item_content"
         android:layout_width="match_parent"
         android:layout_height="@dimen/material_drawer_item_primary"
-        android:id="@+id/item_content"
+        android:elevation="4dp"
         android:gravity="center_vertical|start"
         android:orientation="vertical"
-        android:paddingEnd="@dimen/material_drawer_vertical_padding"
-        android:paddingLeft="@dimen/material_drawer_vertical_padding"
-        android:paddingRight="@dimen/material_drawer_vertical_padding"
         android:paddingStart="@dimen/material_drawer_vertical_padding"
-        android:elevation="4dp"
+        android:paddingLeft="@dimen/material_drawer_vertical_padding"
+        android:paddingEnd="@dimen/material_drawer_vertical_padding"
+        android:paddingRight="@dimen/material_drawer_vertical_padding"
         android:visibility="gone">
 
         <TextView

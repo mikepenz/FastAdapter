@@ -10,5 +10,13 @@ import com.mikepenz.fastadapter.IItemList
 
 abstract class DefaultItemList<Item : GenericItem> : IItemList<Item> {
 
-    var fastAdapter: FastAdapter<Item>? = null
+    private var _fastAdapter: FastAdapter<Item>? = null
+
+    var fastAdapter: FastAdapter<Item>?
+        get() = if (active) _fastAdapter else null
+        set(value) {
+            _fastAdapter = value
+        }
+
+    override var active: Boolean = true
 }

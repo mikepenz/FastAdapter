@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter.adapters
 
+import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.utils.AdapterPredicate
@@ -7,7 +8,6 @@ import com.mikepenz.fastadapter.utils.DefaultItemList
 import com.mikepenz.fastadapter.utils.DefaultItemListImpl
 import com.mikepenz.fastadapter.utils.Triple
 import java.util.*
-import java.util.Arrays.asList
 
 /**
  * Kotlin type alias to simplify usage for an all accepting ModelAdapter
@@ -23,6 +23,11 @@ open class ModelAdapter<Model, Item : GenericItem>(
         val itemList: IItemList<Item>,
         var interceptor: (element: Model) -> Item?
 ) : AbstractAdapter<Item>(), IItemAdapter<Model, Item> {
+
+    constructor(interceptor: (element: Model) -> Item?) : this(
+            DefaultItemListImpl<Item>(), interceptor
+    )
+
     override var fastAdapter: FastAdapter<Item>?
         get() = super.fastAdapter
         set(fastAdapter) {
@@ -30,6 +35,16 @@ open class ModelAdapter<Model, Item : GenericItem>(
                 (itemList as DefaultItemList<Item>).fastAdapter = fastAdapter
             }
             super.fastAdapter = fastAdapter
+        }
+
+    /**
+     * defines if this adapter is currently activly shown in the list
+     */
+    var active: Boolean = true
+        set(value) {
+            field = value
+            itemList.active = value
+            fastAdapter?.notifyAdapterDataSetChanged() // items are gone
         }
 
     open var reverseInterceptor: ((element: Item) -> Model?)? = null
@@ -43,12 +58,12 @@ open class ModelAdapter<Model, Item : GenericItem>(
 
     //filters the items
     /**
-     * allows you to define your own Filter implementation instead of the default `ItemFilter`
+     * Allows you to define your own Filter implementation instead of the default `ItemFilter`
      */
     open var itemFilter = ItemFilter(this)
 
     /**
-     * the ModelAdapter does not keep a list of input model's to get retrieve them a `reverseInterceptor` is required
+     * The ModelAdapter does not keep a list of input model's to get retrieve them a `reverseInterceptor` is required
      * usually it is used to get the `Model` from a `IModelItem`
      *
      * @return a List of initial Model's
@@ -68,7 +83,9 @@ open class ModelAdapter<Model, Item : GenericItem>(
                             list.add(interceptedItem)
                         }
                     }
-                    else -> throw RuntimeException("to get the list of models, the item either needs to implement `IModelItem` or you have to provide a `reverseInterceptor`")
+                    else -> throw RuntimeException(
+                            "to get the list of models, the item either needs to implement `IModelItem` or you have to provide a `reverseInterceptor`"
+                    )
                 }
             }
             return list
@@ -78,18 +95,13 @@ open class ModelAdapter<Model, Item : GenericItem>(
      * @return the count of items within this adapter
      */
     override val adapterItemCount: Int
-        get() = itemList.size()
+        get() = if (active) itemList.size() else 0
 
     /**
      * @return the items within this adapter
      */
     override val adapterItems: MutableList<Item>
         get() = itemList.items
-
-    constructor(interceptor: (element: Model) -> Item?) : this(
-            DefaultItemListImpl<Item>(),
-            interceptor
-    )
 
     /**
      * Generates a `Item` based on it's `Model` using the interceptor
@@ -107,11 +119,10 @@ open class ModelAdapter<Model, Item : GenericItem>(
      * @param models the List of Model which will be used to create the List of Item
      * @return the generated List of Item
      */
-    open fun intercept(models: List<Model>): List<Item> =
-            models.mapNotNull { intercept(it) }
+    open fun intercept(models: List<Model>): List<Item> = models.mapNotNull { intercept(it) }
 
     /**
-     * filters the items with the constraint using the provided Predicate
+     * Filters the items with the constraint using the provided Predicate
      *
      * @param constraint the string used to filter the list
      */
@@ -140,7 +151,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * returns the global position if the relative position within this adapter was given
+     * Returns the global position if the relative position within this adapter was given
      *
      * @param position the relative position
      * @return the global position
@@ -158,7 +169,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * set a new list of items and apply it to the existing list (clear - add) for this adapter
+     * Set a new list of items and apply it to the existing list (clear - add) for this adapter
      * NOTE may consider using setNewList if the items list is a reference to the list which is used inside the adapter
      *
      * @param items the items to set
@@ -173,7 +184,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * set a new list of model items and apply it to the existing list (clear - add) for this adapter
+     * Set a new list of model items and apply it to the existing list (clear - add) for this adapter
      * NOTE may consider using setNewList if the items list is a reference to the list which is used inside the adapter
      *
      * @param list            the items to set
@@ -191,7 +202,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * set a new list of model and apply it to the existing list (clear - add) for this adapter
+     * Set a new list of model and apply it to the existing list (clear - add) for this adapter
      * NOTE may consider using setNewList if the items list is a reference to the list which is used inside the adapter
      *
      * @param items           the items to set
@@ -228,9 +239,9 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
+     * Sets a complete new list of items onto this adapter, using the new list. Calls notifyDataSetChanged
      *
-     * @param items         the new items to set
+     * @param items        the new items to set
      * @param retainFilter set to true if you want to keep the filter applied
      * @return this
      */
@@ -262,7 +273,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * forces to remap all possible types for the RecyclerView
+     * Forces to remap all possible types for the RecyclerView
      */
     open fun remapMappedTypes() {
         fastAdapter?.clearTypeInstance()
@@ -270,17 +281,17 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * add an array of items to the end of the existing items
+     * Add an array of items to the end of the existing items
      *
      * @param items the items to add
      */
     @SafeVarargs
     override fun add(vararg items: Model): ModelAdapter<Model, Item> {
-        return add(asList(*items))
+        return add(listOf(*items))
     }
 
     /**
-     * add a list of items to the end of the existing items
+     * Add a list of items to the end of the existing items
      *
      * @param items the items to add
      */
@@ -303,18 +314,18 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * add an array of items at the given position within the existing items
+     * Add an array of items at the given position within the existing items
      *
      * @param position the global position
      * @param items    the items to add
      */
     @SafeVarargs
     override fun add(position: Int, vararg items: Model): ModelAdapter<Model, Item> {
-        return add(position, asList(*items))
+        return add(position, listOf(*items))
     }
 
     /**
-     * add a list of items at the given position within the existing items
+     * Add a list of items at the given position within the existing items
      *
      * @param position the global position
      * @param items     the items to add
@@ -336,7 +347,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * sets an item at the given position, overwriting the previous item
+     * Sets an item at the given position, overwriting the previous item
      *
      * @param position the global position
      * @param item  the item to set
@@ -356,7 +367,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * moves an item within the list from a position to a position
+     * Moves an item within the list from a position to a position
      *
      * @param fromPosition the position global from which we want to move
      * @param toPosition   the global position to which to move
@@ -368,7 +379,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * removes an item at the given position within the existing icons
+     * Removes an item at the given position within the existing icons
      *
      * @param position the global position
      */
@@ -378,7 +389,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * removes a range of items starting with the given position within the existing icons
+     * Removes a range of items starting with the given position within the existing icons
      *
      * @param position  the global position
      * @param itemCount the count of items which were removed
@@ -389,7 +400,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * removes all items of this adapter
+     * Removes all items of this adapter
      */
     override fun clear(): ModelAdapter<Model, Item> {
         itemList.clear(fastAdapter?.getPreItemCountByOrder(order) ?: 0)
@@ -397,7 +408,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * remvoes an item by it's identifier
+     * Removes an item by it's identifier
      *
      * @param identifier the identifier to search for
      * @return this
@@ -416,7 +427,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
                         //a sub item which is not in the list can be instantly deleted
                         expandable.parent?.subItems?.remove(item)
                     }
-                    if (position != -1) {
+                    if (position != RecyclerView.NO_POSITION) {
                         //a normal displayed item can only be deleted afterwards
                         remove(position)
                     }
@@ -429,12 +440,15 @@ open class ModelAdapter<Model, Item : GenericItem>(
     }
 
     /**
-     * util function which recursively iterates over all items and subItems of the given adapter.
+     * Util function which recursively iterates over all items and subItems of the given adapter.
      * It executes the given `predicate` on every item and will either stop if that function returns true, or continue (if stopOnMatch is false)
      *
      * @param predicate   the predicate to run on every item, to check for a match or do some changes (e.g. select)
      * @param stopOnMatch defines if we should stop iterating after the first match
-     * @return Triple&lt;Boolean, IItem, Integer&gt; The first value is true (it is always not null), the second contains the item and the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
+     * @return Triple<Boolean, IItem, Integer>
+     *     The first value is true (it is always not null),
+     *     the second contains the item,
+     *     the third the position (if the item is visible) if we had a match, (always false and null and null in case of stopOnMatch == false)
      */
     open fun recursive(
             predicate: AdapterPredicate<Item>,
@@ -484,7 +498,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
     companion object {
 
         /**
-         * static method to retrieve a new `ItemAdapter`
+         * Static method to retrieve a new `ItemAdapter`
          *
          * @return a new ItemAdapter
          */

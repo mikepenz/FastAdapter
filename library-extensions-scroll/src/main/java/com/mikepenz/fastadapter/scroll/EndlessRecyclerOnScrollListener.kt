@@ -8,9 +8,9 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter
 abstract class EndlessRecyclerOnScrollListener : RecyclerView.OnScrollListener {
 
     private var enabled = true
-    private var mPreviousTotal = 0
-    private var mLoading = true
-    private var mVisibleThreshold = -1
+    private var previousTotal = 0
+    private var isLoading = true
+    private var visibleThreshold = RecyclerView.NO_POSITION
     var firstVisibleItem: Int = 0
         private set
     var visibleItemCount: Int = 0
@@ -18,13 +18,13 @@ abstract class EndlessRecyclerOnScrollListener : RecyclerView.OnScrollListener {
     var totalItemCount: Int = 0
         private set
 
-    private var mIsOrientationHelperVertical: Boolean = false
-    private var mOrientationHelper: OrientationHelper? = null
+    private var isOrientationHelperVertical: Boolean = false
+    private var orientationHelper: OrientationHelper? = null
 
     var currentPage = 0
         private set
 
-    private var mFooterAdapter: ItemAdapter<*>? = null
+    private var footerAdapter: ItemAdapter<*>? = null
 
     lateinit var layoutManager: RecyclerView.LayoutManager
         private set
@@ -35,7 +35,7 @@ abstract class EndlessRecyclerOnScrollListener : RecyclerView.OnScrollListener {
      * @param adapter the ItemAdapter used to host footer items
      */
     constructor(adapter: ItemAdapter<*>) {
-        this.mFooterAdapter = adapter
+        this.footerAdapter = adapter
     }
 
     constructor(layoutManager: RecyclerView.LayoutManager) {
@@ -43,12 +43,12 @@ abstract class EndlessRecyclerOnScrollListener : RecyclerView.OnScrollListener {
     }
 
     constructor(visibleThreshold: Int) {
-        this.mVisibleThreshold = visibleThreshold
+        this.visibleThreshold = visibleThreshold
     }
 
     constructor(layoutManager: RecyclerView.LayoutManager, visibleThreshold: Int) {
         this.layoutManager = layoutManager
-        this.mVisibleThreshold = visibleThreshold
+        this.visibleThreshold = visibleThreshold
     }
 
     /**
@@ -58,8 +58,8 @@ abstract class EndlessRecyclerOnScrollListener : RecyclerView.OnScrollListener {
      */
     constructor(layoutManager: RecyclerView.LayoutManager, visibleThreshold: Int, footerAdapter: ItemAdapter<*>) {
         this.layoutManager = layoutManager
-        this.mVisibleThreshold = visibleThreshold
-        this.mFooterAdapter = footerAdapter
+        this.visibleThreshold = visibleThreshold
+        this.footerAdapter = footerAdapter
     }
 
     private fun findFirstVisibleItemPosition(recyclerView: RecyclerView): Int {
@@ -74,15 +74,15 @@ abstract class EndlessRecyclerOnScrollListener : RecyclerView.OnScrollListener {
 
     private fun findOneVisibleChild(fromIndex: Int, toIndex: Int, completelyVisible: Boolean,
                                     acceptPartiallyVisible: Boolean): View? {
-        if (layoutManager.canScrollVertically() != mIsOrientationHelperVertical || mOrientationHelper == null) {
-            mIsOrientationHelperVertical = layoutManager.canScrollVertically()
-            mOrientationHelper = if (mIsOrientationHelperVertical)
+        if (layoutManager.canScrollVertically() != isOrientationHelperVertical || orientationHelper == null) {
+            isOrientationHelperVertical = layoutManager.canScrollVertically()
+            orientationHelper = if (isOrientationHelperVertical)
                 OrientationHelper.createVerticalHelper(layoutManager)
             else
                 OrientationHelper.createHorizontalHelper(layoutManager)
         }
 
-        val mOrientationHelper = this.mOrientationHelper ?: return null
+        val mOrientationHelper = this.orientationHelper ?: return null
 
         val start = mOrientationHelper.startAfterPadding
         val end = mOrientationHelper.endAfterPadding
@@ -115,32 +115,34 @@ abstract class EndlessRecyclerOnScrollListener : RecyclerView.OnScrollListener {
         super.onScrolled(recyclerView, dx, dy)
 
         if (enabled) {
-            if (!::layoutManager.isInitialized)
+            if (!::layoutManager.isInitialized) {
                 layoutManager = recyclerView.layoutManager
                         ?: throw RuntimeException("A LayoutManager is required")
+            }
 
-            val footerItemCount = mFooterAdapter?.adapterItemCount ?: 0
+            val footerItemCount = footerAdapter?.adapterItemCount ?: 0
 
-            if (mVisibleThreshold == -1)
-                mVisibleThreshold = findLastVisibleItemPosition(recyclerView) - findFirstVisibleItemPosition(recyclerView) - footerItemCount
+            if (visibleThreshold == RecyclerView.NO_POSITION) {
+                visibleThreshold = findLastVisibleItemPosition(recyclerView) - findFirstVisibleItemPosition(recyclerView) - footerItemCount
+            }
 
             visibleItemCount = recyclerView.childCount - footerItemCount
             totalItemCount = layoutManager.itemCount - footerItemCount
             firstVisibleItem = findFirstVisibleItemPosition(recyclerView)
 
-            if (mLoading) {
-                if (totalItemCount > mPreviousTotal) {
-                    mLoading = false
-                    mPreviousTotal = totalItemCount
+            if (isLoading) {
+                if (totalItemCount > previousTotal) {
+                    isLoading = false
+                    previousTotal = totalItemCount
                 }
             }
-            if (!mLoading && totalItemCount - visibleItemCount <= firstVisibleItem + mVisibleThreshold) {
+            if (!isLoading && totalItemCount - visibleItemCount <= firstVisibleItem + visibleThreshold) {
 
                 currentPage++
 
                 onLoadMore(currentPage)
 
-                mLoading = true
+                isLoading = true
             }
         }
     }
@@ -157,8 +159,8 @@ abstract class EndlessRecyclerOnScrollListener : RecyclerView.OnScrollListener {
 
     @JvmOverloads
     fun resetPageCount(page: Int = 0) {
-        mPreviousTotal = 0
-        mLoading = true
+        previousTotal = 0
+        isLoading = true
         currentPage = page
         onLoadMore(currentPage)
     }

@@ -47,7 +47,7 @@
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:layout_marginTop="@dimen/material_drawer_vertical_padding"
-        app:iiv_color="@color/md_black_1000"
+        app:iiv_color="?colorOnSurface"
         app:iiv_icon="gmd-keyboard-arrow-up"
         app:iiv_size="16dp" />
 </LinearLayout>

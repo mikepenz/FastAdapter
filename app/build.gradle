@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
+apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 
 //wrap with try and catch so the build is working even if the signing stuff is missing
 try {
@@ -53,6 +54,9 @@ android {
         exclude 'META-INF/library-core_release.kotlin_module'
         exclude 'META-INF/library_release.kotlin_module'
     }
+    dexOptions {
+        javaMaxHeapSize = "4G"
+    }
 }
 
 kapt {
@@ -82,12 +86,6 @@ dependencies {
     // view binding lib?
     implementation 'com.android.support:support-annotations:28.0.0'
 
-    // used to base on some backwards compatible themes
-    // contains util classes to support various android versions, and clean up code
-    // comes with the awesome "Holder"-Pattern
-    // https://github.com/mikepenz/Materialize
-    implementation "com.mikepenz:materialize:${versions.materialize}"
-
     // used to provide out of the box icon font support. simplifies development,
     // and provides scalable icons. the core is very very light
     // https://github.com/mikepenz/Android-Iconics
@@ -97,8 +95,12 @@ dependencies {
     //used to generate the drawer on the left
     //https://github.com/mikepenz/MaterialDrawer
     implementation("com.mikepenz:materialdrawer:${versions.materialdrawer}") {
-        transitive = true
-        exclude group: "com.mikepenz"
+        exclude module: "fastadapter"
+        exclude module: "fastadapter-extensions-expandable"
+    }
+    implementation("com.mikepenz:materialdrawer-iconics:${versions.materialdrawer}") {
+        exclude module: "fastadapter"
+        exclude module: "fastadapter-extensions-expandable"
     }
     //used to provide different itemAnimators for the RecyclerView
     //https://github.com/mikepenz/ItemAnimators
@@ -106,8 +108,8 @@ dependencies {
     //used to generate the Open Source section
     //https://github.com/mikepenz/AboutLibraries
     implementation("com.mikepenz:aboutlibraries:${versions.aboutlib}") {
-        transitive = true
-        exclude group: "com.mikepenz"
+        exclude module: "fastadapter"
+        exclude module: "fastadapter-extensions-expandable"
     }
     //used to display the icons in the drawer
     //https://github.com/mikepenz/Android-Iconics
@@ -149,20 +151,20 @@ dependencies {
 
     //Used to async operations
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
-    implementation 'io.reactivex.rxjava2:rxjava:2.2.13'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.16'
 
     compileOnly "com.google.code.findbugs:jsr305:3.0.2"
 
-    implementation "android.arch.persistence.room:runtime:${versions.room}"
-    kapt "android.arch.persistence.room:compiler:${versions.room}"
+    implementation "androidx.room:room-runtime:${versions.room}"
+    kapt "androidx.room:room-compiler:${versions.room}"
 
-    implementation "android.arch.lifecycle:extensions:${versions.lifecycle}"
+    implementation "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}"
 
 
     configurations.all {
-        resolutionStrategy.force "com.mikepenz:materialize:${versions.materialize}"
         resolutionStrategy.force "com.mikepenz:iconics-core:${versions.iconics}"
         resolutionStrategy.force "com.mikepenz:iconics-views:${versions.iconics}"
+        resolutionStrategy.force "com.mikepenz:aboutlibraries-core:${versions.aboutlib}"
         resolutionStrategy.force "com.mikepenz:aboutlibraries:${versions.aboutlib}"
         resolutionStrategy.force "androidx.appcompat:appcompat:${versions.appcompat}"
         resolutionStrategy.force "androidx.recyclerview:recyclerview:${versions.recyclerView}"

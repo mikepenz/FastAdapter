@@ -99,7 +99,7 @@ class CustomStickyRecyclerHeadersDecoration private constructor(private val mAda
      *
      * @param x x-coordinate
      * @param y y-coordinate
-     * @return position of header, or -1 if not found
+     * @return position of header, or [androidx.recyclerview.widget.RecyclerView.NO_POSITION] (-1) if not found
      */
     fun findHeaderPositionUnder(x: Int, y: Int): Int {
         for (i in 0 until mHeaderRects.size()) {
@@ -108,7 +108,7 @@ class CustomStickyRecyclerHeadersDecoration private constructor(private val mAda
                 return mHeaderRects.keyAt(i)
             }
         }
-        return -1
+        return RecyclerView.NO_POSITION
     }
 
     /**

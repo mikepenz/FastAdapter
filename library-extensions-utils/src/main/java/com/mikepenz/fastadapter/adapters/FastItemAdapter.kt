@@ -15,27 +15,22 @@ typealias GenericFastItemAdapter = FastItemAdapter<GenericItem>
  * Created by mikepenz on 18.01.16.
  */
 open class FastItemAdapter<Item : GenericItem>(
-        /**
-         * returns the internal created [ItemAdapter]
-         */
+        /** @return the internal created [ItemAdapter] */
         val itemAdapter: ItemAdapter<Item> = items()
 ) : IItemAdapter<Item, Item> by itemAdapter, FastAdapter<Item>() {
-    /**
-     * @return the filter used to filter items
-     */
+
+    /** @return the filter used to filter items */
     val itemFilter: ItemFilter<*, Item>
         get() = itemAdapter.itemFilter
 
-    /**
-     * ctor
-     */
+    /** ctor */
     init {
         addAdapter<IAdapter<Item>>(0, itemAdapter)
         cacheSizes()
     }
 
     /**
-     * defines if the IdDistributor is used to provide an ID to all added items which do not yet define an id
+     * Defines if the IdDistributor is used to provide an ID to all added items which do not yet define an id
      *
      * @param useIdDistributor false if the IdDistributor shouldn't be used
      * @return this
@@ -47,20 +42,18 @@ open class FastItemAdapter<Item : GenericItem>(
     }
 
     /**
-     * removes a range of items starting with the given position within the existing icons
+     * Removes a range of items starting with the given position within the existing icons
      *
      * @param position  the global position
      * @param itemCount the count of items removed
      */
     @Deprecated(message = "removeItemRange is deprecated", replaceWith = ReplaceWith("removeRange"), level = DeprecationLevel.WARNING)
     open fun removeItemRange(position: Int, itemCount: Int): FastItemAdapter<Item> {
-        itemAdapter.removeRange(position, itemCount)
+        removeRange(position, itemCount)
         return this
     }
 
-    /**
-     * convenient open functions, to force to remap all possible types for the RecyclerView
-     */
+    /** Convenient open functions, to force to remap all possible types for the RecyclerView */
     open fun remapMappedTypes() {
         itemAdapter.remapMappedTypes()
     }

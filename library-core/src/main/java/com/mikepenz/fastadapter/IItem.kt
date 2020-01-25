@@ -17,90 +17,45 @@ typealias GenericItem = IItem<out RecyclerView.ViewHolder>
  */
 interface IItem<VH : RecyclerView.ViewHolder> : IIdentifyable {
 
-    /**
-     * a Tag of the Item
-     */
+    /** A Tag of the Item */
     var tag: Any?
 
-    /**
-     * If the item is enabled
-     */
+    /** If the item is enabled */
     var isEnabled: Boolean
 
-    /**
-     * If the item is selected
-     */
+    /** If the item is selected */
     var isSelected: Boolean
 
-    /**
-     * If the item is selectable
-     */
+    /** If the item is selectable */
     var isSelectable: Boolean
 
-    /**
-     * The type of the Item. Can be a hardcoded INT, but preferred is a defined id
-     */
+    /** The type of the Item. Can be a hardcoded INT, but preferred is a defined id */
     @get:IdRes
     val type: Int
 
-    /**
-     * The layout for the given item
-     */
+    /** The layout for the given item */
     @get:LayoutRes
     val layoutRes: Int
 
-    /**
-     * generates a view by the defined LayoutRes
-     *
-     * @param ctx
-     * @return
-     */
+    /** Generates a view by the defined LayoutRes */
     fun generateView(ctx: Context): View
 
-    /**
-     * generates a view by the defined LayoutRes and pass the LayoutParams from the parent
-     *
-     * @param ctx
-     * @param parent
-     * @return
-     */
+    /** Generates a view by the defined LayoutRes and pass the LayoutParams from the parent */
     fun generateView(ctx: Context, parent: ViewGroup): View
 
-    /**
-     * Generates a ViewHolder from this Item with the given parent
-     *
-     * @param parent
-     * @return
-     */
+    /** Generates a ViewHolder from this Item with the given parent */
     fun getViewHolder(parent: ViewGroup): VH
 
-    /**
-     * Binds the data of this item to the given holder
-     *
-     * @param holder
-     * @param payloads
-     */
+    /** Binds the data of this item to the given holder */
     fun bindView(holder: VH, payloads: MutableList<Any>)
 
-    /**
-     * View needs to release resources when its recycled
-     *
-     * @param holder
-     */
+    /** View needs to release resources when its recycled */
     fun unbindView(holder: VH)
 
-    /**
-     * View got attached to the window
-     *
-     * @param holder
-     */
+    /** View got attached to the window */
     fun attachToWindow(holder: VH)
 
-    /**
-     * View got detached from the window
-     *
-     * @param holder
-     */
+    /** View got detached from the window */
     fun detachFromWindow(holder: VH)
 
     /**
@@ -111,11 +66,6 @@ interface IItem<VH : RecyclerView.ViewHolder> : IIdentifyable {
      */
     fun failedToRecycle(holder: VH): Boolean
 
-    /**
-     * If this item equals to the given identifier
-     *
-     * @param id
-     * @return
-     */
+    /** If this item equals to the given identifier */
     fun equals(id: Int): Boolean
 }

@@ -34,9 +34,7 @@ open class HeaderSelectionItem : SimpleSubExpandableItem() {
         var selectedSubItems = 0
         if (mSubSelectionProvider != null)
             selectedSubItems = mSubSelectionProvider?.invoke() ?: 0
-        val descr = StringHolder(description?.text)
-        if (selectedSubItems > 0)
-            descr.setText("Selected children: " + selectedSubItems + "/" + subItems.size)
+        val descr = StringHolder(if (selectedSubItems > 0) description?.textString else "Selected children: " + selectedSubItems + "/" + subItems.size)
         StringHolder.applyToOrHide(descr, holder.description)
 
         holder.description.setTextColor(if (selectedSubItems == 0) Color.BLACK else Color.RED)

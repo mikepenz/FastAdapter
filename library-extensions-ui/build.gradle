@@ -29,15 +29,13 @@ android {
 }
 
 dependencies {
-    implementation  project(':library-core')
+    implementation project(':library-core')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
 
-    implementation "androidx.recyclerview:recyclerview:${versions.androidX}"
+    implementation "androidx.recyclerview:recyclerview:${versions.recyclerView}"
     implementation "com.google.android.material:material:${versions.androidX}"
     implementation "androidx.annotation:annotation:${versions.androidX}"
-
-    implementation "com.mikepenz:materialize:${versions.materialize}"
 }
 
 if (project.hasProperty('pushall') || project.hasProperty('library_extensions_ui_only')) {

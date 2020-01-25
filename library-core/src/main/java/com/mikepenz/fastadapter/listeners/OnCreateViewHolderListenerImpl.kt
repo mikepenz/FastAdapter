@@ -8,11 +8,11 @@ import com.mikepenz.fastadapter.IHookable
 import com.mikepenz.fastadapter.utils.bind
 
 /**
- * default implementation of the OnCreateViewHolderListener
+ * Default implementation of the OnCreateViewHolderListener
  */
 open class OnCreateViewHolderListenerImpl<Item : GenericItem> : OnCreateViewHolderListener<Item> {
     /**
-     * is called inside the onCreateViewHolder method and creates the viewHolder based on the provided viewTyp
+     * Is called inside the onCreateViewHolder method and creates the viewHolder based on the provided viewTyp
      *
      * @param parent   the parent which will host the View
      * @param viewType the type of the ViewHolder we want to create
@@ -23,7 +23,7 @@ open class OnCreateViewHolderListenerImpl<Item : GenericItem> : OnCreateViewHold
     }
 
     /**
-     * is called after the viewHolder was created and the default listeners were added
+     * Is called after the viewHolder was created and the default listeners were added
      *
      * @param viewHolder the created viewHolder after all listeners were set
      * @return the viewHolder given as param

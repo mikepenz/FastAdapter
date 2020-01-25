@@ -29,49 +29,26 @@ abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolde
         return this
     }
 
-    /**
-     * this method states if we should insert a custom element at the vien position
-     *
-     * @param position
-     * @return
-     */
+    /** This method states if we should insert a custom element at the given position */
     abstract fun shouldInsertItemAtPosition(position: Int): Boolean
 
-    /**
-     * this method calculates how many elements were already inserted before this position;
-     *
-     * @param position
-     * @return
-     */
+    /** This method calculates how many elements were already inserted before this position */
     abstract fun itemInsertedBeforeCount(position: Int): Int
 
 
-    /**
-     * overwrite the registerAdapterDataObserver to correctly forward all events to the FastAdapter
-     *
-     * @param observer
-     */
+    /** Overwrite the [RecyclerView.Adapter.registerAdapterDataObserver] to correctly forward all events to the FastAdapter */
     override fun registerAdapterDataObserver(observer: RecyclerView.AdapterDataObserver) {
         super.registerAdapterDataObserver(observer)
         adapter?.registerAdapterDataObserver(observer)
     }
 
-    /**
-     * overwrite the unregisterAdapterDataObserver to correctly forward all events to the FastAdapter
-     *
-     * @param observer
-     */
+    /** Overwrite the [RecyclerView.Adapter.unregisterAdapterDataObserver] to correctly forward all events to the FastAdapter */
     override fun unregisterAdapterDataObserver(observer: RecyclerView.AdapterDataObserver) {
         super.unregisterAdapterDataObserver(observer)
         adapter?.unregisterAdapterDataObserver(observer)
     }
 
-    /**
-     * overwrite the getItemViewType to correctly return the value from the FastAdapter
-     *
-     * @param position
-     * @return
-     */
+    /** Overwrite the [RecyclerView.Adapter.getItemViewType] to correctly return the value from the FastAdapter */
     override fun getItemViewType(position: Int): Int {
         return if (shouldInsertItemAtPosition(position)) {
             getItem(position)?.type ?: 0
@@ -80,12 +57,7 @@ abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolde
         }
     }
 
-    /**
-     * overwrite the getItemId to correctly return the value from the FastAdapter
-     *
-     * @param position
-     * @return
-     */
+    /** Overwrite the [RecyclerView.Adapter.getItemId] to correctly return the value from the FastAdapter */
     override fun getItemId(position: Int): Long {
         return if (shouldInsertItemAtPosition(position)) {
             getItem(position)?.identifier ?: 0
@@ -94,35 +66,22 @@ abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolde
         }
     }
 
-    /**
-     * make sure we return the Item from the FastAdapter so we retrieve the item from all adapters
-     *
-     * @param position
-     * @return
-     */
+    /** Make sure we return the Item from the FastAdapter so we retrieve the item from all adapters */
     fun getItem(position: Int): Item? {
         return if (shouldInsertItemAtPosition(position)) {
             items[itemInsertedBeforeCount(position - 1)]
-        } else null
+        } else {
+            null
+        }
     }
 
-    /**
-     * make sure we return the count from the FastAdapter so we retrieve the count from all adapters
-     *
-     * @return
-     */
+    /** Make sure we return the count from the FastAdapter so we retrieve the count from all adapters */
     override fun getItemCount(): Int {
         val itemCount = adapter?.itemCount ?: 0
         return itemCount + itemInsertedBeforeCount(itemCount)
     }
 
-    /**
-     * the onCreateViewHolder is managed by the FastAdapter so forward this correctly
-     *
-     * @param parent
-     * @param viewType
-     * @return
-     */
+    /** The [RecyclerView.Adapter.onCreateViewHolder] is managed by the FastAdapter so forward this correctly */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         //TODO OPTIMIZE
         val vh = items.firstOrNull { it.type == viewType }?.getViewHolder(parent)
@@ -138,12 +97,7 @@ abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolde
         //empty implementation as the one with the List payloads is already called
     }
 
-    /**
-     * the onBindViewHolder is managed by the FastAdapter so forward this correctly
-     *
-     * @param holder
-     * @param position
-     */
+    /** The [RecyclerView.Adapter.onBindViewHolder] is managed by the FastAdapter so forward this correctly */
     override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>) {
         if (shouldInsertItemAtPosition(position)) {
             getItem(position)?.bindView(holder, payloads)
@@ -152,66 +106,37 @@ abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolde
         }
     }
 
-    /**
-     * the setHasStableIds is managed by the FastAdapter so forward this correctly
-     *
-     * @param hasStableIds
-     */
+    /** The [RecyclerView.Adapter.setHasStableIds] is managed by the FastAdapter so forward this correctly */
     override fun setHasStableIds(hasStableIds: Boolean) {
         adapter?.setHasStableIds(hasStableIds)
     }
 
-    /**
-     * the onViewRecycled is managed by the FastAdapter so forward this correctly
-     *
-     * @param holder
-     */
+    /** The [RecyclerView.Adapter.onViewRecycled] is managed by the FastAdapter so forward this correctly */
     override fun onViewRecycled(holder: VH) {
         adapter?.onViewRecycled(holder)
     }
 
-    /**
-     * the onFailedToRecycleView is managed by the FastAdapter so forward this correctly
-     *
-     * @param holder
-     * @return
-     */
+    /** The [RecyclerView.Adapter.onFailedToRecycleView] is managed by the FastAdapter so forward this correctly */
     override fun onFailedToRecycleView(holder: VH): Boolean {
         return adapter?.onFailedToRecycleView(holder) ?: false
     }
 
-    /**
-     * the onViewDetachedFromWindow is managed by the FastAdapter so forward this correctly
-     *
-     * @param holder
-     */
+    /** The [RecyclerView.Adapter.onViewDetachedFromWindow] is managed by the FastAdapter so forward this correctly */
     override fun onViewDetachedFromWindow(holder: VH) {
         adapter?.onViewDetachedFromWindow(holder)
     }
 
-    /**
-     * the onViewAttachedToWindow is managed by the FastAdapter so forward this correctly
-     *
-     * @param holder
-     */
+    /** The [RecyclerView.Adapter.onViewAttachedToWindow] is managed by the FastAdapter so forward this correctly */
     override fun onViewAttachedToWindow(holder: VH) {
         adapter?.onViewAttachedToWindow(holder)
     }
 
-    /**
-     * the onAttachedToRecyclerView is managed by the FastAdapter so forward this correctly
-     *
-     * @param recyclerView
-     */
+    /** The [RecyclerView.Adapter.onAttachedToRecyclerView] is managed by the FastAdapter so forward this correctly */
     override fun onAttachedToRecyclerView(recyclerView: RecyclerView) {
         adapter?.onAttachedToRecyclerView(recyclerView)
     }
 
-    /**
-     * the onDetachedFromRecyclerView is managed by the FastAdapter so forward this correctly
-     *
-     * @param recyclerView
-     */
+    /** The [RecyclerView.Adapter.onDetachedFromRecyclerView] is managed by the FastAdapter so forward this correctly */
     override fun onDetachedFromRecyclerView(recyclerView: RecyclerView) {
         adapter?.onDetachedFromRecyclerView(recyclerView)
     }
