@@ -1,5 +1,6 @@
 include ':app'
 include ':library-core'
+include ':library-extensions-binding'
 include ':library-extensions-diff'
 include ':library-extensions-drag'
 include ':library-extensions-expandable'

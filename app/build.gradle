@@ -57,6 +57,11 @@ android {
     dexOptions {
         javaMaxHeapSize = "4G"
     }
+
+    buildFeatures {
+        viewBinding = true
+        dataBinding = true
+    }
 }
 
 kapt {
@@ -69,6 +74,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
 
     implementation project(':library-core')
+    implementation project(':library-extensions-binding')
     implementation project(':library-extensions-diff')
     implementation project(':library-extensions-drag')
     implementation project(':library-extensions-expandable')
