@@ -122,7 +122,7 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
             if (drawable != null) {
                 val itemHeight = itemView.bottom - itemView.top
                 val intrinsicWidth = drawable.intrinsicWidth
-                val intrinsicHeight = drawable.intrinsicWidth
+                val intrinsicHeight = drawable.intrinsicHeight
 
                 val left: Int
                 val right: Int
