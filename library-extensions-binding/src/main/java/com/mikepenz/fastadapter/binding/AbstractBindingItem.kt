@@ -65,7 +65,7 @@ abstract class AbstractBindingItem<VB : ViewBinding, VH : BindingViewHolder<VB>>
      * This method is called by generateView(Context ctx), generateView(Context ctx, ViewGroup parent) and getViewHolder(ViewGroup parent)
      * it will generate the ViewBinding. You have to provide the correct binding class.
      */
-    abstract fun createBinding(inflater: LayoutInflater): VB
+    abstract fun createBinding(inflater: LayoutInflater, parent: ViewGroup? = null): VB
 
     /** Generates a view by the defined LayoutRes */
     override fun generateView(ctx: Context): View {
@@ -80,7 +80,7 @@ abstract class AbstractBindingItem<VB : ViewBinding, VH : BindingViewHolder<VB>>
 
     /** Generates a view by the defined LayoutRes and pass the LayoutParams from the parent */
     override fun generateView(ctx: Context, parent: ViewGroup): View {
-        val viewHolder = getViewHolder(createBinding(LayoutInflater.from(ctx)))
+        val viewHolder = getViewHolder(createBinding(LayoutInflater.from(ctx), parent))
 
         //as we already know the type of our ViewHolder cast it to our type
         bindView(viewHolder, Collections.emptyList())
@@ -90,7 +90,7 @@ abstract class AbstractBindingItem<VB : ViewBinding, VH : BindingViewHolder<VB>>
 
     /** Generates a ViewHolder from this Item with the given parent */
     override fun getViewHolder(parent: ViewGroup): VH {
-        return getViewHolder(createBinding(LayoutInflater.from(parent.context)))
+        return getViewHolder(createBinding(LayoutInflater.from(parent.context), parent))
     }
 
     /** Generates a ViewHolder from this Item with the given ViewBinding */

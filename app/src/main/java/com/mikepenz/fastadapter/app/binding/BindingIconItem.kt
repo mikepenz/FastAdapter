@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.app.binding
 
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.IExpandable
 import com.mikepenz.fastadapter.IParentItem
@@ -71,8 +72,8 @@ class BindingIconItem : AbstractBindingItem<IconItemBinding, BindingViewHolder<I
         holder.binding.icon.setImageDrawable(null)
     }
 
-    override fun createBinding(inflater: LayoutInflater): IconItemBinding {
-        return IconItemBinding.inflate(inflater)
+    override fun createBinding(inflater: LayoutInflater, parent: ViewGroup?): IconItemBinding {
+        return IconItemBinding.inflate(inflater, parent, false)
     }
 
     override fun getViewHolder(viewBinding: IconItemBinding): BindingViewHolder<IconItemBinding> {
