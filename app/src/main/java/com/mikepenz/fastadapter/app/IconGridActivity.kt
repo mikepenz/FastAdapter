@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
-import com.mikepenz.fastadapter.app.items.IconItem
+import com.mikepenz.fastadapter.app.binding.BindingIconItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem
 import com.mikepenz.fastadapter.expandable.getExpandableExtension
 import com.mikepenz.iconics.Iconics
@@ -60,9 +60,9 @@ class IconGridActivity : AppCompatActivity() {
             val expandableItem = SimpleSubExpandableItem()
             expandableItem.withName(font.fontName).identifier = count.toLong()
 
-            val icons = ArrayList<IconItem>()
+            val icons = ArrayList<BindingIconItem>()
             for (icon in font.icons) {
-                val iconItem = IconItem()
+                val iconItem = BindingIconItem()
                 iconItem.withIcon(font.getIcon(icon))
                 icons.add(iconItem)
             }

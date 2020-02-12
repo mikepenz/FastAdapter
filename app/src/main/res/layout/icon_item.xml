@@ -13,32 +13,38 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:clickable="true"
-    android:orientation="horizontal">
+    <data>
 
-    <TextView
-        android:id="@+id/name"
+    </data>
+
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
-        android:layout_height="48dp"
-        android:background="@drawable/button_rect_list_normal"
-        android:clickable="false"
-        android:gravity="center_vertical"
-        android:paddingLeft="56dp"
-        android:paddingEnd="8dp"
-        android:paddingRight="8dp"
-        android:textSize="14sp" />
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:clickable="true"
+        android:orientation="horizontal">
 
-    <com.mikepenz.iconics.view.IconicsImageView
-        android:id="@+id/icon"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
-        android:clickable="false"
-        android:padding="8dp"
-        android:scaleType="fitXY" />
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/button_rect_list_normal"
+            android:clickable="false"
+            android:gravity="center_vertical"
+            android:paddingLeft="56dp"
+            android:paddingEnd="8dp"
+            android:paddingRight="8dp"
+            android:textSize="14sp" />
 
-</androidx.cardview.widget.CardView>
+        <com.mikepenz.iconics.view.IconicsImageView
+            android:id="@+id/icon"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:clickable="false"
+            android:padding="8dp"
+            android:scaleType="fitXY" />
+
+    </androidx.cardview.widget.CardView>
+</layout>
