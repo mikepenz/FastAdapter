@@ -13,7 +13,7 @@ import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.listeners.*
 import com.mikepenz.fastadapter.utils.AdapterPredicate
-import com.mikepenz.fastadapter.utils.DefaultTypeInstanceCache
+import com.mikepenz.fastadapter.utils.DefaultItemVHFactoryCache
 import com.mikepenz.fastadapter.utils.Triple
 import com.mikepenz.fastadapter.utils.attachToView
 import java.util.*
@@ -45,13 +45,13 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
     private val adapters = ArrayList<IAdapter<Item>>()
 
     /**
-     * Sets an type instance cache to this fast adapter instance.
-     * The cache will manage the type instances to create new views more efficient.
-     * Normally an shared cache is used over all adapter instances.
+     * Sets an item factory cache to this fast adapter instance.
+     * The cache will manage the item factories to create new views more efficient.
+     * Normally a shared cache is used over all adapter instances.
      *
-     * TypeInstanceCache a custom `TypeInstanceCache` implementation
+     * DefaultItemFactoryCache a custom `IItemFactoryCache` implementation
      */
-    open var typeInstanceCache: ITypeInstanceCache<Item> = DefaultTypeInstanceCache()
+    open var itemVHFactoryCache: IItemVHFactoryCache<IItemVHFactory<*>> = DefaultItemVHFactoryCache()
     // cache the sizes of the different adapters so we can access the items more performant
     private val adapterSizes = SparseArray<IAdapter<Item>>()
     // the total size
@@ -289,8 +289,25 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      *
      * @param item an IItem which will be shown in the list
      */
+    @Deprecated("Register the factory instead", replaceWith = ReplaceWith("registerItemFactory(item)"))
     fun registerTypeInstance(item: Item) {
-        typeInstanceCache.register(item)
+        if (item is IItemVHFactory<*>) {
+            registerItemFactory(item)
+        } else {
+            item.factory?.let {
+                registerItemFactory(it)
+            }
+        }
+        // note if the item does not implement `IItemFactory<*>`, and thus requires you to register the factory for the type.
+    }
+
+    /**
+     * Register a new type factory into the TypeInstances to be able to efficiently create thew ViewHolders
+     *
+     * @param item an IItem which will be shown in the list
+     */
+    fun registerItemFactory(item: IItemVHFactory<*>) {
+        itemVHFactoryCache.register(item)
     }
 
     /**
@@ -299,15 +316,15 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      * @param type the int type of the item
      * @return the Item typeInstance
      */
-    fun getTypeInstance(type: Int): Item {
-        return typeInstanceCache[type]
+    fun getTypeInstance(type: Int): IItemVHFactory<*> {
+        return itemVHFactoryCache[type]
     }
 
     /**
      * Clears the internal mapper - be sure, to remap everything before going on
      */
     fun clearTypeInstance() {
-        typeInstanceCache.clear()
+        itemVHFactoryCache.clear()
     }
 
     /**
@@ -331,9 +348,8 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         logger.log("onCreateViewHolder: $viewType")
 
-        val typeInstance = getTypeInstance(viewType)
-
-        val holder = onCreateViewHolderListener.onPreCreateViewHolder(this, parent, viewType, typeInstance)
+        val itemFactory = getTypeInstance(viewType)
+        val holder = onCreateViewHolderListener.onPreCreateViewHolder(this, parent, viewType, itemFactory)
 
         //set the adapter
         holder.itemView.setTag(R.id.fastadapter_item_adapter, this@FastAdapter)
@@ -349,7 +365,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
             viewTouchListener.attachToView(holder, holder.itemView)
         }
 
-        return onCreateViewHolderListener.onPostCreateViewHolder(this, holder, typeInstance)
+        return onCreateViewHolderListener.onPostCreateViewHolder(this, holder, itemFactory)
     }
 
     /**

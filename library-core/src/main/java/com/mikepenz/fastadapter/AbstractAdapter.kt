@@ -12,10 +12,8 @@ abstract class AbstractAdapter<Item : GenericItem> : IAdapter<Item> {
     /** Internal mapper to remember and add possible types for the RecyclerView */
     override fun mapPossibleTypes(items: Iterable<Item>?) {
         fastAdapter?.let { fastAdapter ->
-            if (items != null) {
-                for (item in items) {
-                    fastAdapter.registerTypeInstance(item)
-                }
+            items?.mapNotNull { it as? IItemVHFactory<*> ?: it.factory }?.forEach {
+                fastAdapter.registerItemFactory(it)
             }
         }
     }

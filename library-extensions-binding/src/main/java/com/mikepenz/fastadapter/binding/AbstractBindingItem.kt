@@ -1,27 +1,25 @@
 package com.mikepenz.fastadapter.binding
 
-import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
 import androidx.viewbinding.ViewBinding
 import com.mikepenz.fastadapter.IItem
-import java.util.*
+import com.mikepenz.fastadapter.IItemVHFactory
 
 /**
  * Implements an abstract item simplifying usage with ViewBinding.
  */
 abstract class AbstractBindingItem<VB : ViewBinding, VH : BindingViewHolder<VB>> : IItem<VH> {
 
-    /** The layout res of this item, not needed */
-    override val layoutRes: Int = -1
-
     /** The identifier of this item */
     override var identifier: Long = -1L
 
     /** The tag of this item */
     override var tag: Any? = null
+
+    /** The factory to use for creating this item, this does not have to be provided if the IItemFactory is implemented by this item too */
+    override val factory: IItemVHFactory<VH>? = null
 
     /** If this item is enabled */
     override var isEnabled: Boolean = true
@@ -62,41 +60,6 @@ abstract class AbstractBindingItem<VB : ViewBinding, VH : BindingViewHolder<VB>>
     }
 
     /**
-     * This method is called by generateView(Context ctx), generateView(Context ctx, ViewGroup parent) and getViewHolder(ViewGroup parent)
-     * it will generate the ViewBinding. You have to provide the correct binding class.
-     */
-    abstract fun createBinding(inflater: LayoutInflater, parent: ViewGroup? = null): VB
-
-    /** Generates a view by the defined LayoutRes */
-    override fun generateView(ctx: Context): View {
-        val viewHolder = getViewHolder(createBinding(LayoutInflater.from(ctx)))
-
-        //as we already know the type of our ViewHolder cast it to our type
-        bindView(viewHolder, Collections.emptyList())
-
-        //return the bound view
-        return viewHolder.itemView
-    }
-
-    /** Generates a view by the defined LayoutRes and pass the LayoutParams from the parent */
-    override fun generateView(ctx: Context, parent: ViewGroup): View {
-        val viewHolder = getViewHolder(createBinding(LayoutInflater.from(ctx), parent))
-
-        //as we already know the type of our ViewHolder cast it to our type
-        bindView(viewHolder, Collections.emptyList())
-        //return the bound and generatedView
-        return viewHolder.itemView
-    }
-
-    /** Generates a ViewHolder from this Item with the given parent */
-    override fun getViewHolder(parent: ViewGroup): VH {
-        return getViewHolder(createBinding(LayoutInflater.from(parent.context), parent))
-    }
-
-    /** Generates a ViewHolder from this Item with the given ViewBinding */
-    abstract fun getViewHolder(viewBinding: VB): VH
-
-    /**
      * If this item equals to the given identifier
      *
      * @param id identifier
@@ -114,4 +77,26 @@ abstract class AbstractBindingItem<VB : ViewBinding, VH : BindingViewHolder<VB>>
 
     /** The hashCode implementation */
     override fun hashCode(): Int = identifier.hashCode()
+}
+
+/**
+ * Implements an abstract item simplifying usage with ViewBinding.
+ */
+abstract class AbstractBindingItemVHFactory<VB : ViewBinding, VH : BindingViewHolder<VB>> : IItemVHFactory<VH> {
+    /** The layout res of this item, not needed */
+    override val layoutRes: Int = -1
+
+    /**
+     * This method is called by generateView(Context ctx), generateView(Context ctx, ViewGroup parent) and getViewHolder(ViewGroup parent)
+     * it will generate the ViewBinding. You have to provide the correct binding class.
+     */
+    abstract fun createBinding(inflater: LayoutInflater, parent: ViewGroup? = null): VB
+
+    /** Generates a ViewHolder from this Item with the given parent */
+    override fun getViewHolder(parent: ViewGroup): VH {
+        return getViewHolder(createBinding(LayoutInflater.from(parent.context), parent))
+    }
+
+    /** Generates a ViewHolder from this Item with the given ViewBinding */
+    abstract fun getViewHolder(viewBinding: VB): VH
 }

@@ -8,14 +8,16 @@ import androidx.recyclerview.widget.RecyclerView
 import butterknife.ButterKnife
 import com.bumptech.glide.Glide
 import com.mikepenz.aboutlibraries.util.getThemeColor
+import com.mikepenz.fastadapter.IItemVHFactory
 import com.mikepenz.fastadapter.app.R
-import com.mikepenz.fastadapter.items.AbstractItem
+import com.mikepenz.fastadapter.items.BaseItem
+import com.mikepenz.fastadapter.items.BaseItemFactory
 import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils
 
 /**
  * Created by mikepenz on 28.12.15.
  */
-class SimpleImageItem : AbstractItem<SimpleImageItem.ViewHolder>() {
+class SimpleImageItem : BaseItem<SimpleImageItem.ViewHolder>() {
 
     private var mImageUrl: String? = null
     private var mName: String? = null
@@ -31,12 +33,9 @@ class SimpleImageItem : AbstractItem<SimpleImageItem.ViewHolder>() {
         get() = R.id.fastadapter_simple_image_item_id
 
     /**
-     * defines the layout which will be used for this item in the list
-     *
-     * @return the layout for this item
+     * defines the factory to create this items VH
      */
-    override val layoutRes: Int
-        get() = R.layout.simple_image_item
+    override val factory: IItemVHFactory<ViewHolder> = SimpleImageItemFactory
 
     fun withImage(imageUrl: String): SimpleImageItem {
         this.mImageUrl = imageUrl
@@ -102,9 +101,6 @@ class SimpleImageItem : AbstractItem<SimpleImageItem.ViewHolder>() {
         holder.imageDescription.text = null
     }
 
-    override fun getViewHolder(v: View): ViewHolder {
-        return ViewHolder(v)
-    }
 
     /**
      * our ViewHolder
@@ -130,5 +126,30 @@ class SimpleImageItem : AbstractItem<SimpleImageItem.ViewHolder>() {
             lp.height = finalHeight
             imageView.layoutParams = lp
         }
+    }
+}
+
+/**
+ * Created by mikepenz on 28.12.15.
+ */
+object SimpleImageItemFactory : BaseItemFactory<SimpleImageItem.ViewHolder>() {
+    /**
+     * defines the type defining this item. must be unique. preferably an id
+     *
+     * @return the type
+     */
+    override val type: Int
+        get() = R.id.fastadapter_simple_image_item_id
+
+    /**
+     * defines the layout which will be used for this item in the list
+     *
+     * @return the layout for this item
+     */
+    override val layoutRes: Int
+        get() = R.layout.simple_image_item
+
+    override fun getViewHolder(v: View): SimpleImageItem.ViewHolder {
+        return SimpleImageItem.ViewHolder(v)
     }
 }

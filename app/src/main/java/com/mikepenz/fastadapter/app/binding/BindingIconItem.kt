@@ -4,11 +4,13 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.IExpandable
+import com.mikepenz.fastadapter.IItemVHFactory
 import com.mikepenz.fastadapter.IParentItem
 import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.app.databinding.IconItemBinding
 import com.mikepenz.fastadapter.binding.AbstractBindingItem
+import com.mikepenz.fastadapter.binding.AbstractBindingItemVHFactory
 import com.mikepenz.fastadapter.binding.BindingViewHolder
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.IIcon
@@ -19,7 +21,10 @@ import com.mikepenz.iconics.utils.colorInt
  */
 class BindingIconItem : AbstractBindingItem<IconItemBinding, BindingViewHolder<IconItemBinding>>(), IExpandable<BindingViewHolder<IconItemBinding>> {
 
-    var mIcon: IIcon? = null
+    override val factory: IItemVHFactory<BindingViewHolder<IconItemBinding>>? = BindingIconFactory
+
+    var icon: IIcon? = null
+
     override var parent: IParentItem<*>? = null
     override var isExpanded: Boolean = false
 
@@ -46,7 +51,7 @@ class BindingIconItem : AbstractBindingItem<IconItemBinding, BindingViewHolder<I
      * @return this
      */
     fun withIcon(icon: IIcon): BindingIconItem {
-        this.mIcon = icon
+        this.icon = icon
         return this
     }
 
@@ -59,18 +64,29 @@ class BindingIconItem : AbstractBindingItem<IconItemBinding, BindingViewHolder<I
         super.bindView(holder, payloads)
 
         //define our data for the view
-        mIcon?.let {
+        icon?.let {
             holder.binding.icon.icon = IconicsDrawable(holder.binding.icon.context, it).apply {
                 colorInt = holder.binding.root.context.getThemeColor(R.attr.colorOnSurface)
             }
         }
-        holder.binding.name.text = mIcon?.name
+        holder.binding.name.text = icon?.name
     }
 
     override fun unbindView(holder: BindingViewHolder<IconItemBinding>) {
         super.unbindView(holder)
         holder.binding.icon.setImageDrawable(null)
     }
+}
+
+object BindingIconFactory : AbstractBindingItemVHFactory<IconItemBinding, BindingViewHolder<IconItemBinding>>() {
+    /**
+     * defines the type defining this item. must be unique. preferably an id
+     *
+     * @return the type
+     */
+    override val type: Int
+        get() = R.id.fastadapter_icon_item_id
+
 
     override fun createBinding(inflater: LayoutInflater, parent: ViewGroup?): IconItemBinding {
         return IconItemBinding.inflate(inflater, parent, false)
