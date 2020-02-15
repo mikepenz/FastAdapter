@@ -62,6 +62,7 @@ class PagedActivity : AppCompatActivity() {
         val selectExtension = mFastAdapter.getSelectExtension()
         selectExtension.isSelectable = true
 
+        // Register the factory which will be used to create the SimpleImageItem's ViewHolder
         mFastAdapter.registerItemFactory(SimpleImageItemFactory)
 
         //configure our fastAdapter
