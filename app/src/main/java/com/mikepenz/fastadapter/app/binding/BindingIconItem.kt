@@ -9,9 +9,9 @@ import com.mikepenz.fastadapter.IParentItem
 import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.app.databinding.IconItemBinding
-import com.mikepenz.fastadapter.binding.AbstractBindingItem
-import com.mikepenz.fastadapter.binding.AbstractBindingItemVHFactory
+import com.mikepenz.fastadapter.binding.BaseBindingItemVHFactory
 import com.mikepenz.fastadapter.binding.BindingViewHolder
+import com.mikepenz.fastadapter.items.BaseItem
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.IIcon
 import com.mikepenz.iconics.utils.colorInt
@@ -19,7 +19,7 @@ import com.mikepenz.iconics.utils.colorInt
 /**
  * Created by mikepenz on 28.12.15.
  */
-class BindingIconItem : AbstractBindingItem<IconItemBinding, BindingViewHolder<IconItemBinding>>(), IExpandable<BindingViewHolder<IconItemBinding>> {
+class BindingIconItem : BaseItem<BindingViewHolder<IconItemBinding>>(), IExpandable<BindingViewHolder<IconItemBinding>> {
 
     override val factory: IItemVHFactory<BindingViewHolder<IconItemBinding>>? = BindingIconFactory
 
@@ -78,7 +78,7 @@ class BindingIconItem : AbstractBindingItem<IconItemBinding, BindingViewHolder<I
     }
 }
 
-object BindingIconFactory : AbstractBindingItemVHFactory<IconItemBinding, BindingViewHolder<IconItemBinding>>() {
+object BindingIconFactory : BaseBindingItemVHFactory<IconItemBinding, BindingViewHolder<IconItemBinding>>() {
     override fun createBinding(inflater: LayoutInflater, parent: ViewGroup?): IconItemBinding {
         return IconItemBinding.inflate(inflater, parent, false)
     }
