@@ -85,9 +85,6 @@ abstract class BaseItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
  * Implements an abstract item factory simplifying splitting the code into more meaningful parts
  */
 abstract class BaseItemFactory<VH : RecyclerView.ViewHolder> : IItemVHFactory<VH> {
-    /** The layout res of this item, not needed */
-    override val layoutRes: Int = -1
-
     /** Generates a ViewHolder from this Item with the given parent */
     override fun getViewHolder(parent: ViewGroup): VH {
         return getViewHolder(createView(parent.context, parent))

@@ -63,7 +63,7 @@ class PagedActivity : AppCompatActivity() {
         selectExtension.isSelectable = true
 
         // Register the factory which will be used to create the SimpleImageItem's ViewHolder
-        mFastAdapter.registerItemFactory(SimpleImageItemFactory)
+        mFastAdapter.registerItemFactory(R.id.fastadapter_sample_item_id, SimpleImageItemFactory)
 
         //configure our fastAdapter
         //rv.setLayoutManager(new GridLayoutManager(this, 3));

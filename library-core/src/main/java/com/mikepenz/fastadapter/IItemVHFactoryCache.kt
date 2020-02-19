@@ -5,7 +5,7 @@ package com.mikepenz.fastadapter
  */
 interface IItemVHFactoryCache<ItemVHFactory : GenericItemVHFactory> {
 
-    fun register(item: ItemVHFactory): Boolean
+    fun register(type: Int, item: ItemVHFactory): Boolean
 
     operator fun get(type: Int): ItemVHFactory
 

@@ -292,10 +292,10 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
     @Deprecated("Register the factory instead", replaceWith = ReplaceWith("registerItemFactory(item)"))
     fun registerTypeInstance(item: Item) {
         if (item is IItemVHFactory<*>) {
-            registerItemFactory(item)
+            registerItemFactory(item.type, item)
         } else {
             item.factory?.let {
-                registerItemFactory(it)
+                registerItemFactory(item.type, it)
             }
         }
         // note if the item does not implement `IItemFactory<*>`, and thus requires you to register the factory for the type.
@@ -306,8 +306,8 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      *
      * @param item an IItem which will be shown in the list
      */
-    fun registerItemFactory(item: IItemVHFactory<*>) {
-        itemVHFactoryCache.register(item)
+    fun registerItemFactory(type: Int, item: IItemVHFactory<*>) {
+        itemVHFactoryCache.register(type, item)
     }
 
     /**

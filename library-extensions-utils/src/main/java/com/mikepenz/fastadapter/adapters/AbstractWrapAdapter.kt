@@ -85,7 +85,7 @@ abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolde
     /** The [RecyclerView.Adapter.onCreateViewHolder] is managed by the FastAdapter so forward this correctly */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         //TODO OPTIMIZE
-        val vh = items.asSequence().mapNotNull { it as? IItemVHFactory<VH> }.firstOrNull { it.type == viewType }?.getViewHolder(parent)
+        val vh = items.asSequence().mapNotNull { it to it as? IItemVHFactory<VH> }.firstOrNull { (item, factory) -> item.type == viewType }?.second?.getViewHolder(parent)
         if (vh != null) {
             return vh
         }

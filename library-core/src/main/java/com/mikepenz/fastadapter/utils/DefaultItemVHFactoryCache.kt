@@ -12,9 +12,9 @@ class DefaultItemVHFactoryCache<ItemVHFactory : GenericItemVHFactory> : IItemVHF
     // we remember all possible types so we can create a new view efficiently
     private val typeInstances = SparseArray<ItemVHFactory>()
 
-    override fun register(item: ItemVHFactory): Boolean {
-        if (typeInstances.indexOfKey(item.type) < 0) {
-            typeInstances.put(item.type, item)
+    override fun register(type: Int, item: ItemVHFactory): Boolean {
+        if (typeInstances.indexOfKey(type) < 0) {
+            typeInstances.put(type, item)
             return true
         }
         return false

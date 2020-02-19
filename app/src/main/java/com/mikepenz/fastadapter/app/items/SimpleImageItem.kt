@@ -134,14 +134,6 @@ class SimpleImageItem : BaseItem<SimpleImageItem.ViewHolder>() {
  */
 object SimpleImageItemFactory : BaseItemFactory<SimpleImageItem.ViewHolder>() {
     /**
-     * defines the type defining this item. must be unique. preferably an id
-     *
-     * @return the type
-     */
-    override val type: Int
-        get() = R.id.fastadapter_simple_image_item_id
-
-    /**
      * defines the layout which will be used for this item in the list
      *
      * @return the layout for this item
