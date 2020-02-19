@@ -14,7 +14,6 @@ import java.util.*
 /**
  * Implements the general methods of the IItem interface to speed up development.
  */
-@Deprecated("Replace in favor of the more modular BaseItem")
 abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH>, IItemVHFactory<VH>, IItemViewGenerator {
 
     /** The identifier of this item */
