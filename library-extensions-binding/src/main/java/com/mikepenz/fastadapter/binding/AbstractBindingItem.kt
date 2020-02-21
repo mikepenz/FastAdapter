@@ -13,12 +13,12 @@ import com.mikepenz.fastadapter.items.BaseItem
 abstract class AbstractBindingItem<Binding : ViewBinding> : BaseItem<BindingViewHolder<Binding>>(), IItemVHFactory<BindingViewHolder<Binding>> {
 
     @CallSuper
-    override fun bindView(holder: BindingViewHolder<Binding>, payloads: MutableList<Any>) {
+    override fun bindView(holder: BindingViewHolder<Binding>, payloads: List<Any>) {
         super.bindView(holder, payloads)
         bindView(holder.binding, payloads)
     }
 
-    open fun bindView(binding: Binding, payloads: MutableList<Any>) {}
+    open fun bindView(binding: Binding, payloads: List<Any>) {}
 
     override fun unbindView(holder: BindingViewHolder<Binding>) {
         super.unbindView(holder)

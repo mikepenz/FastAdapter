@@ -15,7 +15,7 @@ class ProgressItem : AbstractItem<ProgressItem.ViewHolder>() {
     override val layoutRes: Int
         get() = R.layout.progress_item
 
-    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
         if (isEnabled) {
             holder.itemView.setBackgroundResource(FastAdapterUIUtils.getSelectableBackground(holder.itemView.context))

@@ -53,7 +53,7 @@ class BindingIconItem : AbstractBindingItem<IconItemBinding>(), IExpandable<Bind
     /**
      * binds the data of this item onto the viewHolder
      */
-    override fun bindView(binding: IconItemBinding, payloads: MutableList<Any>) {
+    override fun bindView(binding: IconItemBinding, payloads: List<Any>) {
         //define our data for the view
         icon?.let {
             binding.icon.icon = IconicsDrawable(binding.icon.context, it).apply {

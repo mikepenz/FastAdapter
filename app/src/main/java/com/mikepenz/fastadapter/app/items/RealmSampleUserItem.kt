@@ -137,7 +137,7 @@ open class RealmSampleUserItem : RealmObject(), IItem<RealmSampleUserItem.ViewHo
      *
      * @param holder
      */
-    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         //set the selected state of this item. force this otherwise it may is missed when implementing an item
         holder.itemView.isSelected = isSelected
 

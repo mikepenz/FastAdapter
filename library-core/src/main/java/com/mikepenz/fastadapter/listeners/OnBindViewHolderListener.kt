@@ -10,7 +10,7 @@ interface OnBindViewHolderListener {
      * @param position   the position of this viewHolder
      * @param payloads   the payloads provided by the adapter
      */
-    fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>)
+    fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>)
 
     /**
      * Is called in onViewRecycled to unbind the data on the ViewHolder

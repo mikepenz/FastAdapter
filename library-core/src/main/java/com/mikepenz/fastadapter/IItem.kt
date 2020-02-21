@@ -33,7 +33,7 @@ interface IItem<VH : RecyclerView.ViewHolder> : IIdentifyable {
     val factory: IItemVHFactory<VH>?
 
     /** Binds the data of this item to the given holder */
-    fun bindView(holder: VH, payloads: MutableList<Any>)
+    fun bindView(holder: VH, payloads: List<Any>)
 
     /** View needs to release resources when its recycled */
     fun unbindView(holder: VH)

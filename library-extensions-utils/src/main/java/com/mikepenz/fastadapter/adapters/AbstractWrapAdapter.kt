@@ -99,7 +99,7 @@ abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolde
     }
 
     /** The [RecyclerView.Adapter.onBindViewHolder] is managed by the FastAdapter so forward this correctly */
-    override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(holder: VH, position: Int, payloads: List<Any>) {
         if (shouldInsertItemAtPosition(position)) {
             getItem(position)?.bindView(holder, payloads)
         } else {

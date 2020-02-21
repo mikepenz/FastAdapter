@@ -171,7 +171,7 @@ class StickyHeaderAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerVie
      * @param position
      * @param payloads
      */
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
         fastAdapter?.onBindViewHolder(holder, position, payloads)
     }
 

@@ -388,7 +388,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
         }
     }
 
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
         //we do not want the binding to happen twice (the legacyBindViewMode
         if (!legacyBindViewMode) {
             if (verboseLoggingEnabled)
@@ -852,7 +852,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
     abstract class ViewHolder<Item : GenericItem>(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         /** Binds the data of this item onto the viewHolder */
-        abstract fun bindView(item: Item, payloads: MutableList<Any>)
+        abstract fun bindView(item: Item, payloads: List<Any>)
 
         /** View needs to release resources when its recycled */
         abstract fun unbindView(item: Item)

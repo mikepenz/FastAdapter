@@ -35,7 +35,7 @@ abstract class BaseItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
 
     /** Binds the data of this item to the given holder */
     @CallSuper
-    override fun bindView(holder: VH, payloads: MutableList<Any>) {
+    override fun bindView(holder: VH, payloads: List<Any>) {
         //set the selected state of this item. force this otherwise it may is missed when implementing an item
         holder.itemView.isSelected = isSelected
     }

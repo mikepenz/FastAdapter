@@ -67,7 +67,7 @@ class RadioButtonSampleItem : AbstractItem<RadioButtonSampleItem.ViewHolder>() {
      *
      * @param holder the viewHolder of this item
      */
-    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
 
         holder.radioButton.isChecked = isSelected
