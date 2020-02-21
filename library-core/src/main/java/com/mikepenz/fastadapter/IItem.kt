@@ -1,10 +1,6 @@
 package com.mikepenz.fastadapter
 
-import android.content.Context
-import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.IdRes
-import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 
 /**
@@ -33,21 +29,11 @@ interface IItem<VH : RecyclerView.ViewHolder> : IIdentifyable {
     @get:IdRes
     val type: Int
 
-    /** The layout for the given item */
-    @get:LayoutRes
-    val layoutRes: Int
-
-    /** Generates a view by the defined LayoutRes */
-    fun generateView(ctx: Context): View
-
-    /** Generates a view by the defined LayoutRes and pass the LayoutParams from the parent */
-    fun generateView(ctx: Context, parent: ViewGroup): View
-
-    /** Generates a ViewHolder from this Item with the given parent */
-    fun getViewHolder(parent: ViewGroup): VH
+    /** The factory to use for creating this item, this does not have to be provided if the IItemFactory is implemented by this item too */
+    val factory: IItemVHFactory<VH>?
 
     /** Binds the data of this item to the given holder */
-    fun bindView(holder: VH, payloads: MutableList<Any>)
+    fun bindView(holder: VH, payloads: List<Any>)
 
     /** View needs to release resources when its recycled */
     fun unbindView(holder: VH)

@@ -3,6 +3,7 @@ package com.mikepenz.fastadapter.adapters
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.IItemVHFactory
 
 /**
  * Created by mikepenz on 03.03.16.
@@ -84,7 +85,7 @@ abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolde
     /** The [RecyclerView.Adapter.onCreateViewHolder] is managed by the FastAdapter so forward this correctly */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VH {
         //TODO OPTIMIZE
-        val vh = items.firstOrNull { it.type == viewType }?.getViewHolder(parent)
+        val vh = items.asSequence().mapNotNull { it to it as? IItemVHFactory<VH> }.firstOrNull { (item, factory) -> item.type == viewType }?.second?.getViewHolder(parent)
         if (vh != null) {
             return vh
         }
@@ -98,7 +99,7 @@ abstract class AbstractWrapAdapter<Item : IItem<VH>, VH : RecyclerView.ViewHolde
     }
 
     /** The [RecyclerView.Adapter.onBindViewHolder] is managed by the FastAdapter so forward this correctly */
-    override fun onBindViewHolder(holder: VH, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(holder: VH, position: Int, payloads: List<Any>) {
         if (shouldInsertItemAtPosition(position)) {
             getItem(position)?.bindView(holder, payloads)
         } else {

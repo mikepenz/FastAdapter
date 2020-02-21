@@ -84,7 +84,7 @@ open class SimpleItem : AbstractItem<SimpleItem.ViewHolder>(), IDraggable {
         var name: TextView = view.findViewById(R.id.material_drawer_name)
         var description: TextView = view.findViewById(R.id.material_drawer_description)
 
-        override fun bindView(item: SimpleItem, payloads: MutableList<Any>) {
+        override fun bindView(item: SimpleItem, payloads: List<Any>) {
             //get the context
             val ctx = itemView.context
 

@@ -97,7 +97,7 @@ class TwoLineItem : AbstractItem<TwoLineItem.ViewHolder>() {
         return this
     }
 
-    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
         if (isEnabled) {
             holder.itemView.setBackgroundResource(FastAdapterUIUtils.getSelectableBackground(holder.itemView.context))

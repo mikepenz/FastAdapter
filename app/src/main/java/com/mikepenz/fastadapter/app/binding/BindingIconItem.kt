@@ -17,9 +17,9 @@ import com.mikepenz.iconics.utils.colorInt
 /**
  * Created by mikepenz on 28.12.15.
  */
-class BindingIconItem : AbstractBindingItem<IconItemBinding, BindingViewHolder<IconItemBinding>>(), IExpandable<BindingViewHolder<IconItemBinding>> {
+class BindingIconItem : AbstractBindingItem<IconItemBinding>(), IExpandable<BindingViewHolder<IconItemBinding>> {
+    var icon: IIcon? = null
 
-    var mIcon: IIcon? = null
     override var parent: IParentItem<*>? = null
     override var isExpanded: Boolean = false
 
@@ -46,37 +46,28 @@ class BindingIconItem : AbstractBindingItem<IconItemBinding, BindingViewHolder<I
      * @return this
      */
     fun withIcon(icon: IIcon): BindingIconItem {
-        this.mIcon = icon
+        this.icon = icon
         return this
     }
 
     /**
      * binds the data of this item onto the viewHolder
-     *
-     * @param holder the viewHolder of this item
      */
-    override fun bindView(holder: BindingViewHolder<IconItemBinding>, payloads: MutableList<Any>) {
-        super.bindView(holder, payloads)
-
+    override fun bindView(binding: IconItemBinding, payloads: List<Any>) {
         //define our data for the view
-        mIcon?.let {
-            holder.binding.icon.icon = IconicsDrawable(holder.binding.icon.context, it).apply {
-                colorInt = holder.binding.root.context.getThemeColor(R.attr.colorOnSurface)
+        icon?.let {
+            binding.icon.icon = IconicsDrawable(binding.icon.context, it).apply {
+                colorInt = binding.root.context.getThemeColor(R.attr.colorOnSurface)
             }
         }
-        holder.binding.name.text = mIcon?.name
+        binding.name.text = icon?.name
     }
 
-    override fun unbindView(holder: BindingViewHolder<IconItemBinding>) {
-        super.unbindView(holder)
-        holder.binding.icon.setImageDrawable(null)
+    override fun unbindView(binding: IconItemBinding) {
+        binding.icon.setImageDrawable(null)
     }
 
     override fun createBinding(inflater: LayoutInflater, parent: ViewGroup?): IconItemBinding {
         return IconItemBinding.inflate(inflater, parent, false)
-    }
-
-    override fun getViewHolder(viewBinding: IconItemBinding): BindingViewHolder<IconItemBinding> {
-        return BindingViewHolder(viewBinding)
     }
 }

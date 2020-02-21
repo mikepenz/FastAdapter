@@ -18,7 +18,7 @@ open class HeaderSelectionItem : SimpleSubExpandableItem() {
         this.mSubSelectionProvider = subSelectionProvider
     }
 
-    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
 
         //get the context
