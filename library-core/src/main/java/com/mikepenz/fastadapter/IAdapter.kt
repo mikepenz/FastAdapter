@@ -22,9 +22,6 @@ interface IAdapter<Item : GenericItem> {
     /** Defines the list of defined items within THIS adapter */
     val adapterItems: List<Item>
 
-    /** Internal mapper to remember and add possible types for the RecyclerView */
-    fun mapPossibleTypes(items: Iterable<Item>?)
-
     /**
      * @param position the relative position
      * @return the item at the given relative position within this adapter

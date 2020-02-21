@@ -190,7 +190,6 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      */
     private fun prepareAdapters(adapter: IAdapter<Item>) {
         adapter.fastAdapter = this
-        adapter.mapPossibleTypes(adapter.adapterItems)
         adapters.forEachIndexed { i, item -> item.order = i }
         cacheSizes()
     }
@@ -286,7 +285,6 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
 
     /**
      * Register a new type into the TypeInstances to be able to efficiently create thew ViewHolders
-     *
      * @param item an IItem which will be shown in the list
      */
     @Deprecated("Register the factory instead", replaceWith = ReplaceWith("registerItemFactory(item)"))
@@ -580,7 +578,12 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
      * @return the viewType for this position
      */
     override fun getItemViewType(position: Int): Int {
-        return getItem(position)?.type ?: super.getItemViewType(position)
+        return getItem(position)?.let {
+            if (!itemVHFactoryCache.contains(it.type)) {
+                registerTypeInstance(it)
+            }
+            it.type
+        } ?: super.getItemViewType(position)
     }
 
     /**

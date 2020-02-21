@@ -228,9 +228,6 @@ open class ModelAdapter<Model, Item : GenericItem>(
             extension[items] = resetFilter
         }
 
-        //map the types
-        mapPossibleTypes(items)
-
         //forward set
         val itemsBeforeThisAdapter = fastAdapter?.getPreItemCountByOrder(order) ?: 0
         itemList[items, itemsBeforeThisAdapter] = adapterNotifier
@@ -259,8 +256,6 @@ open class ModelAdapter<Model, Item : GenericItem>(
             itemFilter.resetFilter()
         }
 
-        mapPossibleTypes(newItems)
-
         val publishResults = filter != null && retainFilter
         if (retainFilter) {
             filter?.let { filterText ->
@@ -277,7 +272,6 @@ open class ModelAdapter<Model, Item : GenericItem>(
      */
     open fun remapMappedTypes() {
         fastAdapter?.clearTypeInstance()
-        mapPossibleTypes(itemList.items)
     }
 
     /**
@@ -309,7 +303,6 @@ open class ModelAdapter<Model, Item : GenericItem>(
         } else {
             itemList.addAll(items, 0)
         }
-        mapPossibleTypes(items)
         return this
     }
 
@@ -341,7 +334,6 @@ open class ModelAdapter<Model, Item : GenericItem>(
         }
         if (items.isNotEmpty()) {
             itemList.addAll(position, items, fastAdapter?.getPreItemCountByOrder(order) ?: 0)
-            mapPossibleTypes(items)
         }
         return this
     }
@@ -362,7 +354,6 @@ open class ModelAdapter<Model, Item : GenericItem>(
             idDistributor.checkId(item)
         }
         itemList[position, item] = fastAdapter?.getPreItemCount(position) ?: 0
-        fastAdapter?.registerTypeInstance(item)
         return this
     }
 

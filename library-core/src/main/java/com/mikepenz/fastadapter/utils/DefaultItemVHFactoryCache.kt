@@ -24,6 +24,8 @@ class DefaultItemVHFactoryCache<ItemVHFactory : GenericItemVHFactory> : IItemVHF
         return typeInstances.get(type)
     }
 
+    override fun contains(type: Int): Boolean = typeInstances.indexOfKey(type) >= 0
+
     override fun clear() {
         typeInstances.clear()
     }

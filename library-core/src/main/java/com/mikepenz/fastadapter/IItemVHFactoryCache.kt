@@ -9,5 +9,7 @@ interface IItemVHFactoryCache<ItemVHFactory : GenericItemVHFactory> {
 
     operator fun get(type: Int): ItemVHFactory
 
+    fun contains(type: Int): Boolean
+
     fun clear()
 }

@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.app.items.SimpleImageItem
-import com.mikepenz.fastadapter.app.items.SimpleImageItemFactory
 import com.mikepenz.fastadapter.app.paged.DemoEntity
 import com.mikepenz.fastadapter.app.paged.DemoEntityViewModel
 import com.mikepenz.fastadapter.paged.PagedModelAdapter
@@ -61,9 +60,6 @@ class PagedActivity : AppCompatActivity() {
         //
         val selectExtension = mFastAdapter.getSelectExtension()
         selectExtension.isSelectable = true
-
-        // Register the factory which will be used to create the SimpleImageItem's ViewHolder
-        mFastAdapter.registerItemFactory(R.id.fastadapter_sample_item_id, SimpleImageItemFactory)
 
         //configure our fastAdapter
         //rv.setLayoutManager(new GridLayoutManager(this, 3));

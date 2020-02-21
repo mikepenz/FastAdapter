@@ -7,7 +7,7 @@ import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IAdapterExtension
 import com.mikepenz.fastadapter.adapters.ModelAdapter
 import com.mikepenz.fastadapter.utils.ComparableItemListImpl
-import java.util.Collections
+import java.util.*
 
 /**
  * Created by mikepenz on 28.10.16.
@@ -45,9 +45,6 @@ object FastAdapterDiffUtil {
         if (adapter.itemList is ComparableItemListImpl<*>) {
             Collections.sort(items, (adapter.itemList as ComparableItemListImpl<Item>).comparator)
         }
-
-        //map the types
-        adapter.mapPossibleTypes(items)
 
         //remember the old items
         val adapterItems = adapter.adapterItems
