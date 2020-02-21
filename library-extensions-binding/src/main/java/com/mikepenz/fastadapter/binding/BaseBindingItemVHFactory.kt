@@ -9,9 +9,6 @@ import com.mikepenz.fastadapter.IItemVHFactory
  * Implements an abstract item simplifying usage with ViewBinding.
  */
 abstract class BaseBindingItemVHFactory<VB : ViewBinding, VH : BindingViewHolder<VB>> : IItemVHFactory<VH> {
-    /** The layout res of this item, not needed */
-    override val layoutRes: Int = -1
-
     /**
      * This method is called by generateView(Context ctx), generateView(Context ctx, ViewGroup parent) and getViewHolder(ViewGroup parent)
      * it will generate the ViewBinding. You have to provide the correct binding class.

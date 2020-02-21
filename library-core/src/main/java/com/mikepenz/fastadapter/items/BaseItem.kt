@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.IItemVHFactory
@@ -85,6 +86,11 @@ abstract class BaseItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
  * Implements an abstract item factory simplifying splitting the code into more meaningful parts
  */
 abstract class BaseItemFactory<VH : RecyclerView.ViewHolder> : IItemVHFactory<VH> {
+
+    /** The layout for the given item */
+    @get:LayoutRes
+    abstract val layoutRes: Int
+
     /** Generates a ViewHolder from this Item with the given parent */
     override fun getViewHolder(parent: ViewGroup): VH {
         return getViewHolder(createView(parent.context, parent))

@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.CallSuper
+import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.IItemVHFactory
@@ -33,6 +34,10 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : IItem<VH>, IItemVHFa
 
     /** If this item is selectable */
     override var isSelectable: Boolean = true
+
+    /** The layout for the given item */
+    @get:LayoutRes
+    abstract val layoutRes: Int
 
     /** Binds the data of this item to the given holder */
     @CallSuper

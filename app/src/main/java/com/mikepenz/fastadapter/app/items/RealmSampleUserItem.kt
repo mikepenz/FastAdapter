@@ -64,7 +64,7 @@ open class RealmSampleUserItem : RealmObject(), IItem<RealmSampleUserItem.ViewHo
     /**
      * returns the layout for the given item
      */
-    override val layoutRes: Int
+    val layoutRes: Int
         get() = R.layout.letter_item
 
     /**
