@@ -24,7 +24,7 @@ import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
 import com.mikepenz.iconics.utils.actionBar
 import com.mikepenz.iconics.utils.colorInt
-import kotlinx.android.synthetic.main.activity_sort.*
+import kotlinx.android.synthetic.main.activity_sample.*
 import java.io.Serializable
 import java.util.*
 
@@ -63,7 +63,7 @@ class SortActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sort)
+        setContentView(R.layout.activity_sample)
 
         ButterKnife.bind(this)
 
