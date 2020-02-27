@@ -25,21 +25,21 @@ abstract class AbstractBindingItem<Binding : ViewBinding> : BaseItem<BindingView
         unbindView(holder.binding)
     }
 
-    open fun unbindView(holder: Binding) {}
+    open fun unbindView(binding: Binding) {}
 
     override fun attachToWindow(holder: BindingViewHolder<Binding>) {
         super.attachToWindow(holder)
         attachToWindow(holder.binding)
     }
 
-    open fun attachToWindow(holder: Binding) {}
+    open fun attachToWindow(binding: Binding) {}
 
     override fun detachFromWindow(holder: BindingViewHolder<Binding>) {
         super.detachFromWindow(holder)
         detachFromWindow(holder.binding)
     }
 
-    open fun detachFromWindow(holder: Binding) {}
+    open fun detachFromWindow(binding: Binding) {}
 
     /**
      * This method is called by generateView(Context ctx), generateView(Context ctx, ViewGroup parent) and getViewHolder(ViewGroup parent)
