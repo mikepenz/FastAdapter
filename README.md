@@ -1,12 +1,21 @@
 # FastAdapter [ ![Download](https://api.bintray.com/packages/mikepenz/maven/com.mikepenz%3Afastadapter/images/download.svg) ](https://bintray.com/mikepenz/maven/com.mikepenz%3Afastadapter/_latestVersion)
 
-> The RecyclerView is one of the most used widgets in the Android world, and with it you have to implement an Adapter which provides the items for the view. Most use cases require the same base logic, but require you to write everything again and again.
+The FastAdapter is here to simplify creating adapters for RecyclerViews. Don't worry about the adapter anymore. Just write the logic for how your view/item should look like, and you are done.
+It's blazingly fast, minimizing the code you need to write, and is easy to extend.
 
-The FastAdapter is here to simplify this process. You don't have to worry about the adapter anymore. Just write the logic for how your view/item should look like, and you are done.
-This library has a fast and highly optimized core which provides core functionality, most apps require. It also prevents common mistakes by taking away those steps from the devs. 
-Beside being blazing fast, minimizing the code you need to write, it is also really easy to extend. Just provide another adapter implementation, hook into the adapter chain, custom select / deselection behaviors. Everything is possible.
+-------
 
-## A quick overview:
+<p align="center">
+    <a href="#whats-included-">What's included 🚀</a> &bull;
+    <a href="#setup">Setup 🛠️</a> &bull;
+    <a href="MIGRATION.md">Migration Guide 🧬</a> &bull;
+    <a href="#used-by">Used by</a> &bull;
+    <a href="https://play.google.com/store/apps/details?id=com.mikepenz.fastadapter.app">Sample App</a>
+</p>
+
+-------
+
+### What's included 🚀
 - Core module 100% in Kotlin
 - Click / Long-Click listeners
 - Selection / Multi-Selection ([MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.kt), [CheckBoxSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/CheckBoxSampleActivity.kt), [RadioButtonSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/RadioButtonSampleActivity.kt))
@@ -31,22 +40,20 @@ Beside being blazing fast, minimizing the code you need to write, it is also rea
 - Paging (via Jetpack paging lib) ([PagedActivity](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/PagedActivity.kt))
 
 # Preview
-## Demo
-You can try it out here [Google Play](https://play.google.com/store/apps/details?id=com.mikepenz.fastadapter.app) (or download the latest release from GitHub)
 
-## Screenshots
+## Screenshots 🎉
 ![Image](https://raw.githubusercontent.com/mikepenz/FastAdapter/develop/DEV/github/screenshots1.jpg)
 
+# Setup
 
-# Include in your project
-## Latest releases
+## Latest releases 🛠
 
 - Kotlin && NEW | [v5.0.0-b01](https://github.com/mikepenz/FastAdapter/tree/v5.0.0-b01)
 - Kotlin | [v4.1.2](https://github.com/mikepenz/FastAdapter/tree/v4.1.2)
 - Java && AndroidX | [v3.3.1](https://github.com/mikepenz/FastAdapter/tree/v3.3.1)
 - Java && AppCompat | [v3.2.9](https://github.com/mikepenz/FastAdapter/tree/v3.2.9)
 
-## Using Maven
+## Provide the gradle dependency
 
 The library is split up into core, commons, and extensions. The core functions are included in the following dependency.
 ```gradle
@@ -74,9 +81,6 @@ implementation "com.mikepenz:fastadapter-extensions-utils:${latestFastAdapterRel
 implementation "com.google.android.material:material:${androidX}"
 ```
 
-## v5.x.y
-> Major release, migrates fully to Kotlin. Check out the changelog or the [MIGRATION GUIDE](https://github.com/mikepenz/FastAdapter/blob/develop/MIGRATION.md for more details
-
 ## How to use
 ### 1. Implement your item (the easy way)
 Just create a class which extends the `AbstractItem` as shown below. Implement the methods, and your item is ready.
@@ -89,7 +93,7 @@ open class SimpleItem : AbstractItem<SimpleItem.ViewHolder>() {
     override val type: Int
         get() = R.id.fastadapter_sample_item_id
 
-    /** defines the layout which will be used for this item in the list  */
+    /** defines the layout which will be used for this item in the list */
     override val layoutRes: Int
         get() = R.layout.sample_item
 
@@ -294,7 +298,7 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
 ## Articles
 - [RecyclerView Adapter made easy](https://blog.iamsuleiman.com/recyclerview-adapter-android-made-fast-easy/) (FastAdapter v2.x)
 
-## Libs used in sample app:
+## Used by
 Mike Penz:
 - AboutLibraries https://github.com/mikepenz/AboutLibraries
 - Android-Iconics https://github.com/mikepenz/Android-Iconics
@@ -332,7 +336,7 @@ A special thanks to the very active contributors who added many improvements to 
 
 # License
 
-    Copyright 2019 Mike Penz
+    Copyright 2020 Mike Penz
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
