@@ -209,6 +209,7 @@ public class FastAdapterTest {
         itemAdapter.add(testItem);
         FastAdapter<TestItem> adapter = new FastAdapter<>();
         adapter.addAdapter(0, itemAdapter);
+        adapter.registerItemFactory(testItem.getType(), testItem); // registering the factory happens only during usage of the adapter now
         final ViewGroup dummyParent = new FrameLayout(RuntimeEnvironment.application);
         adapter.onCreateViewHolder(dummyParent, testItem.getType());
     }
