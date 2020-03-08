@@ -68,6 +68,7 @@ implementation "com.mikepenz:fastadapter-extensions-expandable:${latestFastAdapt
 
 Many helper classes are included in the following dependency.
 ```gradle
+implementation "com.mikepenz:fastadapter-extensions-binding:${latestFastAdapterRelease}" // diff util helpers
 implementation "com.mikepenz:fastadapter-extensions-diff:${latestFastAdapterRelease}" // diff util helpers
 implementation "com.mikepenz:fastadapter-extensions-drag:${latestFastAdapterRelease}" // drag support
 implementation "com.mikepenz:fastadapter-extensions-paged:${latestFastAdapterRelease}" // paging support
@@ -81,7 +82,7 @@ implementation "com.google.android.material:material:${androidX}"
 ```
 
 ## How to use
-### 1. Implement your item (the easy way)
+### 1a. Implement your item (the easy way)
 Just create a class which extends the `AbstractItem` as shown below. Implement the methods, and your item is ready.
 ```kotlin
 open class SimpleItem : AbstractItem<SimpleItem.ViewHolder>() {
@@ -117,6 +118,26 @@ open class SimpleItem : AbstractItem<SimpleItem.ViewHolder>() {
 }
 
 ```
+
+#### 1b. Implement item with ViewBinding (the easiest way
+
+```kotlin
+class BindingIconItem : AbstractBindingItem<IconItemBinding>() {
+    var name: String? = null
+
+    override val type: Int
+        get() = R.id.fastadapter_icon_item_id
+
+    override fun bindView(binding: IconItemBinding, payloads: List<Any>) {
+        binding.name.text = name
+    }
+
+    override fun createBinding(inflater: LayoutInflater, parent: ViewGroup?): IconItemBinding {
+        return IconItemBinding.inflate(inflater, parent, false)
+    }
+}
+```
+Use the `binding` extension dependency in your application for this.
 
 ### 2. Set the Adapter to the RecyclerView
 ```kotlin
