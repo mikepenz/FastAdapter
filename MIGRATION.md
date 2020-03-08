@@ -13,6 +13,15 @@ FastAdapter.with<ExpandableTestItem, IAdapter<ExpandableTestItem>>(itemAdapter)
 FastAdapter.with(itemAdapter)
 ```
 
+- Correct API specification for the bind method. (The payload for bindView should be immutable)
+
+```kotlin
+// old
+override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>)
+// v5
+override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>)
+```
+
 #### v4.x.y
 
 v4 is a huge release changing most of the codebase to Kotlin. This comes with many refactors, and as a result of that with many breaking API changes. 
