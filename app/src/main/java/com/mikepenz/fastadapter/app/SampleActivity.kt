@@ -28,9 +28,11 @@ import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.mikepenz.materialdrawer.iconics.withIcon
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.PrimaryDrawerItem
+import com.mikepenz.materialdrawer.model.interfaces.withDescription
 import com.mikepenz.materialdrawer.model.interfaces.withIdentifier
 import com.mikepenz.materialdrawer.model.interfaces.withName
 import com.mikepenz.materialdrawer.model.interfaces.withSelectable
+import com.mikepenz.materialdrawer.util.addItems
 import kotlinx.android.synthetic.main.activity_main.*
 
 class SampleActivity : AppCompatActivity() {
@@ -39,8 +41,10 @@ class SampleActivity : AppCompatActivity() {
 
     //save our FastAdapter
     private lateinit var mFastAdapter: FastAdapter<SimpleImageItem>
+
     //save our FastAdapter
     private lateinit var mItemAdapter: ItemAdapter<SimpleImageItem>
+
     //our `SelectExtension`
     private lateinit var selectExtension: SelectExtension<SimpleImageItem>
 
@@ -59,7 +63,7 @@ class SampleActivity : AppCompatActivity() {
 
         //Create the drawer
         slider.apply {
-            this.itemAdapter.add(
+            addItems(
                     PrimaryDrawerItem().withName(R.string.sample_icon_grid).withDescription(R.string.sample_icon_grid_descr).withSelectable(false).withIdentifier(8).withIcon(MaterialDesignIconic.Icon.gmi_grid),
                     PrimaryDrawerItem().withName(R.string.sample_simple_item_list).withDescription(R.string.sample_simple_item_list_descr).withSelectable(false).withIdentifier(6).withIcon(MaterialDesignIconic.Icon.gmi_format_align_justify),
                     PrimaryDrawerItem().withName(R.string.sample_image_list).withDescription(R.string.sample_image_list_descr).withSelectable(false).withIdentifier(5).withIcon(MaterialDesignIconic.Icon.gmi_wallpaper),
