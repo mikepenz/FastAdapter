@@ -35,9 +35,9 @@ It's blazingly fast, minimizing the code you need to write, and is easy to exten
 - Comes with useful Helpers
  - ActionModeHelper ([MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.kt))
  - UndoHelper ([MultiselectSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/MultiselectSampleActivity.kt))
- - More to come...
 - FastScroller (external lib) ([SimpleItemListSample](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/SimpleItemListActivity.kt))
 - Paging (via Jetpack paging lib) ([PagedActivity](https://github.com/mikepenz/FastAdapter/blob/develop/app/src/main/java/com/mikepenz/fastadapter/app/PagedActivity.kt))
+ - More to come...
 
 # Preview
 
@@ -82,7 +82,8 @@ implementation "com.google.android.material:material:${androidX}"
 ```
 
 ## How to use
-### 1a. Implement your item (the easy way)
+### 1. Implement your item
+#### 1a. Implement your item as usual (the easy way)
 Just create a class which extends the `AbstractItem` as shown below. Implement the methods, and your item is ready.
 ```kotlin
 open class SimpleItem : AbstractItem<SimpleItem.ViewHolder>() {
@@ -105,7 +106,7 @@ open class SimpleItem : AbstractItem<SimpleItem.ViewHolder>() {
         var name: TextView = view.findViewById(R.id.material_drawer_name)
         var description: TextView = view.findViewById(R.id.material_drawer_description)
 
-        override fun bindView(item: SimpleItem, payloads: MutableList<Any>) {
+        override fun bindView(item: SimpleItem, payloads: List<Any>) {
             name.text = item.name
             description.text = item.name
         }
@@ -119,7 +120,7 @@ open class SimpleItem : AbstractItem<SimpleItem.ViewHolder>() {
 
 ```
 
-#### 1b. Implement item with ViewBinding (the easiest way
+#### 1b. Implement item with ViewBinding (the easiest way)
 
 ```kotlin
 class BindingIconItem : AbstractBindingItem<IconItemBinding>() {
