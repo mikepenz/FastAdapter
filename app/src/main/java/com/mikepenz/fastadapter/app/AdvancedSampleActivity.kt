@@ -58,7 +58,10 @@ class AdvancedSampleActivity : AppCompatActivity() {
         val adapters: Collection<ItemAdapter<out GenericItem>> = listOf(mHeaderAdapter, mItemAdapter)
         mFastAdapter = FastAdapter.with(adapters)
 
-        mFastAdapter.getExpandableExtension()
+        val expandableExtension = mFastAdapter.getExpandableExtension()
+        //
+        expandableExtension.isOnlyOneExpandedItem = true
+
         val selectExtension = mFastAdapter.getSelectExtension()
 
         //configure our mFastAdapter
@@ -146,10 +149,23 @@ class AdvancedSampleActivity : AppCompatActivity() {
 
                     val subSubItems = LinkedList<ISubItem<*>>()
                     for (iii in 1..3) {
-                        val subSubItem = SimpleSubItem()
+                        val subSubItem = SimpleSubExpandableItem()
                         subSubItem.withName("---- SubSubTest " + id.get())
                                 .withHeader(headers[i / 5])
                                 .identifier = id.getAndIncrement()
+
+
+                        val subSubSubItems = LinkedList<ISubItem<*>>()
+                        for (iiii in 1..3) {
+                            val subSubSubItem = SimpleSubItem()
+                            subSubSubItem.withName("---- SubSubSubTest " + id.get())
+                                    .withHeader(headers[i / 5])
+                                    .identifier = id.getAndIncrement()
+                            subSubSubItems.add(subSubSubItem)
+                        }
+                        subSubItem.subItems = subSubSubItems
+
+
                         subSubItems.add(subSubItem)
                     }
                     subItem.subItems = subSubItems
