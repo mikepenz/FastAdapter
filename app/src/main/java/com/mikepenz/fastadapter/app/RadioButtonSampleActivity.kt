@@ -12,7 +12,6 @@ import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.items.RadioButtonSampleItem
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
-import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
@@ -23,15 +22,11 @@ class RadioButtonSampleActivity : AppCompatActivity() {
     private lateinit var selectExtension: SelectExtension<RadioButtonSampleItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
         // Handle Toolbar
         setSupportActionBar(toolbar)
-
-        //style our ui
-        MaterializeBuilder().withActivity(this).build()
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = FastItemAdapter()

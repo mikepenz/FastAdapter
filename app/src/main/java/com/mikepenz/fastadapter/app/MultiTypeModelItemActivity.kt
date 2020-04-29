@@ -2,7 +2,6 @@ package com.mikepenz.fastadapter.app
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
@@ -15,7 +14,6 @@ import com.mikepenz.fastadapter.app.model.RightModelIconItem
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.iconics.Iconics
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
-import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
@@ -24,16 +22,12 @@ class MultiTypeModelItemActivity : AppCompatActivity() {
     private lateinit var fastAdapter: GenericFastAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
         // Handle Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.sample_multi_model_item)
-
-        //style our ui
-        MaterializeBuilder().withActivity(this).build()
 
         //if you need multiple items for different models you can also do this be defining a Function which get's the model object and returns the item (extends IItem)
         val itemAdapter = ModelAdapter { element: IconModel ->

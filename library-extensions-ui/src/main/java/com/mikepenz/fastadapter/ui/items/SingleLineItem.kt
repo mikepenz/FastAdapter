@@ -11,8 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.ui.R
 import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils
-import com.mikepenz.materialize.holder.ImageHolder
-import com.mikepenz.materialize.holder.StringHolder
+import com.mikepenz.fastadapter.ui.utils.ImageHolder
+import com.mikepenz.fastadapter.ui.utils.StringHolder
 
 /**
  * Created by fabianterhorst on 30.03.16.
@@ -24,6 +24,7 @@ class SingleLineItem : AbstractItem<SingleLineItem.ViewHolder>() {
 
     var avatar: ImageHolder? = null
         private set
+
     var icon: ImageHolder? = null
         private set
 
@@ -88,7 +89,7 @@ class SingleLineItem : AbstractItem<SingleLineItem.ViewHolder>() {
         return this
     }
 
-    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
         if (isEnabled) {
             holder.itemView.setBackgroundResource(FastAdapterUIUtils.getSelectableBackground(holder.itemView.context))
@@ -106,9 +107,7 @@ class SingleLineItem : AbstractItem<SingleLineItem.ViewHolder>() {
         holder.icon.visibility = View.VISIBLE
     }
 
-    override fun getViewHolder(v: View): ViewHolder {
-        return ViewHolder(v)
-    }
+    override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         var name: TextView = view.findViewById<View>(R.id.name) as TextView

@@ -4,11 +4,18 @@ import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
 import androidx.collection.ArraySet
-import com.mikepenz.fastadapter.*
+import androidx.recyclerview.widget.RecyclerView
+import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericItem
+import com.mikepenz.fastadapter.IAdapter
+import com.mikepenz.fastadapter.IAdapterExtension
+import com.mikepenz.fastadapter.IExpandable
+import com.mikepenz.fastadapter.IItemAdapter
+import com.mikepenz.fastadapter.ISelectionListener
 import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.utils.AdapterPredicate
-import java.util.*
+import java.util.ArrayList
 
 /**
  * Extension method to retrieve or create the SelectExtension from the current FastAdapter.
@@ -37,7 +44,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     // you can also use this if you have any custom logic for selections, and do not depend on the "selected" state of the view
     // note if enabled it will feel a bit slower because it will animate the selection
     /**
-     * select between the different selection behaviors.
+     * Select between the different selection behaviors.
      * there are now 2 different variants of selection. you can toggle this via `withSelectWithItemUpdate(boolean)` (where false == default - variant 1)
      * 1.) direct selection via the view "selected" state, we also make sure we do not animate here so no notifyItemChanged is called if we repeatly press the same item
      * 2.) we select the items via a notifyItemChanged. this will allow custom selected logics within your views (isSelected() - do something...) and it will also animate the change via the provided itemAnimator. because of the animation of the itemAnimator the selection will have a small delay (time of animating)
@@ -53,9 +60,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     // If false, a user can't deselect an item via click (you can still do this programmatically)
     var allowDeselection = true
     // if items are selectable in general
-    /**
-     * If items are selectable
-     */
+    /** If items are selectable */
     var isSelectable = false
 
     //a listener that get's notified whenever an item is selected or deselected
@@ -167,7 +172,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     override fun performFiltering(constraint: CharSequence?) {}
 
     /**
-     * toggles the selection of the item at the given position
+     * Toggles the selection of the item at the given position
      *
      * @param position the global position
      */
@@ -180,7 +185,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     }
 
     /**
-     * handles the selection and deselects item if multiSelect is disabled
+     * Handles the selection and deselects item if multiSelect is disabled
      *
      * @param position the global position
      */
@@ -224,7 +229,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     }
 
     /**
-     * select all items
+     * Select all items
      *
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
@@ -237,7 +242,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
                     item: Item,
                     position: Int
             ): Boolean {
-                select(lastParentAdapter, item, -1, false, considerSelectableFlag)
+                select(lastParentAdapter, item, RecyclerView.NO_POSITION, false, considerSelectableFlag)
                 return false
             }
         }, false)
@@ -245,7 +250,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     }
 
     /**
-     * select's a provided item, this won't notify the adapter
+     * Select's a provided item, this won't notify the adapter
      *
      * @param item                   the item to select
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
@@ -259,7 +264,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     }
 
     /**
-     * selects all items at the positions in the iteratable
+     * Selects all items at the positions in the iteratable
      *
      * @param positions the global positions to select
      */
@@ -268,7 +273,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     }
 
     /**
-     * selects an item and remembers its position in the selections list
+     * Selects an item and remembers its position in the selections list
      *
      * @param position               the global position
      * @param fireEvent              true if the onClick listener should be called
@@ -285,11 +290,11 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     }
 
     /**
-     * selects an item and remembers its position in the selections list
+     * Selects an item and remembers its position in the selections list
      *
      * @param adapter                adapter holding this item (or it's parent)
      * @param item                   the item to select
-     * @param position               the global position (or &lt; 0 if the item is not displayed)
+     * @param position               the global position (or < 0 if the item is not displayed)
      * @param fireEvent              true if the onClick listener should be called
      * @param considerSelectableFlag true if the select method should not select an item if its not selectable
      */
@@ -310,7 +315,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     }
 
     /**
-     * selects an item by it's identifier
+     * Selects an item by it's identifier
      *
      * @param identifier             the identifier of the item to select
      * @param fireEvent              true if the onClick listener should be called
@@ -345,7 +350,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     }
 
     /**
-     * deselects all selections
+     * Deselects all selections
      */
     fun deselect() {
         fastAdapter.recursive(object : AdapterPredicate<Item> {
@@ -358,7 +363,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     }
 
     /**
-     * deselects all items at the positions in the iteratable
+     * Deselects all items at the positions in the iteratable
      *
      * @param positions the global positions to deselect
      */
@@ -370,7 +375,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     }
 
     /**
-     * deselects an item and removes its position in the selections list
+     * Deselects an item and removes its position in the selections list
      * also takes an iterator to remove items from the map
      *
      * @param position the global position
@@ -383,16 +388,16 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     }
 
     /**
-     * deselects an item and removes its position in the selections list
+     * Deselects an item and removes its position in the selections list
      * also takes an iterator to remove items from the map
      *
      * @param item     the item to deselected
-     * @param position the global position (or &lt; 0 if the item is not displayed)
+     * @param position the global position (or < 0 if the item is not displayed)
      * @param entries  the iterator which is used to deselect all
      */
 
     @JvmOverloads
-    fun deselect(item: Item, position: Int = -1, entries: MutableIterator<Int>? = null) {
+    fun deselect(item: Item, position: Int = RecyclerView.NO_POSITION, entries: MutableIterator<Int>? = null) {
         item.isSelected = false
         entries?.remove()
         if (position >= 0) {
@@ -403,7 +408,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
 
 
     /**
-     * selects an item by it's identifier
+     * Selects an item by it's identifier
      *
      * @param identifier the identifier of the item to deselect
      */
@@ -448,7 +453,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
     }
 
     /**
-     * deletes all current selected items
+     * Deletes all current selected items
      *
      * @return a list of the IItem elements which were deleted
      */
@@ -464,7 +469,7 @@ class SelectExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<I
                         //a sub item which is not in the list can be instantly deleted
                         expandable.parent?.subItems?.remove(item)
                     }
-                    if (position != -1) {
+                    if (position != RecyclerView.NO_POSITION) {
                         //a normal displayed item can only be deleted afterwards
                         positions.add(position)
                     }

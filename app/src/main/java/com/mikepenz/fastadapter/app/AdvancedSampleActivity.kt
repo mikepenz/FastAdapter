@@ -9,6 +9,7 @@ import androidx.appcompat.view.ActionMode
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -20,8 +21,6 @@ import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
 import com.mikepenz.fastadapter.expandable.getExpandableExtension
 import com.mikepenz.fastadapter.helpers.ActionModeHelper
 import com.mikepenz.fastadapter.select.getSelectExtension
-import com.mikepenz.materialize.MaterializeBuilder
-import com.mikepenz.materialize.util.UIUtils
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
@@ -41,16 +40,12 @@ class AdvancedSampleActivity : AppCompatActivity() {
     private var mActionModeHelper: ActionModeHelper<GenericItem>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
         // Handle Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.sample_advanced)
-
-        //style our ui
-        MaterializeBuilder().withActivity(this).build()
 
         //create our adapters
         mHeaderAdapter = items()
@@ -87,7 +82,7 @@ class AdvancedSampleActivity : AppCompatActivity() {
                 val actionMode = mActionModeHelper?.onLongClick(this@AdvancedSampleActivity, position)
                 if (actionMode != null) {
                     //we want color our CAB
-                    findViewById<View>(R.id.action_mode_bar).setBackgroundColor(UIUtils.getThemeColorFromAttrOrRes(this@AdvancedSampleActivity, R.attr.colorPrimary, R.color.material_drawer_primary))
+                    findViewById<View>(R.id.action_mode_bar).setBackgroundColor(this@AdvancedSampleActivity.getThemeColor(R.attr.colorPrimary, R.color.colorPrimary))
                 }
                 //if we have no actionMode we do not consume the event
                 actionMode != null

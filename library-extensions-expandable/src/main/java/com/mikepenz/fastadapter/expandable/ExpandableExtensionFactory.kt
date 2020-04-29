@@ -8,9 +8,7 @@ class ExpandableExtensionFactory : ExtensionFactory<ExpandableExtension<*>> {
 
     override val clazz = ExpandableExtension::class.java
 
-    override fun create(
-            fastAdapter: FastAdapter<out GenericItem>
-    ): ExpandableExtension<*>? {
+    override fun create(fastAdapter: FastAdapter<out GenericItem>): ExpandableExtension<*>? {
         return ExpandableExtension(fastAdapter)
     }
 }

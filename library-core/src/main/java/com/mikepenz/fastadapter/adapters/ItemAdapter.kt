@@ -24,7 +24,7 @@ open class ItemAdapter<Item : GenericItem> : ModelAdapter<Item, Item> {
     companion object {
 
         /**
-         * static method to retrieve a new `ItemAdapter`
+         * Static method to retrieve a new `ItemAdapter`
          *
          * @return a new ItemAdapter
          */

@@ -1,6 +1,7 @@
 package com.mikepenz.fastadapter.adapters
 
 import android.widget.Filter
+import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.listeners.ItemFilterListener
 import com.mikepenz.fastadapter.select.SelectExtension
@@ -11,7 +12,7 @@ import kotlin.math.min
  * ItemFilter which extends the Filter api provided by Android
  * This calls automatically all required methods, just overwrite the filterItems method
  */
-open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: ModelAdapter<Model, Item>) :
+open class ItemFilter<Model, Item : GenericItem>(private val itemAdapter: ModelAdapter<Model, Item>) :
         Filter() {
     private var originalItems: MutableList<Item>? = null
     var constraint: CharSequence? = null
@@ -25,30 +26,30 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
     var filterPredicate: ((item: Item, constraint: CharSequence?) -> Boolean)? = null
 
     /**
-     * helper method to get all selections from the ItemAdapter's original item list
+     * Helper method to get all selections from the ItemAdapter's original item list
      *
      * @return a Set with the global positions of all selected Items
      */
     open val selections: Set<Int>
         get() {
-            val fastAdapter = mItemAdapter.fastAdapter ?: return emptySet()
-            val adapterOffset = fastAdapter.getPreItemCountByOrder(mItemAdapter.order)
+            val fastAdapter = itemAdapter.fastAdapter ?: return emptySet()
+            val adapterOffset = fastAdapter.getPreItemCountByOrder(itemAdapter.order)
             return originalItems?.mapIndexedNotNullTo(HashSet()) { index, item -> if (item.isSelected) index + adapterOffset else null }
                     ?: fastAdapter.getExtension<SelectExtension<Item>>(SelectExtension::class.java)?.selections
                     ?: emptySet()
         }
 
     /**
-     * helper method to get all selections from the ItemAdapter's original item list
+     * Helper method to get all selections from the ItemAdapter's original item list
      *
      * @return a Set with the selected items out of all items in this itemAdapter (not the listed ones)
      */
     open val selectedItems: Set<Item>
-        get() {
-            return originalItems?.filterTo(HashSet()) { it.isSelected }
-                    ?: mItemAdapter.fastAdapter?.getExtension<SelectExtension<Item>>(SelectExtension::class.java)?.selectedItems
+        get() = originalItems?.filterTo(HashSet()) { it.isSelected }
+                    ?: itemAdapter.fastAdapter
+                            ?.getExtension<SelectExtension<Item>>(SelectExtension::class.java)
+                            ?.selectedItems
                     ?: emptySet()
-        }
 
     override fun performFiltering(constraint: CharSequence?): FilterResults {
         val results = FilterResults()
@@ -59,7 +60,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
         }
 
         //call extensions
-        mItemAdapter.fastAdapter?.extensions?.forEach { adapterExtension ->
+        itemAdapter.fastAdapter?.extensions?.forEach { adapterExtension ->
             adapterExtension.performFiltering(constraint)
         }
 
@@ -67,7 +68,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
 
         // Gets original items or adapter items (set to original items)
         // Result is always nonnull
-        val items: List<Item> = originalItems ?: ArrayList(mItemAdapter.adapterItems).also {
+        val items: List<Item> = originalItems ?: ArrayList(itemAdapter.adapterItems).also {
             originalItems = it
         }
 
@@ -84,7 +85,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
             // We perform filtering operation
             val filteredItems = filterPredicate?.let { filterPredicate ->
                 items.filter { filterPredicate(it, constraint) }
-            } ?: mItemAdapter.adapterItems
+            } ?: itemAdapter.adapterItems
 
             results.values = filteredItems
             results.count = filteredItems.size
@@ -95,7 +96,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
     override fun publishResults(constraint: CharSequence?, results: FilterResults) {
         // Now we have to inform the adapter about the new list filtered
         if (results.values != null) {
-            mItemAdapter.setInternal(results.values as List<Item>, false, null)
+            itemAdapter.setInternal(results.values as List<Item>, false, null)
         }
 
         //only fire when we are filtered, not in onreset
@@ -130,41 +131,41 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
      * @return the relative position
      */
     fun getAdapterPosition(identifier: Long): Int {
-        return originalItems?.indexOfFirst { it.identifier == identifier } ?: -1
+        return originalItems?.indexOfFirst { it.identifier == identifier } ?: RecyclerView.NO_POSITION
     }
 
     /**
-     * add an array of items to the end of the existing items
+     * Add an array of items to the end of the existing items
      *
      * @param items the items to add
      */
     @SafeVarargs
     fun add(vararg items: Item): ModelAdapter<*, Item> {
-        return add(asList(*items))
+        return add(listOf(*items))
     }
 
     /**
-     * add a list of items to the end of the existing items
+     * Add a list of items to the end of the existing items
      * will prior check if we are currently filtering
      *
      * @param items the items to add
      */
     fun add(items: List<Item>): ModelAdapter<*, Item> {
         if (items.isEmpty()) {
-            return mItemAdapter
+            return itemAdapter
         }
         return originalItems?.let { originalItems ->
-            if (mItemAdapter.isUseIdDistributor) {
-                mItemAdapter.idDistributor.checkIds(items)
+            if (itemAdapter.isUseIdDistributor) {
+                itemAdapter.idDistributor.checkIds(items)
             }
             originalItems.addAll(items)
             publishResults(constraint, performFiltering(constraint))
-            mItemAdapter
-        } ?: mItemAdapter.addInternal(items)
+            itemAdapter
+        } ?: itemAdapter.addInternal(items)
     }
 
     /**
-     * add an array of items at the given position within the existing items
+     * Add an array of items at the given position within the existing items
      *
      * @param position the global position
      * @param items    the items to add
@@ -175,50 +176,50 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
     }
 
     /**
-     * add a list of items at the given position within the existing items
+     * Add a list of items at the given position within the existing items
      *
      * @param position the global position
      * @param items    the items to add
      */
     fun add(position: Int, items: List<Item>): ModelAdapter<*, Item> {
         if (items.isEmpty()) {
-            return mItemAdapter
+            return itemAdapter
         }
         return originalItems?.let { originalItems ->
-            if (mItemAdapter.isUseIdDistributor) {
-                mItemAdapter.idDistributor.checkIds(items)
+            if (itemAdapter.isUseIdDistributor) {
+                itemAdapter.idDistributor.checkIds(items)
             }
-            mItemAdapter.fastAdapter?.let { fastAdapter ->
-                val origPosition = getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(position)
+            itemAdapter.fastAdapter?.let { fastAdapter ->
+                val origPosition = getAdapterPosition(itemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(position)
                 originalItems.addAll(origPosition, items)
             }
             publishResults(constraint, performFiltering(constraint))
-            mItemAdapter
-        } ?: mItemAdapter.addInternal(position, items)
+            itemAdapter
+        } ?: itemAdapter.addInternal(position, items)
     }
 
     /**
-     * sets an item at the given position, overwriting the previous item
+     * Sets an item at the given position, overwriting the previous item
      *
      * @param position the global position
      * @param item     the item to set
      */
     operator fun set(position: Int, item: Item): ModelAdapter<*, Item> {
         return originalItems?.let { originalItems ->
-            if (mItemAdapter.isUseIdDistributor) {
-                mItemAdapter.idDistributor.checkId(item)
+            if (itemAdapter.isUseIdDistributor) {
+                itemAdapter.idDistributor.checkId(item)
             }
-            mItemAdapter.fastAdapter?.let { fastAdapter ->
-                val origPosition = getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(position)
+            itemAdapter.fastAdapter?.let { fastAdapter ->
+                val origPosition = getAdapterPosition(itemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(position)
                 originalItems[origPosition] = item
             }
             publishResults(constraint, performFiltering(constraint))
-            mItemAdapter
-        } ?: mItemAdapter.setInternal(position, item)
+            itemAdapter
+        } ?: itemAdapter.setInternal(position, item)
     }
 
     /**
-     * moves an item within the list from a position to a position
+     * Moves an item within the list from a position to a position
      *
      * @param fromPosition the position global from which we want to move
      * @param toPosition   the global position to which to move
@@ -226,36 +227,36 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
      */
     fun move(fromPosition: Int, toPosition: Int): ModelAdapter<*, Item> {
         return originalItems?.let { originalItems ->
-            mItemAdapter.fastAdapter?.getPreItemCount(fromPosition)?.let { preItemCount ->
-                val adjustedFrom = getAdapterPosition(mItemAdapter.adapterItems[fromPosition])
-                val adjustedTo = getAdapterPosition(mItemAdapter.adapterItems[toPosition])
+            itemAdapter.fastAdapter?.getPreItemCount(fromPosition)?.let { preItemCount ->
+                val adjustedFrom = getAdapterPosition(itemAdapter.adapterItems[fromPosition])
+                val adjustedTo = getAdapterPosition(itemAdapter.adapterItems[toPosition])
                 val item = originalItems[adjustedFrom - preItemCount]
                 originalItems.removeAt(adjustedFrom - preItemCount)
                 originalItems.add(adjustedTo - preItemCount, item)
                 performFiltering(constraint)
             }
-            mItemAdapter
-        } ?: mItemAdapter.move(fromPosition, toPosition)
+            itemAdapter
+        } ?: itemAdapter.move(fromPosition, toPosition)
     }
 
     /**
-     * removes an item at the given position within the existing icons
+     * Removes an item at the given position within the existing icons
      *
      * @param position the global position
      */
     fun remove(position: Int): ModelAdapter<*, Item> {
         return originalItems?.let { originalItems ->
-            mItemAdapter.fastAdapter?.let { fastAdapter ->
-                val origPosition = getAdapterPosition(mItemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(position)
+            itemAdapter.fastAdapter?.let { fastAdapter ->
+                val origPosition = getAdapterPosition(itemAdapter.adapterItems[position]) - fastAdapter.getPreItemCount(position)
                 originalItems.removeAt(origPosition)
             }
             publishResults(constraint, performFiltering(constraint))
-            mItemAdapter
-        } ?: mItemAdapter.remove(position)
+            itemAdapter
+        } ?: itemAdapter.remove(position)
     }
 
     /**
-     * removes a range of items starting with the given position within the existing icons
+     * Removes a range of items starting with the given position within the existing icons
      *
      * @param position  the global position
      * @param itemCount the count of items which were removed
@@ -264,7 +265,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
         return originalItems?.let { originalItems ->
             //global position to relative
             val length = originalItems.size
-            mItemAdapter.fastAdapter?.getPreItemCount(position)?.let { preItemCount ->
+            itemAdapter.fastAdapter?.getPreItemCount(position)?.let { preItemCount ->
                 //make sure we do not delete to many items
                 val saveItemCount = min(itemCount, length - position + preItemCount)
                 for (i in 0 until saveItemCount) {
@@ -272,18 +273,18 @@ open class ItemFilter<Model, Item : GenericItem>(private val mItemAdapter: Model
                 }
                 publishResults(constraint, performFiltering(constraint))
             }
-            mItemAdapter
-        } ?: mItemAdapter.removeRange(position, itemCount)
+            itemAdapter
+        } ?: itemAdapter.removeRange(position, itemCount)
     }
 
     /**
-     * removes all items of this adapter
+     * Removes all items of this adapter
      */
     fun clear(): ModelAdapter<*, Item> {
         return originalItems?.let { originalItems ->
             originalItems.clear()
             publishResults(constraint, performFiltering(constraint))
-            mItemAdapter
-        } ?: mItemAdapter.clear()
+            itemAdapter
+        } ?: itemAdapter.clear()
     }
 }

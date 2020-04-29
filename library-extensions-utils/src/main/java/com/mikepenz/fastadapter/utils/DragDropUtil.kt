@@ -8,15 +8,14 @@ import com.mikepenz.fastadapter.drag.IExtendedDraggable
 /**
  * Created by flisar on 30.09.2016.
  */
-
 object DragDropUtil {
     /**
-     * this functions binds the view's touch listener to start the drag via the touch helper...
+     * This functions binds the view's touch listener to start the drag via the touch helper…
      *
      * @param holder the view holder
      * @param holder the item
      */
-    fun bindDragHandle(holder: RecyclerView.ViewHolder, item: IExtendedDraggable<RecyclerView.ViewHolder>) {
+    @JvmStatic fun bindDragHandle(holder: RecyclerView.ViewHolder, item: IExtendedDraggable<RecyclerView.ViewHolder>) {
         // if necessary, init the drag handle, which will start the drag when touched
         if (item.touchHelper != null) {
             item.getDragView(holder)?.setOnTouchListener { _, event ->
@@ -37,8 +36,9 @@ object DragDropUtil {
      * @param oldPosition the start position of the move
      * @param newPosition the end position of the move
      */
-    fun onMove(itemAdapter: IItemAdapter<*, *>, oldPosition: Int, newPosition: Int) {
-        // necessary, because the positions passed to this function may be jumping in case of that the recycler view is scrolled while holding an item outside of the recycler view
+    @JvmStatic fun onMove(itemAdapter: IItemAdapter<*, *>, oldPosition: Int, newPosition: Int) {
+        // necessary, because the positions passed to this function may be jumping in case of
+        // that the recycler view is scrolled while holding an item outside of the recycler view
         if (oldPosition < newPosition) {
             for (i in oldPosition + 1..newPosition) {
                 itemAdapter.move(i, i - 1)

@@ -36,7 +36,7 @@ dependencies {
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
 
-    implementation "androidx.recyclerview:recyclerview:${versions.androidX}"
+    implementation "androidx.recyclerview:recyclerview:${versions.recyclerView}"
     implementation "com.google.android.material:material:${versions.androidX}"
     implementation "androidx.annotation:annotation:${versions.androidX}"
 }

@@ -2,7 +2,6 @@ package com.mikepenz.fastadapter.app
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,7 +11,6 @@ import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.select.getSelectExtension
-import com.mikepenz.materialize.MaterializeBuilder
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
@@ -27,16 +25,12 @@ class StickyHeaderSampleActivity : AppCompatActivity() {
     private lateinit var fastAdapter: FastAdapter<SimpleItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
         // Handle Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.sample_sticky_header)
-
-        //style our ui
-        MaterializeBuilder().withActivity(this).build()
 
         //create our adapters
         val stickyHeaderAdapter = StickyHeaderAdapter<SimpleItem>()

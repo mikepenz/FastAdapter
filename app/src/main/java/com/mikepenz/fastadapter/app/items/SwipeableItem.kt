@@ -1,9 +1,9 @@
 package com.mikepenz.fastadapter.app.items
 
+import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.app.R
@@ -81,7 +81,7 @@ class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable, IDra
      *
      * @param holder the viewHolder of this item
      */
-    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
 
         //set the text for the name
@@ -97,7 +97,7 @@ class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable, IDra
         if (swipedDirection != 0) {
             swipedAction = holder.itemView.context.getString(R.string.action_undo)
             swipedText = if (swipedDirection == ItemTouchHelper.LEFT) "Removed" else "Archived"
-            holder.swipeResultContent.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, if (swipedDirection == ItemTouchHelper.LEFT) R.color.md_red_900 else R.color.md_blue_900))
+            holder.swipeResultContent.setBackgroundColor(if (swipedDirection == ItemTouchHelper.LEFT) Color.RED else Color.BLUE)
         }
         holder.swipedAction.text = swipedAction ?: ""
         holder.swipedText.text = swipedText ?: ""

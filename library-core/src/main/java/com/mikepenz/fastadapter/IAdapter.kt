@@ -9,47 +9,32 @@ typealias GenericAdapter = IAdapter<GenericItem>
  * Created by mikepenz on 27.12.15.
  */
 interface IAdapter<Item : GenericItem> {
-    /**
-     * defines the FastAdapter which manages all the core logic
-     *
-     * @return the FastAdapter specified for this IAdapter
-     */
+
+    /** Defines the FastAdapter which manages all the core logic */
     var fastAdapter: FastAdapter<Item>?
 
-    /**
-     * returs the position of this Adapter in the FastAdapter
-     *
-     * @return the position of this Adapter in the FastAdapter
-     */
-    /**
-     * sets the position of this Adapter in the FastAdapter
-     */
+    /** Defines the position of this Adapter in the FastAdapter */
     var order: Int
 
-    /**
-     * defines the count of items of THIS adapter
-     *
-     * @return the count of items of THIS adapter
-     */
+    /** Defines the count of items of THIS adapter */
     val adapterItemCount: Int
 
-    /**
-     * @return the list of defined items within THIS adapter
-     */
+    /** Defines the list of defined items within THIS adapter */
     val adapterItems: List<Item>
-
-    /**
-     * internal mapper to remember and add possible types for the RecyclerView
-     *
-     * @param items
-     */
-    fun mapPossibleTypes(items: Iterable<Item>?)
 
     /**
      * @param position the relative position
      * @return the item at the given relative position within this adapter
      */
     fun getAdapterItem(position: Int): Item
+
+    /**
+     * @param position the relative position
+     * @return the item at the given relative position within this adapter if it has been loaded
+     */
+    fun peekAdapterItem(position: Int): Item? {
+        return getAdapterItem(position)
+    }
 
     /**
      * Searches for the given item and calculates its relative position

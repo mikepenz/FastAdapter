@@ -11,63 +11,63 @@ import com.mikepenz.fastadapter.utils.SubItemUtil
 /**
  * Created by Michael on 15.09.2016.
  */
-open class RangeSelectorHelper<Item : GenericItem>(private val mFastAdapter: FastItemAdapter<Item>) {
-    private var mActionModeHelper: ActionModeHelper<*>? = null
-    private var mSupportSubItems = false
-    private var mPayload: Any? = null
+open class RangeSelectorHelper<Item : GenericItem>(private val fastAdapter: FastItemAdapter<Item>) {
+    private var actionModeHelper: ActionModeHelper<*>? = null
+    private var supportSubItems = false
+    private var payload: Any? = null
 
-    private var mLastLongPressIndex: Int? = null
+    private var lastLongPressIndex: Int? = null
 
     /**
-     * set the ActionModeHelper, if you want to notify it after a range was selected
+     * Set the ActionModeHelper, if you want to notify it after a range was selected
      * so that it can update the ActionMode title
      *
      * @param actionModeHelper the action mode helper that should be used
      * @return this, for supporting function call chaining
      */
     fun withActionModeHelper(actionModeHelper: ActionModeHelper<*>?): RangeSelectorHelper<*> {
-        mActionModeHelper = actionModeHelper
+        this.actionModeHelper = actionModeHelper
         return this
     }
 
     /**
-     * enable this, if you want the range selector to correclty handle sub items as well
+     * Enable this, if you want the range selector to correclty handle sub items as well
      *
      * @param supportSubItems true, if sub items are supported, false otherwise
      * @return this, for supporting function call chaining
      */
     fun withSupportSubItems(supportSubItems: Boolean): RangeSelectorHelper<*> {
-        this.mSupportSubItems = supportSubItems
+        this.supportSubItems = supportSubItems
         return this
     }
 
     /**
-     * the provided payload will be passed to the adapters notify function, if one is provided
+     * The provided payload will be passed to the adapters notify function, if one is provided
      *
      * @param payload the paylaod that should be passed to the adapter on selection state change
      * @return this, for supporting function call chaining
      */
     fun withPayload(payload: Any): RangeSelectorHelper<*> {
-        mPayload = payload
+        this.payload = payload
         return this
     }
 
     /**
-     * resets the last long pressed index, we only want to respect two consecutive long clicks for selecting a range of items
+     * Resets the last long pressed index, we only want to respect two consecutive long clicks for selecting a range of items
      */
     fun onClick() {
         reset()
     }
 
     /**
-     * resets the last long pressed index, we only want to respect two consecutive long presses for selecting a range of items
+     * Resets the last long pressed index, we only want to respect two consecutive long presses for selecting a range of items
      */
     fun reset() {
-        mLastLongPressIndex = null
+        lastLongPressIndex = null
     }
 
     /**
-     * will take care to save the long pressed index
+     * Will take care to save the long pressed index
      * or to select all items in the range between the current long pressed item and the last long pressed item
      *
      * @param index      the index of the long pressed item
@@ -76,31 +76,31 @@ open class RangeSelectorHelper<Item : GenericItem>(private val mFastAdapter: Fas
      */
     @JvmOverloads
     fun onLongClick(index: Int, selectItem: Boolean = true): Boolean {
-        if (mLastLongPressIndex == null) {
+        if (lastLongPressIndex == null) {
             // we only consider long presses on not selected items
-            if (mFastAdapter.getAdapterItem(index).isSelectable) {
-                mLastLongPressIndex = index
+            if (fastAdapter.getAdapterItem(index).isSelectable) {
+                lastLongPressIndex = index
                 // we select this item as well
                 if (selectItem) {
-                    val selectExtension: SelectExtension<Item>? = mFastAdapter.getExtension(SelectExtension::class.java)
+                    val selectExtension: SelectExtension<Item>? = fastAdapter.getExtension(SelectExtension::class.java)
                     selectExtension?.select(index)
                 }
-                mActionModeHelper?.checkActionMode(null) // works with null as well, as the ActionMode is active for sure!
+                actionModeHelper?.checkActionMode(null) // works with null as well, as the ActionMode is active for sure!
                 return true
             }
-        } else if (mLastLongPressIndex != index) {
-            mLastLongPressIndex?.let {
+        } else if (lastLongPressIndex != index) {
+            lastLongPressIndex?.let {
                 // select all items in the range between the two long clicks
                 selectRange(it, index, true)
             }
             // reset the index
-            mLastLongPressIndex = null
+            lastLongPressIndex = null
         }
         return false
     }
 
     /**
-     * selects all items in a range, from and to indizes are inclusive
+     * Selects all items in a range, from and to indizes are inclusive
      *
      * @param from        the from index
      * @param to          the to index
@@ -119,9 +119,9 @@ open class RangeSelectorHelper<Item : GenericItem>(private val mFastAdapter: Fas
 
         var item: IItem<*>
         for (i in from..to) {
-            item = mFastAdapter.getAdapterItem(i)
+            item = fastAdapter.getAdapterItem(i)
             if (item.isSelectable) {
-                val selectExtension: SelectExtension<Item>? = mFastAdapter.getExtension(SelectExtension::class.java)
+                val selectExtension: SelectExtension<Item>? = fastAdapter.getExtension(SelectExtension::class.java)
                 if (selectExtension != null) {
                     if (select) {
                         selectExtension.select(i)
@@ -130,19 +130,19 @@ open class RangeSelectorHelper<Item : GenericItem>(private val mFastAdapter: Fas
                     }
                 }
             }
-            if (mSupportSubItems && !skipHeaders) {
+            if (supportSubItems && !skipHeaders) {
                 // if a group is collapsed, select all sub items
                 if (item is IExpandable<*> && !(item as IExpandable<*>).isExpanded) {
-                    SubItemUtil.selectAllSubItems(mFastAdapter, mFastAdapter.getAdapterItem(i), select, true, mPayload)
+                    SubItemUtil.selectAllSubItems(fastAdapter, fastAdapter.getAdapterItem(i), select, true, payload)
                 }
             }
         }
 
-        mActionModeHelper?.checkActionMode(null) // works with null as well, as the ActionMode is active for sure!
+        actionModeHelper?.checkActionMode(null) // works with null as well, as the ActionMode is active for sure!
     }
 
     /**
-     * add the values to the bundle for saveInstanceState
+     * Add the values to the bundle for saveInstanceState
      *
      * @param savedInstanceState If the activity is being re-initialized after
      * previously being shut down then this Bundle contains the data it most
@@ -152,14 +152,14 @@ open class RangeSelectorHelper<Item : GenericItem>(private val mFastAdapter: Fas
      */
     @JvmOverloads
     fun saveInstanceState(savedInstanceState: Bundle, prefix: String = ""): Bundle {
-        mLastLongPressIndex?.let {
+        lastLongPressIndex?.let {
             savedInstanceState.putInt(BUNDLE_LAST_LONG_PRESS, it)
         }
         return savedInstanceState
     }
 
     /**
-     * restore the index of the last long pressed index
+     * Restore the index of the last long pressed index
      * IMPORTANT! Call this method only after all items where added to the adapters again. Otherwise it may select wrong items!
      *
      * @param savedInstanceState If the activity is being re-initialized after
@@ -171,7 +171,7 @@ open class RangeSelectorHelper<Item : GenericItem>(private val mFastAdapter: Fas
     @JvmOverloads
     fun withSavedInstanceState(savedInstanceState: Bundle?, prefix: String = ""): RangeSelectorHelper<*> {
         if (savedInstanceState != null && savedInstanceState.containsKey(BUNDLE_LAST_LONG_PRESS + prefix))
-            mLastLongPressIndex = savedInstanceState.getInt(BUNDLE_LAST_LONG_PRESS + prefix)
+            lastLongPressIndex = savedInstanceState.getInt(BUNDLE_LAST_LONG_PRESS + prefix)
         return this
     }
 

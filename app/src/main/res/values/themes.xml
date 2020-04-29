@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="SampleApp.DayNight" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="materialDrawerStyle">@style/Widget.MaterialDrawerStyle</item>
+        <item name="materialDrawerHeaderStyle">@style/Widget.MaterialDrawerHeaderStyle</item>
+
+        <item name="android:windowTranslucentStatus">true</item>
+
+        <!-- CAB :D -->
+        <item name="windowActionModeOverlay">true</item>
+
+        <item name="toolbarStyle">@style/CustomToolbarStyle</item>
+        <item name="colorControlNormal">@android:color/black</item>
+    </style>
+</resources>
