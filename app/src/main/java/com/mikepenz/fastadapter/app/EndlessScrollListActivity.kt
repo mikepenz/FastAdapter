@@ -12,6 +12,7 @@ import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
@@ -31,6 +32,7 @@ import com.mikepenz.iconics.utils.actionBar
 import com.mikepenz.iconics.utils.colorInt
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
+
 
 class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilterListener<GenericItem> {
 
@@ -178,6 +180,11 @@ class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFi
 
     override fun itemTouchDropped(oldPosition: Int, newPosition: Int) {
         // save the new item order, i.e. in your database
+        // remove visual highlight to dropped item
+    }
+
+    override fun itemTouchStartDrag(viewHolder: RecyclerView.ViewHolder) {
+        // add visual highlight to dragged item
     }
 
     override fun itemsFiltered(constraint: CharSequence?, results: List<GenericItem>?) {
