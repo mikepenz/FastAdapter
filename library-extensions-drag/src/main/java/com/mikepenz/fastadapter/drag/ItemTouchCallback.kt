@@ -9,7 +9,7 @@ interface ItemTouchCallback {
      *
      * @param viewHolder dragged ViewHolder
      */
-    fun itemTouchStartDrag(viewHolder : RecyclerView.ViewHolder)
+    fun itemTouchStartDrag(viewHolder: RecyclerView.ViewHolder)
 
     /**
      * Called when an item has been dragged
