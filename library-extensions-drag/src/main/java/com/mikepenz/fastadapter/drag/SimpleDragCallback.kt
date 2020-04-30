@@ -106,6 +106,11 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
         from = to
     }
 
+    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+        super.onSelectedChanged(viewHolder, actionState)
+        if (ItemTouchHelper.ACTION_STATE_DRAG == actionState && viewHolder != null) callbackItemTouch?.itemTouchStartDrag(viewHolder)
+    }
+
     companion object {
 
         const val ALL = ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
