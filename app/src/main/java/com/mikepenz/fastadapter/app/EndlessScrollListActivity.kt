@@ -32,6 +32,7 @@ import com.mikepenz.iconics.utils.colorInt
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
+
 class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilterListener<GenericItem> {
 
     //save our FastAdapter
@@ -178,6 +179,7 @@ class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFi
 
     override fun itemTouchDropped(oldPosition: Int, newPosition: Int) {
         // save the new item order, i.e. in your database
+        // remove visual highlight to dropped item
     }
 
     override fun itemsFiltered(constraint: CharSequence?, results: List<GenericItem>?) {
