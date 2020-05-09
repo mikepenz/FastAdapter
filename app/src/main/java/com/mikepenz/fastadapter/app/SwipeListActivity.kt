@@ -111,6 +111,7 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
         )
                 .withBackgroundSwipeRight(Color.BLUE)
                 .withLeaveBehindSwipeRight(leaveBehindDrawableRight)
+                .withNotifyAllDrops(true)
 
         touchHelper = ItemTouchHelper(touchCallback) // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
         touchHelper.attachToRecyclerView(rv) // Attach ItemTouchHelper to RecyclerView

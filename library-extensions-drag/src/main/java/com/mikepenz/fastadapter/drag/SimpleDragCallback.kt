@@ -21,6 +21,8 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
 
     private var directions = UP_DOWN
 
+    private var notifyAllDrops = false // Default behaviour of v5.0.1-
+
     @Suppress("EmptyDefaultConstructor")
     @IntDef(ALL, UP_DOWN, LEFT_RIGHT)
     @Retention(AnnotationRetention.SOURCE)
@@ -47,6 +49,10 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
 
     override fun isLongPressDragEnabled(): Boolean {
         return isDragEnabled
+    }
+
+    fun setNotifyAllDrops(notifyAllDrops: Boolean) {
+        this.notifyAllDrops = notifyAllDrops
     }
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -98,7 +104,9 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
-        if (from != RecyclerView.NO_POSITION && to != RecyclerView.NO_POSITION) {
+        if (notifyAllDrops || (from != RecyclerView.NO_POSITION && to != RecyclerView.NO_POSITION)) {
+            // If 'to' is not set, then we can assume the item hasn't moved at all
+            if (from != RecyclerView.NO_POSITION && to == RecyclerView.NO_POSITION) to = from
             callbackItemTouch?.itemTouchDropped(from, to)
         }
         // reset the from/to positions
@@ -108,7 +116,10 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         super.onSelectedChanged(viewHolder, actionState)
-        if (ItemTouchHelper.ACTION_STATE_DRAG == actionState && viewHolder != null) callbackItemTouch?.itemTouchStartDrag(viewHolder)
+        if (ItemTouchHelper.ACTION_STATE_DRAG == actionState && viewHolder != null) {
+            from = viewHolder.adapterPosition
+            callbackItemTouch?.itemTouchStartDrag(viewHolder)
+        }
     }
 
     companion object {
