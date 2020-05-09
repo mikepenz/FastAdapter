@@ -861,17 +861,17 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
         abstract fun unbindView(item: Item)
 
         /** View got attached to the window */
-        fun attachToWindow(item: Item) {}
+        open fun attachToWindow(item: Item) {}
 
         /** View got detached from the window */
-        fun detachFromWindow(item: Item) {}
+        open fun detachFromWindow(item: Item) {}
 
         /**
          * View is in a transient state and could not be recycled
          *
          * @return return true if you want to recycle anyways (after clearing animations or so)
          */
-        fun failedToRecycle(item: Item): Boolean {
+        open fun failedToRecycle(item: Item): Boolean {
             return false
         }
     }
