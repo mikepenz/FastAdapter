@@ -7,6 +7,7 @@ import androidx.annotation.StringRes
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.app.R
+import com.mikepenz.fastadapter.app.adapters.IDraggableViewHolder
 import com.mikepenz.fastadapter.drag.IDraggable
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.swipe.ISwipeable
@@ -120,7 +121,7 @@ class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable, IDra
     /**
      * our ViewHolder
      */
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view), IDraggableViewHolder {
         var name: TextView = view.findViewById(R.id.material_drawer_name)
         var description: TextView = view.findViewById(R.id.material_drawer_description)
         var swipeResultContent: View = view.findViewById(R.id.swipe_result_content)
@@ -134,6 +135,14 @@ class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable, IDra
             swipedAction.setOnClickListener {
                 swipedActionRunnable?.run()
             }
+        }
+
+        override fun onDropped() {
+            itemContent.setBackgroundColor(Color.TRANSPARENT)
+        }
+
+        override fun onDragged() {
+            itemContent.setBackgroundColor(Color.LTGRAY)
         }
     }
 }

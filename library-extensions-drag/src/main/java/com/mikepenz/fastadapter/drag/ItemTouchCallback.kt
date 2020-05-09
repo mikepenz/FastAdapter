@@ -1,6 +1,15 @@
 package com.mikepenz.fastadapter.drag
 
+import androidx.recyclerview.widget.RecyclerView
+
 interface ItemTouchCallback {
+
+    /**
+     * Called when an item enters drag state
+     *
+     * @param viewHolder dragged ViewHolder
+     */
+    fun itemTouchStartDrag(viewHolder: RecyclerView.ViewHolder)
 
     /**
      * Called when an item has been dragged
@@ -14,7 +23,9 @@ interface ItemTouchCallback {
 
     /**
      * Called when an item has been dropped
-     * This event is only called once when the user stopped dragging the item
+     * This event is only called :
+     *   - Once when the user stopped dragging the item
+     *   - If the corresponding AbstractItem implements {@link IDraggable}
      *
      * @param oldPosition start position
      * @param newPosition end position

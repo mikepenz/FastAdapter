@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.app.adapters.IDraggableViewHolder
 import com.mikepenz.fastadapter.app.items.SwipeableItem
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
@@ -174,7 +175,17 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
     }
 
     override fun itemTouchDropped(oldPosition: Int, newPosition: Int) {
+        val vh: RecyclerView.ViewHolder? = rv.findViewHolderForAdapterPosition(newPosition)
+        if (vh is IDraggableViewHolder) {
+            (vh as IDraggableViewHolder).onDropped()
+        }
         // save the new item order, i.e. in your database
+    }
+
+    override fun itemTouchStartDrag(viewHolder: RecyclerView.ViewHolder) {
+        if (viewHolder is IDraggableViewHolder) {
+            (viewHolder as IDraggableViewHolder).onDragged()
+        }
     }
 
     override fun itemSwiped(position: Int, direction: Int) {
