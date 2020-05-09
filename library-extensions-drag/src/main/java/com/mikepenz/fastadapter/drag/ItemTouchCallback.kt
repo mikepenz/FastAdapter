@@ -9,7 +9,7 @@ interface ItemTouchCallback {
      *
      * @param viewHolder dragged ViewHolder
      */
-    fun itemTouchStartDrag(viewHolder: RecyclerView.ViewHolder)
+    fun itemTouchStartDrag(viewHolder: RecyclerView.ViewHolder) {}
 
     /**
      * Called when an item has been dragged
@@ -30,5 +30,5 @@ interface ItemTouchCallback {
      * @param oldPosition start position
      * @param newPosition end position
      */
-    fun itemTouchDropped(oldPosition: Int, newPosition: Int)
+    fun itemTouchDropped(oldPosition: Int, newPosition: Int) {}
 }
