@@ -71,6 +71,11 @@ class SimpleSwipeDragCallback @JvmOverloads constructor(
         return this
     }
 
+    fun withNotifyAllDrops(notifyAllDrops: Boolean): SimpleSwipeDragCallback {
+        this.notifyAllDrops = notifyAllDrops
+        return this
+    }
+
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         simpleSwipeCallback.onSwiped(viewHolder, direction)
     }

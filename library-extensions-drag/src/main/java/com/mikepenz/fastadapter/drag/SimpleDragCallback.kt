@@ -14,12 +14,17 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
 
     //our callback
     private var callbackItemTouch: ItemTouchCallback? = null // interface
-    private var isDragEnabled = true
+
+    /** enable to drag around via long press */
+    var isDragEnabled = true
 
     private var from = RecyclerView.NO_POSITION
     private var to = RecyclerView.NO_POSITION
 
     private var directions = UP_DOWN
+
+    /** enable notification for all drops, even if location did not change */
+    var notifyAllDrops = false // Default behaviour of v5.0.1-
 
     @Suppress("EmptyDefaultConstructor")
     @IntDef(ALL, UP_DOWN, LEFT_RIGHT)
@@ -98,7 +103,9 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
-        if (from != RecyclerView.NO_POSITION && to != RecyclerView.NO_POSITION) {
+        if (notifyAllDrops || (from != RecyclerView.NO_POSITION && to != RecyclerView.NO_POSITION)) {
+            // If 'to' is not set, then we can assume the item hasn't moved at all
+            if (from != RecyclerView.NO_POSITION && to == RecyclerView.NO_POSITION) to = from
             callbackItemTouch?.itemTouchDropped(from, to)
         }
         // reset the from/to positions
@@ -108,7 +115,10 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
         super.onSelectedChanged(viewHolder, actionState)
-        if (ItemTouchHelper.ACTION_STATE_DRAG == actionState && viewHolder != null) callbackItemTouch?.itemTouchStartDrag(viewHolder)
+        if (ItemTouchHelper.ACTION_STATE_DRAG == actionState && viewHolder != null) {
+            from = viewHolder.adapterPosition
+            callbackItemTouch?.itemTouchStartDrag(viewHolder)
+        }
     }
 
     companion object {
