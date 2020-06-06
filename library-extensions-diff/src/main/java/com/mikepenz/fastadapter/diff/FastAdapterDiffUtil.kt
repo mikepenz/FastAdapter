@@ -16,6 +16,38 @@ import java.util.*
 object FastAdapterDiffUtil {
 
     /**
+     * This method will prepare the adapter and the previous set of of items for the diffing.
+     *
+     * It automatically collapses all expandables (if enabled) as they are not supported by the diff util,
+     * pre sort the items based on the comparator if available.
+     *
+     * Note this is not needed in simple usecases. See [set] instead (set without [DiffUtil.DiffResult]).
+     *
+     * @param adapter     the adapter containing the current items.
+     * @param items       the new set of items we want to put into the adapter
+     * @param A           The adapter type, whereas A extends [ModelAdapter]
+     * @param Model       The model type we work with
+     * @param Item        The item type kept in the adapter
+     * @return the list of original items as a copy, to calculate the diff on
+     */
+    fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> prepare(adapter: A, items: List<Item>): List<Item> {
+        if (adapter.isUseIdDistributor) {
+            adapter.idDistributor.checkIds(items)
+        }
+
+        // The FastAdapterDiffUtil does not handle expanded items. Call collapse if possible
+        collapseIfPossible(adapter.fastAdapter)
+
+        //if we have a comparator then sort
+        if (adapter.itemList is ComparableItemListImpl<*>) {
+            Collections.sort(items, (adapter.itemList as ComparableItemListImpl<Item>).comparator)
+        }
+
+        //remember the old items
+        return adapter.adapterItems.toList()
+    }
+
+    /**
      * This method will compute a [DiffUtil.DiffResult] based on the given adapter, and the list of new items.
      *
      * It automatically collapses all expandables (if enabled) as they are not supported by the diff util,
@@ -34,37 +66,42 @@ object FastAdapterDiffUtil {
      * @return the [DiffUtil.DiffResult] computed.
      */
     fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> calculateDiff(adapter: A, items: List<Item>, callback: DiffCallback<Item> = DiffCallbackImpl(), detectMoves: Boolean = true): DiffUtil.DiffResult {
-        if (adapter.isUseIdDistributor) {
-            adapter.idDistributor.checkIds(items)
-        }
-
-        // The FastAdapterDiffUtil does not handle expanded items. Call collapse if possible
-        collapseIfPossible(adapter.fastAdapter)
-
-        //if we have a comparator then sort
-        if (adapter.itemList is ComparableItemListImpl<*>) {
-            Collections.sort(items, (adapter.itemList as ComparableItemListImpl<Item>).comparator)
-        }
-
         //remember the old items
+        val oldItems = prepare(adapter, items)
         val adapterItems = adapter.adapterItems
-        val oldItems = adapterItems.toList()
 
         //pass in the oldItem list copy as we will update the one in the adapter itself
         val result = DiffUtil.calculateDiff(FastAdapterCallback(oldItems, items, callback), detectMoves)
 
         //make sure the new items list is not a reference of the already mItems list
-        if (items !== adapterItems) {
+        postCalculate(adapter, items)
+
+        return result
+    }
+
+
+    /**
+     * This method will ensure to update the maintained list of elements in the adapter. *After* the diff util updated the UI.
+     * This is required to ensure the adapter contains the new elements! those are required for the diff util to update the RV with the notify methods.
+     *
+     * Note this is not needed in simple usecases. See [set] instead (set without [DiffUtil.DiffResult]).
+     *
+     * @param oldItems    the original list of items before the diff was calculated
+     * @param Item        the list of *new* items we used to calculate the diff
+     * @return the [DiffUtil.DiffResult] computed.
+     */
+    fun <A : ModelAdapter<Model, Item>, Model, Item : GenericItem> postCalculate(adapter: A, newItems: List<Item>) {
+        //make sure the new items list is not a reference of the already mItems list
+        val adapterItems = adapter.adapterItems
+        if (newItems !== adapterItems) {
             //remove all previous items
             if (adapterItems.isNotEmpty()) {
                 adapterItems.clear()
             }
 
             //add all new items to the list
-            adapterItems.addAll(items)
+            adapterItems.addAll(newItems)
         }
-
-        return result
     }
 
     /** Uses Reflection to collapse all items if this adapter uses expandable items */
