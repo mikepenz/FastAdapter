@@ -2,15 +2,14 @@ package com.mikepenz.fastadapter.helpers
 
 import android.view.View
 import android.widget.TextView
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.IItemAdapter
 import com.mikepenz.fastadapter.select.SelectExtension
-import java.util.ArrayList
+import java.util.*
 import java.util.Arrays.asList
-import java.util.Comparator
-import java.util.TreeSet
 
 /**
  * Created by mikepenz on 04.01.16.
@@ -88,7 +87,7 @@ class UndoHelper<Item : GenericItem>(
      * @param positions  the positions where the items were removed
      * @return the generated Snackbar
      */
-    fun remove(view: View, text: String, actionText: String, @Snackbar.Duration duration: Int, positions: Set<Int>): Snackbar {
+    fun remove(view: View, text: String, actionText: String, @BaseTransientBottomBar.Duration duration: Int, positions: Set<Int>): Snackbar {
         if (history != null) {
             // Set a flag, if remove was called before the Snackbar
             // executed the commit -> Snackbar does not commit the new
