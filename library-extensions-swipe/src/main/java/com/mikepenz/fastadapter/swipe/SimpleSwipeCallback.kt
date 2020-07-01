@@ -23,6 +23,10 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
     private var bgPaint: Paint? = null
     private var horizontalMargin = Integer.MAX_VALUE
 
+    // Swipe movement control
+    private var sensitivityFactor = 1f
+    private var surfaceThreshold = 0.5f
+
     interface ItemSwipeCallback {
 
         /**
@@ -67,6 +71,26 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
         return this
     }
 
+    /**
+     * Control the sensitivity of the swipe gesture
+     * 0.5 : very sensitive
+     * 1 : Android default
+     * 10 : almost insensitive
+     */
+    fun withSensitivity(f: Float): SimpleSwipeCallback {
+        sensitivityFactor = f
+        return this
+    }
+
+    /**
+     * % of the item's width or height needed to confirm the swipe action
+     * Android default : 0.5
+     */
+    fun withSurfaceThreshold(f: Float): SimpleSwipeCallback {
+        surfaceThreshold = f
+        return this
+    }
+
     override fun getSwipeDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         val item = FastAdapter.getHolderAdapterItem<IItem<*>>(viewHolder)
         return if (item is ISwipeable) {
@@ -92,6 +116,14 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
         // not enabled
         return false
+    }
+
+    override fun getSwipeEscapeVelocity(defaultValue: Float): Float {
+        return defaultValue * sensitivityFactor
+    }
+
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+        return surfaceThreshold
     }
 
     //Inspired/modified from: https://github.com/nemanja-kovacevic/recycler-view-swipe-to-delete/blob/master/app/src/main/java/net/nemanjakovacevic/recyclerviewswipetodelete/MainActivity.java
