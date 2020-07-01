@@ -76,6 +76,16 @@ class SimpleSwipeDragCallback @JvmOverloads constructor(
         return this
     }
 
+    fun withSensitivity(f: Float): SimpleSwipeDragCallback {
+        simpleSwipeCallback.withSensitivity(f)
+        return this
+    }
+
+    fun withSurfaceThreshold(f: Float): SimpleSwipeDragCallback {
+        simpleSwipeCallback.withSurfaceThreshold(f)
+        return this
+    }
+
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         simpleSwipeCallback.onSwiped(viewHolder, direction)
     }
@@ -84,6 +94,13 @@ class SimpleSwipeDragCallback @JvmOverloads constructor(
         return simpleSwipeCallback.getSwipeDirs(recyclerView, viewHolder)
     }
 
+    override fun getSwipeEscapeVelocity(defaultValue: Float): Float {
+        return simpleSwipeCallback.getSwipeEscapeVelocity(defaultValue)
+    }
+
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+        return simpleSwipeCallback.getSwipeThreshold(viewHolder)
+    }
 
     override fun onChildDraw(
             c: Canvas,
