@@ -72,7 +72,7 @@ class SimpleSwipeDragCallback @JvmOverloads constructor(
     }
 
     fun withNotifyAllDrops(notifyAllDrops: Boolean): SimpleSwipeDragCallback {
-        setNotifyAllDrops(notifyAllDrops)
+        this.notifyAllDrops = notifyAllDrops
         return this
     }
 

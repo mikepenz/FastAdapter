@@ -6,7 +6,6 @@ import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.items.SimpleItem
@@ -21,7 +20,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_sample.*
-import java.util.*
 
 /**
  * Created by Aleksander Mielczarek on 07.08.2017.
@@ -108,24 +106,16 @@ class DiffUtilActivity : AppCompatActivity() {
 
     private fun setDataAsync() {
         disposables.add(Single.fromCallable { createData() }
-                .map<DiffUtil.DiffResult> { simpleItems -> FastAdapterDiffUtil.calculateDiff(fastItemAdapter.itemAdapter, simpleItems) }.subscribeOn(Schedulers.io())
+                .map { simpleItems -> FastAdapterDiffUtil.calculateDiff(fastItemAdapter.itemAdapter, simpleItems) }.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { result -> FastAdapterDiffUtil[fastItemAdapter.itemAdapter] = result })
     }
 
     private fun createData(): List<SimpleItem> {
-        val items = Arrays.asList(
-                SimpleItem().withName("Item 1").withIdentifier(1),
-                SimpleItem().withName("Item 2").withIdentifier(2),
-                SimpleItem().withName("Item 3").withIdentifier(3),
-                SimpleItem().withName("Item 4").withIdentifier(4),
-                SimpleItem().withName("Item 5").withIdentifier(5),
-                SimpleItem().withName("Item 6").withIdentifier(6),
-                SimpleItem().withName("Item 7").withIdentifier(7),
-                SimpleItem().withName("Item 8").withIdentifier(8),
-                SimpleItem().withName("Item 9").withIdentifier(9),
-                SimpleItem().withName("Item 10").withIdentifier(10)
-        )
+        val items = mutableListOf<SimpleItem>()
+        repeat(100) {
+            items.add(SimpleItem().withName("Item ${it + 1}").withIdentifier((it + 1).toLong()))
+        }
         items.shuffle()
         return items
     }

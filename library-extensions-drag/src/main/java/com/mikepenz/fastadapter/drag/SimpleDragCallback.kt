@@ -14,14 +14,17 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
 
     //our callback
     private var callbackItemTouch: ItemTouchCallback? = null // interface
-    private var isDragEnabled = true
+
+    /** enable to drag around via long press */
+    var isDragEnabled = true
 
     private var from = RecyclerView.NO_POSITION
     private var to = RecyclerView.NO_POSITION
 
     private var directions = UP_DOWN
 
-    private var notifyAllDrops = false // Default behaviour of v5.0.1-
+    /** enable notification for all drops, even if location did not change */
+    var notifyAllDrops = false // Default behaviour of v5.0.1-
 
     @Suppress("EmptyDefaultConstructor")
     @IntDef(ALL, UP_DOWN, LEFT_RIGHT)
@@ -49,10 +52,6 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
 
     override fun isLongPressDragEnabled(): Boolean {
         return isDragEnabled
-    }
-
-    fun setNotifyAllDrops(notifyAllDrops: Boolean) {
-        this.notifyAllDrops = notifyAllDrops
     }
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
