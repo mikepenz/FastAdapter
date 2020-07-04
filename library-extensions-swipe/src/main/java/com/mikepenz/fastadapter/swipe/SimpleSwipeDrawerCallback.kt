@@ -113,7 +113,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
      * Android default touch event mechanisms don't transmit these events to the sublayer :
      * any click on the exposed surface just swipe the item back to where it came
      */
-    class RecyclerTouchTransmitter() : View.OnTouchListener {
+    class RecyclerTouchTransmitter : View.OnTouchListener {
 
         override fun onTouch(v: View?, event: MotionEvent): Boolean {
             if (null == v || v !is ViewGroup) return false
