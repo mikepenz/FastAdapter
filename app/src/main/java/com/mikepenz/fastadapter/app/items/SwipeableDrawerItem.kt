@@ -9,7 +9,7 @@ import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.app.adapters.IDraggableViewHolder
 import com.mikepenz.fastadapter.drag.IDraggable
 import com.mikepenz.fastadapter.items.AbstractItem
-import com.mikepenz.fastadapter.swipe.IDrawerSwipeable
+import com.mikepenz.fastadapter.swipe.IDrawerSwipeableViewHolder
 import com.mikepenz.fastadapter.swipe.ISwipeable
 import com.mikepenz.materialdrawer.holder.StringHolder
 import io.reactivex.functions.Consumer
@@ -110,14 +110,13 @@ class SwipeableDrawerItem : AbstractItem<SwipeableDrawerItem.ViewHolder>(), ISwi
     /**
      * our ViewHolder
      */
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view), IDraggableViewHolder, IDrawerSwipeable {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view), IDraggableViewHolder, IDrawerSwipeableViewHolder {
         var name: TextView = view.findViewById(R.id.material_drawer_name)
         var description: TextView = view.findViewById(R.id.material_drawer_description)
         var archiveBtn: View = view.findViewById(R.id.archive_btn)
         var deleteBtn: View = view.findViewById(R.id.delete_btn)
         var shareBtn: View = view.findViewById(R.id.share_btn)
         var itemContent: View = view.findViewById(R.id.item_content)
-        var swipeResultContent: View = view.findViewById(R.id.swipe_result_content)
 
         var deleteActionRunnable: Runnable? = null
         var archiveActionRunnable: Runnable? = null

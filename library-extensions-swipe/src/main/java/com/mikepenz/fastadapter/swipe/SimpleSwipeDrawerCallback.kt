@@ -19,20 +19,26 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
 
     // Swipe movement control
     private var sensitivityFactor = 1f
-    // "Drawer width" the swipe movement is allowed to reach before blocking
-    private var swipeWidthLeftDp = 80
-    private var swipeWidthRightDp = 80
+    // "Drawer width" swipe gesture is allowed to reach before blocking
+    private var swipeWidthLeftDp = 20
+    private var swipeWidthRightDp = 20
 
     // Indicates whether the touchTransmitter has been set on the RecyclerView
     private var touchTransmitterSet = false
 
 
+    /**
+     * Enable swipe to the left until the given width has been reached
+     */
     fun withSwipeLeft(widthDp : Int): SimpleSwipeDrawerCallback {
         swipeWidthLeftDp = widthDp
         setDefaultSwipeDirs(swipeDirs or ItemTouchHelper.LEFT)
         return this
     }
 
+    /**
+     * Enable swipe to the right until the given width has been reached
+     */
     fun withSwipeRight(widthDp : Int): SimpleSwipeDrawerCallback {
         swipeWidthRightDp = widthDp
         setDefaultSwipeDirs(swipeDirs or ItemTouchHelper.RIGHT)
@@ -64,14 +70,13 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        // Not enabled
+        // Not used
     }
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
         // Not enabled
         return false
     }
-
 
     override fun getSwipeEscapeVelocity(defaultValue: Float): Float {
         return defaultValue * sensitivityFactor
@@ -90,12 +95,12 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
         }
 
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            val isLeft = dX > 0
+            val isLeft = dX < 0
             var swipeWidthPc = recyclerView.context.resources.displayMetrics.density / itemView.width
             swipeWidthPc *= if (isLeft) swipeWidthLeftDp else swipeWidthRightDp
 
             var swipeableView = itemView
-            if (viewHolder is IDrawerSwipeable) swipeableView = viewHolder.swipeableView
+            if (viewHolder is IDrawerSwipeableViewHolder) swipeableView = viewHolder.swipeableView
 
             swipeableView.translationX = dX * swipeWidthPc
         } else super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)

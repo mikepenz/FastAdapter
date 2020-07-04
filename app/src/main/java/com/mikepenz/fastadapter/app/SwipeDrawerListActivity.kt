@@ -110,8 +110,8 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback {
                 this,
                 ItemTouchHelper.LEFT)
                 .withNotifyAllDrops(true)
-                .withSwipeLeft(160) // Width of archive and share buttons
-                .withSwipeRight(80) // Width of delete button
+                .withSwipeLeft(80) // Width of delete button
+                .withSwipeRight(160) // Width of archive and share buttons
                 .withSensitivity(10f)
 
         touchHelper = ItemTouchHelper(touchCallback) // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
