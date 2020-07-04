@@ -34,12 +34,12 @@ class SimpleSwipeDrawerDragCallback @JvmOverloads constructor(
         return this
     }
 
-    fun withSwipeLeft(widthDp : Int): SimpleSwipeDrawerDragCallback {
+    fun withSwipeLeft(widthDp: Int): SimpleSwipeDrawerDragCallback {
         simpleSwipeCallback.withSwipeLeft(widthDp)
         return this
     }
 
-    fun withSwipeRight(widthDp : Int): SimpleSwipeDrawerDragCallback {
+    fun withSwipeRight(widthDp: Int): SimpleSwipeDrawerDragCallback {
         simpleSwipeCallback.withSwipeRight(widthDp)
         return this
     }
