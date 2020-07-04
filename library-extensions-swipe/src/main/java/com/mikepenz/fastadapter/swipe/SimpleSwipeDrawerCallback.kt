@@ -1,41 +1,40 @@
 package com.mikepenz.fastadapter.swipe
 
-import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Rect
-import android.util.Log
-import android.view.GestureDetector
-import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.OnItemTouchListener
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
 
 
 /**
- * Created by Mattias on 2016-02-13.
+ * Created by Robb on 2020-07-04.
  */
 class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs: Int = ItemTouchHelper.LEFT) : ItemTouchHelper.SimpleCallback(0, swipeDirs) {
+
     // Swipe movement control
     private var sensitivityFactor = 1f
+    // "Drawer width" the swipe movement is allowed to reach before blocking
+    private var swipeWidthLeftDp = 80
+    private var swipeWidthRightDp = 80
 
-    private var swipeWidthDp = 80
-
-    private lateinit var recyclerTouchListener: OnItemTouchListener
-
-    private var recyclerViewListened = false
+    // Indicates whether the touchTransmitter has been set on the RecyclerView
+    private var touchTransmitterSet = false
 
 
-    fun withSwipeLeft(): SimpleSwipeDrawerCallback {
+    fun withSwipeLeft(widthDp : Int): SimpleSwipeDrawerCallback {
+        swipeWidthLeftDp = widthDp
         setDefaultSwipeDirs(swipeDirs or ItemTouchHelper.LEFT)
         return this
     }
 
-    fun withSwipeRight(): SimpleSwipeDrawerCallback {
+    fun withSwipeRight(widthDp : Int): SimpleSwipeDrawerCallback {
+        swipeWidthRightDp = widthDp
         setDefaultSwipeDirs(swipeDirs or ItemTouchHelper.RIGHT)
         return this
     }
@@ -81,33 +80,9 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         val itemView = viewHolder.itemView
 
-        if (!recyclerViewListened) {
-            recyclerTouchListener = RecyclerItemClickListener(recyclerView.context, recyclerView, null)
-            recyclerView.setOnTouchListener { v, event ->
-                Log.i("aa", ">> recyclerView click " + event.x + " / " + event.y + " - " + event.actionMasked)
-                // Get the viewholder's root element
-                var childView = recyclerView.findChildViewUnder(event.x, event.y)
-                if (childView != null && childView is ViewGroup) {
-                    val position = recyclerView.layoutManager?.getPosition(childView)
-                    Log.i("aa", ">> recyclerView pos $position")
-
-                    // Get the ViewGroup that's been clicked on (upper or lower layer)
-                    val childViewOffset = Rect()
-                    childView.getHitRect(childViewOffset)
-                    childView = childView.getInnermostViewByCoordinates(event.x - childViewOffset.left, event.y - childViewOffset.top)
-                    if (childView != null)
-                        when (event.actionMasked) {
-                            MotionEvent.ACTION_DOWN -> {
-                                childView.onTouchEvent(event)
-                            }
-                            MotionEvent.ACTION_UP -> {
-                                childView.onTouchEvent(event)
-                            }
-                        }
-                }
-                false
-            }
-            recyclerViewListened = true
+        if (!touchTransmitterSet) {
+            recyclerView.setOnTouchListener(RecyclerTouchTransmitter(recyclerView))
+            touchTransmitterSet = true
         }
 
         if (viewHolder.adapterPosition == RecyclerView.NO_POSITION) {
@@ -115,11 +90,9 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
         }
 
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-
-            // Click on the empty space that reveals the underlying buttons => do nothing; buttons should intercept the click
-//            if (isCurrentlyActive && abs(dX).toInt() == itemView.width) return
-
-            val swipeWidthPc = (recyclerView.context.resources.displayMetrics.density * swipeWidthDp) / itemView.width
+            val isLeft = dX > 0
+            var swipeWidthPc = recyclerView.context.resources.displayMetrics.density / itemView.width
+            swipeWidthPc *= if (isLeft) swipeWidthLeftDp else swipeWidthRightDp
 
             var swipeableView = itemView
             if (viewHolder is IDrawerSwipeable) swipeableView = viewHolder.swipeableView
@@ -128,55 +101,53 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
         } else super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
 
-    fun ViewGroup.getInnermostViewByCoordinates(x: Float, y: Float): View? {
-        (childCount - 1 downTo 0)
-                .map { this.getChildAt(it) }
-                .forEach {
-                    val bounds = Rect()
-                    it.getHitRect(bounds)
-                    if (bounds.contains(x.toInt(), y.toInt())) {
-                        return if (it is ViewGroup) it.getInnermostViewByCoordinates(x - bounds.left, y - bounds.top)
-                        else it
+    /**
+     * Hack to force-transmit click events to the first visible View at the clicked coordinates
+     * [< swiped area ] exposed sublayer ]
+     * Android default touch event mechanisms don't transmit these events to the sublayer :
+     * any click on the exposed surface just swipe the item back to where it came
+     */
+    class RecyclerTouchTransmitter(rv: RecyclerView) : View.OnTouchListener {
+
+        private val recyclerView = rv
+
+        override fun onTouch(v: View?, event: MotionEvent): Boolean {
+            // Get the clicked viewholder's root element
+            var childView = recyclerView.findChildViewUnder(event.x, event.y)
+            if (childView != null && childView is ViewGroup) {
+                // Get the first visible View under the clicked coordinates
+                val childViewOffset = Rect()
+                childView.getHitRect(childViewOffset)
+                childView = childView.getFirstVisibleViewByCoordinates(event.x - childViewOffset.left, event.y - childViewOffset.top)
+                // Transmit the ACTION_DOWN and ACTION_UP events to this View
+                if (childView != null)
+                    when (event.actionMasked) {
+                        MotionEvent.ACTION_DOWN -> {
+                            childView.onTouchEvent(event)
+                        }
+                        MotionEvent.ACTION_UP -> {
+                            childView.onTouchEvent(event)
+                        }
                     }
-                }
-        return null
-    }
-
-
-    class RecyclerItemClickListener(context: Context?, recyclerView: RecyclerView, private val mListener: OnItemClickListener?) : OnItemTouchListener {
-
-        interface OnItemClickListener {
-            fun onItemClick(view: View?, position: Int)
-            fun onLongItemClick(view: View?, position: Int)
-        }
-
-        var mGestureDetector: GestureDetector
-        override fun onInterceptTouchEvent(view: RecyclerView, e: MotionEvent): Boolean {
-            val childView = view.findChildViewUnder(e.x, e.y)
-            Log.i("aa", ">> RecyclerItemClickListener " + e.x + " / " + e.y + " - " + e.actionMasked)
-            if (childView != null && mListener != null && mGestureDetector.onTouchEvent(e)) {
-                mListener.onItemClick(childView, view.getChildAdapterPosition(childView))
-                return true
             }
             return false
         }
 
-        override fun onTouchEvent(view: RecyclerView, motionEvent: MotionEvent) {}
-        override fun onRequestDisallowInterceptTouchEvent(disallowIntercept: Boolean) {}
-
-        init {
-            mGestureDetector = GestureDetector(context, object : SimpleOnGestureListener() {
-                override fun onSingleTapUp(e: MotionEvent): Boolean {
-                    return true
-                }
-
-                override fun onLongPress(e: MotionEvent) {
-                    val child = recyclerView.findChildViewUnder(e.x, e.y)
-                    if (child != null && mListener != null) {
-                        mListener.onLongItemClick(child, recyclerView.getChildAdapterPosition(child))
+        /**
+         * Return the first visible non-ViewGroup View within the given ViewGroup, at the given coordinates
+         */
+        private fun ViewGroup.getFirstVisibleViewByCoordinates(x: Float, y: Float): View? {
+            (childCount - 1 downTo 0)
+                    .map { this.getChildAt(it) }
+                    .forEach {
+                        val bounds = Rect()
+                        it.getHitRect(bounds)
+                        if (bounds.contains(x.toInt(), y.toInt()) && VISIBLE == it.visibility) {
+                            return if (it is ViewGroup) it.getFirstVisibleViewByCoordinates(x - bounds.left, y - bounds.top)
+                            else it
+                        }
                     }
-                }
-            })
+            return null
         }
     }
 }

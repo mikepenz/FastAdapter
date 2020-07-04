@@ -1,8 +1,6 @@
 package com.mikepenz.fastadapter.app.items
 
 import android.graphics.Color
-import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
@@ -26,6 +24,8 @@ class SwipeableDrawerItem : AbstractItem<SwipeableDrawerItem.ViewHolder>(), ISwi
     var description: StringHolder? = null
 
     var deleteAction: Consumer<SwipeableDrawerItem>? = null
+    var archiveAction: Consumer<SwipeableDrawerItem>? = null
+    var shareAction: Consumer<SwipeableDrawerItem>? = null
     override var isSwipeable = true
     override var isDraggable = true
 
@@ -35,7 +35,7 @@ class SwipeableDrawerItem : AbstractItem<SwipeableDrawerItem.ViewHolder>(), ISwi
      * @return the type
      */
     override val type: Int
-        get() = R.id.fastadapter_swipable_choice_item_id
+        get() = R.id.fastadapter_swipable_drawer_item_id
 
     /**
      * defines the layout which will be used for this item in the list
@@ -43,7 +43,7 @@ class SwipeableDrawerItem : AbstractItem<SwipeableDrawerItem.ViewHolder>(), ISwi
      * @return the layout for this item
      */
     override val layoutRes: Int
-        get() = R.layout.swipeable_choice_item
+        get() = R.layout.swipeable_drawer_item
 
     fun withName(Name: String): SwipeableDrawerItem {
         this.name = StringHolder(Name)
@@ -88,11 +88,9 @@ class SwipeableDrawerItem : AbstractItem<SwipeableDrawerItem.ViewHolder>(), ISwi
         //set the text for the description or hide
         StringHolder.applyToOrHide(description, holder.description)
 
-        holder.deleteActionRunnable = Runnable { delete() }
-    }
-
-    private fun delete() {
-        deleteAction?.accept(this)
+        holder.deleteActionRunnable = Runnable { deleteAction?.accept(this) }
+        holder.archiveActionRunnable = Runnable { archiveAction?.accept(this) }
+        holder.shareActionRunnable = Runnable { shareAction?.accept(this) }
     }
 
     override fun unbindView(holder: ViewHolder) {
@@ -100,6 +98,8 @@ class SwipeableDrawerItem : AbstractItem<SwipeableDrawerItem.ViewHolder>(), ISwi
         holder.name.text = null
         holder.description.text = null
         holder.deleteActionRunnable = null
+        holder.archiveActionRunnable = null
+        holder.shareActionRunnable = null
         holder.itemContent.translationX = 0f
     }
 
@@ -113,51 +113,25 @@ class SwipeableDrawerItem : AbstractItem<SwipeableDrawerItem.ViewHolder>(), ISwi
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view), IDraggableViewHolder, IDrawerSwipeable {
         var name: TextView = view.findViewById(R.id.material_drawer_name)
         var description: TextView = view.findViewById(R.id.material_drawer_description)
+        var archiveBtn: View = view.findViewById(R.id.archive_btn)
         var deleteBtn: View = view.findViewById(R.id.delete_btn)
+        var shareBtn: View = view.findViewById(R.id.share_btn)
         var itemContent: View = view.findViewById(R.id.item_content)
         var swipeResultContent: View = view.findViewById(R.id.swipe_result_content)
 
         var deleteActionRunnable: Runnable? = null
+        var archiveActionRunnable: Runnable? = null
+        var shareActionRunnable: Runnable? = null
 
         init {
             deleteBtn.setOnClickListener {
                 deleteActionRunnable?.run()
             }
-            view.setOnTouchListener { v, event ->
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-
-                    }
-                    MotionEvent.ACTION_UP -> {
-
-                    }
-                }
-                Log.i("aa", ">> view click")
-                false
+            archiveBtn.setOnClickListener {
+                archiveActionRunnable?.run()
             }
-            itemContent.setOnTouchListener { v, event ->
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-
-                    }
-                    MotionEvent.ACTION_UP -> {
-
-                    }
-                }
-                Log.i("aa", ">> itemContent click")
-                false
-            }
-            swipeResultContent.setOnTouchListener { v, event ->
-                when (event.action) {
-                    MotionEvent.ACTION_DOWN -> {
-
-                    }
-                    MotionEvent.ACTION_UP -> {
-
-                    }
-                }
-                Log.i("aa", ">> swipeResultContent click")
-                false
+            shareBtn.setOnClickListener {
+                shareActionRunnable?.run()
             }
         }
 

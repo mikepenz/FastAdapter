@@ -43,7 +43,25 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback {
         if (position12 != RecyclerView.NO_POSITION) {
             //this sample uses a filter. If a filter is used we should use the methods provided by the filter (to make sure filter and normal state is updated)
             fastItemDrawerAdapter.itemFilter.remove(position12)
-            Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT)
+            Toast.makeText(this, "Deleted", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun archive(item: SwipeableDrawerItem) {
+        item.archiveAction = null
+        val position12 = fastItemDrawerAdapter.getAdapterPosition(item)
+        if (position12 != RecyclerView.NO_POSITION) {
+            // Do something intelligent here
+            Toast.makeText(this, "Archived", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun share(item: SwipeableDrawerItem) {
+        item.shareAction = null
+        val position12 = fastItemDrawerAdapter.getAdapterPosition(item)
+        if (position12 != RecyclerView.NO_POSITION) {
+            // Do something intelligent here
+            Toast.makeText(this, "Shared", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -77,6 +95,8 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback {
                 swipeableItem.withIsSwipeable(i % 5 != 0)
                 swipeableItem.withIsDraggable(i % 5 != 0)
                 swipeableItem.deleteAction = Consumer { item -> delete(item) }
+                swipeableItem.archiveAction = Consumer { item -> archive(item) }
+                swipeableItem.shareAction = Consumer { item -> share(item) }
                 items.add(swipeableItem)
                 x++
             }
@@ -90,7 +110,8 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback {
                 this,
                 ItemTouchHelper.LEFT)
                 .withNotifyAllDrops(true)
-                .withSwipeRight()
+                .withSwipeLeft(160) // Width of archive and share buttons
+                .withSwipeRight(80) // Width of delete button
                 .withSensitivity(10f)
 
         touchHelper = ItemTouchHelper(touchCallback) // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
