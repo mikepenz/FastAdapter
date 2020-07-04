@@ -19,6 +19,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
 
     // Swipe movement control
     private var sensitivityFactor = 1f
+
     // "Drawer width" swipe gesture is allowed to reach before blocking
     private var swipeWidthLeftDp = 20
     private var swipeWidthRightDp = 20
@@ -30,7 +31,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     /**
      * Enable swipe to the left until the given width has been reached
      */
-    fun withSwipeLeft(widthDp : Int): SimpleSwipeDrawerCallback {
+    fun withSwipeLeft(widthDp: Int): SimpleSwipeDrawerCallback {
         swipeWidthLeftDp = widthDp
         setDefaultSwipeDirs(swipeDirs or ItemTouchHelper.LEFT)
         return this
@@ -39,7 +40,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     /**
      * Enable swipe to the right until the given width has been reached
      */
-    fun withSwipeRight(widthDp : Int): SimpleSwipeDrawerCallback {
+    fun withSwipeRight(widthDp: Int): SimpleSwipeDrawerCallback {
         swipeWidthRightDp = widthDp
         setDefaultSwipeDirs(swipeDirs or ItemTouchHelper.RIGHT)
         return this
@@ -86,7 +87,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
         val itemView = viewHolder.itemView
 
         if (!touchTransmitterSet) {
-            recyclerView.setOnTouchListener(RecyclerTouchTransmitter(recyclerView))
+            recyclerView.setOnTouchListener(RecyclerTouchTransmitter())
             touchTransmitterSet = true
         }
 
@@ -112,29 +113,23 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
      * Android default touch event mechanisms don't transmit these events to the sublayer :
      * any click on the exposed surface just swipe the item back to where it came
      */
-    class RecyclerTouchTransmitter(rv: RecyclerView) : View.OnTouchListener {
-
-        private val recyclerView = rv
+    class RecyclerTouchTransmitter() : View.OnTouchListener {
 
         override fun onTouch(v: View?, event: MotionEvent): Boolean {
-            // Get the clicked viewholder's root element
-            var childView = recyclerView.findChildViewUnder(event.x, event.y)
-            if (childView != null && childView is ViewGroup) {
-                // Get the first visible View under the clicked coordinates
-                val childViewOffset = Rect()
-                childView.getHitRect(childViewOffset)
-                childView = childView.getFirstVisibleViewByCoordinates(event.x - childViewOffset.left, event.y - childViewOffset.top)
-                // Transmit the ACTION_DOWN and ACTION_UP events to this View
-                if (childView != null)
-                    when (event.actionMasked) {
-                        MotionEvent.ACTION_DOWN -> {
-                            childView.onTouchEvent(event)
-                        }
-                        MotionEvent.ACTION_UP -> {
-                            childView.onTouchEvent(event)
-                        }
+            if (null == v || v !is ViewGroup) return false
+
+            // Get the first visible View under the clicked coordinates
+            val childView = v.getFirstVisibleViewByCoordinates(event.x, event.y)
+            // Transmit the ACTION_DOWN and ACTION_UP events to this View
+            if (childView != null)
+                when (event.actionMasked) {
+                    MotionEvent.ACTION_DOWN -> {
+                        childView.onTouchEvent(event)
                     }
-            }
+                    MotionEvent.ACTION_UP -> {
+                        childView.onTouchEvent(event)
+                    }
+                }
             return false
         }
 
