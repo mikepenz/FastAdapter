@@ -35,6 +35,9 @@
             android:name="com.mikepenz.fastadapter.app.SwipeListActivity"
             android:label="@string/sample_swipe_list" />
         <activity
+            android:name="com.mikepenz.fastadapter.app.SwipeDrawerListActivity"
+            android:label="@string/sample_swipe_drawer_list" />
+        <activity
             android:name="com.mikepenz.fastadapter.app.ImageListActivity"
             android:label="@string/sample_image_list" />
         <activity

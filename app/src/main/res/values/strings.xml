@@ -5,8 +5,10 @@
     <string name="sample_paged_list_descr">PageListAdapter</string>
     <string name="sample_simple_item_list">SimpleItemList Sample</string>
     <string name="sample_simple_item_list_descr">Filter, Drag&amp;Drop</string>
-    <string name="sample_swipe_list">SwipeList Sample</string>
+    <string name="sample_swipe_list">SwipeList Sample (delayed)</string>
     <string name="sample_swipe_list_descr">Swipe, leave-behinds and actions</string>
+    <string name="sample_swipe_drawer_list">SwipeList Sample (drawer)</string>
+    <string name="sample_swipe_drawer_list_descr">Swipe, buttons and actions</string>
     <string name="sample_icon_grid">IconGrid Sample</string>
     <string name="sample_icon_grid_descr">Grid, Expandable</string>
     <string name="sample_image_list">ImageList Sample</string>
