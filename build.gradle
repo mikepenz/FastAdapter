@@ -2,8 +2,8 @@
 buildscript {
     ext {
         release = [
-                versionName: "5.1.0",
-                versionCode: 5010
+                versionName: "5.2.0",
+                versionCode: 5020
         ]
 
         setup = [
