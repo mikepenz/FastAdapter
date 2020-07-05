@@ -48,6 +48,7 @@ class SampleActivity : AppCompatActivity() {
     //our `SelectExtension`
     private lateinit var selectExtension: SelectExtension<SimpleImageItem>
 
+    @Suppress("deprecation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -77,13 +78,14 @@ class SampleActivity : AppCompatActivity() {
                     PrimaryDrawerItem().withName(R.string.sample_checkbox_item).withDescription(R.string.sample_checkbox_item_descr).withSelectable(false).withIdentifier(10).withIcon(CommunityMaterial.Icon.cmd_checkbox_marked),
                     PrimaryDrawerItem().withName(R.string.sample_radiobutton_item).withDescription(R.string.sample_radiobutton_item_descr).withSelectable(false).withIdentifier(11).withIcon(CommunityMaterial.Icon2.cmd_radiobox_marked),
                     PrimaryDrawerItem().withName(R.string.sample_swipe_list).withDescription(R.string.sample_swipe_list_descr).withSelectable(false).withIdentifier(12).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
-                    PrimaryDrawerItem().withName(R.string.sample_endless_scroll_list).withDescription(R.string.sample_endless_scroll_list_descr).withSelectable(false).withIdentifier(13).withIcon(MaterialDesignIconic.Icon.gmi_long_arrow_down),
-                    PrimaryDrawerItem().withName(R.string.sample_sort).withDescription(R.string.sample_sort_descr).withSelectable(false).withIdentifier(14).withIcon(MaterialDesignIconic.Icon.gmi_sort_by_alpha),
-                    PrimaryDrawerItem().withName(R.string.sample_mopub).withDescription(R.string.sample_mopub_descr).withSelectable(false).withIdentifier(15).withIcon(MaterialDesignIconic.Icon.gmi_accounts_list),
-                    PrimaryDrawerItem().withName(R.string.sample_realm_list).withDescription(R.string.sample_realm_list_descr).withSelectable(false).withIdentifier(16).withIcon(MaterialDesignIconic.Icon.gmi_format_color_text),
-                    PrimaryDrawerItem().withName(R.string.sample_collapsible_multi_select_delete).withDescription(R.string.sample_collapsible_multi_select_delete_descr).withSelectable(false).withIdentifier(17).withIcon(MaterialDesignIconic.Icon.gmi_check_all),
-                    PrimaryDrawerItem().withName(R.string.sample_sticky_header_mopub).withDescription(R.string.sample_sticky_header_mopub_descr).withSelectable(false).withIdentifier(18).withIcon(MaterialDesignIconic.Icon.gmi_accounts_list),
-                    PrimaryDrawerItem().withName(R.string.sample_diff_util).withDescription(R.string.sample_diff_util_descr).withSelectable(false).withIdentifier(19).withIcon(MaterialDesignIconic.Icon.gmi_refresh),
+                    PrimaryDrawerItem().withName(R.string.sample_swipe_drawer_list).withDescription(R.string.sample_swipe_drawer_list_descr).withSelectable(false).withIdentifier(13).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
+                    PrimaryDrawerItem().withName(R.string.sample_endless_scroll_list).withDescription(R.string.sample_endless_scroll_list_descr).withSelectable(false).withIdentifier(14).withIcon(MaterialDesignIconic.Icon.gmi_long_arrow_down),
+                    PrimaryDrawerItem().withName(R.string.sample_sort).withDescription(R.string.sample_sort_descr).withSelectable(false).withIdentifier(15).withIcon(MaterialDesignIconic.Icon.gmi_sort_by_alpha),
+                    PrimaryDrawerItem().withName(R.string.sample_mopub).withDescription(R.string.sample_mopub_descr).withSelectable(false).withIdentifier(16).withIcon(MaterialDesignIconic.Icon.gmi_accounts_list),
+                    PrimaryDrawerItem().withName(R.string.sample_realm_list).withDescription(R.string.sample_realm_list_descr).withSelectable(false).withIdentifier(17).withIcon(MaterialDesignIconic.Icon.gmi_format_color_text),
+                    PrimaryDrawerItem().withName(R.string.sample_collapsible_multi_select_delete).withDescription(R.string.sample_collapsible_multi_select_delete_descr).withSelectable(false).withIdentifier(18).withIcon(MaterialDesignIconic.Icon.gmi_check_all),
+                    PrimaryDrawerItem().withName(R.string.sample_sticky_header_mopub).withDescription(R.string.sample_sticky_header_mopub_descr).withSelectable(false).withIdentifier(19).withIcon(MaterialDesignIconic.Icon.gmi_accounts_list),
+                    PrimaryDrawerItem().withName(R.string.sample_diff_util).withDescription(R.string.sample_diff_util_descr).withSelectable(false).withIdentifier(20).withIcon(MaterialDesignIconic.Icon.gmi_refresh),
                     DividerDrawerItem(),
                     PrimaryDrawerItem().withName(R.string.open_source).withSelectable(false).withIdentifier(100).withIcon(MaterialDesignIconic.Icon.gmi_github)
             )
@@ -101,14 +103,15 @@ class SampleActivity : AppCompatActivity() {
                     10L -> Intent(this@SampleActivity, CheckBoxSampleActivity::class.java)
                     11L -> Intent(this@SampleActivity, RadioButtonSampleActivity::class.java)
                     12L -> Intent(this@SampleActivity, SwipeListActivity::class.java)
-                    13L -> Intent(this@SampleActivity, EndlessScrollListActivity::class.java)
-                    14L -> Intent(this@SampleActivity, SortActivity::class.java)
-                    15L -> Intent(this@SampleActivity, MopubAdsActivity::class.java)
-                    16L -> Intent(this@SampleActivity, RealmActivity::class.java)
-                    17L -> Intent(this@SampleActivity, ExpandableMultiselectDeleteSampleActivity::class.java)
-                    18L -> Intent(this@SampleActivity, StickyHeaderMopubAdsActivity::class.java)
-                    19L -> Intent(this@SampleActivity, DiffUtilActivity::class.java)
-                    20L -> Intent(this@SampleActivity, PagedActivity::class.java)
+                    13L -> Intent(this@SampleActivity, SwipeDrawerListActivity::class.java)
+                    14L -> Intent(this@SampleActivity, EndlessScrollListActivity::class.java)
+                    15L -> Intent(this@SampleActivity, SortActivity::class.java)
+                    16L -> Intent(this@SampleActivity, MopubAdsActivity::class.java)
+                    17L -> Intent(this@SampleActivity, RealmActivity::class.java)
+                    18L -> Intent(this@SampleActivity, ExpandableMultiselectDeleteSampleActivity::class.java)
+                    19L -> Intent(this@SampleActivity, StickyHeaderMopubAdsActivity::class.java)
+                    20L -> Intent(this@SampleActivity, DiffUtilActivity::class.java)
+                    21L -> Intent(this@SampleActivity, PagedActivity::class.java)
                     100L -> LibsBuilder()
                             .withFields(R.string::class.java.fields)
                             .withActivityTitle(getString(R.string.open_source))
@@ -125,7 +128,7 @@ class SampleActivity : AppCompatActivity() {
                 false
             }
             selectedItemPosition = RecyclerView.NO_POSITION
-            withSavedInstance(savedInstanceState)
+            setSavedInstance(savedInstanceState)
         }
 
         //create our ItemAdapter which will host our items
