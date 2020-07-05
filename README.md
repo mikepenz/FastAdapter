@@ -354,6 +354,7 @@ A special thanks to the very active contributors who added many improvements to 
 
 * **[Allan Wang](https://github.com/AllanWang)** 
 * **[MFlisar](https://github.com/MFlisar)**
+* **[RobbWatershed](https://github.com/RobbWatershed)**
 
 # License
 
