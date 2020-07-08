@@ -19,7 +19,7 @@ import com.mikepenz.fastadapter.swipe.SimpleSwipeCallback
 class SimpleSwipeDragCallback @JvmOverloads constructor(
         itemTouchCallback: ItemTouchCallback,
         itemSwipeCallback: SimpleSwipeCallback.ItemSwipeCallback,
-        leaveBehindDrawable: Drawable,
+        leaveBehindDrawable: Drawable?,
         swipeDirs: Int = ItemTouchHelper.LEFT,
         @ColorInt bgColor: Int = Color.RED
 ) : SimpleDragCallback(itemTouchCallback) {
