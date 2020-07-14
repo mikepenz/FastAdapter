@@ -74,7 +74,7 @@ abstract class BaseItem<VH : RecyclerView.ViewHolder> : IItem<VH> {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (other == null || javaClass != other.javaClass) return false
-        val that = other as? AbstractItem<*>?
+        val that = other as? BaseItem<*>?
         return identifier == that?.identifier
     }
 
