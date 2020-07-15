@@ -411,6 +411,25 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     }
 
     /**
+     * Expand all items on a path from the root to a certain item
+     *
+     * @param item              item to be expanded
+     * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
+     */
+    @JvmOverloads
+    fun expandAllOnPath(item: IExpandable<*>?, notifyItemChanged: Boolean = false) {
+        val parents = getExpandableParents(item ?: return)
+
+        parents.forEach { expand(fastAdapter.getPosition(it.identifier)) }
+
+        //we need to notify to get the correct drawable if there is one showing the current state
+        if (notifyItemChanged) {
+            val position = fastAdapter.getPosition(item.identifier)
+            fastAdapter.notifyItemChanged(position)
+        }
+    }
+
+    /**
      * Opens the expandable item at the given position with parents who contains this item
      *
      * @param position          the global position
@@ -447,6 +466,12 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     /** Walks through the parents tree while parents are non-null and parents are IExpandable */
     private fun getExpandableParents(position: Int): List<IExpandable<*>> {
         val expandable = fastAdapter.getItem(position) as? IExpandable<*> ?: return emptyList()
+
+        return getExpandableParents(expandable)
+    }
+
+    /** Walks through the parents tree while parents are non-null and parents are IExpandable */
+    private fun getExpandableParents(expandable: IExpandable<*>): List<IExpandable<*>> {
 
         // walk through the parents tree
         val parents = mutableListOf<IExpandable<*>>()
