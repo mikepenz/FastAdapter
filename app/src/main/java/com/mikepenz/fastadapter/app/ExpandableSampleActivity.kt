@@ -83,15 +83,12 @@ class ExpandableSampleActivity : AppCompatActivity() {
                         }
                     }
                     subSubItem.subItems.addAll(subSubSubItems)
-                    subSubItem.subItems.forEach { it.parent = subSubItem }
                     subSubItems.add(subSubItem)
                 }
                 subItem.subItems.addAll(subSubItems)
-                subItem.subItems.forEach { it.parent = subItem }
                 subItems.add(subItem)
             }
             parent.subItems.addAll(subItems)
-            parent.subItems.forEach { it.parent = parent }
             items.add(parent)
         }
         fastItemAdapter.add(items)
