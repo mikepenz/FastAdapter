@@ -41,6 +41,8 @@ class ExpandableSampleActivity : AppCompatActivity() {
         rv.itemAnimator = SlideDownAlphaAnimator()
         rv.adapter = fastItemAdapter
 
+        var itemToBeExpanded: SimpleSubExpandableItem? = null
+
         //fill with some sample data
         val items = ArrayList<GenericItem>()
         val identifier = AtomicLong(1)
@@ -74,6 +76,11 @@ class ExpandableSampleActivity : AppCompatActivity() {
                         val subSubSubItem = SimpleSubExpandableItem()
                         subSubSubItem.withName("---- SubSubSubTest $iiii").identifier = identifier.getAndIncrement()
                         subSubSubItems.add(subSubSubItem)
+
+                        //save 7th item just to demonstrate how expandAllOnPath works
+                        if (identifier.get() == 7L) {
+                            itemToBeExpanded = subSubSubItem
+                        }
                     }
                     subSubItem.subItems.addAll(subSubSubItems)
                     subSubItems.add(subSubItem)
@@ -92,6 +99,9 @@ class ExpandableSampleActivity : AppCompatActivity() {
         //set the back arrow in the toolbar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(false)
+
+        //expand the whole path for the previously selected item
+        fastItemAdapter.getExpandableExtension().expandAllOnPath(itemToBeExpanded)
     }
 
     override fun onSaveInstanceState(_outState: Bundle) {
