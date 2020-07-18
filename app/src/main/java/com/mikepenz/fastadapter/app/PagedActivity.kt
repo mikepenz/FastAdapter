@@ -10,18 +10,22 @@ import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.GenericFastAdapter
+import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.app.items.SimpleImageItem
 import com.mikepenz.fastadapter.app.paged.DemoEntity
 import com.mikepenz.fastadapter.app.paged.DemoEntityViewModel
 import com.mikepenz.fastadapter.paged.PagedModelAdapter
 import com.mikepenz.fastadapter.select.getSelectExtension
+import com.mikepenz.fastadapter.ui.items.ProgressItem
 import kotlinx.android.synthetic.main.activity_main.*
 
 
 class PagedActivity : AppCompatActivity() {
 
     //save our FastAdapter
-    private lateinit var mFastAdapter: FastAdapter<SimpleImageItem>
+    private lateinit var mFastAdapter: GenericFastAdapter
+
     //save our FastAdapter
     private lateinit var mItemAdapter: PagedModelAdapter<DemoEntity, SimpleImageItem>
 
@@ -54,8 +58,10 @@ class PagedActivity : AppCompatActivity() {
             }
         }
 
+        val footerAdapter: ItemAdapter<ProgressItem> = ItemAdapter()
+
         //create our FastAdapter which will manage everything
-        mFastAdapter = FastAdapter.with(listOf(mItemAdapter))
+        mFastAdapter = FastAdapter.with(listOf(mItemAdapter, footerAdapter))
 
         //
         val selectExtension = mFastAdapter.getSelectExtension()
@@ -65,6 +71,8 @@ class PagedActivity : AppCompatActivity() {
         //rv.setLayoutManager(new GridLayoutManager(this, 3));
         rv.layoutManager = LinearLayoutManager(this)
         rv.adapter = mFastAdapter
+
+        footerAdapter.add(ProgressItem())
 
         val viewModel = ViewModelProviders.of(this,
                 DemoEntityViewModel.DemoEntityViewModelFactory(this.application))
