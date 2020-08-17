@@ -1,6 +1,8 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 buildscript {
     ext {
+        dokka = "1.4.0-dev-35"
+
         release = [
                 versionName: "5.2.2",
                 versionCode: 5022
@@ -40,6 +42,7 @@ buildscript {
         maven {
             url "https://plugins.gradle.org/m2/"
         }
+        maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
     }
     dependencies {
         classpath "com.android.tools.build:gradle:${setup.gradleTools}"
@@ -48,6 +51,7 @@ buildscript {
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.8.5'
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:${versions.detekt}"
         classpath "com.mikepenz.aboutlibraries.plugin:aboutlibraries-plugin:${versions.aboutlib}"
+        classpath "org.jetbrains.dokka:dokka-gradle-plugin:${dokka}"
     }
 }
 
@@ -60,6 +64,7 @@ allprojects {
         maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
         maven { url "https://jitpack.io" }
         maven { url "https://dl.bintray.com/mikepenz/maven" }
+        maven { url "https://dl.bintray.com/kotlin/kotlin-dev" }
     }
 }
 
@@ -71,3 +76,9 @@ subprojects {
     }
 }
 
+apply plugin: 'org.jetbrains.dokka'
+
+tasks.dokkaHtmlMultimodule {
+    //outputDirectory = "$buildDir/multimodule"
+    //documentationFileName = "README.md"
+}

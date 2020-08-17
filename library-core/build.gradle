@@ -1,5 +1,6 @@
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
+apply plugin: 'org.jetbrains.dokka'
 
 android {
     compileSdkVersion setup.compileSdk
@@ -81,6 +82,20 @@ tasks.withType(Test) {
                 def startItem = '|  ', endItem = '  |'
                 def repeatLength = startItem.length() + output.length() + endItem.length()
                 println('\n' + ('-' * repeatLength) + '\n' + startItem + output + endItem + '\n' + ('-' * repeatLength))
+            }
+        }
+    }
+}
+
+
+dokkaHtml {
+    dokkaSourceSets {
+        configureEach {
+            displayName = "core"
+            moduleDisplayName = "FastAdapter"
+            perPackageOption {
+                prefix = "com.mikepenz.fastadapter.extensions"
+                suppress = true
             }
         }
     }
