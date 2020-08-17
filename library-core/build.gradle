@@ -88,15 +88,39 @@ tasks.withType(Test) {
 }
 
 
+// dokkaHtml {
+//     dokkaSourceSets {
+//         configureEach {
+//             displayName = "core"
+//             moduleDisplayName = "FastAdapter"
+//             perPackageOption {
+//                 prefix = "com.mikepenz.fastadapter.extensions"
+//                 suppress = true
+//             }
+//         }
+//     }
+// }
+// Causes: https://github.com/Kotlin/dokka/issues/1328
+
 dokkaHtml {
     dokkaSourceSets {
-        configureEach {
-            displayName = "core"
-            moduleDisplayName = "FastAdapter"
-            perPackageOption {
-                prefix = "com.mikepenz.fastadapter.extensions"
-                suppress = true
-            }
+        create("main") {
         }
     }
 }
+// works kind of
+// generates sources (according to generated files)
+// misses navigation in generated HTML
+
+//dokkaHtml {
+//    dokkaSourceSets {
+//        create("main") {
+//            perPackageOption {
+//                prefix = "com.mikepenz.fastadapter.extensions"
+//                suppress = true
+//            }
+//        }
+//    }
+//}
+// fails with
+// Caused by: org.codehaus.groovy.runtime.typehandling.GroovyCastException: Cannot cast object 'com.mikepenz.fastadapter.extensions' with class 'java.lang.String' to class 'org.gradle.api.provider.Property'
