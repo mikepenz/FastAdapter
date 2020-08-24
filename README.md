@@ -48,7 +48,7 @@ It's blazingly fast, minimizing the code you need to write, and is easy to exten
 
 ## Latest releases 🛠
 
-- Kotlin | [v5.2.2](https://github.com/mikepenz/FastAdapter/tree/v5.2.2)
+- Kotlin | [v5.2.3](https://github.com/mikepenz/FastAdapter/tree/v5.2.3)
 - Java && AndroidX | [v3.3.1](https://github.com/mikepenz/FastAdapter/tree/v3.3.1)
 - Java && AppCompat | [v3.2.9](https://github.com/mikepenz/FastAdapter/tree/v3.2.9)
 
