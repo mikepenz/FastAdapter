@@ -68,7 +68,7 @@ implementation "com.mikepenz:fastadapter-extensions-expandable:${latestFastAdapt
 
 Many helper classes are included in the following dependency.
 ```gradle
-implementation "com.mikepenz:fastadapter-extensions-binding:${latestFastAdapterRelease}" // diff util helpers
+implementation "com.mikepenz:fastadapter-extensions-binding:${latestFastAdapterRelease}" // view binding helpers
 implementation "com.mikepenz:fastadapter-extensions-diff:${latestFastAdapterRelease}" // diff util helpers
 implementation "com.mikepenz:fastadapter-extensions-drag:${latestFastAdapterRelease}" // drag support
 implementation "com.mikepenz:fastadapter-extensions-paged:${latestFastAdapterRelease}" // paging support
@@ -248,7 +248,7 @@ override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
 Start by initializing your adapters:
 
 ```kotlin
-// Head is a model class for your header
+// Header is a model class for your header
 val headerAdapter = ItemAdapter<Header>()
 ```
 
