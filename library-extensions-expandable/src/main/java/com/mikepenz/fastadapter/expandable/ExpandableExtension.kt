@@ -306,7 +306,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
      * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
      */
     @JvmOverloads
-    fun toggleExpandable(position: Int, notifyItemChanged: Boolean = true) {
+    fun toggleExpandable(position: Int, notifyItemChanged: Boolean = false) {
         val item = fastAdapter.getItem(position) as? IExpandable<*> ?: return
         if (item.isExpanded) {
             collapse(position, notifyItemChanged)
@@ -321,7 +321,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
      * @param notifyItemChanged true if we need to call notifyItemChanged. DEFAULT: false
      */
     @JvmOverloads
-    fun collapse(notifyItemChanged: Boolean = true) {
+    fun collapse(notifyItemChanged: Boolean = false) {
         val expandedItems = expandedItems
         for (i in expandedItems.indices.reversed()) {
             collapse(expandedItems[i], notifyItemChanged)
