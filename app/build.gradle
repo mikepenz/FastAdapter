@@ -12,6 +12,7 @@ if (getSigningFile() != null) {
 android {
     compileSdkVersion setup.compileSdk
     buildToolsVersion setup.buildTools
+    ndkVersion "21.3.6528147"
 
     defaultConfig {
         minSdkVersion setup.minSdk
