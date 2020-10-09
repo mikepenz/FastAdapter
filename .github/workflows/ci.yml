@@ -69,6 +69,8 @@ jobs:
       - name: Prepare Secrets
         if: github.event_name  == 'workflow_dispatch'
         run: |
+          echo "::add-mask::${{github.event.inputs.passphrase }}"
+          INPUT_PASS_PHRASE=${{github.event.inputs.passphrase }}
           echo "::add-mask::$INPUT_PASS_PHRASE"
 
           BINTRAY_API_KEY=$(echo "${{ secrets.BINTRAY_API_KEY }}" | gpg -d --passphrase "${INPUT_PASS_PHRASE}" --batch)
@@ -83,20 +85,20 @@ jobs:
           echo "::add-mask::$NEXUS_PASSWORD"
           echo "NEXUS_PASSWORD=$NEXUS_PASSWORD" >> $GITHUB_ENV
         env:
-          INPUT_PASS_PHRASE: ${{github.event.inputs.passphrase }}
           INPUT_VERSION: ${{ github.event.inputs.version }}
 
       - name: Prepare Keystore and Local.
         if: github.event_name  == 'workflow_dispatch'
         run: |
+          echo "::add-mask::${{github.event.inputs.passphrase }}"
+          INPUT_PASS_PHRASE=${{github.event.inputs.passphrase }}
           echo "::add-mask::$INPUT_PASS_PHRASE"
+
           echo "${{ secrets.KEYSTORE }}" > opensource.jks.asc
           gpg -d --passphrase "$INPUT_PASS_PHRASE" --batch "opensource.jks.asc" > "app/opensource.jks"
           echo "${{ secrets.SIGNING_GRADLE }}" > signing.gradle.asc
           gpg -d --passphrase "$INPUT_PASS_PHRASE" --batch "signing.gradle.asc" > "app/signing.gradle"
           echo "openSource.signing.file=signing.gradle" >> local.properties
-        env:
-          INPUT_PASS_PHRASE: ${{github.event.inputs.passphrase }}
 
       - name: Build Release App
         if: startsWith(github.ref, 'refs/tags/')
