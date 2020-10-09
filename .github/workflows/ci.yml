@@ -17,23 +17,6 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - name: TEST
-        if: github.event_name  == 'workflow_dispatch'
-        run: |
-          echo "::add-mask::$INPUT_PASS_PHRASE"
-          echo "PASS_PHRASE: $INPUT_PASS_PHRASE"
-          echo "INPUT_VERSION: $INPUT_VERSION"
-
-          echo "DECRYPT"
-          BINTRAY_API_KEY=$(echo "${{ secrets.BINTRAY_API_KEY }}" | gpg -d --passphrase "${INPUT_PASS_PHRASE}" --batch)
-          echo "POST DECRYPT"
-
-          echo "::add-mask::$BINTRAY_API_KEY"
-          echo "BINTRAY_API_KEY: $BINTRAY_API_KEY"
-        env:
-          INPUT_PASS_PHRASE: ${{github.event.inputs.passphrase}}
-          INPUT_VERSION: ${{ github.event.inputs.version }}
-
       - name: Checkout
         uses: actions/checkout@v2
         with:
@@ -83,14 +66,37 @@ jobs:
         env:
           DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Prepare Keystore and Local.
-        if: startsWith(github.ref, 'refs/tags/')
+      - name: Prepare Secrets
+        if: github.event_name  == 'workflow_dispatch'
         run: |
+          echo "::add-mask::$INPUT_PASS_PHRASE"
+
+          BINTRAY_API_KEY=$(echo "${{ secrets.BINTRAY_API_KEY }}" | gpg -d --passphrase "${INPUT_PASS_PHRASE}" --batch)
+          echo "::add-mask::$BINTRAY_API_KEY"
+          echo "BINTRAY_API_KEY=$BINTRAY_API_KEY" >> $GITHUB_ENV
+
+          BINTRAY_GPG_PASS=$(echo "${{ secrets.BINTRAY_GPG_PASS }}" | gpg -d --passphrase "${INPUT_PASS_PHRASE}" --batch)
+          echo "::add-mask::$BINTRAY_GPG_PASS"
+          echo "BINTRAY_GPG_PASS=$BINTRAY_GPG_PASS" >> $GITHUB_ENV
+
+          NEXUS_PASSWORD=$(echo "${{ secrets.NEXUS_PASSWORD }}" | gpg -d --passphrase "${INPUT_PASS_PHRASE}" --batch)
+          echo "::add-mask::$NEXUS_PASSWORD"
+          echo "NEXUS_PASSWORD=$NEXUS_PASSWORD" >> $GITHUB_ENV
+        env:
+          INPUT_PASS_PHRASE: ${{github.event.inputs.passphrase }}
+          INPUT_VERSION: ${{ github.event.inputs.version }}
+
+      - name: Prepare Keystore and Local.
+        if: github.event_name  == 'workflow_dispatch'
+        run: |
+          echo "::add-mask::$INPUT_PASS_PHRASE"
           echo "${{ secrets.KEYSTORE }}" > opensource.jks.asc
-          gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch "opensource.jks.asc" > "app/opensource.jks"
+          gpg -d --passphrase "$INPUT_PASS_PHRASE" --batch "opensource.jks.asc" > "app/opensource.jks"
           echo "${{ secrets.SIGNING_GRADLE }}" > signing.gradle.asc
-          gpg -d --passphrase "${{ secrets.KEYSTORE_PASSPHRASE }}" --batch "signing.gradle.asc" > "app/signing.gradle"
+          gpg -d --passphrase "$INPUT_PASS_PHRASE" --batch "signing.gradle.asc" > "app/signing.gradle"
           echo "openSource.signing.file=signing.gradle" >> local.properties
+        env:
+          INPUT_PASS_PHRASE: ${{github.event.inputs.passphrase }}
 
       - name: Build Release App
         if: startsWith(github.ref, 'refs/tags/')
@@ -112,10 +118,7 @@ jobs:
           ./gradlew library-extensions-utils:bintrayUpload -x test -x lint -Plibrary_extensions_utils_only --no-configure-on-demand --no-parallel
         env:
           BINTRAY_USER: ${{ secrets.BINTRAY_USER }}
-          BINTRAY_API_KEY: ${{ secrets.BINTRAY_API_KEY }}
-          BINTRAY_GPG_PASS: ${{ secrets.BINTRAY_GPG_PASS }}
           NEXUS_USERNAME: ${{ secrets.NEXUS_USERNAME }}
-          NEXUS_PASSWORD: ${{ secrets.NEXUS_PASSWORD }}
 
       - name: Collect artifacts
         run: |
