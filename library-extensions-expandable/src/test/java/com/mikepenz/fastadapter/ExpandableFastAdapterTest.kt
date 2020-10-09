@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter
 
+import android.os.Build
 import android.os.Bundle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -11,9 +12,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 import java.util.*
 
 @RunWith(AndroidJUnit4::class)
+@Config(sdk = [Build.VERSION_CODES.P])
 class ExpandableFastAdapterTest {
     private lateinit var adapter: FastAdapter<ExpandableTestItem>
     private lateinit var itemAdapter: ItemAdapter<ExpandableTestItem>
