@@ -20,15 +20,19 @@ jobs:
       - name: TEST
         if: github.event_name  == 'workflow_dispatch'
         run: |
-          echo $INPUT_PASS_PHRASE
-          echo $INPUT_VERSION
+          echo "::add-mask::$INPUT_PASS_PHRASE"
+          echo "PASS_PHRASE: $INPUT_PASS_PHRASE"
+          echo "INPUT_VERSION: $INPUT_VERSION"
 
-          BINTRAY_API_KEY=$(echo ${{ secrets.BINTRAY_API_KEY }} | gpg -d --passphrase "testtest")
+          echo "DECRYPT"
+          BINTRAY_API_KEY=$(echo ${{ secrets.BINTRAY_API_KEY }} | gpg -d --passphrase "$INPUT_PASS_PHRASE" --batch)
+          echo "POST DECRYPT"
+
           echo "::add-mask::$BINTRAY_API_KEY"
-          echo $BINTRAY_API_KEY
+          echo "BINTRAY_API_KEY: $BINTRAY_API_KEY"
         env:
           INPUT_PASS_PHRASE: ${{secrets[github.event.inputs.passphrase]}}
-          INPUT_VERSION: ${{ github.event.inputs.passphrase }}
+          INPUT_VERSION: ${{ github.event.inputs.version }}
 
       - name: Checkout
         uses: actions/checkout@v2
