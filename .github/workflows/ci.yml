@@ -31,7 +31,7 @@ jobs:
           echo "::add-mask::$BINTRAY_API_KEY"
           echo "BINTRAY_API_KEY: $BINTRAY_API_KEY"
         env:
-          INPUT_PASS_PHRASE: ${{secrets[github.event.inputs.passphrase]}}
+          INPUT_PASS_PHRASE: ${{github.event.inputs.passphrase}}
           INPUT_VERSION: ${{ github.event.inputs.version }}
 
       - name: Checkout
