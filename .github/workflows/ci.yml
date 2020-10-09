@@ -69,19 +69,17 @@ jobs:
       - name: Prepare Secrets
         if: github.event_name  == 'workflow_dispatch'
         run: |
-          echo "::add-mask::${{github.event.inputs.passphrase }}"
-          INPUT_PASS_PHRASE=${{github.event.inputs.passphrase }}
-          echo "::add-mask::$INPUT_PASS_PHRASE"
+          echo "::add-mask::$INPUT_PASSPHRASE"
 
-          BINTRAY_API_KEY=$(echo "${{ secrets.BINTRAY_API_KEY }}" | gpg -d --passphrase "${INPUT_PASS_PHRASE}" --batch)
+          BINTRAY_API_KEY=$(echo "${{ secrets.BINTRAY_API_KEY }}" | gpg -d --passphrase "$INPUT_PASSPHRASE" --batch)
           echo "::add-mask::$BINTRAY_API_KEY"
           echo "BINTRAY_API_KEY=$BINTRAY_API_KEY" >> $GITHUB_ENV
 
-          BINTRAY_GPG_PASS=$(echo "${{ secrets.BINTRAY_GPG_PASS }}" | gpg -d --passphrase "${INPUT_PASS_PHRASE}" --batch)
+          BINTRAY_GPG_PASS=$(echo "${{ secrets.BINTRAY_GPG_PASS }}" | gpg -d --passphrase "$INPUT_PASSPHRASE" --batch)
           echo "::add-mask::$BINTRAY_GPG_PASS"
           echo "BINTRAY_GPG_PASS=$BINTRAY_GPG_PASS" >> $GITHUB_ENV
 
-          NEXUS_PASSWORD=$(echo "${{ secrets.NEXUS_PASSWORD }}" | gpg -d --passphrase "${INPUT_PASS_PHRASE}" --batch)
+          NEXUS_PASSWORD=$(echo "${{ secrets.NEXUS_PASSWORD }}" | gpg -d --passphrase "$INPUT_PASSPHRASE" --batch)
           echo "::add-mask::$NEXUS_PASSWORD"
           echo "NEXUS_PASSWORD=$NEXUS_PASSWORD" >> $GITHUB_ENV
         env:
@@ -90,14 +88,12 @@ jobs:
       - name: Prepare Keystore and Local.
         if: github.event_name  == 'workflow_dispatch'
         run: |
-          echo "::add-mask::${{github.event.inputs.passphrase }}"
-          INPUT_PASS_PHRASE=${{github.event.inputs.passphrase }}
-          echo "::add-mask::$INPUT_PASS_PHRASE"
+          echo "::add-mask::$INPUT_PASSPHRASE"
 
           echo "${{ secrets.KEYSTORE }}" > opensource.jks.asc
-          gpg -d --passphrase "$INPUT_PASS_PHRASE" --batch "opensource.jks.asc" > "app/opensource.jks"
+          gpg -d --passphrase "$INPUT_PASSPHRASE" --batch "opensource.jks.asc" > "app/opensource.jks"
           echo "${{ secrets.SIGNING_GRADLE }}" > signing.gradle.asc
-          gpg -d --passphrase "$INPUT_PASS_PHRASE" --batch "signing.gradle.asc" > "app/signing.gradle"
+          gpg -d --passphrase "$INPUT_PASSPHRASE" --batch "signing.gradle.asc" > "app/signing.gradle"
           echo "openSource.signing.file=signing.gradle" >> local.properties
 
       - name: Build Release App
