@@ -27,7 +27,7 @@ buildscript {
                 materialdrawer  : '8.1.6',
                 aboutlib        : '8.4.2',
                 roboelectric    : '4.4',
-                detekt          : '1.0.1',
+                detekt          : '1.14.1',
                 paging          : "2.1.2",
                 room            : "2.2.5",
                 lifecycle       : "2.2.0"
