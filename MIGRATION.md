@@ -1,5 +1,27 @@
 ### Upgrade Notes
 
+#### v5.x.y
+
+v5 brings some general API cleanup which should make the usage easier. Removed generic type to simplify code.
+
+- Usages of the `FastAdapter.with()` method have been simplified
+
+```kotlin
+// old
+FastAdapter.with<ExpandableTestItem, IAdapter<ExpandableTestItem>>(itemAdapter)
+// v5
+FastAdapter.with(itemAdapter)
+```
+
+- Correct API specification for the bind method. (The payload for bindView should be immutable)
+
+```kotlin
+// old
+override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>)
+// v5
+override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>)
+```
+
 #### v4.x.y
 
 v4 is a huge release changing most of the codebase to Kotlin. This comes with many refactors, and as a result of that with many breaking API changes. 

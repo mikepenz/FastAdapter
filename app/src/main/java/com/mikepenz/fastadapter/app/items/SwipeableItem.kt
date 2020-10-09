@@ -1,12 +1,13 @@
 package com.mikepenz.fastadapter.app.items
 
+import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.app.R
+import com.mikepenz.fastadapter.app.adapters.IDraggableViewHolder
 import com.mikepenz.fastadapter.drag.IDraggable
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.fastadapter.swipe.ISwipeable
@@ -81,7 +82,7 @@ class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable, IDra
      *
      * @param holder the viewHolder of this item
      */
-    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
 
         //set the text for the name
@@ -97,7 +98,7 @@ class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable, IDra
         if (swipedDirection != 0) {
             swipedAction = holder.itemView.context.getString(R.string.action_undo)
             swipedText = if (swipedDirection == ItemTouchHelper.LEFT) "Removed" else "Archived"
-            holder.swipeResultContent.setBackgroundColor(ContextCompat.getColor(holder.itemView.context, if (swipedDirection == ItemTouchHelper.LEFT) R.color.md_red_900 else R.color.md_blue_900))
+            holder.swipeResultContent.setBackgroundColor(if (swipedDirection == ItemTouchHelper.LEFT) Color.RED else Color.BLUE)
         }
         holder.swipedAction.text = swipedAction ?: ""
         holder.swipedText.text = swipedText ?: ""
@@ -120,7 +121,7 @@ class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable, IDra
     /**
      * our ViewHolder
      */
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
+    class ViewHolder(view: View) : RecyclerView.ViewHolder(view), IDraggableViewHolder {
         var name: TextView = view.findViewById(R.id.material_drawer_name)
         var description: TextView = view.findViewById(R.id.material_drawer_description)
         var swipeResultContent: View = view.findViewById(R.id.swipe_result_content)
@@ -134,6 +135,14 @@ class SwipeableItem : AbstractItem<SwipeableItem.ViewHolder>(), ISwipeable, IDra
             swipedAction.setOnClickListener {
                 swipedActionRunnable?.run()
             }
+        }
+
+        override fun onDropped() {
+            itemContent.setBackgroundColor(Color.TRANSPARENT)
+        }
+
+        override fun onDragged() {
+            itemContent.setBackgroundColor(Color.LTGRAY)
         }
     }
 }

@@ -8,87 +8,87 @@ import kotlin.math.min
 /**
  * The default item list implementation
  */
-
 open class DefaultItemListImpl<Item : GenericItem> @JvmOverloads constructor(
-        protected var mItems: MutableList<Item> = ArrayList()
+        @Suppress("ConstructorParameterNaming")
+        protected var _items: MutableList<Item> = ArrayList()
 ) : DefaultItemList<Item>() {
 
     override val items: MutableList<Item>
-        get() = mItems
+        get() = _items
 
     override val isEmpty: Boolean
-        get() = mItems.isEmpty()
+        get() = _items.isEmpty()
 
     override fun get(position: Int): Item {
-        return mItems[position]
+        return _items[position]
     }
 
     override fun getAdapterPosition(identifier: Long): Int =
-            mItems.indexOfFirst { it.identifier == identifier }
+            _items.indexOfFirst { it.identifier == identifier }
 
     override fun remove(position: Int, preItemCount: Int) {
-        mItems.removeAt(position - preItemCount)
+        _items.removeAt(position - preItemCount)
         fastAdapter?.notifyAdapterItemRemoved(position)
     }
 
     override fun removeRange(position: Int, itemCount: Int, preItemCount: Int) {
         //global position to relative
-        val length = mItems.size
+        val length = _items.size
         //make sure we do not delete too many items
         val saveItemCount = min(itemCount, length - position + preItemCount)
         for (i in 0 until saveItemCount) {
-            mItems.removeAt(position - preItemCount)
+            _items.removeAt(position - preItemCount)
         }
         fastAdapter?.notifyAdapterItemRangeRemoved(position, saveItemCount)
     }
 
     override fun move(fromPosition: Int, toPosition: Int, preItemCount: Int) {
-        val item = mItems[fromPosition - preItemCount]
-        mItems.removeAt(fromPosition - preItemCount)
-        mItems.add(toPosition - preItemCount, item)
+        val item = _items[fromPosition - preItemCount]
+        _items.removeAt(fromPosition - preItemCount)
+        _items.add(toPosition - preItemCount, item)
         fastAdapter?.notifyAdapterItemMoved(fromPosition, toPosition)
     }
 
     override fun size(): Int {
-        return mItems.size
+        return _items.size
     }
 
     override fun clear(preItemCount: Int) {
-        val size = mItems.size
-        mItems.clear()
+        val size = _items.size
+        _items.clear()
         fastAdapter?.notifyAdapterItemRangeRemoved(preItemCount, size)
     }
 
     override fun set(position: Int, item: Item, preItemCount: Int) {
-        mItems[position - preItemCount] = item
+        _items[position - preItemCount] = item
         fastAdapter?.notifyAdapterItemChanged(position)
     }
 
     override fun addAll(items: List<Item>, preItemCount: Int) {
-        val countBefore = mItems.size
-        mItems.addAll(items)
+        val countBefore = _items.size
+        _items.addAll(items)
         fastAdapter?.notifyAdapterItemRangeInserted(preItemCount + countBefore, items.size)
     }
 
     override fun addAll(position: Int, items: List<Item>, preItemCount: Int) {
-        mItems.addAll(position - preItemCount, items)
+        _items.addAll(position - preItemCount, items)
         fastAdapter?.notifyAdapterItemRangeInserted(position, items.size)
     }
 
     override fun set(items: List<Item>, preItemCount: Int, adapterNotifier: IAdapterNotifier?) {
         //get sizes
         val newItemsCount = items.size
-        val previousItemsCount = mItems.size
+        val previousItemsCount = _items.size
 
         //make sure the new items list is not a reference of the already mItems list
-        if (items !== mItems) {
+        if (items !== _items) {
             //remove all previous items
-            if (mItems.isNotEmpty()) {
-                mItems.clear()
+            if (_items.isNotEmpty()) {
+                _items.clear()
             }
 
             //add all new items to the list
-            mItems.addAll(items)
+            _items.addAll(items)
         }
         fastAdapter?.let { fastAdapter ->
             //now properly notify the adapter about the changes
@@ -102,7 +102,7 @@ open class DefaultItemListImpl<Item : GenericItem> @JvmOverloads constructor(
     }
 
     override fun setNewList(items: List<Item>, notify: Boolean) {
-        mItems = ArrayList(items)
+        _items = ArrayList(items)
         if (notify) {
             fastAdapter?.notifyAdapterDataSetChanged()
         }

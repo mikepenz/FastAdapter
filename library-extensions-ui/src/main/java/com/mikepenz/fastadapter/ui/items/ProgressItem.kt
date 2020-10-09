@@ -15,19 +15,14 @@ class ProgressItem : AbstractItem<ProgressItem.ViewHolder>() {
     override val layoutRes: Int
         get() = R.layout.progress_item
 
-    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
         if (isEnabled) {
             holder.itemView.setBackgroundResource(FastAdapterUIUtils.getSelectableBackground(holder.itemView.context))
         }
     }
 
-    override fun unbindView(holder: ViewHolder) {
-    }
-
-    override fun getViewHolder(v: View): ViewHolder {
-        return ViewHolder(v)
-    }
+    override fun getViewHolder(v: View): ViewHolder = ViewHolder(v)
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private var progressBar: ProgressBar = view.findViewById(R.id.progress_bar)

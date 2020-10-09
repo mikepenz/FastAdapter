@@ -6,10 +6,10 @@ package com.mikepenz.fastadapter
 
 interface ISelectionListener<Item : GenericItem> {
     /**
-     * is called, whenever the provided item is selected or deselected
+     * Is called, whenever the provided item is selected or deselected
      *
      * @param item the item who's selection state changed
-     * param selected the new selection state of the item
+     * @param selected the new selection state of the item
      */
     fun onSelectionChanged(item: Item, selected: Boolean)
 }

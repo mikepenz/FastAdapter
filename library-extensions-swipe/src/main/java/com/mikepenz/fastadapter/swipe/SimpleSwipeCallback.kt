@@ -23,6 +23,10 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
     private var bgPaint: Paint? = null
     private var horizontalMargin = Integer.MAX_VALUE
 
+    // Swipe movement control
+    private var sensitivityFactor = 1f
+    private var surfaceThreshold = 0.5f
+
     interface ItemSwipeCallback {
 
         /**
@@ -57,11 +61,33 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
 
     fun withBackgroundSwipeLeft(@ColorInt bgColor: Int): SimpleSwipeCallback {
         bgColorLeft = bgColor
+        setDefaultSwipeDirs(swipeDirs or ItemTouchHelper.LEFT)
         return this
     }
 
     fun withBackgroundSwipeRight(@ColorInt bgColor: Int): SimpleSwipeCallback {
         bgColorRight = bgColor
+        setDefaultSwipeDirs(swipeDirs or ItemTouchHelper.RIGHT)
+        return this
+    }
+
+    /**
+     * Control the sensitivity of the swipe gesture
+     * 0.5 : very sensitive
+     * 1 : Android default
+     * 10 : almost insensitive
+     */
+    fun withSensitivity(f: Float): SimpleSwipeCallback {
+        sensitivityFactor = f
+        return this
+    }
+
+    /**
+     * % of the item's width or height needed to confirm the swipe action
+     * Android default : 0.5
+     */
+    fun withSurfaceThreshold(f: Float): SimpleSwipeCallback {
+        surfaceThreshold = f
         return this
     }
 
@@ -92,6 +118,14 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
         return false
     }
 
+    override fun getSwipeEscapeVelocity(defaultValue: Float): Float {
+        return defaultValue * sensitivityFactor
+    }
+
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+        return surfaceThreshold
+    }
+
     //Inspired/modified from: https://github.com/nemanja-kovacevic/recycler-view-swipe-to-delete/blob/master/app/src/main/java/net/nemanjakovacevic/recyclerviewswipetodelete/MainActivity.java
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         val itemView = viewHolder.itemView
@@ -120,7 +154,7 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
             if (drawable != null) {
                 val itemHeight = itemView.bottom - itemView.top
                 val intrinsicWidth = drawable.intrinsicWidth
-                val intrinsicHeight = drawable.intrinsicWidth
+                val intrinsicHeight = drawable.intrinsicHeight
 
                 val left: Int
                 val right: Int

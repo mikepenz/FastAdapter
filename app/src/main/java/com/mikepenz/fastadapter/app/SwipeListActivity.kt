@@ -11,24 +11,24 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.app.adapters.IDraggableViewHolder
 import com.mikepenz.fastadapter.app.items.SwipeableItem
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
 import com.mikepenz.fastadapter.swipe.SimpleSwipeCallback
 import com.mikepenz.fastadapter.swipe_drag.SimpleSwipeDragCallback
 import com.mikepenz.fastadapter.utils.DragDropUtil
-import com.mikepenz.iconics.IconicsColor
 import com.mikepenz.iconics.IconicsDrawable
-import com.mikepenz.iconics.IconicsSize
 import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
-import com.mikepenz.materialize.MaterializeBuilder
+import com.mikepenz.iconics.utils.actionBar
+import com.mikepenz.iconics.utils.colorInt
+import com.mikepenz.iconics.utils.sizeDp
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
@@ -55,15 +55,11 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
         // Handle Toolbar
         setSupportActionBar(toolbar)
-
-        //style our ui
-        MaterializeBuilder().withActivity(this).build()
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = FastItemAdapter()
@@ -76,7 +72,7 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
 
         //configure the itemAdapter
         fastItemAdapter.itemFilter.filterPredicate = { item: SwipeableItem, constraint: CharSequence? ->
-            item.name?.text.toString().contains(constraint.toString(), ignoreCase = true)
+            item.name?.textString.toString().contains(constraint.toString(), ignoreCase = true)
         }
 
         //get our recyclerView and do basic setup
@@ -103,24 +99,21 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
 
         //add drag and drop for item
         //and add swipe as well
-        val leaveBehindDrawableLeft = IconicsDrawable(this)
-                .icon(MaterialDesignIconic.Icon.gmi_delete)
-                .color(IconicsColor.colorInt(Color.WHITE))
-                .size(IconicsSize.dp(24))
-        val leaveBehindDrawableRight = IconicsDrawable(this)
-                .icon(MaterialDesignIconic.Icon.gmi_archive)
-                .color(IconicsColor.colorInt(Color.WHITE))
-                .size(IconicsSize.dp(24))
+        val leaveBehindDrawableLeft = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_delete).apply { colorInt = Color.WHITE; sizeDp = 24 }
+        val leaveBehindDrawableRight = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_archive).apply { colorInt = Color.WHITE; sizeDp = 24 }
 
         touchCallback = SimpleSwipeDragCallback(
                 this,
                 this,
                 leaveBehindDrawableLeft,
                 ItemTouchHelper.LEFT,
-                ContextCompat.getColor(this, R.color.md_red_900)
+                Color.RED
         )
-                .withBackgroundSwipeRight(ContextCompat.getColor(this, R.color.md_blue_900))
+                .withBackgroundSwipeRight(Color.BLUE)
                 .withLeaveBehindSwipeRight(leaveBehindDrawableRight)
+                .withNotifyAllDrops(true)
+                .withSensitivity(10f)
+                .withSurfaceThreshold(0.8f)
 
         touchHelper = ItemTouchHelper(touchCallback) // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
         touchHelper.attachToRecyclerView(rv) // Attach ItemTouchHelper to RecyclerView
@@ -158,7 +151,7 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
         inflater.inflate(R.menu.search, menu)
 
         //search icon
-        menu.findItem(R.id.search).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_search).color(IconicsColor.colorInt(Color.BLACK)).actionBar()
+        menu.findItem(R.id.search).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_search).apply { colorInt = Color.BLACK; actionBar() }
 
         val searchView = menu.findItem(R.id.search).actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -185,7 +178,17 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
     }
 
     override fun itemTouchDropped(oldPosition: Int, newPosition: Int) {
+        val vh: RecyclerView.ViewHolder? = rv.findViewHolderForAdapterPosition(newPosition)
+        if (vh is IDraggableViewHolder) {
+            (vh as IDraggableViewHolder).onDropped()
+        }
         // save the new item order, i.e. in your database
+    }
+
+    override fun itemTouchStartDrag(viewHolder: RecyclerView.ViewHolder) {
+        if (viewHolder is IDraggableViewHolder) {
+            (viewHolder as IDraggableViewHolder).onDragged()
+        }
     }
 
     override fun itemSwiped(position: Int, direction: Int) {

@@ -2,7 +2,6 @@ package com.mikepenz.fastadapter.app
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.GenericItem
@@ -13,7 +12,6 @@ import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
 import com.mikepenz.fastadapter.expandable.getExpandableExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
-import com.mikepenz.materialize.MaterializeBuilder
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 import java.util.concurrent.atomic.AtomicLong
@@ -23,16 +21,12 @@ class ExpandableSampleActivity : AppCompatActivity() {
     private lateinit var fastItemAdapter: GenericFastItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_sample)
 
         // Handle Toolbar
         setSupportActionBar(toolbar)
         supportActionBar?.setTitle(R.string.sample_collapsible)
-
-        //style our ui
-        MaterializeBuilder().withActivity(this).build()
 
         //create our FastAdapter
         fastItemAdapter = FastItemAdapter()
@@ -46,6 +40,8 @@ class ExpandableSampleActivity : AppCompatActivity() {
         rv.layoutManager = LinearLayoutManager(this)
         rv.itemAnimator = SlideDownAlphaAnimator()
         rv.adapter = fastItemAdapter
+
+        var itemToBeExpanded: SimpleSubExpandableItem? = null
 
         //fill with some sample data
         val items = ArrayList<GenericItem>()
@@ -80,6 +76,11 @@ class ExpandableSampleActivity : AppCompatActivity() {
                         val subSubSubItem = SimpleSubExpandableItem()
                         subSubSubItem.withName("---- SubSubSubTest $iiii").identifier = identifier.getAndIncrement()
                         subSubSubItems.add(subSubSubItem)
+
+                        //save 7th item just to demonstrate how expandAllOnPath works
+                        if (identifier.get() == 7L) {
+                            itemToBeExpanded = subSubSubItem
+                        }
                     }
                     subSubItem.subItems.addAll(subSubSubItems)
                     subSubItems.add(subSubItem)
@@ -98,6 +99,9 @@ class ExpandableSampleActivity : AppCompatActivity() {
         //set the back arrow in the toolbar
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(false)
+
+        //expand the whole path for the previously selected item
+        fastItemAdapter.getExpandableExtension().expandAllOnPath(itemToBeExpanded)
     }
 
     override fun onSaveInstanceState(_outState: Bundle) {

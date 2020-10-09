@@ -9,10 +9,7 @@ import com.mikepenz.fastadapter.IIdentifyable
 abstract class DefaultIdDistributor<Identifiable : IIdentifyable> : IIdDistributor<Identifiable> {
 
     /**
-     * set an unique identifier for all identifiables which do not have one set already
-     *
-     * @param identifiables
-     * @return
+     * Set an unique identifier for all identifiables which do not have one set already
      */
     override fun checkIds(identifiables: List<Identifiable>): List<Identifiable> {
         var i = 0
@@ -25,10 +22,7 @@ abstract class DefaultIdDistributor<Identifiable : IIdentifyable> : IIdDistribut
     }
 
     /**
-     * set an unique identifier for all items which do not have one set already
-     *
-     * @param identifiables
-     * @return
+     * Set an unique identifier for all items which do not have one set already
      */
     override fun checkIds(vararg identifiables: Identifiable): Array<out Identifiable> {
         for (identifiable in identifiables) {
@@ -38,10 +32,7 @@ abstract class DefaultIdDistributor<Identifiable : IIdentifyable> : IIdDistribut
     }
 
     /**
-     * set an unique identifier for the identifiable which do not have one set already
-     *
-     * @param identifiable
-     * @return
+     * Set an unique identifier for the identifiable which do not have one set already
      */
     override fun checkId(identifiable: Identifiable): Identifiable {
         if (identifiable.identifier == -1L) {

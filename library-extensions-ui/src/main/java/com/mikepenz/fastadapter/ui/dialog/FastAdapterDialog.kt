@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 
 class FastAdapterDialog<Item : GenericItem> : AlertDialog {
@@ -77,7 +76,7 @@ class FastAdapterDialog<Item : GenericItem> : AlertDialog {
     private fun initAdapterIfNeeded() {
         if (fastAdapter == null || recyclerView!!.adapter == null) {
             itemAdapter = ItemAdapter.items()
-            fastAdapter = FastAdapter.with<Item, IAdapter<Item>>(itemAdapter!!)
+            fastAdapter = FastAdapter.with(itemAdapter!!)
             recyclerView!!.adapter = fastAdapter
         }
     }
@@ -258,7 +257,7 @@ class FastAdapterDialog<Item : GenericItem> : AlertDialog {
      * Start the dialog and display it on screen.  The window is placed in the
      * application layer and opaque.  Note that you should not override this
      * method to do initialization when the dialog is shown, instead implement
-     * that in [.onStart].
+     * that in [onStart].
      */
     override fun show() {
         if (recyclerView!!.layoutManager == null) {

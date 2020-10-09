@@ -5,10 +5,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
 import com.mikepenz.fastadapter.R
-import com.mikepenz.fastadapter.listeners.*
+import com.mikepenz.fastadapter.listeners.ClickEventHook
+import com.mikepenz.fastadapter.listeners.CustomEventHook
+import com.mikepenz.fastadapter.listeners.EventHook
+import com.mikepenz.fastadapter.listeners.LongClickEventHook
+import com.mikepenz.fastadapter.listeners.TouchEventHook
 
 /**
- * binds the hooks to the viewHolder
+ * Binds the hooks to the viewHolder
  *
  * @param viewHolder the viewHolder of the item
  */
@@ -28,7 +32,7 @@ internal fun List<EventHook<out GenericItem>>.bind(viewHolder: RecyclerView.View
 }
 
 /**
- * attaches the specific event to a view
+ * Attaches the specific event to a view
  *
  * @param viewHolder the viewHolder containing this view
  * @param view       the view to attach to
@@ -82,7 +86,7 @@ internal fun <Item : GenericItem> EventHook<Item>.attachToView(viewHolder: Recyc
             }
             false
         })
-        is CustomEventHook<*> -> //we trigger the event binding
-            (this as CustomEventHook<Item>).attachEvent(view, viewHolder)
+        //we trigger the event binding
+        is CustomEventHook<*> -> (this as CustomEventHook<Item>).attachEvent(view, viewHolder)
     }
 }

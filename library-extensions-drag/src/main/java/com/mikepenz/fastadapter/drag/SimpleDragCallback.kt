@@ -8,44 +8,50 @@ import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 
 /**
- * based on the sample from
- * https://github.com/AleBarreto/DragRecyclerView
+ * Based on the [sample](https://github.com/AleBarreto/DragRecyclerView)
  */
 open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
 
     //our callback
-    private var mCallbackItemTouch: ItemTouchCallback? = null // interface
-    private var mIsDragEnabled = true
+    private var callbackItemTouch: ItemTouchCallback? = null // interface
 
-    private var mFrom = RecyclerView.NO_POSITION
-    private var mTo = RecyclerView.NO_POSITION
+    /** enable to drag around via long press */
+    var isDragEnabled = true
 
-    private var mDirections = UP_DOWN
+    private var from = RecyclerView.NO_POSITION
+    private var to = RecyclerView.NO_POSITION
+
+    private var directions = UP_DOWN
+
+    /** enable notification for all drops, even if location did not change */
+    var notifyAllDrops = false // Default behaviour of v5.0.1-
 
     @Suppress("EmptyDefaultConstructor")
     @IntDef(ALL, UP_DOWN, LEFT_RIGHT)
     @Retention(AnnotationRetention.SOURCE)
-    annotation class Directions()
+    annotation class Directions {
+        // empty on purpose
+    }
 
     constructor(@Directions directions: Int = UP_DOWN) : super(directions, 0) {
-        this.mDirections = directions
+        this.directions = directions
     }
 
     constructor(@Directions directions: Int, itemTouchCallback: ItemTouchCallback) : super(directions, 0) {
-        this.mDirections = directions
-        this.mCallbackItemTouch = itemTouchCallback
+        this.directions = directions
+        this.callbackItemTouch = itemTouchCallback
     }
 
     constructor(itemTouchCallback: ItemTouchCallback) : super(UP_DOWN, 0) {
-        this.mCallbackItemTouch = itemTouchCallback
+        this.callbackItemTouch = itemTouchCallback
     }
 
     fun setIsDragEnabled(mIsDragEnabled: Boolean) {
-        this.mIsDragEnabled = mIsDragEnabled
+        this.isDragEnabled = mIsDragEnabled
     }
 
     override fun isLongPressDragEnabled(): Boolean {
-        return mIsDragEnabled
+        return isDragEnabled
     }
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -53,13 +59,13 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
         val item = FastAdapter.getHolderAdapterItem<IItem<*>>(viewHolder)
         if (item is IDraggable) {
             if ((item as IDraggable).isDraggable) {
-                if (mFrom == RecyclerView.NO_POSITION) {
-                    mFrom = viewHolder.adapterPosition
+                if (from == RecyclerView.NO_POSITION) {
+                    from = viewHolder.adapterPosition
                 }
-                mTo = target.adapterPosition
+                to = target.adapterPosition
             }
         }
-        if (mCallbackItemTouch == null) {
+        if (callbackItemTouch == null) {
             val adapter = recyclerView.adapter
             var itemAdapter: ItemAdapter<*>? = null
             if (adapter is FastAdapter<*>) {
@@ -74,7 +80,7 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
             }
             throw RuntimeException("SimpleDragCallback without an callback is only allowed when using the ItemAdapter or the FastItemAdapter")
         }
-        return mCallbackItemTouch?.itemTouchOnMove(viewHolder.adapterPosition, target.adapterPosition)
+        return callbackItemTouch?.itemTouchOnMove(viewHolder.adapterPosition, target.adapterPosition)
                 ?: false // information to the interface
     }
 
@@ -87,7 +93,7 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
                 0
             }
         } else {
-            mDirections
+            directions
         }
     }
 
@@ -97,12 +103,22 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
-        if (mFrom != RecyclerView.NO_POSITION && mTo != RecyclerView.NO_POSITION) {
-            mCallbackItemTouch?.itemTouchDropped(mFrom, mTo)
+        if (notifyAllDrops || (from != RecyclerView.NO_POSITION && to != RecyclerView.NO_POSITION)) {
+            // If 'to' is not set, then we can assume the item hasn't moved at all
+            if (from != RecyclerView.NO_POSITION && to == RecyclerView.NO_POSITION) to = from
+            callbackItemTouch?.itemTouchDropped(from, to)
         }
         // reset the from/to positions
-        mTo = RecyclerView.NO_POSITION
-        mFrom = mTo
+        to = RecyclerView.NO_POSITION
+        from = to
+    }
+
+    override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
+        super.onSelectedChanged(viewHolder, actionState)
+        if (ItemTouchHelper.ACTION_STATE_DRAG == actionState && viewHolder != null) {
+            from = viewHolder.adapterPosition
+            callbackItemTouch?.itemTouchStartDrag(viewHolder)
+        }
     }
 
     companion object {

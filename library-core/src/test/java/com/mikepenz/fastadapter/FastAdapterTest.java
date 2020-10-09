@@ -124,7 +124,7 @@ public class FastAdapterTest {
         List<TestItem> items = TestDataGenerator.genTestItemList(100);
         itemAdapter.set(items);
 
-        assertThat(adapter.getItemViewType(40)).isEqualTo(-1);
+        assertThat(adapter.getItemViewType(40)).isEqualTo(RecyclerView.NO_POSITION);
     }
 
     @Test
@@ -209,6 +209,7 @@ public class FastAdapterTest {
         itemAdapter.add(testItem);
         FastAdapter<TestItem> adapter = new FastAdapter<>();
         adapter.addAdapter(0, itemAdapter);
+        adapter.registerItemFactory(testItem.getType(), testItem); // registering the factory happens only during usage of the adapter now
         final ViewGroup dummyParent = new FrameLayout(RuntimeEnvironment.application);
         adapter.onCreateViewHolder(dummyParent, testItem.getType());
     }

@@ -7,7 +7,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 
 /**
@@ -20,6 +19,7 @@ class FastAdapterBottomSheetDialog<Item : GenericItem> : BottomSheetDialog {
         private set
 
     var fastAdapter: FastAdapter<Item>? = null
+
     lateinit var itemAdapter: ItemAdapter<Item>
 
     constructor(context: Context) : super(context) {
@@ -59,7 +59,7 @@ class FastAdapterBottomSheetDialog<Item : GenericItem> : BottomSheetDialog {
     private fun initAdapterIfNeeded() {
         if (fastAdapter == null || recyclerView?.adapter == null) {
             itemAdapter = ItemAdapter.items()
-            fastAdapter = FastAdapter.with<Item, IAdapter<Item>>(itemAdapter)
+            fastAdapter = FastAdapter.with(itemAdapter)
             recyclerView?.adapter = fastAdapter
         }
     }
@@ -106,7 +106,7 @@ class FastAdapterBottomSheetDialog<Item : GenericItem> : BottomSheetDialog {
      * Start the dialog and display it on screen.  The window is placed in the
      * application layer and opaque.  Note that you should not override this
      * method to do initialization when the dialog is shown, instead implement
-     * that in [.onStart].
+     * that in [onStart].
      */
     override fun show() {
         if (recyclerView?.layoutManager == null) {

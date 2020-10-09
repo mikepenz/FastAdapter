@@ -2,7 +2,6 @@ package com.mikepenz.fastadapter.app
 
 import android.os.Bundle
 import android.view.MenuItem
-import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,10 +18,9 @@ class MopubAdsActivity : AppCompatActivity() {
     private lateinit var adapter: MopubFastItemAdapter<LetterItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
-        findViewById<View>(android.R.id.content).systemUiVisibility = findViewById<View>(android.R.id.content).systemUiVisibility or View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
         super.onCreate(savedInstanceState)
 
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_sample)
 
         ButterKnife.bind(this)
 

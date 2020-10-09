@@ -14,7 +14,7 @@ class LetterItem(var letter: String) : AbstractItem<LetterItem.ViewHolder>() {
     override val layoutRes: Int
         get() = R.layout.letter_item
 
-    override fun bindView(holder: ViewHolder, payloads: MutableList<Any>) {
+    override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
         holder.text.text = letter
     }

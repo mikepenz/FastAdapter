@@ -10,14 +10,14 @@ import androidx.recyclerview.widget.RecyclerView
 interface IExtendedDraggable<VH : RecyclerView.ViewHolder> : IDraggable {
 
     /**
-     * this returns the ItemTouchHelper
+     * This returns the ItemTouchHelper
      *
      * @return the ItemTouchHelper if item has one or null
      */
     val touchHelper: ItemTouchHelper?
 
     /**
-     * this method returns the drag view inside the item
+     * This method returns the drag view inside the item
      * use this with (@withTouchHelper) to start dragging when this view is touched
      *
      * @param viewHolder the ViewHolder

@@ -29,7 +29,7 @@ class FastScrollIndicatorAdapter<Item : GenericItem> : RecyclerView.Adapter<Recy
         val item = getItem(position)
         return if (item is SimpleSubItem && item.name != null) {
             //based on the position we set the headers text
-            item.name?.text?.get(0) ?: ' '
+            item.name?.textString?.get(0) ?: ' '
         } else ' '
     }
 
@@ -146,7 +146,7 @@ class FastScrollIndicatorAdapter<Item : GenericItem> : RecyclerView.Adapter<Recy
      * @param position
      * @param payloads
      */
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, payloads: List<Any>) {
         fastAdapter?.onBindViewHolder(holder, position, payloads)
     }
 

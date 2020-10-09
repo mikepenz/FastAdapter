@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter
 
+import android.os.Build
 import android.os.Bundle
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -11,9 +12,11 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.robolectric.annotation.Config
 import java.util.*
 
 @RunWith(AndroidJUnit4::class)
+@Config(sdk = [Build.VERSION_CODES.P])
 class ExpandableFastAdapterTest {
     private lateinit var adapter: FastAdapter<ExpandableTestItem>
     private lateinit var itemAdapter: ItemAdapter<ExpandableTestItem>
@@ -24,7 +27,7 @@ class ExpandableFastAdapterTest {
     @Throws(Exception::class)
     fun setUp() {
         itemAdapter = ItemAdapter()
-        adapter = FastAdapter.with<ExpandableTestItem, IAdapter<ExpandableTestItem>>(itemAdapter)
+        adapter = FastAdapter.with(itemAdapter)
         expandableExtension = adapter.getExpandableExtension()
         selectExtension = adapter.getSelectExtension()
     }
@@ -140,7 +143,7 @@ class ExpandableFastAdapterTest {
     @Throws(Exception::class)
     fun toggleNoneExpandable() {
         val itemAdapter = ItemAdapter<NoneExpandableTestItem>()
-        val fastAdapter = FastAdapter.with<NoneExpandableTestItem, IAdapter<NoneExpandableTestItem>>(itemAdapter)
+        val fastAdapter = FastAdapter.with(itemAdapter)
         val expandableExtension = fastAdapter.getExpandableExtension()
         val noneExpandableTestItems = ArrayList<NoneExpandableTestItem>()
         val item = NoneExpandableTestItem()

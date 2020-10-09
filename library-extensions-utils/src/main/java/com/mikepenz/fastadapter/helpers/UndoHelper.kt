@@ -2,6 +2,7 @@ package com.mikepenz.fastadapter.helpers
 
 import android.view.View
 import android.widget.TextView
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericItem
@@ -12,18 +13,17 @@ import java.util.Arrays.asList
 
 /**
  * Created by mikepenz on 04.01.16.
- */
-class UndoHelper<Item : GenericItem>
-/**
+ *
  * Constructor to create the UndoHelper
  *
  * @param adapter      the root FastAdapter
  * @param undoListener the listener which gets called when an item was really removed
  */
-(private val mAdapter: FastAdapter<Item>, private val mUndoListener: UndoListener<Item>) {
+class UndoHelper<Item : GenericItem>(
+        private val adapter: FastAdapter<Item>,
+        private val undoListener: UndoListener<Item>
+) {
     private var history: History? = null
-    var snackBar: Snackbar? = null
-        private set
     private var snackBarActionText = ""
     private var alreadyCommitted: Boolean = false
 
@@ -46,8 +46,11 @@ class UndoHelper<Item : GenericItem>
         }
     }
 
+    var snackBar: Snackbar? = null
+        private set
+
     /**
-     * an optional method to add a [Snackbar] of your own with custom styling.
+     * An optional method to add a [Snackbar] of your own with custom styling.
      * note that using this method will override your custom action
      *
      * @param snackBar   your own Snackbar
@@ -60,10 +63,10 @@ class UndoHelper<Item : GenericItem>
     }
 
     /**
-     * convenience method to be used if you have previously set a [Snackbar] with [.withSnackBar]
+     * Convenience method to be used if you have previously set a [Snackbar] with [withSnackBar]
      *
      * @param positions the positions where the items were removed
-     * @return the snackbar or null if [.withSnackBar] was not previously called
+     * @return the snackbar or null if [withSnackBar] was not previously called
      */
     fun remove(positions: Set<Int>): Snackbar? {
         val snackBar = this.snackBar ?: return null
@@ -73,9 +76,9 @@ class UndoHelper<Item : GenericItem>
     }
 
     /**
-     * removes items from the ItemAdapter.
+     * Removes items from the ItemAdapter.
      * note that the values of "view", "text", "actionText", and "duration"
-     * will be ignored if [.withSnackBar] was used.
+     * will be ignored if [withSnackBar] was used.
      * if it was not used, a default snackbar will be generated
      *
      * @param view       the view which will host the SnackBar
@@ -84,7 +87,7 @@ class UndoHelper<Item : GenericItem>
      * @param positions  the positions where the items were removed
      * @return the generated Snackbar
      */
-    fun remove(view: View, text: String, actionText: String, @Snackbar.Duration duration: Int, positions: Set<Int>): Snackbar {
+    fun remove(view: View, text: String, actionText: String, @BaseTransientBottomBar.Duration duration: Int, positions: Set<Int>): Snackbar {
         if (history != null) {
             // Set a flag, if remove was called before the Snackbar
             // executed the commit -> Snackbar does not commit the new
@@ -96,7 +99,7 @@ class UndoHelper<Item : GenericItem>
         val history = History()
         history.action = ACTION_REMOVE
         for (position in positions) {
-            history.items.add(mAdapter.getRelativeInfo(position))
+            history.items.add(adapter.getRelativeInfo(position))
         }
         history.items.sortWith(Comparator { lhs, rhs -> Integer.valueOf(lhs.position).compareTo(rhs.position) })
 
@@ -117,7 +120,7 @@ class UndoHelper<Item : GenericItem>
                 for (relativeInfo in mHistory.items) {
                     positions.add(relativeInfo.position)
                 }
-                mUndoListener.commitRemove(positions, mHistory.items)
+                undoListener.commitRemove(positions, mHistory.items)
                 this.history = null
             }
         }
@@ -149,7 +152,7 @@ class UndoHelper<Item : GenericItem>
                         relativeInfo.item?.let {
                             adapter?.addInternal(relativeInfo.position, asList(it))
                             if (relativeInfo.item?.isSelected == true) {
-                                val selectExtension = mAdapter.getExtension<SelectExtension<Item>>(SelectExtension::class.java)
+                                val selectExtension = this.adapter.getExtension<SelectExtension<Item>>(SelectExtension::class.java)
                                 selectExtension?.select(relativeInfo.position)
                             }
                         }

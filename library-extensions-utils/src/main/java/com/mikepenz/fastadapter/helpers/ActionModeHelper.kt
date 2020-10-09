@@ -34,7 +34,7 @@ class ActionModeHelper<Item : GenericItem> {
     private var actionItemClickedListener: ActionItemClickedListener? = null
 
     /**
-     * convenient method to check if action mode is active or nor
+     * Convenient method to check if action mode is active or nor
      *
      * @return true, if ActionMode is active, false otherwise
      */
@@ -76,7 +76,7 @@ class ActionModeHelper<Item : GenericItem> {
     }
 
     /**
-     * no longer needed, the FastAdapter can handle sub items now on its own
+     * No longer needed, the FastAdapter can handle sub items now on its own
      *
      * @param expandableExtension
      * @return
@@ -87,7 +87,7 @@ class ActionModeHelper<Item : GenericItem> {
     }
 
     /**
-     * implements the basic behavior of a CAB and multi select behavior,
+     * Implements the basic behavior of a CAB and multi select behavior,
      * including logics if the clicked item is collapsible
      *
      * @param item the current item
@@ -98,7 +98,7 @@ class ActionModeHelper<Item : GenericItem> {
     }
 
     /**
-     * implements the basic behavior of a CAB and multi select behavior,
+     * Implements the basic behavior of a CAB and multi select behavior,
      * including logics if the clicked item is collapsible
      *
      * @param act  the current Activity
@@ -128,7 +128,7 @@ class ActionModeHelper<Item : GenericItem> {
     }
 
     /**
-     * implements the basic behavior of a CAB and multi select behavior onLongClick
+     * Implements the basic behavior of a CAB and multi select behavior onLongClick
      *
      * @param act      the current Activity
      * @param position the position of the clicked item
@@ -149,7 +149,7 @@ class ActionModeHelper<Item : GenericItem> {
     }
 
     /**
-     * check if the ActionMode should be shown or not depending on the currently selected items
+     * Check if the ActionMode should be shown or not depending on the currently selected items
      * Additionally, it will also update the title in the CAB for you
      *
      * @param act the current Activity
@@ -161,7 +161,7 @@ class ActionModeHelper<Item : GenericItem> {
     }
 
     /**
-     * reset any active action mode if it is active, useful, to avoid leaking the activity if this helper class is retained
+     * Reset any active action mode if it is active, useful, to avoid leaking the activity if this helper class is retained
      */
     fun reset() {
         if (actionMode != null) {
@@ -186,7 +186,7 @@ class ActionModeHelper<Item : GenericItem> {
     }
 
     /**
-     * updates the title to reflect the current selected items or to show a user defined title
+     * Updates the title to reflect the current selected items or to show a user defined title
      *
      * @param selected number of selected items
      */
