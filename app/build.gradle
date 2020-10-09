@@ -5,15 +5,14 @@ apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 apply plugin: 'com.mikepenz.aboutlibraries.plugin'
 
-//wrap with try and catch so the build is working even if the signing stuff is missing
-try {
-    apply from: '../../../signing.gradle'
-} catch (ex) {
+if (getSigningFile() != null) {
+    apply from: "${getSigningFile()}"
 }
 
 android {
     compileSdkVersion setup.compileSdk
     buildToolsVersion setup.buildTools
+    ndkVersion "21.3.6528147"
 
     defaultConfig {
         minSdkVersion setup.minSdk
@@ -28,16 +27,14 @@ android {
     buildTypes {
         debug {
             versionNameSuffix "-DEBUG"
-            try {
+            if (getSigningFile() != null) {
                 signingConfig signingConfigs.debug
-            } catch (ex) {
             }
             minifyEnabled false
         }
         release {
-            try {
+            if (getSigningFile() != null) {
                 signingConfig signingConfigs.release
-            } catch (ex) {
             }
             zipAlignEnabled true
             minifyEnabled false
