@@ -25,7 +25,7 @@ jobs:
           echo "INPUT_VERSION: $INPUT_VERSION"
 
           echo "DECRYPT"
-          BINTRAY_API_KEY=$(echo ${{ secrets.BINTRAY_API_KEY }} | gpg -d --passphrase "$INPUT_PASS_PHRASE" --batch)
+          BINTRAY_API_KEY=$(echo "${{ secrets.BINTRAY_API_KEY }}" | gpg -d --passphrase "${INPUT_PASS_PHRASE}" --batch)
           echo "POST DECRYPT"
 
           echo "::add-mask::$BINTRAY_API_KEY"
