@@ -2,9 +2,14 @@
 name: CI
 
 on:
-  push:
-    tags:
-      - '*'
+  workflow_dispatch:
+    inputs:
+      passphrase:
+        description: 'Passphrase required for secrets'
+        required: true
+      version:
+        description: 'Version to build'
+        required: true
   pull_request:
 
 jobs:
@@ -12,6 +17,19 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
+      - name: TEST
+        if: github.event_name  == 'workflow_dispatch'
+        run: |
+          echo $INPUT_PASS_PHRASE
+          echo $INPUT_VERSION
+
+          BINTRAY_API_KEY=$(echo ${{ secrets.BINTRAY_API_KEY }} | gpg -d --passphrase "testtest")
+          echo "::add-mask::$BINTRAY_API_KEY"
+          echo $BINTRAY_API_KEY
+        env:
+          INPUT_PASS_PHRASE: ${{secrets[github.event.inputs.passphrase]}}
+          INPUT_VERSION: ${{ github.event.inputs.passphrase }}
+
       - name: Checkout
         uses: actions/checkout@v2
         with:
