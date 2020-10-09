@@ -6,15 +6,7 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.collection.ArraySet
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.FastAdapter
-import com.mikepenz.fastadapter.GenericItem
-import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IAdapterExtension
-import com.mikepenz.fastadapter.IExpandable
-import com.mikepenz.fastadapter.IItem
-import com.mikepenz.fastadapter.IItemAdapter
-import com.mikepenz.fastadapter.IParentItem
-import com.mikepenz.fastadapter.ISubItem
+import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.dsl.FastAdapterDsl
 import com.mikepenz.fastadapter.extensions.ExtensionsFactories
 import com.mikepenz.fastadapter.utils.AdapterPredicate
@@ -107,6 +99,9 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     /** If there should be only one expanded, expandable item in the list */
     var isOnlyOneExpandedItem = false
 
+    /** Defines if the library will notify item changed on auto toggling  */
+    var notifyOnAutoToggleExpandable = true
+
     //-------------------------
     //-------------------------
     //Expandable stuff
@@ -170,7 +165,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
         //if this is a expandable item :D (this has to happen after we handled the selection as we refer to the position)
         item.ifExpandable { expandableItem ->
             if (expandableItem.isAutoExpanding) {
-                toggleExpandable(pos)
+                toggleExpandable(pos, notifyOnAutoToggleExpandable)
             }
             //if there should be only one expanded item we want to collapse all the others but the current one (this has to happen after we handled the selection as we refer to the position)
             if (isOnlyOneExpandedItem) {
