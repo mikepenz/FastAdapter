@@ -27,18 +27,26 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     // Indicates whether the touchTransmitter has been set on the RecyclerView
     private var touchTransmitterSet = false
 
+    // States of swiped items
+    //  Key = item position
+    //  Value = swiped direction (see {@link ItemTouchHelper})
     private val swipedStates = HashMap<Int,Int>()
 
     interface ItemSwipeCallback {
 
         /**
-         * Called when an drawer has been swiped
+         * Called when a drawer has been swiped
          *
          * @param position  position of item in the adapter
-         * @param direction direction the item where the drawer was swiped
+         * @param direction direction the item where the drawer was swiped (see {@link ItemTouchHelper})
          */
         fun itemSwiped(position: Int, direction: Int)
 
+        /**
+         * Called when a drawer has been un-swiped (= returns to its default position)
+         *
+         * @param position  position of item in the adapter
+         */
         fun itemUnswiped(position: Int)
     }
 
@@ -115,11 +123,10 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
         if (position == RecyclerView.NO_POSITION) return
 
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            println(">> dX $dX")
             // Careful, dX is not the delta of user's movement, it's the new offset of the swiped view's left side !
             val isLeftArea = dX < 0
 
-            // Update swiped state
+            // If unswiped, fire event and update swiped state
             if (0f == dX && swipedStates.containsKey(position)) {
                 itemSwipeCallback?.itemUnswiped(viewHolder.adapterPosition)
                 swipedStates.remove(position)
