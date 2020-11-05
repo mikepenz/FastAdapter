@@ -17,6 +17,7 @@ import com.mikepenz.fastadapter.app.adapters.IDraggableViewHolder
 import com.mikepenz.fastadapter.app.items.SwipeableDrawerItem
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
+import com.mikepenz.fastadapter.swipe.SimpleSwipeDrawerCallback
 import com.mikepenz.fastadapter.swipe_drag.SimpleSwipeDrawerDragCallback
 import com.mikepenz.fastadapter.utils.DragDropUtil
 import com.mikepenz.iconics.IconicsDrawable
@@ -27,7 +28,7 @@ import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
-class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback {
+class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeDrawerCallback.ItemSwipeCallback {
 
     //save our FastAdapter
     private lateinit var fastItemDrawerAdapter: FastItemAdapter<SwipeableDrawerItem>
@@ -108,7 +109,8 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback {
         //and add swipe as well
         touchCallback = SimpleSwipeDrawerDragCallback(
                 this,
-                ItemTouchHelper.LEFT)
+                ItemTouchHelper.LEFT,
+                this)
                 .withNotifyAllDrops(true)
                 .withSwipeLeft(80) // Width of delete button
                 .withSwipeRight(160) // Width of archive and share buttons
@@ -192,5 +194,12 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback {
 
     companion object {
         private val ALPHABET = arrayOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z")
+    }
+
+    override fun itemSwiped(position: Int, direction: Int) {
+        var directionStr = ""
+        if (ItemTouchHelper.LEFT == direction) directionStr = "left"
+        else if (ItemTouchHelper.RIGHT == direction) directionStr = "right"
+        Toast.makeText(this, "Item $position swiped $directionStr", Toast.LENGTH_SHORT).show()
     }
 }

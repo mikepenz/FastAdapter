@@ -15,7 +15,7 @@ import com.mikepenz.fastadapter.IItem
 /**
  * Created by Robb on 2020-07-04.
  */
-class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs: Int = ItemTouchHelper.LEFT) : ItemTouchHelper.SimpleCallback(0, swipeDirs) {
+class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs: Int = ItemTouchHelper.LEFT, private val itemSwipeCallback: ItemSwipeCallback? = null) : ItemTouchHelper.SimpleCallback(0, swipeDirs) {
 
     // Swipe movement control
     private var sensitivityFactor = 1f
@@ -27,6 +27,16 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     // Indicates whether the touchTransmitter has been set on the RecyclerView
     private var touchTransmitterSet = false
 
+    interface ItemSwipeCallback {
+
+        /**
+         * Called when an item has been swiped
+         *
+         * @param position  position of item in the adapter
+         * @param direction direction the item was swiped
+         */
+        fun itemSwiped(position: Int, direction: Int)
+    }
 
     /**
      * Enable swipe to the left until the given width has been reached
@@ -71,7 +81,12 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        // Not used
+        viewHolder.itemView.translationX = 0f
+        viewHolder.itemView.translationY = 0f
+        val position = viewHolder.adapterPosition
+        if (position != RecyclerView.NO_POSITION) {
+            itemSwipeCallback?.itemSwiped(position, direction)
+        }
     }
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
