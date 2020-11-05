@@ -27,15 +27,19 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     // Indicates whether the touchTransmitter has been set on the RecyclerView
     private var touchTransmitterSet = false
 
+    private val swipedStates = HashMap<Int,Int>()
+
     interface ItemSwipeCallback {
 
         /**
-         * Called when an item has been swiped
+         * Called when an drawer has been swiped
          *
          * @param position  position of item in the adapter
-         * @param direction direction the item was swiped
+         * @param direction direction the item where the drawer was swiped
          */
         fun itemSwiped(position: Int, direction: Int)
+
+        fun itemUnswiped(position: Int)
     }
 
     /**
@@ -84,8 +88,9 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
         viewHolder.itemView.translationX = 0f
         viewHolder.itemView.translationY = 0f
         val position = viewHolder.adapterPosition
-        if (position != RecyclerView.NO_POSITION) {
+        if (position != RecyclerView.NO_POSITION && (!swipedStates.containsKey(position) || swipedStates[position] != direction) ) {
             itemSwipeCallback?.itemSwiped(position, direction)
+            swipedStates[position] = direction
         }
     }
 
@@ -106,14 +111,22 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
             touchTransmitterSet = true
         }
 
-        if (viewHolder.adapterPosition == RecyclerView.NO_POSITION) {
-            return
-        }
+        val position = viewHolder.adapterPosition
+        if (position == RecyclerView.NO_POSITION) return
 
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            val isLeft = dX < 0
+            println(">> dX $dX")
+            // Careful, dX is not the delta of user's movement, it's the new offset of the swiped view's left side !
+            val isLeftArea = dX < 0
+
+            // Update swiped state
+            if (0f == dX && swipedStates.containsKey(position)) {
+                itemSwipeCallback?.itemUnswiped(viewHolder.adapterPosition)
+                swipedStates.remove(position)
+            }
+
             var swipeWidthPc = recyclerView.context.resources.displayMetrics.density / itemView.width
-            swipeWidthPc *= if (isLeft) swipeWidthLeftDp else swipeWidthRightDp
+            swipeWidthPc *= if (isLeftArea) swipeWidthLeftDp else swipeWidthRightDp
 
             var swipeableView = itemView
             if (viewHolder is IDrawerSwipeableViewHolder) swipeableView = viewHolder.swipeableView

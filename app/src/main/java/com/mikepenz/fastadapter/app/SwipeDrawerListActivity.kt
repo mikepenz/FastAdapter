@@ -58,7 +58,6 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSw
     }
 
     private fun share(item: SwipeableDrawerItem) {
-        item.shareAction = null
         val position12 = fastItemDrawerAdapter.getAdapterPosition(item)
         if (position12 != RecyclerView.NO_POSITION) {
             // Do something intelligent here
@@ -200,6 +199,10 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSw
         var directionStr = ""
         if (ItemTouchHelper.LEFT == direction) directionStr = "left"
         else if (ItemTouchHelper.RIGHT == direction) directionStr = "right"
-        Toast.makeText(this, "Item $position swiped $directionStr", Toast.LENGTH_SHORT).show()
+        println("Item $position swiped $directionStr")
+    }
+
+    override fun itemUnswiped(position: Int) {
+        println("Item $position unswiped")
     }
 }
