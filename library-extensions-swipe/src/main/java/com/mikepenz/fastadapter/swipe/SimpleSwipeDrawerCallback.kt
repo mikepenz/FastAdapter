@@ -30,7 +30,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     // States of swiped items
     //  Key = item position
     //  Value = swiped direction (see {@link ItemTouchHelper})
-    private val swipedStates = HashMap<Int,Int>()
+    private val swipedStates = HashMap<Int, Int>()
 
     interface ItemSwipeCallback {
 
@@ -96,7 +96,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
         viewHolder.itemView.translationX = 0f
         viewHolder.itemView.translationY = 0f
         val position = viewHolder.adapterPosition
-        if (position != RecyclerView.NO_POSITION && (!swipedStates.containsKey(position) || swipedStates[position] != direction) ) {
+        if (position != RecyclerView.NO_POSITION && (!swipedStates.containsKey(position) || swipedStates[position] != direction)) {
             itemSwipeCallback?.itemSwiped(position, direction)
             swipedStates[position] = direction
         }
