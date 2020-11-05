@@ -126,7 +126,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
      * Hack to force-transmit click events to the first visible View at the clicked coordinates
      * [< swiped area ] exposed sublayer ]
      * Android default touch event mechanisms don't transmit these events to the sublayer :
-     * any click on the exposed surface just swipe the item back to where it came
+     * any click on the exposed surface just swipes the item back to where it came
      */
     class RecyclerTouchTransmitter : View.OnTouchListener {
 
