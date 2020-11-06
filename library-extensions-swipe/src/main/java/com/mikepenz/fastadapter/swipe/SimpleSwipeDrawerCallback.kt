@@ -93,8 +93,6 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        viewHolder.itemView.translationX = 0f
-        viewHolder.itemView.translationY = 0f
         val position = viewHolder.adapterPosition
         if (position != RecyclerView.NO_POSITION && (!swipedStates.containsKey(position) || swipedStates[position] != direction)) {
             itemSwipeCallback?.itemSwiped(position, direction)
