@@ -48,7 +48,7 @@ It's blazingly fast, minimizing the code you need to write, and is easy to exten
 
 ## Latest releases 🛠
 
-- Kotlin | [v5.2.4](https://github.com/mikepenz/FastAdapter/tree/v5.2.4)
+- Kotlin | [v5.3.0](https://github.com/mikepenz/FastAdapter/tree/v5.3.0)
 - Java && AndroidX | [v3.3.1](https://github.com/mikepenz/FastAdapter/tree/v3.3.1)
 - Java && AppCompat | [v3.2.9](https://github.com/mikepenz/FastAdapter/tree/v3.2.9)
 
@@ -335,14 +335,14 @@ Other Libs:
 
 # Developed By
 
-* Mike Penz 
-  * [mikepenz.com](http://mikepenz.com) - <mikepenz@gmail.com>
-  * [paypal.me/mikepenz](http://paypal.me/mikepenz)
+- Mike Penz
+  - [mikepenz.dev](https://mikepenz.dev) - [blog.mikepenz.dev](https://blog.mikepenz.dev) - <mikepenz@gmail.com>
+  - [paypal.me/mikepenz](http://paypal.me/mikepenz)
+  - [Automatic changelog generation action](https://github.com/marketplace/actions/release-changelog-builder)
 
-* Fabian Terhorst
-  * [github.com/FabianTerhorst](https://github.com/FabianTerhorst) - <fabian.terhorst@gmail.com>
-  * [paypal.me/fabianterhorst](http://paypal.me/fabianterhorst)
-
+- Fabian Terhorst
+  - [github.com/FabianTerhorst](https://github.com/FabianTerhorst) - <fabian.terhorst@gmail.com>
+  - [paypal.me/fabianterhorst](http://paypal.me/fabianterhorst)
 
 # Contributors
 

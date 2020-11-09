@@ -14,14 +14,15 @@ import com.mikepenz.fastadapter.swipe.SimpleSwipeDrawerCallback
  */
 class SimpleSwipeDrawerDragCallback @JvmOverloads constructor(
         itemTouchCallback: ItemTouchCallback,
-        swipeDirs: Int = ItemTouchHelper.LEFT) : SimpleDragCallback(itemTouchCallback) {
+        swipeDirs: Int = ItemTouchHelper.LEFT,
+        itemSwipeCallback: SimpleSwipeDrawerCallback.ItemSwipeCallback? = null) : SimpleDragCallback(itemTouchCallback) {
 
     private val simpleSwipeCallback: SimpleSwipeDrawerCallback
     private var defaultSwipeDirs: Int = 0
 
     init {
         setDefaultSwipeDirs(swipeDirs)
-        simpleSwipeCallback = SimpleSwipeDrawerCallback(swipeDirs)
+        simpleSwipeCallback = SimpleSwipeDrawerCallback(swipeDirs, itemSwipeCallback)
     }
 
     override fun setDefaultSwipeDirs(defaultSwipeDirs: Int) {
