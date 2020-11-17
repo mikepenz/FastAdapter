@@ -174,10 +174,10 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
             if (childView != null)
                 when (event.actionMasked) {
                     MotionEvent.ACTION_DOWN -> {
-                        childView.onTouchEvent(event)
+                        return childView.onTouchEvent(event)
                     }
                     MotionEvent.ACTION_UP -> {
-                        childView.onTouchEvent(event)
+                        return childView.onTouchEvent(event)
                     }
                 }
             return false
