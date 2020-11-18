@@ -114,6 +114,7 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSw
                 .withSwipeLeft(80) // Width of delete button
                 .withSwipeRight(160) // Width of archive and share buttons
                 .withSensitivity(10f)
+                .withSurfaceThreshold(0.3f)
 
         touchHelper = ItemTouchHelper(touchCallback) // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
         touchHelper.attachToRecyclerView(rv) // Attach ItemTouchHelper to RecyclerView

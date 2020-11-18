@@ -50,6 +50,11 @@ class SimpleSwipeDrawerDragCallback @JvmOverloads constructor(
         return this
     }
 
+    fun withSurfaceThreshold(f: Float): SimpleSwipeDrawerDragCallback {
+        simpleSwipeCallback.withSurfaceThreshold(f)
+        return this
+    }
+
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         simpleSwipeCallback.onSwiped(viewHolder, direction)
     }

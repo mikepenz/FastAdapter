@@ -19,6 +19,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
 
     // Swipe movement control
     private var sensitivityFactor = 1f
+    private var surfaceThreshold = 0.5f
 
     // "Drawer width" swipe gesture is allowed to reach before blocking
     private var swipeWidthLeftDp = 20
@@ -79,6 +80,15 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
         return this
     }
 
+    /**
+     * % of the item's width or height needed to confirm the swipe action
+     * Android default : 0.5
+     */
+    fun withSurfaceThreshold(f: Float): SimpleSwipeDrawerCallback {
+        surfaceThreshold = f
+        return this
+    }
+
     override fun getSwipeDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         val item = FastAdapter.getHolderAdapterItem<IItem<*>>(viewHolder)
         return if (item is ISwipeable) {
@@ -107,6 +117,13 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
 
     override fun getSwipeEscapeVelocity(defaultValue: Float): Float {
         return defaultValue * sensitivityFactor
+    }
+
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+        // During the "unswipe" gesture, Android doesn't use the threshold value properly
+        // => Need to communicate an inverted value for swiped items
+        return if (swipedStates.containsKey(viewHolder.adapterPosition)) 1f - surfaceThreshold
+        else surfaceThreshold
     }
 
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
@@ -157,10 +174,10 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
             if (childView != null)
                 when (event.actionMasked) {
                     MotionEvent.ACTION_DOWN -> {
-                        childView.onTouchEvent(event)
+                        return childView.onTouchEvent(event)
                     }
                     MotionEvent.ACTION_UP -> {
-                        childView.onTouchEvent(event)
+                        return childView.onTouchEvent(event)
                     }
                 }
             return false
