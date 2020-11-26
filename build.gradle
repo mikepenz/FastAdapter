@@ -9,7 +9,7 @@ buildscript {
         ]
 
         setup = [
-                gradleTools: '4.1.0',
+                gradleTools: '4.1.1',
                 compileSdk : 30,
                 buildTools : "30.0.2",
                 minSdk     : 16,
@@ -24,10 +24,10 @@ buildscript {
                 drawerlayout    : '1.1.0',
                 constraintLayout: '2.0.4',
                 cardview        : '1.0.0',
-                kotlin          : '1.4.10',
-                iconics         : '5.0.0',
-                materialdrawer  : '8.1.6',
-                aboutlib        : '8.4.5',
+                kotlin          : '1.4.20',
+                iconics         : '5.1.1',
+                materialdrawer  : '8.2.0',
+                aboutlib        : '8.6.2',
                 roboelectric    : '4.4',
                 detekt          : '1.14.1',
                 paging          : "2.1.2",

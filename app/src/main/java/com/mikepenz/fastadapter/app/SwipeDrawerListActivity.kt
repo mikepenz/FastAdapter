@@ -9,8 +9,8 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.adapters.IDraggableViewHolder
@@ -80,7 +80,7 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSw
         }
 
         //get our recyclerView and do basic setup
-        rv.layoutManager = LinearLayoutManager(this)
+        rv.layoutManager = GridLayoutManager(this, 2)
         rv.itemAnimator = DefaultItemAnimator()
         rv.adapter = fastItemDrawerAdapter
 
