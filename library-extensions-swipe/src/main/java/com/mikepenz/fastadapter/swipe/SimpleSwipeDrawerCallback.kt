@@ -15,10 +15,11 @@ import com.mikepenz.fastadapter.IItem
 /**
  * Created by Robb on 2020-07-04.
  */
-class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs: Int = ItemTouchHelper.LEFT) : ItemTouchHelper.SimpleCallback(0, swipeDirs) {
+class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs: Int = ItemTouchHelper.LEFT, private val itemSwipeCallback: ItemSwipeCallback? = null) : ItemTouchHelper.SimpleCallback(0, swipeDirs) {
 
     // Swipe movement control
     private var sensitivityFactor = 1f
+    private var surfaceThreshold = 0.5f
 
     // "Drawer width" swipe gesture is allowed to reach before blocking
     private var swipeWidthLeftDp = 20
@@ -27,6 +28,28 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     // Indicates whether the touchTransmitter has been set on the RecyclerView
     private var touchTransmitterSet = false
 
+    // States of swiped items
+    //  Key = item position
+    //  Value = swiped direction (see {@link ItemTouchHelper})
+    private val swipedStates = HashMap<Int, Int>()
+
+    interface ItemSwipeCallback {
+
+        /**
+         * Called when a drawer has been swiped
+         *
+         * @param position  position of item in the adapter
+         * @param direction direction the item where the drawer was swiped (see {@link ItemTouchHelper})
+         */
+        fun itemSwiped(position: Int, direction: Int)
+
+        /**
+         * Called when a drawer has been un-swiped (= returns to its default position)
+         *
+         * @param position  position of item in the adapter
+         */
+        fun itemUnswiped(position: Int)
+    }
 
     /**
      * Enable swipe to the left until the given width has been reached
@@ -57,6 +80,15 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
         return this
     }
 
+    /**
+     * % of the item's width or height needed to confirm the swipe action
+     * Android default : 0.5
+     */
+    fun withSurfaceThreshold(f: Float): SimpleSwipeDrawerCallback {
+        surfaceThreshold = f
+        return this
+    }
+
     override fun getSwipeDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         val item = FastAdapter.getHolderAdapterItem<IItem<*>>(viewHolder)
         return if (item is ISwipeable) {
@@ -71,7 +103,11 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        // Not used
+        val position = viewHolder.adapterPosition
+        if (position != RecyclerView.NO_POSITION && (!swipedStates.containsKey(position) || swipedStates[position] != direction)) {
+            itemSwipeCallback?.itemSwiped(position, direction)
+            swipedStates[position] = direction
+        }
     }
 
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
@@ -83,6 +119,13 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
         return defaultValue * sensitivityFactor
     }
 
+    override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
+        // During the "unswipe" gesture, Android doesn't use the threshold value properly
+        // => Need to communicate an inverted value for swiped items
+        return if (swipedStates.containsKey(viewHolder.adapterPosition)) 1f - surfaceThreshold
+        else surfaceThreshold
+    }
+
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         val itemView = viewHolder.itemView
 
@@ -91,14 +134,21 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
             touchTransmitterSet = true
         }
 
-        if (viewHolder.adapterPosition == RecyclerView.NO_POSITION) {
-            return
-        }
+        val position = viewHolder.adapterPosition
+        if (position == RecyclerView.NO_POSITION) return
 
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
-            val isLeft = dX < 0
+            // Careful, dX is not the delta of user's movement, it's the new offset of the swiped view's left side !
+            val isLeftArea = dX < 0
+
+            // If unswiped, fire event and update swiped state
+            if (0f == dX && swipedStates.containsKey(position)) {
+                itemSwipeCallback?.itemUnswiped(viewHolder.adapterPosition)
+                swipedStates.remove(position)
+            }
+
             var swipeWidthPc = recyclerView.context.resources.displayMetrics.density / itemView.width
-            swipeWidthPc *= if (isLeft) swipeWidthLeftDp else swipeWidthRightDp
+            swipeWidthPc *= if (isLeftArea) swipeWidthLeftDp else swipeWidthRightDp
 
             var swipeableView = itemView
             if (viewHolder is IDrawerSwipeableViewHolder) swipeableView = viewHolder.swipeableView
@@ -111,7 +161,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
      * Hack to force-transmit click events to the first visible View at the clicked coordinates
      * [< swiped area ] exposed sublayer ]
      * Android default touch event mechanisms don't transmit these events to the sublayer :
-     * any click on the exposed surface just swipe the item back to where it came
+     * any click on the exposed surface just swipes the item back to where it came
      */
     class RecyclerTouchTransmitter : View.OnTouchListener {
 
@@ -124,10 +174,10 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
             if (childView != null)
                 when (event.actionMasked) {
                     MotionEvent.ACTION_DOWN -> {
-                        childView.onTouchEvent(event)
+                        return childView.onTouchEvent(event)
                     }
                     MotionEvent.ACTION_UP -> {
-                        childView.onTouchEvent(event)
+                        return childView.onTouchEvent(event)
                     }
                 }
             return false

@@ -1,6 +1,5 @@
 package com.mikepenz.fastadapter.app.items
 
-import android.graphics.Color
 import android.view.View
 import android.widget.TextView
 import androidx.annotation.StringRes
@@ -135,11 +134,12 @@ class SwipeableDrawerItem : AbstractItem<SwipeableDrawerItem.ViewHolder>(), ISwi
         }
 
         override fun onDropped() {
-            itemContent.setBackgroundColor(Color.WHITE)
+            // note this is only to showcase this callback, remember that changes to the item need to be remembered when a viewHolder is re-used
+            // itemContent.setBackgroundColor(itemContent.context.getThemeColor(R.attr.colorPrimary))
         }
 
         override fun onDragged() {
-            itemContent.setBackgroundColor(Color.LTGRAY)
+            // itemContent.setBackgroundColor(itemContent.context.getThemeColor(R.attr.colorPrimary))
         }
 
         override val swipeableView: View

@@ -9,14 +9,15 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.DefaultItemAnimator
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.adapters.IDraggableViewHolder
 import com.mikepenz.fastadapter.app.items.SwipeableDrawerItem
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
+import com.mikepenz.fastadapter.swipe.SimpleSwipeDrawerCallback
 import com.mikepenz.fastadapter.swipe_drag.SimpleSwipeDrawerDragCallback
 import com.mikepenz.fastadapter.utils.DragDropUtil
 import com.mikepenz.iconics.IconicsDrawable
@@ -27,7 +28,7 @@ import io.reactivex.functions.Consumer
 import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
-class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback {
+class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeDrawerCallback.ItemSwipeCallback {
 
     //save our FastAdapter
     private lateinit var fastItemDrawerAdapter: FastItemAdapter<SwipeableDrawerItem>
@@ -57,7 +58,6 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback {
     }
 
     private fun share(item: SwipeableDrawerItem) {
-        item.shareAction = null
         val position12 = fastItemDrawerAdapter.getAdapterPosition(item)
         if (position12 != RecyclerView.NO_POSITION) {
             // Do something intelligent here
@@ -80,7 +80,7 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback {
         }
 
         //get our recyclerView and do basic setup
-        rv.layoutManager = LinearLayoutManager(this)
+        rv.layoutManager = GridLayoutManager(this, 2)
         rv.itemAnimator = DefaultItemAnimator()
         rv.adapter = fastItemDrawerAdapter
 
@@ -108,11 +108,13 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback {
         //and add swipe as well
         touchCallback = SimpleSwipeDrawerDragCallback(
                 this,
-                ItemTouchHelper.LEFT)
+                ItemTouchHelper.LEFT,
+                this)
                 .withNotifyAllDrops(true)
                 .withSwipeLeft(80) // Width of delete button
                 .withSwipeRight(160) // Width of archive and share buttons
                 .withSensitivity(10f)
+                .withSurfaceThreshold(0.3f)
 
         touchHelper = ItemTouchHelper(touchCallback) // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
         touchHelper.attachToRecyclerView(rv) // Attach ItemTouchHelper to RecyclerView
@@ -192,5 +194,16 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback {
 
     companion object {
         private val ALPHABET = arrayOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z")
+    }
+
+    override fun itemSwiped(position: Int, direction: Int) {
+        var directionStr = ""
+        if (ItemTouchHelper.LEFT == direction) directionStr = "left"
+        else if (ItemTouchHelper.RIGHT == direction) directionStr = "right"
+        println("Item $position swiped $directionStr")
+    }
+
+    override fun itemUnswiped(position: Int) {
+        println("Item $position unswiped")
     }
 }
