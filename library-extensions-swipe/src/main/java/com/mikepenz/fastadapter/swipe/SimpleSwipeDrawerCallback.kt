@@ -10,8 +10,6 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
-import kotlin.math.max
-import kotlin.math.min
 
 
 /**
@@ -137,11 +135,16 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
         }
 
         val position = viewHolder.adapterPosition
+
         if (position == RecyclerView.NO_POSITION) return
 
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             // Careful, dX is not the delta of user's movement, it's the new offset of the swiped view's left side !
             val isLeftArea = dX < 0
+            // Android's ItemTouchHelper incorrectly sets dX to recyclerView.width when swiping to the max,
+            // which breaks the animation when itemView is smaller than that (e.g. two columns layout)
+            // => fix animation by limiting dX to the itemView's width
+            val itemDx = (dX / recyclerView.width) * itemView.width
 
             // If unswiped, fire event and update swiped state
             if (0f == dX && swipedStates.containsKey(position)) {
@@ -155,11 +158,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
             var swipeableView = itemView
             if (viewHolder is IDrawerSwipeableViewHolder) swipeableView = viewHolder.swipeableView
 
-            // Android's ItemTouchHelper incorrectly sets dX to recyclerView.width when swiping to the max,
-            // which breaks the animation when itemView is smaller than that (e.g. two columns layout)
-            // => fix animation by limiting dX to the itemView's width
-            val realDx = if (dX < 0) max(dX, -itemView.width * 1f) else min(dX, itemView.width * 1f)
-            swipeableView.translationX = realDx * swipeWidthPc
+            swipeableView.translationX = itemDx * swipeWidthPc
         } else super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
 
