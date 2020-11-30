@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IItem
+import kotlin.math.abs
 
 
 /**
@@ -32,6 +33,9 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     //  Key = item position
     //  Value = swiped direction (see {@link ItemTouchHelper})
     private val swipedStates = HashMap<Int, Int>()
+
+    // True if a swiping gesture is currently being done
+    var isSwiping = false
 
     interface ItemSwipeCallback {
 
@@ -107,6 +111,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
         if (position != RecyclerView.NO_POSITION && (!swipedStates.containsKey(position) || swipedStates[position] != direction)) {
             itemSwipeCallback?.itemSwiped(position, direction)
             swipedStates[position] = direction
+            isSwiping = false
         }
     }
 
@@ -135,11 +140,16 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
         }
 
         val position = viewHolder.adapterPosition
+
         if (position == RecyclerView.NO_POSITION) return
 
         if (actionState == ItemTouchHelper.ACTION_STATE_SWIPE) {
             // Careful, dX is not the delta of user's movement, it's the new offset of the swiped view's left side !
             val isLeftArea = dX < 0
+            // Android's ItemTouchHelper incorrectly sets dX to recyclerView.width when swiping to the max,
+            // which breaks the animation when itemView is smaller than that (e.g. two columns layout)
+            // => fix animation by limiting dX to the itemView's width
+            val dXPercent = dX / recyclerView.width
 
             // If unswiped, fire event and update swiped state
             if (0f == dX && swipedStates.containsKey(position)) {
@@ -147,13 +157,14 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
                 swipedStates.remove(position)
             }
 
-            var swipeWidthPc = recyclerView.context.resources.displayMetrics.density / itemView.width
-            swipeWidthPc *= if (isLeftArea) swipeWidthLeftDp else swipeWidthRightDp
+            // If the position is between "swiped" and "unswiped", then we're swiping
+            isSwiping = (abs(dXPercent) > 0 && abs(dXPercent) < 1)
 
             var swipeableView = itemView
             if (viewHolder is IDrawerSwipeableViewHolder) swipeableView = viewHolder.swipeableView
 
-            swipeableView.translationX = dX * swipeWidthPc
+            val swipeWidthPc = recyclerView.context.resources.displayMetrics.density * if (isLeftArea) swipeWidthLeftDp else swipeWidthRightDp
+            swipeableView.translationX = dXPercent * swipeWidthPc
         } else super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
     }
 
@@ -163,10 +174,10 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
      * Android default touch event mechanisms don't transmit these events to the sublayer :
      * any click on the exposed surface just swipes the item back to where it came
      */
-    class RecyclerTouchTransmitter : View.OnTouchListener {
+    inner class RecyclerTouchTransmitter : View.OnTouchListener {
 
         override fun onTouch(v: View?, event: MotionEvent): Boolean {
-            if (null == v || v !is ViewGroup) return false
+            if (isSwiping || null == v || v !is ViewGroup) return false
 
             // Get the first visible View under the clicked coordinates
             val childView = v.getFirstVisibleViewByCoordinates(event.x, event.y)
@@ -174,9 +185,11 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
             if (childView != null)
                 when (event.actionMasked) {
                     MotionEvent.ACTION_DOWN -> {
+                        println("> action down")
                         return childView.onTouchEvent(event)
                     }
                     MotionEvent.ACTION_UP -> {
+                        println("> action up")
                         return childView.onTouchEvent(event)
                     }
                 }
