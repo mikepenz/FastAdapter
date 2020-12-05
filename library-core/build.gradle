@@ -52,6 +52,7 @@ dependencies {
         exclude group: "com.android.support", module: "support-annotations"
         exclude group: "com.android.support", module: "support-v4"
     }
+    testImplementation project(path: ':library-extensions-diff')
 }
 
 if (project.hasProperty('pushall') || project.hasProperty('library_core_only')) {

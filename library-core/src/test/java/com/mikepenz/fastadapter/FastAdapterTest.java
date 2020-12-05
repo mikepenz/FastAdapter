@@ -7,6 +7,7 @@ import android.widget.FrameLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.mikepenz.fastadapter.adapters.ItemAdapter;
+import com.mikepenz.fastadapter.diff.FastAdapterDiffUtil;
 import com.mikepenz.fastadapter.listeners.OnBindViewHolderListener;
 import com.mikepenz.fastadapter.select.SelectExtension;
 
@@ -212,5 +213,31 @@ public class FastAdapterTest {
         adapter.registerItemFactory(testItem.getType(), testItem); // registering the factory happens only during usage of the adapter now
         final ViewGroup dummyParent = new FrameLayout(RuntimeEnvironment.application);
         adapter.onCreateViewHolder(dummyParent, testItem.getType());
+    }
+
+    @Test
+    public void testDifferKeepsSelection() throws Exception {
+        SelectExtension<TestItem> selectExtension = adapter.getExtension(SelectExtension.class);
+
+        // Populate the list for the 1st time
+        FastAdapterDiffUtil.INSTANCE.set(itemAdapter, TestDataGenerator.genTestItemList(100));
+
+        // Select 10th item
+        selectExtension.select(10);
+
+        // Make sure it is selected
+        assertThat(selectExtension.getSelections().size()).isEqualTo(1);
+        assertThat(selectExtension.getSelections().iterator().next()).isEqualTo(10);
+        assertThat(selectExtension.getSelectedItems().size()).isEqualTo(1);
+        assertThat(selectExtension.getSelectedItems().iterator().next().getIdentifier()).isEqualTo(10);
+
+        // Refresh the list with the same items
+        FastAdapterDiffUtil.INSTANCE.set(itemAdapter, TestDataGenerator.genTestItemList(100));
+
+        // Make sure the previously selected item is still selected
+        assertThat(selectExtension.getSelections().size()).isEqualTo(1);
+        assertThat(selectExtension.getSelections().iterator().next()).isEqualTo(10);
+        assertThat(selectExtension.getSelectedItems().size()).isEqualTo(1);
+        assertThat(selectExtension.getSelectedItems().iterator().next().getIdentifier()).isEqualTo(10);
     }
 }
