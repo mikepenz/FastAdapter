@@ -26,7 +26,7 @@ buildscript {
                 cardview        : '1.0.0',
                 kotlin          : '1.4.30',
                 iconics         : '5.2.5',
-                materialdrawer  : '8.3.1',
+                materialdrawer  : '8.3.2',
                 aboutlib        : '8.8.1',
                 roboelectric    : '4.5.1',
                 detekt          : '1.15.0',
@@ -39,7 +39,6 @@ buildscript {
     repositories {
         google()
         mavenCentral()
-        jcenter()
         maven {
             url "https://plugins.gradle.org/m2/"
         }
@@ -59,9 +58,6 @@ allprojects {
         google()
         mavenCentral()
         jcenter()
-        maven { url "https://oss.sonatype.org/content/repositories/snapshots/" }
-        maven { url "https://jitpack.io" }
-        maven { url "https://dl.bintray.com/mikepenz/maven" }
     }
 }
 

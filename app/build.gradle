@@ -169,7 +169,6 @@ dependencies {
 
 buildscript {
     repositories {
-        google()
         jcenter()
     }
     dependencies {
