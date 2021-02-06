@@ -9,13 +9,14 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.CheckBoxSampleItem
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
-import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
 class CheckBoxSampleActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySampleBinding
 
     //save our FastAdapter
     private lateinit var fastItemAdapter: FastItemAdapter<CheckBoxSampleItem>
@@ -23,10 +24,12 @@ class CheckBoxSampleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = FastItemAdapter()
@@ -45,9 +48,9 @@ class CheckBoxSampleActivity : AppCompatActivity() {
         fastItemAdapter.addEventHook(CheckBoxSampleItem.CheckBoxClickEvent())
 
         //get our recyclerView and do basic setup
-        rv.layoutManager = LinearLayoutManager(this)
-        rv.itemAnimator = DefaultItemAnimator()
-        rv.adapter = fastItemAdapter
+        binding.rv.layoutManager = LinearLayoutManager(this)
+        binding.rv.itemAnimator = DefaultItemAnimator()
+        binding.rv.adapter = fastItemAdapter
 
         //fill with some sample data
         var x = 0

@@ -10,20 +10,24 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData
 import com.mikepenz.fastadapter.app.items.ImageItem
-import kotlinx.android.synthetic.main.activity_sample.*
 
 class ImageListActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySampleBinding
+
     //save our FastAdapter
     private lateinit var fastItemAdapter: FastItemAdapter<ImageItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setTitle(R.string.sample_image_list)
 
         //create our FastAdapter which will manage everything
@@ -41,13 +45,13 @@ class ImageListActivity : AppCompatActivity() {
         val columns = resources.getInteger(R.integer.wall_splash_columns)
         if (columns == 1) {
             //linearLayoutManager for one column
-            rv.layoutManager = LinearLayoutManager(this)
+            binding.rv.layoutManager = LinearLayoutManager(this)
         } else {
             //gridLayoutManager for more than one column ;)
-            rv.layoutManager = GridLayoutManager(this, columns)
+            binding.rv.layoutManager = GridLayoutManager(this, columns)
         }
-        rv.itemAnimator = DefaultItemAnimator()
-        rv.adapter = fastItemAdapter
+        binding.rv.itemAnimator = DefaultItemAnimator()
+        binding.rv.adapter = fastItemAdapter
 
         //fill with some sample data
         fastItemAdapter.add(ImageDummyData.imageItems)

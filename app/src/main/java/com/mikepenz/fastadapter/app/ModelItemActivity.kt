@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ModelAdapter
 import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.model.IconModel
 import com.mikepenz.fastadapter.app.model.ModelIconItem
 import com.mikepenz.fastadapter.select.getSelectExtension
@@ -16,20 +17,23 @@ import com.mikepenz.iconics.Iconics
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
 import com.turingtechnologies.materialscrollbar.CustomIndicator
 import com.turingtechnologies.materialscrollbar.DragScrollBar
-import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.ArrayList
 import kotlin.Comparator
 
 class ModelItemActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySampleBinding
+
     //save our FastAdapter
     private lateinit var fastAdapter: FastAdapter<ModelIconItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setTitle(R.string.sample_model_item)
 
         //adapters
@@ -44,7 +48,7 @@ class ModelItemActivity : AppCompatActivity() {
         selectExtension.isSelectable = true
 
         //init our gridLayoutManager and configure RV
-        rv.adapter = fastScrollIndicatorAdapter.wrap(fastAdapter)
+        binding.rv.adapter = fastScrollIndicatorAdapter.wrap(fastAdapter)
 
         val materialScrollBar = findViewById<DragScrollBar>(R.id.dragScrollBar)
         materialScrollBar.visibility = View.VISIBLE
@@ -52,8 +56,8 @@ class ModelItemActivity : AppCompatActivity() {
         materialScrollBar.setHandleOffColor(ContextCompat.getColor(this, R.color.colorAccent))
         materialScrollBar.setIndicator(CustomIndicator(this), true)
 
-        rv.layoutManager = GridLayoutManager(this, 3)
-        rv.itemAnimator = SlideDownAlphaAnimator()
+        binding.rv.layoutManager = GridLayoutManager(this, 3)
+        binding.rv.itemAnimator = SlideDownAlphaAnimator()
 
         //order fonts by their name
         val mFonts = ArrayList(Iconics.getRegisteredFonts(this))

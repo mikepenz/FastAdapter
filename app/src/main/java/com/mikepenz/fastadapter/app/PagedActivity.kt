@@ -10,29 +10,32 @@ import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.SimpleImageItem
 import com.mikepenz.fastadapter.app.paged.DemoEntity
 import com.mikepenz.fastadapter.app.paged.DemoEntityViewModel
 import com.mikepenz.fastadapter.paged.PagedModelAdapter
 import com.mikepenz.fastadapter.select.getSelectExtension
-import kotlinx.android.synthetic.main.activity_main.*
 
 
 class PagedActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySampleBinding
 
     //save our FastAdapter
     private lateinit var mFastAdapter: FastAdapter<SimpleImageItem>
+
     //save our FastAdapter
     private lateinit var mItemAdapter: PagedModelAdapter<DemoEntity, SimpleImageItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //create the activity
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setTitle(R.string.sample_paged_list)
 
         val asyncDifferConfig = AsyncDifferConfig.Builder<DemoEntity>(object : DiffUtil.ItemCallback<DemoEntity>() {
@@ -63,8 +66,8 @@ class PagedActivity : AppCompatActivity() {
 
         //configure our fastAdapter
         //rv.setLayoutManager(new GridLayoutManager(this, 3));
-        rv.layoutManager = LinearLayoutManager(this)
-        rv.adapter = mFastAdapter
+        binding.rv.layoutManager = LinearLayoutManager(this)
+        binding.rv.adapter = mFastAdapter
 
         val viewModel = ViewModelProviders.of(this,
                 DemoEntityViewModel.DemoEntityViewModelFactory(this.application))
