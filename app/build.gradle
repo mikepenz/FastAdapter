@@ -70,16 +70,16 @@ dependencies {
 
     implementation 'com.android.support:multidex:1.0.3'
 
-    implementation project(':library-core')
-    implementation project(':library-extensions-binding')
-    implementation project(':library-extensions-diff')
-    implementation project(':library-extensions-drag')
-    implementation project(':library-extensions-expandable')
-    implementation project(':library-extensions-scroll')
-    implementation project(':library-extensions-swipe')
-    implementation project(':library-extensions-ui')
-    implementation project(':library-extensions-utils')
-    implementation project(':library-extensions-paged')
+    implementation project(':fastadapter')
+    implementation project(':fastadapter-extensions-binding')
+    implementation project(':fastadapter-extensions-diff')
+    implementation project(':fastadapter-extensions-drag')
+    implementation project(':fastadapter-extensions-expandable')
+    implementation project(':fastadapter-extensions-scroll')
+    implementation project(':fastadapter-extensions-swipe')
+    implementation project(':fastadapter-extensions-ui')
+    implementation project(':fastadapter-extensions-utils')
+    implementation project(':fastadapter-extensions-paged')
 
     implementation "androidx.appcompat:appcompat:${versions.appcompat}"
     implementation "androidx.recyclerview:recyclerview:${versions.recyclerView}"
