@@ -1,4 +1,4 @@
-# FastAdapter [![Status](https://travis-ci.org/mikepenz/FastAdapter.svg?branch=develop)](https://travis-ci.org/mikepenz/FastAdapter) [![Download](https://api.bintray.com/packages/mikepenz/maven/com.mikepenz%3Afastadapter/images/download.svg)](https://bintray.com/mikepenz/maven/com.mikepenz%3Afastadapter/_latestVersion)
+# FastAdapter
 
 The FastAdapter is here to simplify creating adapters for RecyclerViews. Don't worry about the adapter anymore. Just write the logic for how your view/item should look like, and you are done.
 It's blazingly fast, minimizing the code you need to write, and is easy to extend.
