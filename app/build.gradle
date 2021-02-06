@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 apply plugin: 'com.mikepenz.aboutlibraries.plugin'
@@ -46,6 +45,9 @@ android {
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+    kotlinOptions {
+        jvmTarget = "1.8"
     }
     packagingOptions {
         exclude 'META-INF/library-core_release.kotlin_module'
@@ -133,8 +135,8 @@ dependencies {
     kapt 'com.jakewharton:butterknife-compiler:10.2.3'
 
     //used to load the images in the ImageListSample
-    //https://github.com/bumptech/glide
-    implementation 'com.github.bumptech.glide:glide:3.8.0'
+    //https://github.com/coil-kt/coil
+    implementation 'io.coil-kt:coil:1.1.1'
 
     //Used to provide the drag selection like google photos
     implementation 'com.github.MFlisar:DragSelectRecyclerView:0.3'

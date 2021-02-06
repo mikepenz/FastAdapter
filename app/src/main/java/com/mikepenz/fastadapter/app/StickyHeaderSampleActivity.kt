@@ -9,10 +9,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
-import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
 /**
@@ -20,16 +20,19 @@ import java.util.*
  * https://github.com/timehop/sticky-headers-recyclerview
  */
 class StickyHeaderSampleActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySampleBinding
 
     //save our FastAdapter
     private lateinit var fastAdapter: FastAdapter<SimpleItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setTitle(R.string.sample_sticky_header)
 
         //create our adapters
@@ -47,13 +50,13 @@ class StickyHeaderSampleActivity : AppCompatActivity() {
         fastAdapter.setHasStableIds(true)
 
         //get our recyclerView and do basic setup
-        rv.layoutManager = LinearLayoutManager(this)
-        rv.itemAnimator = DefaultItemAnimator()
-        rv.adapter = stickyHeaderAdapter.wrap(fastAdapter)
+        binding.rv.layoutManager = LinearLayoutManager(this)
+        binding.rv.itemAnimator = DefaultItemAnimator()
+        binding.rv.adapter = stickyHeaderAdapter.wrap(fastAdapter)
 
         //this adds the Sticky Headers within our list
         val decoration = StickyRecyclerHeadersDecoration(stickyHeaderAdapter)
-        rv.addItemDecoration(decoration)
+        binding.rv.addItemDecoration(decoration)
 
         //fill with some sample data
         val item = SimpleItem().withName("Header")

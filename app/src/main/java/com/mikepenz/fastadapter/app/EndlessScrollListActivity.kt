@@ -17,6 +17,7 @@ import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
@@ -29,11 +30,11 @@ import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
 import com.mikepenz.iconics.utils.actionBar
 import com.mikepenz.iconics.utils.colorInt
-import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
 
 class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilterListener<GenericItem> {
+    private lateinit var binding: ActivitySampleBinding
 
     //save our FastAdapter
     private lateinit var fastItemAdapter: GenericFastItemAdapter
@@ -48,10 +49,12 @@ class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = FastItemAdapter()
@@ -84,9 +87,9 @@ class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFi
         fastItemAdapter.itemFilter.itemFilterListener = this
 
         //get our recyclerView and do basic setup
-        rv.layoutManager = LinearLayoutManager(this)
-        rv.itemAnimator = DefaultItemAnimator()
-        rv.adapter = fastItemAdapter
+        binding.rv.layoutManager = LinearLayoutManager(this)
+        binding.rv.itemAnimator = DefaultItemAnimator()
+        binding.rv.adapter = fastItemAdapter
         endlessRecyclerOnScrollListener = object : EndlessRecyclerOnScrollListener(footerAdapter) {
             override fun onLoadMore(currentPage: Int) {
                 footerAdapter.clear()
@@ -103,7 +106,7 @@ class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFi
                 }, 2000)
             }
         }
-        rv.addOnScrollListener(endlessRecyclerOnScrollListener)
+        binding.rv.addOnScrollListener(endlessRecyclerOnScrollListener)
 
         //fill with some sample data (load the first page here)
         val items = ArrayList<SimpleItem>()
@@ -115,7 +118,7 @@ class EndlessScrollListActivity : AppCompatActivity(), ItemTouchCallback, ItemFi
         //add drag and drop for item
         touchCallback = SimpleDragCallback(this)
         touchHelper = ItemTouchHelper(touchCallback) // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
-        touchHelper.attachToRecyclerView(rv) // Attach ItemTouchHelper to RecyclerView
+        touchHelper.attachToRecyclerView(binding.rv) // Attach ItemTouchHelper to RecyclerView
 
         //restore selections (this has to be done after the items were added
         fastItemAdapter.withSavedInstanceState(savedInstanceState)

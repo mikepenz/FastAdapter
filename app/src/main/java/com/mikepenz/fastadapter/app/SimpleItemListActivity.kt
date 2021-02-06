@@ -18,6 +18,7 @@ import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
 import com.mikepenz.fastadapter.app.adapters.FastScrollIndicatorAdapter
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
@@ -28,10 +29,10 @@ import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
 import com.mikepenz.iconics.utils.actionBar
 import com.mikepenz.iconics.utils.colorInt
-import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
 class SimpleItemListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilterListener<SimpleItem> {
+    private lateinit var binding: ActivitySampleBinding
 
     //save our FastAdapter
     private lateinit var fastAdapter: FastAdapter<SimpleItem>
@@ -43,10 +44,12 @@ class SimpleItemListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilte
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
         //
         val fastScrollIndicatorAdapter = FastScrollIndicatorAdapter<SimpleItem>()
@@ -73,9 +76,9 @@ class SimpleItemListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilte
         itemAdapter.itemFilter.itemFilterListener = this
 
         //get our recyclerView and do basic setup
-        rv.layoutManager = LinearLayoutManager(this)
-        rv.itemAnimator = DefaultItemAnimator()
-        rv.adapter = fastScrollIndicatorAdapter.wrap(fastAdapter)
+        binding.rv.layoutManager = LinearLayoutManager(this)
+        binding.rv.itemAnimator = DefaultItemAnimator()
+        binding.rv.adapter = fastScrollIndicatorAdapter.wrap(fastAdapter)
 
         //fill with some sample data
         var x = 0
@@ -94,7 +97,7 @@ class SimpleItemListActivity : AppCompatActivity(), ItemTouchCallback, ItemFilte
         //add drag and drop for item
         touchCallback = SimpleDragCallback(this)
         touchHelper = ItemTouchHelper(touchCallback) // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
-        touchHelper.attachToRecyclerView(rv) // Attach ItemTouchHelper to RecyclerView
+        touchHelper.attachToRecyclerView(binding.rv) // Attach ItemTouchHelper to RecyclerView
 
         //restore selections (this has to be done after the items were added
         fastAdapter.withSavedInstanceState(savedInstanceState)

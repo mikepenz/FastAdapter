@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.aboutlibraries.LibsBuilder
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter.app.databinding.ActivityMainBinding
 import com.mikepenz.fastadapter.app.dummy.ImageDummyData
 import com.mikepenz.fastadapter.app.items.SimpleImageItem
 import com.mikepenz.fastadapter.select.SelectExtension
@@ -33,9 +34,9 @@ import com.mikepenz.materialdrawer.model.interfaces.withIdentifier
 import com.mikepenz.materialdrawer.model.interfaces.withName
 import com.mikepenz.materialdrawer.model.interfaces.withSelectable
 import com.mikepenz.materialdrawer.util.addItems
-import kotlinx.android.synthetic.main.activity_main.*
 
 class SampleActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding
 
     private lateinit var actionBarDrawerToggle: ActionBarDrawerToggle
 
@@ -51,19 +52,20 @@ class SampleActivity : AppCompatActivity() {
     @Suppress("deprecation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeButtonEnabled(true)
         supportActionBar?.title = ""
 
-        actionBarDrawerToggle = ActionBarDrawerToggle(this, root, toolbar, R.string.material_drawer_open, R.string.material_drawer_close)
+        actionBarDrawerToggle = ActionBarDrawerToggle(this, binding.root, binding.toolbar, R.string.material_drawer_open, R.string.material_drawer_close)
 
         //Create the drawer
-        slider.apply {
+        binding.slider.apply {
             addItems(
                     PrimaryDrawerItem().withName(R.string.sample_icon_grid).withDescription(R.string.sample_icon_grid_descr).withSelectable(false).withIdentifier(8).withIcon(MaterialDesignIconic.Icon.gmi_grid),
                     PrimaryDrawerItem().withName(R.string.sample_simple_item_list).withDescription(R.string.sample_simple_item_list_descr).withSelectable(false).withIdentifier(6).withIcon(MaterialDesignIconic.Icon.gmi_format_align_justify),
@@ -145,9 +147,9 @@ class SampleActivity : AppCompatActivity() {
 
         //configure our fastAdapter
         //rv.setLayoutManager(new GridLayoutManager(this, 3));
-        rv.layoutManager = LinearLayoutManager(this)
-        rv.adapter = mFastAdapter
-        rv.itemAnimator = SlideDownAlphaAnimator().apply {
+        binding.rv.layoutManager = LinearLayoutManager(this)
+        binding.rv.adapter = mFastAdapter
+        binding.rv.itemAnimator = SlideDownAlphaAnimator().apply {
             addDuration = 500
             removeDuration = 500
         }
@@ -189,10 +191,10 @@ class SampleActivity : AppCompatActivity() {
 
         //find out the current visible position
         var firstVisiblePosition = 0
-        if (rv.layoutManager is LinearLayoutManager) {
-            firstVisiblePosition = (rv.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
-        } else if (rv.layoutManager is GridLayoutManager) {
-            firstVisiblePosition = (rv.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
+        if (binding.rv.layoutManager is LinearLayoutManager) {
+            firstVisiblePosition = (binding.rv.layoutManager as LinearLayoutManager).findFirstVisibleItemPosition()
+        } else if (binding.rv.layoutManager is GridLayoutManager) {
+            firstVisiblePosition = (binding.rv.layoutManager as GridLayoutManager).findFirstVisibleItemPosition()
         }
 
         //handle the menu item click
@@ -232,7 +234,7 @@ class SampleActivity : AppCompatActivity() {
     override fun onSaveInstanceState(_outState: Bundle) {
         var outState = _outState
         //add the values which need to be saved from the drawer to the bundle
-        outState = slider.saveInstanceState(outState)
+        outState = binding.slider.saveInstanceState(outState)
         //add the values which need to be saved from the adapter to the bundle
         outState = mFastAdapter.saveInstanceState(outState)
         super.onSaveInstanceState(outState)
@@ -240,8 +242,8 @@ class SampleActivity : AppCompatActivity() {
 
     override fun onBackPressed() {
         //handle the back press :D close the drawer first and if the drawer is closed close the activity
-        if (root.isDrawerOpen(slider)) {
-            root.closeDrawer(slider)
+        if (binding.root.isDrawerOpen(binding.slider)) {
+            binding.root.closeDrawer(binding.slider)
         } else {
             super.onBackPressed()
         }

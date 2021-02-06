@@ -7,24 +7,28 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
 import com.mikepenz.fastadapter.app.binding.BindingIconItem
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem
 import com.mikepenz.fastadapter.expandable.getExpandableExtension
 import com.mikepenz.iconics.Iconics
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
-import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.ArrayList
 import kotlin.Comparator
 
 class IconGridActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySampleBinding
+
     //save our FastAdapter
     private lateinit var fastItemAdapter: GenericFastItemAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setTitle(R.string.sample_icon_grid)
 
         //create our FastAdapter which will manage everything
@@ -45,9 +49,9 @@ class IconGridActivity : AppCompatActivity() {
             }
         }
 
-        rv.layoutManager = gridLayoutManager
-        rv.itemAnimator = SlideDownAlphaAnimator()
-        rv.adapter = fastItemAdapter
+        binding.rv.layoutManager = gridLayoutManager
+        binding.rv.itemAnimator = SlideDownAlphaAnimator()
+        binding.rv.adapter = fastItemAdapter
 
         //order fonts by their name
         val mFonts = ArrayList(Iconics.getRegisteredFonts(this))

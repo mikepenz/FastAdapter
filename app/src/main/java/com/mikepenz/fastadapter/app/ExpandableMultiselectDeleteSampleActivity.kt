@@ -7,12 +7,14 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.michaelflisar.dragselectrecyclerview.DragSelectTouchListener
 import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.HeaderSelectionItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
 import com.mikepenz.fastadapter.expandable.ExpandableExtension
@@ -23,10 +25,11 @@ import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.fastadapter.utils.SubItemUtil
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
-import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
 class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySampleBinding
+
     //save our FastAdapter
     private lateinit var fastItemAdapter: GenericFastItemAdapter
     private lateinit var mExpandableExtension: ExpandableExtension<IItem<*>>
@@ -37,9 +40,11 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setTitle(R.string.sample_collapsible)
 
         //create our FastAdapter
@@ -74,7 +79,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
             mRangeSelectorHelper.onLongClick(position)
             if (actionMode != null) {
                 //we want color our CAB
-                this@ExpandableMultiselectDeleteSampleActivity.findViewById<View>(R.id.action_mode_bar).setBackgroundColor(this@ExpandableMultiselectDeleteSampleActivity.getThemeColor(R.attr.colorPrimary, R.color.colorPrimary))
+                this@ExpandableMultiselectDeleteSampleActivity.findViewById<View>(R.id.action_mode_bar).setBackgroundColor(this@ExpandableMultiselectDeleteSampleActivity.getThemeColor(R.attr.colorPrimary, ContextCompat.getColor(this, R.color.colorPrimary)))
 
                 // start the drag selection
                 mDragSelectTouchListener.startDragSelection(position)
@@ -104,12 +109,12 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
                     // we handled the long press, so we reset the range selector
                     mRangeSelectorHelper.reset()
                 }
-        rv.addOnItemTouchListener(mDragSelectTouchListener)
+        binding.rv.addOnItemTouchListener(mDragSelectTouchListener)
 
         // do basic RecyclerView setup
-        rv.layoutManager = LinearLayoutManager(this)
-        rv.itemAnimator = SlideDownAlphaAnimator()
-        rv.adapter = fastItemAdapter
+        binding.rv.layoutManager = LinearLayoutManager(this)
+        binding.rv.itemAnimator = SlideDownAlphaAnimator()
+        binding.rv.adapter = fastItemAdapter
 
         //fill with some sample data
         val items = ArrayList<GenericItem>()
