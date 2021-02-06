@@ -7,25 +7,27 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
 import butterknife.ButterKnife
 import com.mikepenz.fastadapter.app.adapters.MopubFastItemAdapter
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.LetterItem
 import com.mopub.nativeads.MoPubRecyclerAdapter
 import com.mopub.nativeads.MoPubStaticNativeAdRenderer
 import com.mopub.nativeads.ViewBinder
-import kotlinx.android.synthetic.main.activity_main.*
 
 class MopubAdsActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySampleBinding
 
     private lateinit var adapter: MopubFastItemAdapter<LetterItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         ButterKnife.bind(this)
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
         adapter = MopubFastItemAdapter()
         adapter.onClickListener = { _, _, item, position ->
@@ -49,8 +51,8 @@ class MopubAdsActivity : AppCompatActivity() {
         adapter.registerAdRenderer(MoPubStaticNativeAdRenderer(viewBinder))
         adapter.loadAds("76a3fefaced247959582d2d2df6f4757")
 
-        rv.layoutManager = GridLayoutManager(this, 1)
-        rv.adapter = adapter
+        binding.rv.layoutManager = GridLayoutManager(this, 1)
+        binding.rv.adapter = adapter
 
         //provide the mopub adapter
         this.adapter.withMoPubAdAdapter(adapter)

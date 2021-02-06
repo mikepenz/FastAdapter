@@ -48,7 +48,7 @@ It's blazingly fast, minimizing the code you need to write, and is easy to exten
 
 ## Latest releases 🛠
 
-- Kotlin | [v5.3.2](https://github.com/mikepenz/FastAdapter/tree/v5.3.2)
+- Kotlin | [v5.3.3](https://github.com/mikepenz/FastAdapter/tree/v5.3.3)
 - Java && AndroidX | [v3.3.1](https://github.com/mikepenz/FastAdapter/tree/v3.3.1)
 - Java && AppCompat | [v3.2.9](https://github.com/mikepenz/FastAdapter/tree/v3.2.9)
 
@@ -358,7 +358,7 @@ A special thanks to the very active contributors who added many improvements to 
 
 # License
 
-    Copyright 2020 Mike Penz
+    Copyright 2021 Mike Penz
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
