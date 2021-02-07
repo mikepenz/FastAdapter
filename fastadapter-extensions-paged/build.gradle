@@ -38,9 +38,7 @@ android {
 dependencies {
     implementation project(':fastadapter')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
-
-    api "androidx.paging:paging-runtime:${versions.paging}"
+    api "androidx.paging:paging-runtime-ktx:${versions.paging}"
 }
 
 if (project.hasProperty('pushall') || project.hasProperty('library_extensions_paged_only')) {

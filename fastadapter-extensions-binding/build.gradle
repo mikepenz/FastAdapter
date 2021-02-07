@@ -38,10 +38,6 @@ android {
 dependencies {
     implementation project(':fastadapter')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
-
-    implementation "androidx.annotation:annotation:${versions.androidX}"
-    implementation "androidx.recyclerview:recyclerview:${versions.recyclerView}"
     compileOnly "androidx.databinding:viewbinding:${setup.gradleTools}"
 }
 

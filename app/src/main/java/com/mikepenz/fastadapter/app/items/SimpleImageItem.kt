@@ -6,7 +6,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.ButterKnife
 import coil.clear
 import coil.load
 import com.mikepenz.aboutlibraries.util.getThemeColor
@@ -109,15 +108,12 @@ class SimpleImageItem : BaseItem<SimpleImageItem.ViewHolder>() {
      * our ViewHolder
      */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var view: FrameLayout
+        var view: FrameLayout = view as FrameLayout
         var imageView: ImageView = view.findViewById(R.id.item_image_img)
         var imageName: TextView = view.findViewById(R.id.item_image_name)
         var imageDescription: TextView = view.findViewById(R.id.item_image_description)
 
         init {
-            ButterKnife.bind(this, view)
-            this.view = view as FrameLayout
-
             //optimization to preset the correct height for our device
             val screenWidth = view.context.resources.displayMetrics.widthPixels
             val finalHeight = (screenWidth / 1.5).toInt() / 2
