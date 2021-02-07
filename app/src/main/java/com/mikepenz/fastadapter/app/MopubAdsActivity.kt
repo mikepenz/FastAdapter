@@ -5,7 +5,6 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.GridLayoutManager
-import butterknife.ButterKnife
 import com.mikepenz.fastadapter.app.adapters.MopubFastItemAdapter
 import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.LetterItem
@@ -23,8 +22,6 @@ class MopubAdsActivity : AppCompatActivity() {
         binding = ActivitySampleBinding.inflate(layoutInflater).also {
             setContentView(it.root)
         }
-
-        ButterKnife.bind(this)
 
         // Handle Toolbar
         setSupportActionBar(binding.toolbar)

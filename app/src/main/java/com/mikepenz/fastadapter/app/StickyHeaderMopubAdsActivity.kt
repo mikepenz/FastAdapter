@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.ButterKnife
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.app.adapters.MopubFastItemAdapter
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter
@@ -32,8 +31,6 @@ class StickyHeaderMopubAdsActivity : AppCompatActivity() {
         binding = ActivitySampleBinding.inflate(layoutInflater).also {
             setContentView(it.root)
         }
-
-        ButterKnife.bind(this)
 
         // Handle Toolbar
         setSupportActionBar(binding.toolbar)
