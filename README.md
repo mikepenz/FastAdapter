@@ -326,12 +326,6 @@ Mike Penz:
 - ItemAnimators https://github.com/mikepenz/ItemAnimators
 - MaterialDrawer https://github.com/mikepenz/MaterialDrawer
 
-Other Libs:
-- Butterknife https://github.com/JakeWharton/butterknife
-- Glide https://github.com/bumptech/glide
-- MaterialScrollBar https://github.com/krimin-killr21/MaterialScrollBar
-- StickyRecyclerHeadersAdapter https://github.com/timehop/sticky-headers-recyclerview
-
 
 # Developed By
 

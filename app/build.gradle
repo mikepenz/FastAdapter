@@ -58,8 +58,8 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
-        dataBinding = true
+        viewBinding true
+        dataBinding true
     }
 }
 
@@ -68,9 +68,7 @@ kapt {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
-
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     implementation project(':fastadapter')
     implementation project(':fastadapter-extensions-binding')
@@ -83,8 +81,6 @@ dependencies {
     implementation project(':fastadapter-extensions-utils')
     implementation project(':fastadapter-extensions-paged')
 
-    implementation "androidx.appcompat:appcompat:${versions.appcompat}"
-    implementation "androidx.recyclerview:recyclerview:${versions.recyclerView}"
     implementation "androidx.cardview:cardview:${versions.cardview}"
     implementation "com.google.android.material:material:${versions.material}"
 
@@ -129,10 +125,6 @@ dependencies {
     //Used to provide the FastScrollBar
     //https://github.com/krimin-killr21/MaterialScrollBar
     implementation 'com.github.turing-tech:MaterialScrollBar:13.3.4'
-
-    //https://github.com/JakeWharton/butterknife
-    implementation 'com.jakewharton:butterknife:10.2.3'
-    kapt 'com.jakewharton:butterknife-compiler:10.2.3'
 
     //used to load the images in the ImageListSample
     //https://github.com/coil-kt/coil

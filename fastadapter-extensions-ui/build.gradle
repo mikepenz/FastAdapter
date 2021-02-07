@@ -33,11 +33,7 @@ android {
 dependencies {
     implementation project(':fastadapter')
 
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
-
-    implementation "androidx.recyclerview:recyclerview:${versions.recyclerView}"
     implementation "com.google.android.material:material:${versions.material}"
-    implementation "androidx.annotation:annotation:${versions.androidX}"
 }
 
 if (project.hasProperty('pushall') || project.hasProperty('library_extensions_ui_only')) {

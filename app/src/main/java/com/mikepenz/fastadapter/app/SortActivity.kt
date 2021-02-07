@@ -11,7 +11,6 @@ import androidx.annotation.IntRange
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import butterknife.ButterKnife
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
@@ -66,8 +65,6 @@ class SortActivity : AppCompatActivity() {
         binding = ActivitySampleBinding.inflate(layoutInflater).also {
             setContentView(it.root)
         }
-
-        ButterKnife.bind(this)
 
         // Handle Toolbar
         setSupportActionBar(binding.toolbar)
