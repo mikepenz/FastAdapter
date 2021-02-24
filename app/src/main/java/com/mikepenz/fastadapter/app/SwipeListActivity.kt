@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.adapters.IDraggableViewHolder
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.SwipeableItem
 import com.mikepenz.fastadapter.drag.ItemTouchCallback
 import com.mikepenz.fastadapter.drag.SimpleDragCallback
@@ -29,10 +30,10 @@ import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesign
 import com.mikepenz.iconics.utils.actionBar
 import com.mikepenz.iconics.utils.colorInt
 import com.mikepenz.iconics.utils.sizeDp
-import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
 class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCallback.ItemSwipeCallback {
+    private lateinit var binding: ActivitySampleBinding
 
     //save our FastAdapter
     private lateinit var fastItemAdapter: FastItemAdapter<SwipeableItem>
@@ -56,10 +57,12 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
         //create our FastAdapter which will manage everything
         fastItemAdapter = FastItemAdapter()
@@ -76,9 +79,9 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
         }
 
         //get our recyclerView and do basic setup
-        rv.layoutManager = LinearLayoutManager(this)
-        rv.itemAnimator = DefaultItemAnimator()
-        rv.adapter = fastItemAdapter
+        binding.rv.layoutManager = LinearLayoutManager(this)
+        binding.rv.itemAnimator = DefaultItemAnimator()
+        binding.rv.adapter = fastItemAdapter
 
         //fill with some sample data
         var x = 0
@@ -116,7 +119,7 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
                 .withSurfaceThreshold(0.8f)
 
         touchHelper = ItemTouchHelper(touchCallback) // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
-        touchHelper.attachToRecyclerView(rv) // Attach ItemTouchHelper to RecyclerView
+        touchHelper.attachToRecyclerView(binding.rv) // Attach ItemTouchHelper to RecyclerView
 
         //restore selections (this has to be done after the items were added
         fastItemAdapter.withSavedInstanceState(savedInstanceState)
@@ -178,7 +181,7 @@ class SwipeListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeCal
     }
 
     override fun itemTouchDropped(oldPosition: Int, newPosition: Int) {
-        val vh: RecyclerView.ViewHolder? = rv.findViewHolderForAdapterPosition(newPosition)
+        val vh: RecyclerView.ViewHolder? = binding.rv.findViewHolderForAdapterPosition(newPosition)
         if (vh is IDraggableViewHolder) {
             (vh as IDraggableViewHolder).onDropped()
         }

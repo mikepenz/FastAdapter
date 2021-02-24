@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 apply plugin: 'com.mikepenz.aboutlibraries.plugin'
@@ -47,6 +46,9 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
     packagingOptions {
         exclude 'META-INF/library-core_release.kotlin_module'
         exclude 'META-INF/library_release.kotlin_module'
@@ -56,8 +58,8 @@ android {
     }
 
     buildFeatures {
-        viewBinding = true
-        dataBinding = true
+        viewBinding true
+        dataBinding true
     }
 }
 
@@ -66,23 +68,19 @@ kapt {
 }
 
 dependencies {
-    implementation "org.jetbrains.kotlin:kotlin-stdlib:${versions.kotlin}"
+    implementation 'androidx.multidex:multidex:2.0.1'
 
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation project(':fastadapter')
+    implementation project(':fastadapter-extensions-binding')
+    implementation project(':fastadapter-extensions-diff')
+    implementation project(':fastadapter-extensions-drag')
+    implementation project(':fastadapter-extensions-expandable')
+    implementation project(':fastadapter-extensions-scroll')
+    implementation project(':fastadapter-extensions-swipe')
+    implementation project(':fastadapter-extensions-ui')
+    implementation project(':fastadapter-extensions-utils')
+    implementation project(':fastadapter-extensions-paged')
 
-    implementation project(':library-core')
-    implementation project(':library-extensions-binding')
-    implementation project(':library-extensions-diff')
-    implementation project(':library-extensions-drag')
-    implementation project(':library-extensions-expandable')
-    implementation project(':library-extensions-scroll')
-    implementation project(':library-extensions-swipe')
-    implementation project(':library-extensions-ui')
-    implementation project(':library-extensions-utils')
-    implementation project(':library-extensions-paged')
-
-    implementation "androidx.appcompat:appcompat:${versions.appcompat}"
-    implementation "androidx.recyclerview:recyclerview:${versions.recyclerView}"
     implementation "androidx.cardview:cardview:${versions.cardview}"
     implementation "com.google.android.material:material:${versions.material}"
 
@@ -113,10 +111,10 @@ dependencies {
     }
     //used to display the icons in the drawer
     //https://github.com/mikepenz/Android-Iconics
-    implementation 'com.mikepenz:material-design-iconic-typeface:2.2.0.6-kotlin@aar'
-    implementation 'com.mikepenz:community-material-typeface:5.3.45.1-kotlin@aar'
-    implementation 'com.mikepenz:google-material-typeface:3.0.1.4.original-kotlin@aar'
-    implementation 'com.mikepenz:fontawesome-typeface:5.9.0.0-kotlin@aar'
+    implementation 'com.mikepenz:material-design-iconic-typeface:2.2.0.8-kotlin@aar'
+    implementation 'com.mikepenz:community-material-typeface:5.8.55.0-kotlin@aar'
+    implementation 'com.mikepenz:google-material-typeface:4.0.0.1-kotlin@aar'
+    implementation 'com.mikepenz:fontawesome-typeface:5.9.0.2-kotlin@aar'
 
     //Used for the StickyHeaderSample
     //https://github.com/timehop/sticky-headers-recyclerview
@@ -128,13 +126,9 @@ dependencies {
     //https://github.com/krimin-killr21/MaterialScrollBar
     implementation 'com.github.turing-tech:MaterialScrollBar:13.3.4'
 
-    //https://github.com/JakeWharton/butterknife
-    implementation 'com.jakewharton:butterknife:10.2.3'
-    kapt 'com.jakewharton:butterknife-compiler:10.2.3'
-
     //used to load the images in the ImageListSample
-    //https://github.com/bumptech/glide
-    implementation 'com.github.bumptech.glide:glide:3.8.0'
+    //https://github.com/coil-kt/coil
+    implementation 'io.coil-kt:coil:1.1.1'
 
     //Used to provide the drag selection like google photos
     implementation 'com.github.MFlisar:DragSelectRecyclerView:0.3'
@@ -179,6 +173,6 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath "io.realm:realm-gradle-plugin:7.0.8"
+        classpath "io.realm:realm-gradle-plugin:10.3.1"
     }
 }

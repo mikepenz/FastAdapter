@@ -6,7 +6,8 @@ import android.view.ViewGroup
 import android.view.ViewPropertyAnimator
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import coil.clear
+import coil.load
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.items.AbstractItem
@@ -85,12 +86,14 @@ class ImageItem : AbstractItem<ImageItem.ViewHolder>() {
         style(holder.imageLovedOff, if (mStarred) 0 else 1)
 
         //load glide
-        Glide.with(ctx).load(mImageUrl).animate(R.anim.alpha_on).into(holder.imageView)
+        holder.imageView.load(mImageUrl) {
+            crossfade(true)
+        }
     }
 
     override fun unbindView(holder: ViewHolder) {
         super.unbindView(holder)
-        Glide.clear(holder.imageView)
+        holder.imageView.clear()
         holder.imageView.setImageDrawable(null)
     }
 

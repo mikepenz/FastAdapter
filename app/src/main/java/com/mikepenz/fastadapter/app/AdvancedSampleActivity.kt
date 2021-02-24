@@ -6,6 +6,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,6 +16,7 @@ import com.mikepenz.fastadapter.adapters.GenericItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter.Companion.items
 import com.mikepenz.fastadapter.app.adapters.StickyHeaderAdapter
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubExpandableItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
@@ -22,7 +24,6 @@ import com.mikepenz.fastadapter.expandable.getExpandableExtension
 import com.mikepenz.fastadapter.helpers.ActionModeHelper
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.timehop.stickyheadersrecyclerview.StickyRecyclerHeadersDecoration
-import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 import java.util.concurrent.atomic.AtomicLong
 
@@ -31,6 +32,7 @@ import java.util.concurrent.atomic.AtomicLong
  * https://github.com/timehop/sticky-headers-recyclerview
  */
 class AdvancedSampleActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySampleBinding
 
     //save our FastAdapter
     private lateinit var mFastAdapter: GenericFastAdapter
@@ -41,10 +43,12 @@ class AdvancedSampleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setTitle(R.string.sample_advanced)
 
         //create our adapters
@@ -82,7 +86,7 @@ class AdvancedSampleActivity : AppCompatActivity() {
                 val actionMode = mActionModeHelper?.onLongClick(this@AdvancedSampleActivity, position)
                 if (actionMode != null) {
                     //we want color our CAB
-                    findViewById<View>(R.id.action_mode_bar).setBackgroundColor(this@AdvancedSampleActivity.getThemeColor(R.attr.colorPrimary, R.color.colorPrimary))
+                    findViewById<View>(R.id.action_mode_bar).setBackgroundColor(this@AdvancedSampleActivity.getThemeColor(R.attr.colorPrimary, ContextCompat.getColor(this, R.color.colorPrimary)))
                 }
                 //if we have no actionMode we do not consume the event
                 actionMode != null
@@ -93,12 +97,12 @@ class AdvancedSampleActivity : AppCompatActivity() {
         mActionModeHelper = ActionModeHelper(mFastAdapter, R.menu.cab, ActionBarCallBack())
 
         //get our recyclerView and do basic setup
-        rv.layoutManager = LinearLayoutManager(this)
-        rv.itemAnimator = DefaultItemAnimator()
-        rv.adapter = stickyHeaderAdapter.wrap(mFastAdapter)
+        binding.rv.layoutManager = LinearLayoutManager(this)
+        binding.rv.itemAnimator = DefaultItemAnimator()
+        binding.rv.adapter = stickyHeaderAdapter.wrap(mFastAdapter)
 
         val decoration = StickyRecyclerHeadersDecoration(stickyHeaderAdapter)
-        rv.addItemDecoration(decoration)
+        binding.rv.addItemDecoration(decoration)
 
         //so the headers are aware of changes
         mFastAdapter.registerAdapterDataObserver(object : RecyclerView.AdapterDataObserver() {

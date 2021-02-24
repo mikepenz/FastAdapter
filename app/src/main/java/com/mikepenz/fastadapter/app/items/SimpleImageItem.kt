@@ -4,9 +4,10 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import butterknife.ButterKnife
-import com.bumptech.glide.Glide
+import coil.clear
+import coil.load
 import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.IItemVHFactory
 import com.mikepenz.fastadapter.app.R
@@ -84,19 +85,20 @@ class SimpleImageItem : BaseItem<SimpleImageItem.ViewHolder>() {
         holder.imageView.setImageBitmap(null)
 
         //set the background for the item
-        val color = ctx.getThemeColor(R.attr.colorPrimary, R.color.colorPrimary)
+        val color = ctx.getThemeColor(R.attr.colorPrimary, ContextCompat.getColor(ctx, R.color.colorPrimary))
 
         holder.view.clearAnimation()
         holder.view.foreground = FastAdapterUIUtils.getSelectablePressedBackground(ctx, FastAdapterUIUtils.adjustAlpha(color, 100), 50, true)
 
         //load glide
-        Glide.clear(holder.imageView)
-        Glide.with(ctx).load(mImageUrl).animate(R.anim.alpha_on).into(holder.imageView)
+        holder.imageView.load(mImageUrl) {
+            crossfade(true)
+        }
     }
 
     override fun unbindView(holder: ViewHolder) {
         super.unbindView(holder)
-        Glide.clear(holder.imageView)
+        holder.imageView.clear()
         holder.imageView.setImageDrawable(null)
         holder.imageDescription.text = null
     }
@@ -106,15 +108,12 @@ class SimpleImageItem : BaseItem<SimpleImageItem.ViewHolder>() {
      * our ViewHolder
      */
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        var view: FrameLayout
+        var view: FrameLayout = view as FrameLayout
         var imageView: ImageView = view.findViewById(R.id.item_image_img)
         var imageName: TextView = view.findViewById(R.id.item_image_name)
         var imageDescription: TextView = view.findViewById(R.id.item_image_description)
 
         init {
-            ButterKnife.bind(this, view)
-            this.view = view as FrameLayout
-
             //optimization to preset the correct height for our device
             val screenWidth = view.context.resources.displayMetrics.widthPixels
             val finalHeight = (screenWidth / 1.5).toInt() / 2

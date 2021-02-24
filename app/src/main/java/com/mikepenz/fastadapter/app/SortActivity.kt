@@ -11,11 +11,10 @@ import androidx.annotation.IntRange
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import butterknife.ButterKnife
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
@@ -24,7 +23,6 @@ import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
 import com.mikepenz.iconics.utils.actionBar
 import com.mikepenz.iconics.utils.colorInt
-import kotlinx.android.synthetic.main.activity_sample.*
 import java.io.Serializable
 import java.util.*
 
@@ -34,6 +32,7 @@ import java.util.*
  * @author Ruben Gees
  */
 class SortActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySampleBinding
 
     //save our FastAdapter
     private lateinit var fastAdapter: FastAdapter<SimpleItem>
@@ -63,12 +62,12 @@ class SortActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sample)
-
-        ButterKnife.bind(this)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
 
         //create our FastAdapter which will manage everything
         itemListImpl = ComparableItemListImpl(comparator)
@@ -84,10 +83,9 @@ class SortActivity : AppCompatActivity() {
         }
 
         //get our recyclerView and do basic setup
-        val recyclerView = findViewById<View>(R.id.rv) as RecyclerView
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        recyclerView.itemAnimator = DefaultItemAnimator()
-        recyclerView.adapter = fastAdapter
+        binding.rv.layoutManager = LinearLayoutManager(this)
+        binding.rv.itemAnimator = DefaultItemAnimator()
+        binding.rv.adapter = fastAdapter
 
         sortingStrategy = if (savedInstanceState != null) {
             //Retrieve the previous sorting strategy from the instance state

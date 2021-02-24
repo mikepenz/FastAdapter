@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.GenericFastAdapter
 import com.mikepenz.fastadapter.adapters.ModelAdapter
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.model.IconModel
 import com.mikepenz.fastadapter.app.model.ModelIconItem
 import com.mikepenz.fastadapter.app.model.RightIconModel
@@ -14,19 +15,22 @@ import com.mikepenz.fastadapter.app.model.RightModelIconItem
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.iconics.Iconics
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
-import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
 class MultiTypeModelItemActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySampleBinding
+
     //save our FastAdapter
     private lateinit var fastAdapter: GenericFastAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setTitle(R.string.sample_multi_model_item)
 
         //if you need multiple items for different models you can also do this be defining a Function which get's the model object and returns the item (extends IItem)
@@ -46,9 +50,9 @@ class MultiTypeModelItemActivity : AppCompatActivity() {
         //init our gridLayoutManager and configure RV
         val gridLayoutManager = GridLayoutManager(this, 3)
 
-        rv.layoutManager = gridLayoutManager
-        rv.itemAnimator = SlideDownAlphaAnimator()
-        rv.adapter = fastAdapter
+        binding.rv.layoutManager = gridLayoutManager
+        binding.rv.itemAnimator = SlideDownAlphaAnimator()
+        binding.rv.adapter = fastAdapter
 
         //order fonts by their name
         val mFonts = Iconics.getRegisteredFonts(this).sortedBy { it.fontName }

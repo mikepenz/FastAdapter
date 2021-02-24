@@ -8,24 +8,27 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.view.ActionMode
-import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.ISelectionListener
 import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.SimpleItem
 import com.mikepenz.fastadapter.helpers.ActionModeHelper
 import com.mikepenz.fastadapter.helpers.UndoHelper
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
-import kotlinx.android.synthetic.main.activity_sample.*
 import java.util.*
 
 class MultiselectSampleActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySampleBinding
+
     //save our FastAdapter
     private lateinit var mFastAdapter: FastAdapter<SimpleItem>
     private lateinit var mUndoHelper: UndoHelper<*>
@@ -34,11 +37,12 @@ class MultiselectSampleActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setTitle(R.string.sample_multi_select)
 
         //create our adapters
@@ -80,7 +84,7 @@ class MultiselectSampleActivity : AppCompatActivity() {
             val actionMode = mActionModeHelper.onLongClick(this@MultiselectSampleActivity, position)
             if (actionMode != null) {
                 //we want color our CAB
-                findViewById<View>(R.id.action_mode_bar).setBackgroundColor(this@MultiselectSampleActivity.getThemeColor(R.attr.colorPrimary, R.color.colorPrimary))
+                findViewById<View>(R.id.action_mode_bar).setBackgroundColor(this@MultiselectSampleActivity.getThemeColor(R.attr.colorPrimary, ContextCompat.getColor(this, R.color.colorPrimary)))
             }
             //if we have no actionMode we do not consume the event
             actionMode != null
@@ -97,9 +101,9 @@ class MultiselectSampleActivity : AppCompatActivity() {
         mActionModeHelper = ActionModeHelper(mFastAdapter, R.menu.cab, ActionBarCallBack())
 
         //get our recyclerView and do basic setup
-        rv.layoutManager = LinearLayoutManager(this)
-        rv.itemAnimator = SlideDownAlphaAnimator()
-        rv.adapter = mFastAdapter
+        binding.rv.layoutManager = LinearLayoutManager(this)
+        binding.rv.itemAnimator = SlideDownAlphaAnimator()
+        binding.rv.adapter = mFastAdapter
 
         //fill with some sample data
         val simpleItem = SimpleItem()
@@ -153,6 +157,15 @@ class MultiselectSampleActivity : AppCompatActivity() {
 
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             mUndoHelper.remove(findViewById(android.R.id.content), "Item removed", "Undo", Snackbar.LENGTH_LONG, selectExtension.selections)
+                    .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                            super.onDismissed(transientBottomBar, event)
+                            if (event != Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+                                selectExtension.deselect()
+                            }
+                        }
+                    })
+
             //as we no longer have a selection so the actionMode can be finished
             mode.finish()
             //we consume the event

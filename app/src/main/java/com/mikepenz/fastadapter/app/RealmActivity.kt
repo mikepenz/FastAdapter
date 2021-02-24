@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
+import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.RealmSampleUserItem
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
@@ -19,21 +20,25 @@ import com.mikepenz.itemanimators.AlphaInAnimator
 import io.realm.Realm
 import io.realm.RealmChangeListener
 import io.realm.RealmResults
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class RealmActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySampleBinding
+
     //save our FastAdapter
     private lateinit var mFastItemAdapter: FastItemAdapter<RealmSampleUserItem>
+
     //save our Realm instance to close it later
     private lateinit var mRealm: Realm
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_sample)
+        binding = ActivitySampleBinding.inflate(layoutInflater).also {
+            setContentView(it.root)
+        }
 
         // Handle Toolbar
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setTitle(R.string.sample_realm_list)
 
         //create our FastAdapter which will manage everything
@@ -46,9 +51,9 @@ class RealmActivity : AppCompatActivity() {
         }
 
         //get our recyclerView and do basic setup
-        rv.layoutManager = LinearLayoutManager(this)
-        rv.itemAnimator = AlphaInAnimator()
-        rv.adapter = mFastItemAdapter
+        binding.rv.layoutManager = LinearLayoutManager(this)
+        binding.rv.itemAnimator = AlphaInAnimator()
+        binding.rv.adapter = mFastItemAdapter
 
         //Get a realm instance for this activity
         mRealm = Realm.getDefaultInstance()

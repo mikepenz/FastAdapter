@@ -1,4 +1,4 @@
-# FastAdapter [![Status](https://travis-ci.org/mikepenz/FastAdapter.svg?branch=develop)](https://travis-ci.org/mikepenz/FastAdapter) [![Download](https://api.bintray.com/packages/mikepenz/maven/com.mikepenz%3Afastadapter/images/download.svg)](https://bintray.com/mikepenz/maven/com.mikepenz%3Afastadapter/_latestVersion)
+# FastAdapter
 
 The FastAdapter is here to simplify creating adapters for RecyclerViews. Don't worry about the adapter anymore. Just write the logic for how your view/item should look like, and you are done.
 It's blazingly fast, minimizing the code you need to write, and is easy to extend.
@@ -48,7 +48,7 @@ It's blazingly fast, minimizing the code you need to write, and is easy to exten
 
 ## Latest releases 🛠
 
-- Kotlin | [v5.3.1](https://github.com/mikepenz/FastAdapter/tree/v5.3.1)
+- Kotlin | [v5.3.4](https://github.com/mikepenz/FastAdapter/tree/v5.3.4)
 - Java && AndroidX | [v3.3.1](https://github.com/mikepenz/FastAdapter/tree/v3.3.1)
 - Java && AppCompat | [v3.2.9](https://github.com/mikepenz/FastAdapter/tree/v3.2.9)
 
@@ -326,12 +326,6 @@ Mike Penz:
 - ItemAnimators https://github.com/mikepenz/ItemAnimators
 - MaterialDrawer https://github.com/mikepenz/MaterialDrawer
 
-Other Libs:
-- Butterknife https://github.com/JakeWharton/butterknife
-- Glide https://github.com/bumptech/glide
-- MaterialScrollBar https://github.com/krimin-killr21/MaterialScrollBar
-- StickyRecyclerHeadersAdapter https://github.com/timehop/sticky-headers-recyclerview
-
 
 # Developed By
 
@@ -358,7 +352,7 @@ A special thanks to the very active contributors who added many improvements to 
 
 # License
 
-    Copyright 2020 Mike Penz
+    Copyright 2021 Mike Penz
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
