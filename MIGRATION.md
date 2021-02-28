@@ -37,7 +37,7 @@ We put a lot of focus on type safety with this release, as such this release is 
 * The `IExpandable` interface was changed and now extends `IParentItem` and `ISubItem`.
 * The `ISubItem` interface now only requires the `ViewHolder` type.
 * The `IParentItem` interface only requires the `ViewHolder` type.
-* `IIdentifyable` interface does not require any type anymore.
+* `IIdentifiable` interface does not require any type anymore.
 
 The v4 release brings a new more modular setup. Allowing to be a lot more precise on what to take from the `FastAdapter`. 
 Due to the new modules some packages of various classes might have changes. Check out here on GitHub for the new location of classes.

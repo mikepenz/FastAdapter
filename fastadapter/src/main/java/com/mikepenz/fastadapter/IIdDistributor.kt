@@ -5,7 +5,7 @@ import com.mikepenz.fastadapter.utils.DefaultIdDistributorImpl
 /**
  * Created by fabianterhorst on 16.07.17.
  */
-interface IIdDistributor<Identifiable : IIdentifyable> {
+interface IIdDistributor<Identifiable : IIdentifiable> {
 
     fun checkIds(identifiables: List<Identifiable>): List<Identifiable>
 
@@ -17,6 +17,6 @@ interface IIdDistributor<Identifiable : IIdentifyable> {
 
     companion object {
         @JvmField
-        val DEFAULT: IIdDistributor<out IIdentifyable> = DefaultIdDistributorImpl()
+        val DEFAULT: IIdDistributor<out IIdentifiable> = DefaultIdDistributorImpl()
     }
 }

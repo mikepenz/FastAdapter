@@ -1,12 +1,12 @@
 package com.mikepenz.fastadapter.utils
 
 import com.mikepenz.fastadapter.IIdDistributor
-import com.mikepenz.fastadapter.IIdentifyable
+import com.mikepenz.fastadapter.IIdentifiable
 
 /**
  * Created by mikepenz on 19.09.15.
  */
-abstract class DefaultIdDistributor<Identifiable : IIdentifyable> : IIdDistributor<Identifiable> {
+abstract class DefaultIdDistributor<Identifiable : IIdentifiable> : IIdDistributor<Identifiable> {
 
     /**
      * Set an unique identifier for all identifiables which do not have one set already

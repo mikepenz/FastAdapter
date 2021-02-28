@@ -11,7 +11,7 @@ typealias GenericItem = IItem<out RecyclerView.ViewHolder>
 /**
  * Created by mikepenz on 03.02.15.
  */
-interface IItem<VH : RecyclerView.ViewHolder> : IIdentifyable {
+interface IItem<VH : RecyclerView.ViewHolder> : IIdentifiable {
 
     /** A Tag of the Item */
     var tag: Any?
