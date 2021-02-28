@@ -128,7 +128,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
                         .identifier = (i + 1).toLong()
                 //.withIsExpanded(true) don't use this in such a setup, use adapter.expand() to expand all items instead
 
-                //add subitems so we can showcase the collapsible functionality
+                //add subItems so we can showcase the collapsible functionality
                 val subItems = LinkedList<ISubItem<*>>()
                 for (ii in 1..5) {
                     val sampleItem = SimpleSubItem()
@@ -159,7 +159,7 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
                     val headerItem = item.parent
                     if (headerItem != null) {
                         val pos = fastItemAdapter.getAdapterPosition(headerItem)
-                        // Important: notify the header directly, not via the notifyadapterItemChanged!
+                        // Important: notify the header directly, not via the notifyAdapterItemChanged!
                         // we just want to update the view and we are sure, nothing else has to be done
                         fastItemAdapter.notifyItemChanged(pos)
                     }

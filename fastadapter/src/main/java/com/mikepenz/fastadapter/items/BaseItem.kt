@@ -105,7 +105,7 @@ abstract class BaseItemFactory<VH : RecyclerView.ViewHolder> : IItemVHFactory<VH
 
     /**
      * This method is called by generateView(Context ctx), generateView(Context ctx, ViewGroup parent) and getViewHolder(ViewGroup parent)
-     * it will generate the View from the layout, overwrite this if you want to implement your view creation programatically
+     * it will generate the View from the layout, overwrite this if you want to implement your view creation programmatically
      */
     open fun createView(ctx: Context, parent: ViewGroup?): View {
         return LayoutInflater.from(ctx).inflate(layoutRes, parent, false)

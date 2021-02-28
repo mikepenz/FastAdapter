@@ -31,7 +31,7 @@ open class RangeSelectorHelper<Item : GenericItem>(private val fastAdapter: Fast
     }
 
     /**
-     * Enable this, if you want the range selector to correclty handle sub items as well
+     * Enable this, if you want the range selector to correctly handle sub items as well
      *
      * @param supportSubItems true, if sub items are supported, false otherwise
      * @return this, for supporting function call chaining
@@ -44,7 +44,7 @@ open class RangeSelectorHelper<Item : GenericItem>(private val fastAdapter: Fast
     /**
      * The provided payload will be passed to the adapters notify function, if one is provided
      *
-     * @param payload the paylaod that should be passed to the adapter on selection state change
+     * @param payload the payload that should be passed to the adapter on selection state change
      * @return this, for supporting function call chaining
      */
     fun withPayload(payload: Any): RangeSelectorHelper<*> {
@@ -100,10 +100,10 @@ open class RangeSelectorHelper<Item : GenericItem>(private val fastAdapter: Fast
     }
 
     /**
-     * Selects all items in a range, from and to indizes are inclusive
+     * Selects all items in a range, from and to indices are inclusive
      *
-     * @param from        the from index
-     * @param to          the to index
+     * @param _from       the from index
+     * @param _to         the to index
      * @param select      true, if the provided range should be selected, false otherwise
      * @param skipHeaders true, if you do not want to process headers, false otherwise
      */

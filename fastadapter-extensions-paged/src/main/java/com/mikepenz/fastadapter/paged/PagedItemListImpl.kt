@@ -203,7 +203,7 @@ open class PagedItemListImpl<Model, Item : GenericItem>(
         /**
          * Returns the default placeholder interceptor
          *
-         * Note if your PagedItemList should contain placeholder, you have to provide a logic what the adapter should show while in placeholding state
+         * Note if your PagedItemList should contain placeholder, you have to provide a logic what the adapter should show while in placeholder state
          */
         internal fun <Item : GenericItem> getDefaultPlaceholderInterceptor(): (Int) -> Item {
             return { throw RuntimeException("No item found at position") }

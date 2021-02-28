@@ -38,7 +38,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
         }
 
     /**
-     * defines if this adapter is currently activly shown in the list
+     * defines if this adapter is currently actively shown in the list
      */
     var active: Boolean = true
         set(value) {
@@ -413,7 +413,7 @@ open class ModelAdapter<Model, Item : GenericItem>(
                     position: Int
             ): Boolean {
                 if (identifier == item.identifier) {
-                    //if it's a subitem remove it from the parent
+                    //if it's a subItem remove it from the parent
                     (item as? IExpandable<*>?)?.let { expandable ->
                         //a sub item which is not in the list can be instantly deleted
                         expandable.parent?.subItems?.remove(item)
