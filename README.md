@@ -1,7 +1,7 @@
 # FastAdapter
 
 The FastAdapter is here to simplify creating adapters for RecyclerViews. Don't worry about the adapter anymore. Just write the logic for how your view/item should look like, and you are done.
-It's blazingly fast, minimizing the code you need to write, and is easy to extend.
+It's blazing fast, minimizing the code you need to write, and is easy to extend.
 
 -------
 
@@ -48,7 +48,7 @@ It's blazingly fast, minimizing the code you need to write, and is easy to exten
 
 ## Latest releases 🛠
 
-- Kotlin | [v5.3.4](https://github.com/mikepenz/FastAdapter/tree/v5.3.4)
+- Kotlin | [v5.3.5](https://github.com/mikepenz/FastAdapter/tree/v5.3.5)
 - Java && AndroidX | [v3.3.1](https://github.com/mikepenz/FastAdapter/tree/v3.3.1)
 - Java && AppCompat | [v3.2.9](https://github.com/mikepenz/FastAdapter/tree/v3.2.9)
 

@@ -28,6 +28,7 @@ proguard/
 
 #IntelliJ files
 *.iml
-.idea/
+.idea/*
+!.idea/dictionaries
 
 *.DS_STORE

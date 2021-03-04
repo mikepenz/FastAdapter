@@ -99,7 +99,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val itemAdapter: ModelA
             itemAdapter.setInternal(results.values as List<Item>, false, null)
         }
 
-        //only fire when we are filtered, not in onreset
+        //only fire when we are filtered, not in onReset
         if (originalItems != null) {
             itemFilterListener?.itemsFiltered(constraint, results.values as List<Item>)
         }

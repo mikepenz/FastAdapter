@@ -24,8 +24,8 @@ override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int, pa
 
 #### v4.x.y
 
-v4 is a huge release changing most of the codebase to Kotlin. This comes with many refactors, and as a result of that with many breaking API changes. 
-We put a lot of focus on type safety with this release, as such this release is a lot more strict and tries to prevent as many potential bad type mixups as possible.
+v4 is a huge release changing most of the codebase to Kotlin. This comes with many refactorings, and as a result of that with many breaking API changes. 
+We put a lot of focus on type safety with this release, as such this release is a lot more strict and tries to prevent as many potential bad type mix-ups as possible.
 
 * For compatibility, most existing static fields and functions remain static in Java. For newer functions, accessing from Java may require using the `Companion` class. For instance, `FastAdapter.example()` becomes `FastAdapter.Companion.example()`
 * The `IItem` interface now requires a type specification. E.g. `IItem<RecyclerView.ViewHolder>`
@@ -57,7 +57,7 @@ If you have any issues during the migration, or any questions come up please ope
 * Further details about migrating to androidX and a overview can be found on the official docs. https://developer.android.com/topic/libraries/support-library/refactor
 
 #### v3.2.4
-* Adjusted the `set(int position, Item item, int preItemCount)` to include the `preItemCount` to corretly notify the adapter about the changed element.
+* Adjusted the `set(int position, Item item, int preItemCount)` to include the `preItemCount` to correctly notify the adapter about the changed element.
 
 #### v3.2.3
 * The `ActionModeHelper` requires a `FastAdapter` with the `SelectExtension` applied. This is done in current versions via `withSelectable(true)`. Make sure this is called before creating the `ActionModeHelper`.
@@ -156,17 +156,17 @@ public ViewHolder getViewHolder(View v) {
 
 **SHORT OVERVIEW**
 * If you have items implemented by using the interface you have to implement the new methods (**unbindView**)
-* If you have expandable items make sure to adjust the Model type definitions as metioned below. Check out the `AbstractExpandableItem` to simplify this for you
+* If you have expandable items make sure to adjust the Model type definitions as mentioned below. Check out the `AbstractExpandableItem` to simplify this for you
 * If you use the `MaterialDrawer`, the `AboutLibraries` in your project, please make sure to update them so the changed interfaces do not cause conflicts
 
 **DETAILED**
 * New `unbindView` method was added to the `IItem` --> This method is called when the current item is no longer set and before the `ViewHolder` is used for the next item
  * You should move your view resetting logic here, or for example glide image loading canceling
 * `IExpandable` Model types changes
- * it is now required to define the type which will be used for the subItems. This can be an implementation or `ISubItem`. We now require this, as we will keep the references between childs, and parents.
+ * it is now required to define the type which will be used for the subItems. This can be an implementation or `ISubItem`. We now require this, as we will keep the references between children, and parents.
  * this allows more optimizations, and many additional usecases
 * New `ISubItem` interface added 
- * items serving as subitems, have to implement this. 
+ * items serving as subItems, have to implement this. 
 * New `AbstractExpandableItem` added, which combines `IExpandable` and `ISubItem` with an `AbstractItem` to simplify your life
 * A new `SubItemUtil` was introduced which simplifies some use cases when working with expandable / collapsing lists
 

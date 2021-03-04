@@ -327,7 +327,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
 
     /**
      * Helper method to get the position from a holder
-     * overwrite this if you have an adapter adding additional items inbetwean
+     * overwrite this if you have an adapter adding additional items in-between
      *
      * @param holder the viewHolder of the item
      * @return the position of the holder

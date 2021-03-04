@@ -1,5 +1,6 @@
 package com.mikepenz.fastadapter.swipe
 
+import android.annotation.SuppressLint
 import android.graphics.Canvas
 import android.graphics.Rect
 import android.view.MotionEvent
@@ -29,10 +30,14 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     // Indicates whether the touchTransmitter has been set on the RecyclerView
     private var touchTransmitterSet = false
 
-    // States of swiped items
-    //  Key = item position
-    //  Value = swiped direction (see {@link ItemTouchHelper})
-    private val swipedStates = HashMap<Int, Int>()
+    /**
+     * States of swiped items
+     *   Key = item unique ID
+     *   Value = swiped direction (see {@link androidx.recyclerView.widget.ItemTouchHelper})
+     *
+     * NB : As this class doesn't listen to the recyclerView, it may contain identifiers for old items that have been removed
+     */
+    private val swipedStates = HashMap<Long, Int>()
 
     // True if a swiping gesture is currently being done
     var isSwiping = false
@@ -108,9 +113,10 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         val position = viewHolder.adapterPosition
-        if (position != RecyclerView.NO_POSITION && (!swipedStates.containsKey(position) || swipedStates[position] != direction)) {
+        val id = viewHolder.itemId
+        if (position != RecyclerView.NO_POSITION && (!swipedStates.containsKey(id) || swipedStates[id] != direction)) {
             itemSwipeCallback?.itemSwiped(position, direction)
-            swipedStates[position] = direction
+            swipedStates[id] = direction
             isSwiping = false
         }
     }
@@ -127,10 +133,11 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
         // During the "unswipe" gesture, Android doesn't use the threshold value properly
         // => Need to communicate an inverted value for swiped items
-        return if (swipedStates.containsKey(viewHolder.adapterPosition)) 1f - surfaceThreshold
+        return if (swipedStates.containsKey(viewHolder.itemId)) 1f - surfaceThreshold
         else surfaceThreshold
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         val itemView = viewHolder.itemView
 
@@ -152,9 +159,9 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
             val dXPercent = dX / recyclerView.width
 
             // If unswiped, fire event and update swiped state
-            if (0f == dX && swipedStates.containsKey(position)) {
+            if (0f == dX && swipedStates.containsKey(viewHolder.itemId)) {
                 itemSwipeCallback?.itemUnswiped(viewHolder.adapterPosition)
-                swipedStates.remove(position)
+                swipedStates.remove(viewHolder.itemId)
             }
 
             // If the position is between "swiped" and "unswiped", then we're swiping
@@ -174,10 +181,16 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
      * Android default touch event mechanisms don't transmit these events to the sublayer :
      * any click on the exposed surface just swipes the item back to where it came
      */
+    @SuppressLint("ClickableViewAccessibility")
     inner class RecyclerTouchTransmitter : View.OnTouchListener {
 
+        private var recyclerView: RecyclerView? = null
+
         override fun onTouch(v: View?, event: MotionEvent): Boolean {
+            // No need for that when nothing is swiped or when swiping is in progress
             if (isSwiping || null == v || v !is ViewGroup) return false
+
+            if (v is RecyclerView) recyclerView = v
 
             // Get the first visible View under the clicked coordinates
             val childView = v.getFirstVisibleViewByCoordinates(event.x, event.y)
@@ -198,6 +211,13 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
          * Return the first visible non-ViewGroup View within the given ViewGroup, at the given coordinates
          */
         private fun ViewGroup.getFirstVisibleViewByCoordinates(x: Float, y: Float): View? {
+
+            // If target viewHolder isn't swiped, don't bother going further
+            if (this.parent == recyclerView) {
+                val viewHolder = recyclerView?.getChildViewHolder(this)
+                if (!swipedStates.containsKey(viewHolder?.itemId)) return null
+            }
+
             (childCount - 1 downTo 0)
                     .map { this.getChildAt(it) }
                     .forEach {
