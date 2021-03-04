@@ -1,4 +1,4 @@
-FastAdapter contributors (sorted alphabeticaly)
+FastAdapter contributors (sorted alphabetically)
 ============================================
 
 * **[Fabian Terhorst](https://github.com/FabianTerhorst)**

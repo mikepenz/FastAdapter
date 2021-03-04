@@ -88,7 +88,7 @@ class ActionModeHelper<Item : GenericItem> {
 
     /**
      * Implements the basic behavior of a CAB and multi select behavior,
-     * including logics if the clicked item is collapsible
+     * including logic if the clicked item is collapsible
      *
      * @param item the current item
      * @return null if nothing was done, or a boolean to inform if the event was consumed
@@ -99,7 +99,7 @@ class ActionModeHelper<Item : GenericItem> {
 
     /**
      * Implements the basic behavior of a CAB and multi select behavior,
-     * including logics if the clicked item is collapsible
+     * including logic if the clicked item is collapsible
      *
      * @param act  the current Activity
      * @param item the current item

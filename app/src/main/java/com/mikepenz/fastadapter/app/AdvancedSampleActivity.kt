@@ -28,7 +28,7 @@ import java.util.*
 import java.util.concurrent.atomic.AtomicLong
 
 /**
- * This sample showcases compatibility the awesome Sticky-Headers library by timehop
+ * This sample showcases compatibility with the awesome Sticky-Headers library by timehop
  * https://github.com/timehop/sticky-headers-recyclerview
  */
 class AdvancedSampleActivity : AppCompatActivity() {
@@ -82,7 +82,7 @@ class AdvancedSampleActivity : AppCompatActivity() {
             if (item is IExpandable<*> && item.subItems.isNotEmpty()) {
                 true
             } else {
-                //handle the longclick actions
+                //handle the long click actions
                 val actionMode = mActionModeHelper?.onLongClick(this@AdvancedSampleActivity, position)
                 if (actionMode != null) {
                     //we want color our CAB

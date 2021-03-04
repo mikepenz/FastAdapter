@@ -165,7 +165,7 @@ object SubItemUtil {
     }
 
     /**
-     * Select or unselect all sub itmes underneath an expandable item
+     * Select or unselect all sub items underneath an expandable item
      *
      * @param adapter the adapter instance
      * @param header  the header who's children should be selected or deselected
@@ -176,7 +176,7 @@ object SubItemUtil {
     }
 
     /**
-     * Select or unselect all sub itmes underneath an expandable item
+     * Select or unselect all sub items underneath an expandable item
      *
      * @param adapter      the adapter instance
      * @param header       the header who's children should be selected or deselected

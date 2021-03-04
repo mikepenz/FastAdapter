@@ -11,12 +11,12 @@ class ComparableItemListImpl<Item : GenericItem> @JvmOverloads constructor(
         items: MutableList<Item> = ArrayList()
 ) : DefaultItemListImpl<Item>(items) {
 
-    /** @return the defined Comparator used for this ItemAdaper */
+    /** @return the defined Comparator used for this ItemAdapter */
     var comparator: Comparator<Item>? = comparator
         private set
 
     /**
-     * Define a comparator which will be used to sort the list "everytime" it is altered
+     * Define a comparator which will be used to sort the list "every time" it is altered
      * NOTE this will only sort if you "set" a new list or "add" new items (not if you provide a position for the add function)
      *
      * @param comparator used to sort the list

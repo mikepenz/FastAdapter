@@ -21,7 +21,7 @@ abstract class AbstractItem<VH : RecyclerView.ViewHolder> : BaseItem<VH>(), IIte
 
     /**
      * This method is called by generateView(Context ctx), generateView(Context ctx, ViewGroup parent) and getViewHolder(ViewGroup parent)
-     * it will generate the View from the layout, overwrite this if you want to implement your view creation programatically
+     * it will generate the View from the layout, overwrite this if you want to implement your view creation programmatically
      */
     open fun createView(ctx: Context, parent: ViewGroup?): View {
         return LayoutInflater.from(ctx).inflate(layoutRes, parent, false)

@@ -53,7 +53,7 @@ object AdapterUtil {
      * Gets all items (including sub items) from the FastAdapter
      *
      * @param fastAdapter the FastAdapter
-     * @return a list of all items including the whole subItem hirachy
+     * @return a list of all items including the whole subItem hierarchy
      */
     @JvmStatic fun <Item> getAllItems(fastAdapter: FastAdapter<Item>): List<Item> where Item : GenericItem, Item : IExpandable<*> {
         val size = fastAdapter.itemCount

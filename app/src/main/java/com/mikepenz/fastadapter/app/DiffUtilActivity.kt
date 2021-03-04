@@ -63,7 +63,7 @@ class DiffUtilActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(_outState: Bundle) {
         var outState = _outState
-        //add the values which need to be saved from the adapter to the bundel
+        //add the values which need to be saved from the adapter to the bundle
         outState = fastItemAdapter.saveInstanceState(outState)
         super.onSaveInstanceState(outState)
     }

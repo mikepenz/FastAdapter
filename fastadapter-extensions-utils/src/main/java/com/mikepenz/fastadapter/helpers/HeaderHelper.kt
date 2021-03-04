@@ -31,9 +31,9 @@ class HeaderHelper<Item, HeaderItem : Item> {
     }
 
     /**
-     * Call this when your list order has changed or was updated, and you have to readd the headres
+     * Call this when your list order has changed or was updated, and you have to read the headers
      *
-     * @param items the list which will get the headers added inbetween
+     * @param items the list which will get the headers added in-between
      */
     fun apply(items: MutableList<Item>) {
         //If the list is empty avoid sorting and adding headers.
@@ -69,7 +69,7 @@ class HeaderHelper<Item, HeaderItem : Item> {
     interface GroupingFunction<Item, HeaderItem> {
         /**
          * @param currentItem     the current item we check
-         * @param nextItem        the item comming after the current item
+         * @param nextItem        the item coming after the current item
          * @param currentPosition the current position of the currentItem
          * @return the HeaderItem we want to add after the currentItem
          */

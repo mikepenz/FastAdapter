@@ -1,7 +1,7 @@
 # FastAdapter
 
 The FastAdapter is here to simplify creating adapters for RecyclerViews. Don't worry about the adapter anymore. Just write the logic for how your view/item should look like, and you are done.
-It's blazingly fast, minimizing the code you need to write, and is easy to extend.
+It's blazing fast, minimizing the code you need to write, and is easy to extend.
 
 -------
 

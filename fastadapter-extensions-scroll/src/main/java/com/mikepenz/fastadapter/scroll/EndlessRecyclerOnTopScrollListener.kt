@@ -51,7 +51,7 @@ abstract class EndlessRecyclerOnTopScrollListener : RecyclerView.OnScrollListene
         super.onScrolled(recyclerView, dx, dy)
         if (!::_layoutManager.isInitialized) {
             this._layoutManager = recyclerView.layoutManager as LinearLayoutManager?
-                    ?: throw RuntimeException("A layoutmanager is required")
+                    ?: throw RuntimeException("A LayoutManager is required")
         }
 
         if (visibleThreshold == RecyclerView.NO_POSITION) {
