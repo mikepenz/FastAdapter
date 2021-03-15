@@ -5,6 +5,7 @@
         <item name="android:background">?colorPrimary</item>
         <item name="titleTextAppearance">@style/CustomTitleTextAppearance</item>
         <item name="subtitleTextAppearance">@style/CustomSubTitleTextAppearance</item>
+        <item name="android:theme">@style/ThemeOverlay.SampleApp.Toolbar</item>
     </style>
 
     <style name="CustomTitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
@@ -13,5 +14,9 @@
 
     <style name="CustomSubTitleTextAppearance" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
         <item name="android:textColor">@android:color/black</item>
+    </style>
+
+    <style name="ThemeOverlay.SampleApp.Toolbar" parent="">
+        <item name="colorControlNormal">@android:color/black</item>
     </style>
 </resources>

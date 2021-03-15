@@ -15,6 +15,5 @@
         <item name="windowActionModeOverlay">true</item>
 
         <item name="toolbarStyle">@style/CustomToolbarStyle</item>
-        <item name="colorControlNormal">@android:color/black</item>
     </style>
 </resources>
