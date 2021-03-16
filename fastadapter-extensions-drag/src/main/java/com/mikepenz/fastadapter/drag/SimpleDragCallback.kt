@@ -21,8 +21,6 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
     private var from = RecyclerView.NO_POSITION
     private var to = RecyclerView.NO_POSITION
 
-    private var directions = UP_DOWN
-
     /** enable notification for all drops, even if location did not change */
     var notifyAllDrops = false // Default behaviour of v5.0.1-
 
@@ -33,12 +31,9 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
         // empty on purpose
     }
 
-    constructor(@Directions directions: Int = UP_DOWN) : super(directions, 0) {
-        this.directions = directions
-    }
+    constructor(@Directions directions: Int = UP_DOWN) : super(directions, 0)
 
     constructor(@Directions directions: Int, itemTouchCallback: ItemTouchCallback) : super(directions, 0) {
-        this.directions = directions
         this.callbackItemTouch = itemTouchCallback
     }
 
@@ -57,13 +52,11 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
         // remember the from/to positions
         val item = FastAdapter.getHolderAdapterItem<IItem<*>>(viewHolder)
-        if (item is IDraggable) {
-            if ((item as IDraggable).isDraggable) {
-                if (from == RecyclerView.NO_POSITION) {
-                    from = viewHolder.adapterPosition
-                }
-                to = target.adapterPosition
+        if (item.isDraggable) {
+            if (from == RecyclerView.NO_POSITION) {
+                from = viewHolder.adapterPosition
             }
+            to = target.adapterPosition
         }
         if (callbackItemTouch == null) {
             val adapter = recyclerView.adapter
@@ -86,14 +79,10 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
 
     override fun getDragDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
         val item = FastAdapter.getHolderAdapterItem<IItem<*>>(viewHolder)
-        return if (item is IDraggable) {
-            if ((item as IDraggable).isDraggable) {
-                super.getDragDirs(recyclerView, viewHolder)
-            } else {
-                0
-            }
+        return if (item.isDraggable) {
+            super.getDragDirs(recyclerView, viewHolder)
         } else {
-            directions
+            0
         }
     }
 
@@ -128,3 +117,6 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
         const val LEFT_RIGHT = ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT
     }
 }
+
+private val IItem<*>?.isDraggable: Boolean
+    get() = (this as? IDraggable)?.isDraggable == true
