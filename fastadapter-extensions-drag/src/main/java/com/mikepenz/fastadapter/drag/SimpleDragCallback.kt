@@ -52,11 +52,8 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
     override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder): Boolean {
         // remember the from/to positions
         val item = FastAdapter.getHolderAdapterItem<IItem<*>>(viewHolder)
-        if (item.isDraggable) {
-            if (from == RecyclerView.NO_POSITION) {
-                from = viewHolder.adapterPosition
-            }
-            to = target.adapterPosition
+        if (item.isDraggable && from == RecyclerView.NO_POSITION) {
+            from = viewHolder.adapterPosition
         }
         if (callbackItemTouch == null) {
             val adapter = recyclerView.adapter
@@ -75,6 +72,19 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
         }
         return callbackItemTouch?.itemTouchOnMove(viewHolder.adapterPosition, target.adapterPosition)
                 ?: false // information to the interface
+    }
+
+    override fun onMoved(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        fromPos: Int,
+        target: RecyclerView.ViewHolder,
+        toPos: Int,
+        x: Int,
+        y: Int
+    ) {
+        super.onMoved(recyclerView, viewHolder, fromPos, target, toPos, x, y)
+        to = toPos
     }
 
     override fun getDragDirs(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder): Int {
