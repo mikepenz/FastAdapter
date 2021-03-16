@@ -88,6 +88,9 @@
         <activity
             android:name="com.mikepenz.fastadapter.app.DiffUtilActivity"
             android:label="@string/sample_diff_util" />
+        <activity
+            android:name="com.mikepenz.fastadapter.app.DragAndDropActivity"
+            android:label="Drag &amp; Drop Sample" />
 
         <!-- USED FOR THE MopubAdsActivity sample-->
         <activity
