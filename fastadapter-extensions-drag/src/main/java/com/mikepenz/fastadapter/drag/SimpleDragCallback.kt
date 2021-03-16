@@ -102,14 +102,7 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
 
     override fun clearView(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder) {
         super.clearView(recyclerView, viewHolder)
-        if (notifyAllDrops || (from != RecyclerView.NO_POSITION && to != RecyclerView.NO_POSITION)) {
-            // If 'to' is not set, then we can assume the item hasn't moved at all
-            if (from != RecyclerView.NO_POSITION && to == RecyclerView.NO_POSITION) to = from
-            callbackItemTouch?.itemTouchDropped(from, to)
-        }
-        // reset the from/to positions
-        to = RecyclerView.NO_POSITION
-        from = to
+        callbackItemTouch?.itemTouchStopDrag(viewHolder)
     }
 
     override fun onSelectedChanged(viewHolder: RecyclerView.ViewHolder?, actionState: Int) {
@@ -117,6 +110,15 @@ open class SimpleDragCallback : ItemTouchHelper.SimpleCallback {
         if (ItemTouchHelper.ACTION_STATE_DRAG == actionState && viewHolder != null) {
             from = viewHolder.adapterPosition
             callbackItemTouch?.itemTouchStartDrag(viewHolder)
+        } else if (actionState == ItemTouchHelper.ACTION_STATE_IDLE) {
+            if (notifyAllDrops || from != RecyclerView.NO_POSITION && to != RecyclerView.NO_POSITION) {
+                // If 'to' is not set, then we can assume the item hasn't moved at all
+                if (from != RecyclerView.NO_POSITION && to == RecyclerView.NO_POSITION) to = from
+                callbackItemTouch?.itemTouchDropped(from, to)
+            }
+            // reset the from/to positions
+            to = RecyclerView.NO_POSITION
+            from = RecyclerView.NO_POSITION
         }
     }
 
