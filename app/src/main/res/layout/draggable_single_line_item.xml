@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.mikepenz.fastadapter.app.view.DraggableFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:stateListAnimator="@animator/draggable_state_list_anim"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?android:attr/windowBackground"
+    android:foreground="?attr/selectableItemBackground"
+    tools:ignore="UnusedAttribute">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginEnd="32dp"
+            android:layout_marginRight="32dp"
+            android:contentDescription="@null"
+            app:tint="?attr/colorControlNormal"
+            tools:src="@drawable/material_drawer_ico_account" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Subtitle1"
+            android:textColor="?attr/colorOnSurface"
+            android:textDirection="anyRtl"
+            tools:text="Single text line" />
+
+        <ImageView
+            android:id="@+id/drag_handle"
+            android:layout_width="56dp"
+            android:layout_height="56dp"
+            android:contentDescription="Drag handle"
+            android:padding="16dp"
+            android:src="@drawable/ic_drag_handle"
+            app:tint="?attr/colorControlNormal" />
+
+    </LinearLayout>
+</com.mikepenz.fastadapter.app.view.DraggableFrameLayout>

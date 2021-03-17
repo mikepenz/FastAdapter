@@ -88,6 +88,7 @@ class SampleActivity : AppCompatActivity() {
                     PrimaryDrawerItem().withName(R.string.sample_collapsible_multi_select_delete).withDescription(R.string.sample_collapsible_multi_select_delete_descr).withSelectable(false).withIdentifier(18).withIcon(MaterialDesignIconic.Icon.gmi_check_all),
                     PrimaryDrawerItem().withName(R.string.sample_sticky_header_mopub).withDescription(R.string.sample_sticky_header_mopub_descr).withSelectable(false).withIdentifier(19).withIcon(MaterialDesignIconic.Icon.gmi_accounts_list),
                     PrimaryDrawerItem().withName(R.string.sample_diff_util).withDescription(R.string.sample_diff_util_descr).withSelectable(false).withIdentifier(20).withIcon(MaterialDesignIconic.Icon.gmi_refresh),
+                    PrimaryDrawerItem().withName(R.string.sample_drag_and_drop).withDescription(R.string.sample_drag_and_drop_descr).withSelectable(false).withIdentifier(22).withIcon(MaterialDesignIconic.Icon.gmi_reorder),
                     DividerDrawerItem(),
                     PrimaryDrawerItem().withName(R.string.open_source).withSelectable(false).withIdentifier(100).withIcon(MaterialDesignIconic.Icon.gmi_github)
             )
@@ -114,6 +115,7 @@ class SampleActivity : AppCompatActivity() {
                     19L -> Intent(this@SampleActivity, StickyHeaderMopubAdsActivity::class.java)
                     20L -> Intent(this@SampleActivity, DiffUtilActivity::class.java)
                     21L -> Intent(this@SampleActivity, PagedActivity::class.java)
+                    22L -> Intent(this@SampleActivity, DragAndDropActivity::class.java)
                     100L -> LibsBuilder()
                             .withFields(R.string::class.java.fields)
                             .withActivityTitle(getString(R.string.open_source))

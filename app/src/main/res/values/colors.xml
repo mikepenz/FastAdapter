@@ -15,4 +15,6 @@
     <color name="list_background">#F2F2F2</color>
     <!-- primary colors for drawer -->
     <color name="list_background_normal">#FCFCFC</color>
+
+    <color name="behindRecyclerView">#F0F0F0</color>
 </resources>

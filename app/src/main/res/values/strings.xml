@@ -44,7 +44,15 @@
     <string name="sample_realm_list_descr">Realm, Implement IItem interface</string>
     <string name="sample_diff_util">Diff Util Sample</string>
     <string name="sample_diff_util_descr">Diff Util, refresh list using DiffUtil</string>
+    <string name="sample_drag_and_drop">Drag &amp; Drop Sample</string>
+    <string name="sample_drag_and_drop_descr">Reorder list using drag &amp; drop</string>
     <string name="open_source">Open Source</string>
     <string name="search_title">Search</string>
     <string name="action_undo">UNDO</string>
+    <string name="list_item_general_settings">General settings</string>
+    <string name="list_item_accounts_section">Accounts</string>
+    <string name="list_item_account">Account %d</string>
+    <string name="list_item_misc_section">Miscellaneous</string>
+    <string name="list_item_about">About the app</string>
+    <string name="list_item_licenses">Open source licenses</string>
 </resources>

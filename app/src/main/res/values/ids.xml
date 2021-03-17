@@ -15,4 +15,7 @@
     <item name="fastadapter_swipable_drawer_item_id" type="id" />
     <item name="fastadapter_letter_item_id" type="id" />
     <item name="fastadapter_realm_sample_user_item_id" type="id" />
+    <item name="fastadapter_small_icon_single_line_item" type="id" />
+    <item name="fastadapter_draggable_single_line_item" type="id" />
+    <item name="fastadapter_section_header_item" type="id" />
 </resources>
