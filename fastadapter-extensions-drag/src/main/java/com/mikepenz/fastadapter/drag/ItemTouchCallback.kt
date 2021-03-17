@@ -12,6 +12,13 @@ interface ItemTouchCallback {
     fun itemTouchStartDrag(viewHolder: RecyclerView.ViewHolder) {}
 
     /**
+     * Called when an item leaves drag state
+     *
+     * @param viewHolder dropped ViewHolder
+     */
+    fun itemTouchStopDrag(viewHolder: RecyclerView.ViewHolder) {}
+
+    /**
      * Called when an item has been dragged
      * This event is called on every item in a dragging chain
      *
