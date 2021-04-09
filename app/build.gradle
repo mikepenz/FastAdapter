@@ -80,7 +80,10 @@ repositories {
         content { includeGroup "com.mikepenz.thirdparty" }
     }
     jcenter() {
-        content { includeGroup "com.mopub" }
+        content {
+            includeGroup "com.mopub"
+            includeGroup "com.mopub.volley"
+        }
     }
 }
 
