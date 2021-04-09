@@ -485,7 +485,7 @@ open class FastAdapter<Item : GenericItem> : RecyclerView.Adapter<RecyclerView.V
             if (relativePosition != RecyclerView.NO_POSITION) {
                 return position + relativePosition
             }
-            position = adapter.adapterItemCount
+            position += adapter.adapterItemCount
         }
 
         return RecyclerView.NO_POSITION
