@@ -3,9 +3,7 @@ package com.mikepenz.fastadapter.app
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.paging.PagedList
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.AsyncDifferConfig
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -69,12 +67,11 @@ class PagedActivity : AppCompatActivity() {
         binding.rv.layoutManager = LinearLayoutManager(this)
         binding.rv.adapter = mFastAdapter
 
-        val viewModel = ViewModelProviders.of(this,
-                DemoEntityViewModel.DemoEntityViewModelFactory(this.application))
-                .get(DemoEntityViewModel::class.java)
+        val viewModel = ViewModelProvider(this, DemoEntityViewModel.DemoEntityViewModelFactory(this.application))
+            .get(DemoEntityViewModel::class.java)
 
         //listen to data changes and pass it to adapter for displaying in recycler view
-        viewModel.demoEntitiesList.observe(this, Observer<PagedList<DemoEntity>> { t -> mItemAdapter.submitList(t!!) })
+        viewModel.demoEntitiesList.observe(this, { t -> mItemAdapter.submitList(t!!) })
 
         //if we do this. the first added items will be animated :D
         Handler().postDelayed({
