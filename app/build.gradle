@@ -67,6 +67,23 @@ kapt {
     generateStubs = true
 }
 
+repositories {
+    maven {
+        url "https://jitpack.io"
+        content {
+            includeGroup "com.github.MFlisar"
+            includeGroup "com.github.turing-tech"
+        }
+    }
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+        content { includeGroup "com.mikepenz.thirdparty" }
+    }
+    jcenter() {
+        content { includeGroup "com.mopub" }
+    }
+}
+
 dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
 
@@ -152,9 +169,6 @@ dependencies {
     implementation "androidx.room:room-runtime:${versions.room}"
     kapt "androidx.room:room-compiler:${versions.room}"
 
-    implementation "androidx.lifecycle:lifecycle-extensions:${versions.lifecycle}"
-
-
     configurations.all {
         resolutionStrategy.force "com.mikepenz:iconics-core:${versions.iconics}"
         resolutionStrategy.force "com.mikepenz:iconics-views:${versions.iconics}"
@@ -169,8 +183,10 @@ dependencies {
 
 buildscript {
     repositories {
-        jcenter()
+        mavenCentral()
+        jcenter() { content { includeGroup "io.realm" } }
     }
+
     dependencies {
         classpath "io.realm:realm-gradle-plugin:10.4.0"
     }
