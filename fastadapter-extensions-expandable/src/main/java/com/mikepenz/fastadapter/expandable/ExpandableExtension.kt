@@ -38,8 +38,8 @@ internal fun <R> IItem<out RecyclerView.ViewHolder>?.ifExpandable(block: (IExpan
 }
 
 /** Internal helper function to execute the block if the item is expandable */
-internal fun <R> IItem<out RecyclerView.ViewHolder>?.ifExpandableParent(block: (IExpandable<*>, IParentItem<*>) -> R): R? {
-    return (this as? IExpandable<*>)?.parent?.let {
+internal fun <R> IItem<out RecyclerView.ViewHolder>?.ifExpandableParent(block: (ISubItem<*>, IParentItem<*>) -> R): R? {
+    return (this as? ISubItem<*>)?.parent?.let {
         block.invoke(this, it)
     }
 }
