@@ -57,16 +57,24 @@ class PagedActivity : AppCompatActivity() {
                 override fun areContentsTheSame(oldItem: DemoEntity, newItem: DemoEntity): Boolean {
                     return oldItem.data1 == newItem.data1
                 }
+/*
+                override fun getChangePayload(oldItem: DemoEntity, newItem: DemoEntity): Any? {
+                    return
+                }
+
+ */
             }).build()
 
         //create our ItemAdapter which will host our items
         mItemAdapter = PagedModelAdapter<DemoEntity, SimpleImageItem>(
             asyncDifferConfig,
             { SimpleImageItem().setPlaceholder() }) {
-            SimpleImageItem().withName(it.data1 ?: "").withDescription(it.data2 ?: "").apply {
+            SimpleImageItem().apply {
                 identifier = it.identifier.toLong()
                 isSelectable = true
                 withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/yang_zhuo_yong_cuo,_tibet-china-63.jpg")
+                withName(it.data1 ?: "")
+                withDescription(it.data2 ?: "")
             }
         }
 
