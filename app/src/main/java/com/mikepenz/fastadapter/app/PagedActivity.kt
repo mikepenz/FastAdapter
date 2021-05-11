@@ -62,7 +62,7 @@ class PagedActivity : AppCompatActivity() {
         //create our ItemAdapter which will host our items
         mItemAdapter = PagedModelAdapter<DemoEntity, SimpleImageItem>(
             asyncDifferConfig,
-            { arg: Int -> SimpleImageItem().setPlaceholder() }) {
+            { SimpleImageItem().setPlaceholder() }) {
             SimpleImageItem().withName(it.data1 ?: "").withDescription(it.data2 ?: "").apply {
                 identifier = it.identifier.toLong()
                 isSelectable = true

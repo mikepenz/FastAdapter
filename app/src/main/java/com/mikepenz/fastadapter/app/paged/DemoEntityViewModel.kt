@@ -16,7 +16,7 @@ import io.reactivex.schedulers.Schedulers
  */
 class DemoEntityViewModel(val application: Application) : ViewModel() {
     //PagedList controls data loading using data source
-    val dao: DemoEntityLocalDAO = LocalRepository.getDemoEntityDB(application).demoEntityDAO()
+    private val dao: DemoEntityLocalDAO = LocalRepository.getDemoEntityDB(application).demoEntityDAO()
     var demoEntitiesList: LiveData<PagedList<DemoEntity>>
 
     init {
