@@ -35,8 +35,6 @@ class PagedActivity : AppCompatActivity() {
 
     private lateinit var viewModel: DemoEntityViewModel
 
-    private var iteration = 0
-
     override fun onCreate(savedInstanceState: Bundle?) {
         //create the activity
         super.onCreate(savedInstanceState)
@@ -57,12 +55,6 @@ class PagedActivity : AppCompatActivity() {
                 override fun areContentsTheSame(oldItem: DemoEntity, newItem: DemoEntity): Boolean {
                     return oldItem.data1 == newItem.data1
                 }
-/*
-                override fun getChangePayload(oldItem: DemoEntity, newItem: DemoEntity): Any? {
-                    return
-                }
-
- */
             }).build()
 
         //create our ItemAdapter which will host our items
@@ -100,7 +92,7 @@ class PagedActivity : AppCompatActivity() {
         viewModel.demoEntitiesList.observe(this, { t -> mItemAdapter.submitList(t!!) })
 
         //if we do this. the first added items will be animated :D
-        Handler().postDelayed({
+        Handler(mainLooper).postDelayed({
             //restore selections (this has to be done after the items were added
             mFastAdapter.withSavedInstanceState(savedInstanceState)
         }, 50)
@@ -130,17 +122,17 @@ class PagedActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         //handle the click on the back arrow click
-        when (item.itemId) {
+        return when (item.itemId) {
             android.R.id.home -> {
                 onBackPressed()
-                return true
+                true
             }
             R.id.item_refresh -> {
-                viewModel.updateEntities(++iteration)
-                Toast.makeText(this, "Refresh synchronous", Toast.LENGTH_SHORT).show()
-                return true
+                viewModel.updateEntities()
+                Toast.makeText(this, "Refresh DB", Toast.LENGTH_SHORT).show()
+                true
             }
-            else -> return super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 

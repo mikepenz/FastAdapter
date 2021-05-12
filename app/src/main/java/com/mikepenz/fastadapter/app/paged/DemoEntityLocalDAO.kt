@@ -12,10 +12,6 @@ import androidx.room.Query
 @Dao
 interface DemoEntityLocalDAO {
     //to fetch data required to display in each page
-    @Query("SELECT * FROM DemoEntity WHERE  identifier >= :id ORDER BY identifier LIMIT :size")
-    fun getDemoEntitiesBySize(id: Int, size: Int): List<DemoEntity>
-
-    //to fetch data required to display in each page
     @Query("SELECT * FROM DemoEntity")
     fun getAll(): DataSource.Factory<Int, DemoEntity>
 
@@ -23,6 +19,6 @@ interface DemoEntityLocalDAO {
     @Insert
     fun insertDemoEntities(demoEntities: List<DemoEntity>)
 
-    @Query("UPDATE DemoEntity SET data1 = data1+:generation")
-    fun updateDemoEntities(generation: Int)
+    @Query("UPDATE DemoEntity SET data1 = -data1")
+    fun updateDemoEntities()
 }

@@ -16,7 +16,8 @@ import io.reactivex.schedulers.Schedulers
  */
 class DemoEntityViewModel(val application: Application) : ViewModel() {
     //PagedList controls data loading using data source
-    private val dao: DemoEntityLocalDAO = LocalRepository.getDemoEntityDB(application).demoEntityDAO()
+    private val dao: DemoEntityLocalDAO =
+        LocalRepository.getDemoEntityDB(application).demoEntityDAO()
     var demoEntitiesList: LiveData<PagedList<DemoEntity>>
 
     init {
@@ -29,13 +30,11 @@ class DemoEntityViewModel(val application: Application) : ViewModel() {
         demoEntitiesList = LivePagedListBuilder(dao.getAll(), pagedListConfig).build()
     }
 
-    fun updateEntities(iteration: Int) {
-        Completable.fromRunnable { dao.updateDemoEntities(iteration) }
+    fun updateEntities() {
+        Completable.fromRunnable { dao.updateDemoEntities() }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe {
-                //datasource.invalidate()
-            }
+            .subscribe()
     }
 
     //factory for creating view model,
