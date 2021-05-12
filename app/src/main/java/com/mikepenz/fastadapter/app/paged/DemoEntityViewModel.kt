@@ -45,5 +45,4 @@ class DemoEntityViewModel(val application: Application) : ViewModel() {
             return DemoEntityViewModel(mApplication) as T
         }
     }
-
 }
