@@ -3,7 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/material_drawer_item_primary">
+    android:layout_height="@dimen/material_drawer_item_primary"
+    android:clickable="true"
+    android:focusable="true"
+    android:longClickable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/swipe_result_content"
@@ -78,9 +81,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="?android:colorBackground"
-        android:clickable="true"
+        android:clickable="false"
         android:elevation="4dp"
-        android:focusable="true"
+        android:focusable="false"
         android:foreground="?android:selectableItemBackground"
         android:gravity="center_vertical|start"
         android:orientation="vertical"
