@@ -131,6 +131,10 @@ class SwipeableDrawerItem : AbstractItem<SwipeableDrawerItem.ViewHolder>(), ISwi
             shareBtn.setOnClickListener {
                 shareActionRunnable?.run()
             }
+            // Important : trigger the ViewHolder's global onClick event
+            itemContent.setOnClickListener {
+                (it.parent as View).performClick()
+            }
         }
 
         override fun onDropped() {
