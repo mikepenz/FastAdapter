@@ -3,7 +3,10 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/material_drawer_item_primary">
+    android:layout_height="@dimen/material_drawer_item_primary"
+    android:clickable="true"
+    android:focusable="true"
+    android:longClickable="true">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/swipe_result_content"
