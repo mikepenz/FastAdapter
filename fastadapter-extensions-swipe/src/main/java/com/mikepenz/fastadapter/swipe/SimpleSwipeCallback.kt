@@ -95,7 +95,7 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
         val item = FastAdapter.getHolderAdapterItem<IItem<*>>(viewHolder)
         return if (item is ISwipeable) {
             if ((item as ISwipeable).isSwipeable) {
-                super.getSwipeDirs(recyclerView, viewHolder)
+                item.getSwipeDirs(super.getSwipeDirs(recyclerView, viewHolder))
             } else {
                 0
             }
