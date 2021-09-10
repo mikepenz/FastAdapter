@@ -42,7 +42,7 @@ dependencies {
     api "androidx.recyclerview:recyclerview:${versions.recyclerView}"
     api "androidx.appcompat:appcompat:${versions.appcompat}"
 
-    testImplementation 'junit:junit:4.13.1'
+    testImplementation 'junit:junit:4.13.2'
     testImplementation 'org.mockito:mockito-all:1.10.19'
     testImplementation "org.robolectric:robolectric:${versions.roboelectric}"
     testImplementation 'com.squareup.assertj:assertj-android:1.2.0'
