@@ -1,7 +1,5 @@
 package com.mikepenz.fastadapter.swipe
 
-import androidx.recyclerview.widget.ItemTouchHelper
-
 /**
  * Created by mikepenz on 30.12.15.
  */
@@ -14,5 +12,5 @@ interface ISwipeable {
      *
      * This function will only be called if [isSwipeable] returns true
      */
-    fun isDirectionSupported(direction: Int) : Boolean = true
+    fun isDirectionSupported(direction: Int): Boolean = true
 }
