@@ -1,7 +1,11 @@
 package com.mikepenz.fastadapter.app
 
+import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.view.Menu
+import android.view.MenuItem
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.AsyncDifferConfig
@@ -14,6 +18,10 @@ import com.mikepenz.fastadapter.app.paged.DemoEntity
 import com.mikepenz.fastadapter.app.paged.DemoEntityViewModel
 import com.mikepenz.fastadapter.paged.PagedModelAdapter
 import com.mikepenz.fastadapter.select.getSelectExtension
+import com.mikepenz.iconics.IconicsDrawable
+import com.mikepenz.iconics.typeface.library.materialdesigniconic.MaterialDesignIconic
+import com.mikepenz.iconics.utils.actionBar
+import com.mikepenz.iconics.utils.colorInt
 
 
 class PagedActivity : AppCompatActivity() {
@@ -24,6 +32,8 @@ class PagedActivity : AppCompatActivity() {
 
     //save our FastAdapter
     private lateinit var mItemAdapter: PagedModelAdapter<DemoEntity, SimpleImageItem>
+
+    private lateinit var viewModel: DemoEntityViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         //create the activity
@@ -36,22 +46,27 @@ class PagedActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setTitle(R.string.sample_paged_list)
 
-        val asyncDifferConfig = AsyncDifferConfig.Builder<DemoEntity>(object : DiffUtil.ItemCallback<DemoEntity>() {
-            override fun areItemsTheSame(oldItem: DemoEntity, newItem: DemoEntity): Boolean {
-                return oldItem.identifier == newItem.identifier
-            }
+        val asyncDifferConfig =
+            AsyncDifferConfig.Builder(object : DiffUtil.ItemCallback<DemoEntity>() {
+                override fun areItemsTheSame(oldItem: DemoEntity, newItem: DemoEntity): Boolean {
+                    return oldItem.identifier == newItem.identifier
+                }
 
-            override fun areContentsTheSame(oldItem: DemoEntity, newItem: DemoEntity): Boolean {
-                return oldItem == newItem
-            }
-        }).build()
+                override fun areContentsTheSame(oldItem: DemoEntity, newItem: DemoEntity): Boolean {
+                    return oldItem.data1 == newItem.data1
+                }
+            }).build()
 
         //create our ItemAdapter which will host our items
-        mItemAdapter = PagedModelAdapter<DemoEntity, SimpleImageItem>(asyncDifferConfig, { arg: Int -> SimpleImageItem().setPlaceholder() }) {
-            SimpleImageItem().withName(it.data1 ?: "").withDescription(it.data2 ?: "").apply {
+        mItemAdapter = PagedModelAdapter<DemoEntity, SimpleImageItem>(
+            asyncDifferConfig,
+            { SimpleImageItem().setPlaceholder() }) {
+            SimpleImageItem().apply {
                 identifier = it.identifier.toLong()
                 isSelectable = true
                 withImage("https://raw.githubusercontent.com/mikepenz/earthview-wallpapers/develop/thumb/yang_zhuo_yong_cuo,_tibet-china-63.jpg")
+                withName(it.data1 ?: "")
+                withDescription(it.data2 ?: "")
             }
         }
 
@@ -67,14 +82,17 @@ class PagedActivity : AppCompatActivity() {
         binding.rv.layoutManager = LinearLayoutManager(this)
         binding.rv.adapter = mFastAdapter
 
-        val viewModel = ViewModelProvider(this, DemoEntityViewModel.DemoEntityViewModelFactory(this.application))
+        viewModel = ViewModelProvider(
+            this,
+            DemoEntityViewModel.DemoEntityViewModelFactory(this.application)
+        )
             .get(DemoEntityViewModel::class.java)
 
         //listen to data changes and pass it to adapter for displaying in recycler view
         viewModel.demoEntitiesList.observe(this, { t -> mItemAdapter.submitList(t!!) })
 
         //if we do this. the first added items will be animated :D
-        Handler().postDelayed({
+        Handler(mainLooper).postDelayed({
             //restore selections (this has to be done after the items were added
             mFastAdapter.withSavedInstanceState(savedInstanceState)
         }, 50)
@@ -90,6 +108,32 @@ class PagedActivity : AppCompatActivity() {
         //add the values which need to be saved from the adapter to the bundle
         outState = mFastAdapter.saveInstanceState(outState)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        val inflater = menuInflater
+        inflater.inflate(R.menu.refresh, menu)
+        menu.findItem(R.id.item_refresh).icon =
+            IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_refresh).apply {
+                colorInt = Color.BLACK; actionBar()
+            }
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        //handle the click on the back arrow click
+        return when (item.itemId) {
+            android.R.id.home -> {
+                onBackPressed()
+                true
+            }
+            R.id.item_refresh -> {
+                viewModel.updateEntities()
+                Toast.makeText(this, "Refresh DB", Toast.LENGTH_SHORT).show()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onSupportNavigateUp(): Boolean {

@@ -23,7 +23,8 @@ class SimpleImageItem : BaseItem<SimpleImageItem.ViewHolder>() {
     private var mImageUrl: String? = null
     private var mName: String? = null
     private var mDescription: String? = null
-    private var isPlaceholder: Boolean = false // True when used as placeholderInterceptor by PagedModelAdapter
+    private var isPlaceholder: Boolean =
+        false // True when used as placeholderInterceptor by PagedModelAdapter
 
     /**
      * defines the type defining this item. must be unique. preferably an id
@@ -85,10 +86,18 @@ class SimpleImageItem : BaseItem<SimpleImageItem.ViewHolder>() {
         holder.imageView.setImageBitmap(null)
 
         //set the background for the item
-        val color = ctx.getThemeColor(R.attr.colorPrimary, ContextCompat.getColor(ctx, R.color.colorPrimary))
+        val color = ctx.getThemeColor(
+            R.attr.colorPrimary,
+            ContextCompat.getColor(ctx, R.color.colorPrimary)
+        )
 
         holder.view.clearAnimation()
-        holder.view.foreground = FastAdapterUIUtils.getSelectablePressedBackground(ctx, FastAdapterUIUtils.adjustAlpha(color, 100), 50, true)
+        holder.view.foreground = FastAdapterUIUtils.getSelectablePressedBackground(
+            ctx,
+            FastAdapterUIUtils.adjustAlpha(color, 100),
+            50,
+            true
+        )
 
         //load glide
         holder.imageView.load(mImageUrl) {

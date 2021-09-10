@@ -123,7 +123,11 @@ open class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
      * An overload of [withNewItemsDeliveredTo()][withNewItemsDeliveredTo]
      * that allows additional callbacks.
      */
-    fun <Item : GenericItem> withNewItemsDeliveredTo(itemAdapter: IItemAdapter<*, Item>, itemFactory: (element: Model) -> Item?, extraOnNewItemsListener: OnNewItemsListener<Model>): EndlessScrollHelper<Model> {
+    fun <Item : GenericItem> withNewItemsDeliveredTo(
+        itemAdapter: IItemAdapter<*, Item>,
+        itemFactory: (element: Model) -> Item?,
+        extraOnNewItemsListener: OnNewItemsListener<Model>
+    ): EndlessScrollHelper<Model> {
         onNewItemsListener = DeliverToIItemAdapter2(itemAdapter, itemFactory, extraOnNewItemsListener)
         return this
     }
@@ -180,9 +184,10 @@ open class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
         onLoadMore(ResultReceiverImpl(this, currentPage), currentPage)
     }
 
-    private class ResultReceiverImpl<Model> internal constructor(helper: EndlessScrollHelper<Model>, override val receiverPage: Int)
+    private class ResultReceiverImpl<Model>(helper: EndlessScrollHelper<Model>, override val receiverPage: Int) :
+        WeakReference<EndlessScrollHelper<Model>>(helper), ResultReceiver<Model>, Runnable {
         // We use WeakReferences to outer class to avoid memory leaks.
-        : WeakReference<EndlessScrollHelper<Model>>(helper), ResultReceiver<Model>, Runnable {
+
         private var helperStrongRef: EndlessScrollHelper<Model>? = null
         private var result: List<Model>? = null
 
@@ -225,7 +230,10 @@ open class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
     //-----------------------------------------
     //-----------------------------------------
 
-    private open class DeliverToIItemAdapter<Model, Item : GenericItem> internal constructor(private val itemAdapter: IItemAdapter<*, Item>, private val itemFactory: (element: Model) -> Item?) : OnNewItemsListener<Model> {
+    private open class DeliverToIItemAdapter<Model, Item : GenericItem> internal constructor(
+        private val itemAdapter: IItemAdapter<*, Item>,
+        private val itemFactory: (element: Model) -> Item?
+    ) : OnNewItemsListener<Model> {
 
         override fun onNewItems(newItems: List<Model>, page: Int) {
             val items = newItems.mapNotNull(itemFactory)
@@ -239,14 +247,21 @@ open class EndlessScrollHelper<Model> : EndlessRecyclerOnScrollListener {
         }
     }
 
-    private class DeliverToIItemAdapter2<Model, Item : GenericItem> internal constructor(itemAdapter: IItemAdapter<*, Item>, itemFactory: (element: Model) -> Item?, private val extraOnNewItemsListener: OnNewItemsListener<Model>) : DeliverToIItemAdapter<Model, Item>(itemAdapter, itemFactory) {
+    private class DeliverToIItemAdapter2<Model, Item : GenericItem> internal constructor(
+        itemAdapter: IItemAdapter<*, Item>,
+        itemFactory: (element: Model) -> Item?,
+        private val extraOnNewItemsListener: OnNewItemsListener<Model>
+    ) : DeliverToIItemAdapter<Model, Item>(itemAdapter, itemFactory) {
         override fun onNewItems(newItems: List<Model>, page: Int) {
             extraOnNewItemsListener.onNewItems(newItems, page)
             super.onNewItems(newItems, page)
         }
     }
 
-    private class DeliverToModelAdapter2<Model> internal constructor(modelItemAdapter: ModelAdapter<Model, *>, private val extraOnNewItemsListener: OnNewItemsListener<Model>) : DeliverToModelAdapter<Model>(modelItemAdapter) {
+    private class DeliverToModelAdapter2<Model> internal constructor(
+        modelItemAdapter: ModelAdapter<Model, *>,
+        private val extraOnNewItemsListener: OnNewItemsListener<Model>
+    ) : DeliverToModelAdapter<Model>(modelItemAdapter) {
         override fun onNewItems(newItems: List<Model>, page: Int) {
             extraOnNewItemsListener.onNewItems(newItems, page)
             super.onNewItems(newItems, page)

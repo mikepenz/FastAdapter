@@ -102,7 +102,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
         val item = FastAdapter.getHolderAdapterItem<IItem<*>>(viewHolder)
         return if (item is ISwipeable) {
             if ((item as ISwipeable).isSwipeable) {
-                super.getSwipeDirs(recyclerView, viewHolder)
+                item.getSwipeDirs(super.getSwipeDirs(recyclerView, viewHolder))
             } else {
                 0
             }
@@ -112,7 +112,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
     }
 
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        val position = viewHolder.adapterPosition
+        val position = viewHolder.bindingAdapterPosition
         val id = viewHolder.itemId
         if (position != RecyclerView.NO_POSITION && (!swipedStates.containsKey(id) || swipedStates[id] != direction)) {
             itemSwipeCallback?.itemSwiped(position, direction)
@@ -146,7 +146,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
             touchTransmitterSet = true
         }
 
-        val position = viewHolder.adapterPosition
+        val position = viewHolder.bindingAdapterPosition
 
         if (position == RecyclerView.NO_POSITION) return
 
@@ -160,7 +160,7 @@ class SimpleSwipeDrawerCallback @JvmOverloads constructor(private val swipeDirs:
 
             // If unswiped, fire event and update swiped state
             if (0f == dX && swipedStates.containsKey(viewHolder.itemId)) {
-                itemSwipeCallback?.itemUnswiped(viewHolder.adapterPosition)
+                itemSwipeCallback?.itemUnswiped(viewHolder.bindingAdapterPosition)
                 swipedStates.remove(viewHolder.itemId)
             }
 

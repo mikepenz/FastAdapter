@@ -95,7 +95,7 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
         val item = FastAdapter.getHolderAdapterItem<IItem<*>>(viewHolder)
         return if (item is ISwipeable) {
             if ((item as ISwipeable).isSwipeable) {
-                super.getSwipeDirs(recyclerView, viewHolder)
+                item.getSwipeDirs(super.getSwipeDirs(recyclerView, viewHolder))
             } else {
                 0
             }
@@ -107,7 +107,7 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
         viewHolder.itemView.translationX = 0f
         viewHolder.itemView.translationY = 0f
-        val position = viewHolder.adapterPosition
+        val position = viewHolder.bindingAdapterPosition
         if (position != RecyclerView.NO_POSITION) {
             itemSwipeCallback.itemSwiped(position, direction)
         }
@@ -129,7 +129,7 @@ class SimpleSwipeCallback @JvmOverloads constructor(private val itemSwipeCallbac
     //Inspired/modified from: https://github.com/nemanja-kovacevic/recycler-view-swipe-to-delete/blob/master/app/src/main/java/net/nemanjakovacevic/recyclerviewswipetodelete/MainActivity.java
     override fun onChildDraw(c: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
         val itemView = viewHolder.itemView
-        if (viewHolder.adapterPosition == RecyclerView.NO_POSITION) {
+        if (viewHolder.bindingAdapterPosition == RecyclerView.NO_POSITION) {
             return
         }
         if (abs(dX) > abs(dY)) {

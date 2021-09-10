@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -12,6 +13,7 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.app.adapters.IDraggableViewHolder
 import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
@@ -28,7 +30,8 @@ import com.mikepenz.iconics.utils.colorInt
 import io.reactivex.functions.Consumer
 import java.util.*
 
-class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSwipeDrawerCallback.ItemSwipeCallback {
+class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback,
+    SimpleSwipeDrawerCallback.ItemSwipeCallback {
     private lateinit var binding: ActivitySampleBinding
 
     //save our FastAdapter
@@ -78,9 +81,20 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSw
         //create our FastAdapter which will manage everything
         fastItemDrawerAdapter = FastItemAdapter()
         //configure the itemAdapter
-        fastItemDrawerAdapter.itemFilter.filterPredicate = { item: SwipeableDrawerItem, constraint: CharSequence? ->
-            item.name?.textString.toString().contains(constraint.toString(), ignoreCase = true)
-        }
+        fastItemDrawerAdapter.itemFilter.filterPredicate =
+            { item: SwipeableDrawerItem, constraint: CharSequence? ->
+                item.name?.textString.toString().contains(constraint.toString(), ignoreCase = true)
+            }
+
+
+        // Item click listener
+        fastItemDrawerAdapter.onClickListener =
+            { _: View?, _: IAdapter<SwipeableDrawerItem>, _: SwipeableDrawerItem, pos: Int ->
+                run {
+                    println("click! $pos")
+                    true
+                }
+            }
 
         //get our recyclerView and do basic setup
         binding.rv.layoutManager = LinearLayoutManager(this)
@@ -110,16 +124,18 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSw
         //add drag and drop for item
         //and add swipe as well
         touchCallback = SimpleSwipeDrawerDragCallback(
-                this,
-                ItemTouchHelper.LEFT,
-                this)
-                .withNotifyAllDrops(true)
-                .withSwipeLeft(80) // Width of delete button
-                .withSwipeRight(160) // Width of archive and share buttons
-                .withSensitivity(10f)
-                .withSurfaceThreshold(0.3f)
+            this,
+            ItemTouchHelper.LEFT,
+            this
+        )
+            .withNotifyAllDrops(true)
+            .withSwipeLeft(80) // Width of delete button
+            .withSwipeRight(160) // Width of archive and share buttons
+            .withSensitivity(10f)
+            .withSurfaceThreshold(0.3f)
 
-        touchHelper = ItemTouchHelper(touchCallback) // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
+        touchHelper =
+            ItemTouchHelper(touchCallback) // Create ItemTouchHelper and pass with parameter the SimpleDragCallback
         touchHelper.attachToRecyclerView(binding.rv) // Attach ItemTouchHelper to RecyclerView
 
         //restore selections (this has to be done after the items were added)
@@ -155,7 +171,10 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSw
         inflater.inflate(R.menu.search, menu)
 
         //search icon
-        menu.findItem(R.id.search).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_search).apply { colorInt = Color.BLACK; actionBar() }
+        menu.findItem(R.id.search).icon =
+            IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_search).apply {
+                colorInt = Color.BLACK; actionBar()
+            }
 
         val searchView = menu.findItem(R.id.search).actionView as SearchView
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
@@ -177,7 +196,11 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSw
     }
 
     override fun itemTouchOnMove(oldPosition: Int, newPosition: Int): Boolean {
-        DragDropUtil.onMove(fastItemDrawerAdapter.itemAdapter, oldPosition, newPosition)  // change position
+        DragDropUtil.onMove(
+            fastItemDrawerAdapter.itemAdapter,
+            oldPosition,
+            newPosition
+        )  // change position
         return true
     }
 
@@ -196,7 +219,34 @@ class SwipeDrawerListActivity : AppCompatActivity(), ItemTouchCallback, SimpleSw
     }
 
     companion object {
-        private val ALPHABET = arrayOf("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z")
+        private val ALPHABET = arrayOf(
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T",
+            "U",
+            "V",
+            "W",
+            "X",
+            "Y",
+            "Z"
+        )
     }
 
     override fun itemSwiped(position: Int, direction: Int) {
