@@ -8,10 +8,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 internal fun ISwipeable.getSwipeDirs(dirs: Int): Int {
     var directions = dirs
     if (!isDirectionSupported(ItemTouchHelper.LEFT)) {
-        directions = dirs and ItemTouchHelper.LEFT.inv()
+        directions = directions and ItemTouchHelper.LEFT.inv()
     }
     if (!isDirectionSupported(ItemTouchHelper.RIGHT)) {
-        directions = dirs and ItemTouchHelper.RIGHT.inv()
+        directions = directions and ItemTouchHelper.RIGHT.inv()
     }
     return directions
 }
