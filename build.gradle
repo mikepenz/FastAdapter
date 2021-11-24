@@ -9,8 +9,8 @@ buildscript {
         ]
 
         setup = [
-                gradleTools: '7.0.2',
-                compileSdk : 30,
+                gradleTools: '7.0.3',
+                compileSdk : 31,
                 buildTools : "31.0.0",
                 minSdk     : 16,
                 targetSdk  : 30
@@ -19,18 +19,18 @@ buildscript {
         versions = [
                 recyclerView    : '1.2.1',
                 material        : '1.4.0',
-                appcompat       : '1.3.1',
+                appcompat       : '1.4.0',
                 drawerlayout    : '1.1.0',
                 constraintLayout: '2.1.0',
                 cardview        : '1.0.0',
-                kotlin          : '1.5.30',
+                kotlin          : '1.5.31',
                 iconics         : '5.2.8',
-                materialdrawer  : '8.4.3',
-                aboutlib        : '8.9.1',
+                materialdrawer  : '8.4.5',
+                aboutlib        : '10.0.0-b01',
                 roboelectric    : '4.6.1',
                 detekt          : '1.18.1',
                 paging          : "2.1.2",
-                room            : "2.4.0-alpha04",
+                room            : "2.4.0-beta02",
                 lifecycle       : "2.3.1"
         ]
     }

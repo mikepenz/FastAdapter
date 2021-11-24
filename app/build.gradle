@@ -14,7 +14,7 @@ android {
     ndkVersion "21.3.6528147"
 
     defaultConfig {
-        minSdkVersion setup.minSdk
+        minSdkVersion 21
         targetSdkVersion setup.targetSdk
         versionCode release.versionCode
         versionName release.versionName
@@ -148,7 +148,7 @@ dependencies {
 
     //used to load the images in the ImageListSample
     //https://github.com/coil-kt/coil
-    implementation 'io.coil-kt:coil:1.3.2'
+    implementation 'io.coil-kt:coil:1.4.0'
 
     //Used to provide the drag selection like google photos
     implementation 'com.github.MFlisar:DragSelectRecyclerView:0.3'
@@ -191,6 +191,6 @@ buildscript {
     }
 
     dependencies {
-        classpath "io.realm:realm-gradle-plugin:10.8.0"
+        classpath "io.realm:realm-gradle-plugin:10.8.1"
     }
 }
