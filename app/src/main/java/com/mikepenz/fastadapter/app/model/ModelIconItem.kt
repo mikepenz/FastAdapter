@@ -3,8 +3,8 @@ package com.mikepenz.fastadapter.app.model
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.app.R
+import com.mikepenz.fastadapter.app.utils.getThemeColor
 import com.mikepenz.fastadapter.items.ModelAbstractItem
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.utils.colorInt
