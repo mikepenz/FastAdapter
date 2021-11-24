@@ -1,7 +1,6 @@
 package com.mikepenz.fastadapter.helpers
 
 import android.view.View
-import android.widget.TextView
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.mikepenz.fastadapter.FastAdapter
@@ -20,8 +19,8 @@ import java.util.Arrays.asList
  * @param undoListener the listener which gets called when an item was really removed
  */
 class UndoHelper<Item : GenericItem>(
-        private val adapter: FastAdapter<Item>,
-        private val undoListener: UndoListener<Item>
+    private val adapter: FastAdapter<Item>,
+    private val undoListener: UndoListener<Item>
 ) {
     private var history: History? = null
     private var snackBarActionText = ""
@@ -49,37 +48,37 @@ class UndoHelper<Item : GenericItem>(
     var snackBar: Snackbar? = null
         private set
 
+    /** Constructs the snackbar to be used for the undoHelper */
+    private var snackbarBuilder: (() -> Snackbar)? = null
+
     /**
      * An optional method to add a [Snackbar] of your own with custom styling.
      * note that using this method will override your custom action
      *
-     * @param snackBar   your own Snackbar
      * @param actionText the text to show for the Undo Action
+     * @param snackbarBuilder   constructs the snackbar with custom styling
      */
-    fun withSnackBar(snackBar: Snackbar, actionText: String) {
-        this.snackBar = snackBar
-        snackBarActionText = actionText
-        snackBar.addCallback(snackBarCallback).setAction(actionText) { undoChange() }
+    fun withSnackBar(actionText: String, snackbarBuilder: () -> Snackbar) {
+        this.snackBarActionText = actionText
+        this.snackbarBuilder = snackbarBuilder
     }
 
     /**
      * Convenience method to be used if you have previously set a [Snackbar] with [withSnackBar]
+     * NOTE: No action will be executed if [withSnackBar] was not previously called.
      *
      * @param positions the positions where the items were removed
      * @return the snackbar or null if [withSnackBar] was not previously called
      */
     fun remove(positions: Set<Int>): Snackbar? {
-        val snackBar = this.snackBar ?: return null
-        val snackBarView = snackBar.view
-        val snackBarText = snackBarView.findViewById<View>(com.google.android.material.R.id.snackbar_text) as TextView
-        return remove(snackBarView, snackBarText.text.toString(), snackBarActionText, snackBar.duration, positions)
+        val builder = this.snackbarBuilder ?: return null
+        return remove(positions, snackBarActionText, builder)
     }
 
     /**
      * Removes items from the ItemAdapter.
-     * note that the values of "view", "text", "actionText", and "duration"
-     * will be ignored if [withSnackBar] was used.
-     * if it was not used, a default snackbar will be generated
+     *
+     * Creates a default [Snackbar] with the given information.
      *
      * @param view       the view which will host the SnackBar
      * @param text       the text to show on the SnackBar
@@ -88,6 +87,21 @@ class UndoHelper<Item : GenericItem>(
      * @return the generated Snackbar
      */
     fun remove(view: View, text: String, actionText: String, @BaseTransientBottomBar.Duration duration: Int, positions: Set<Int>): Snackbar {
+        return remove(positions, actionText) {
+            Snackbar.make(view, text, duration)
+        }
+    }
+
+    /**
+     * Removes items from the ItemAdapter.
+     * Displays the created [Snackbar] via the [snackbarBuilder], and configures the action with the given [actionText]
+     *
+     * @param positions  the positions where the items were removed
+     * @param actionText the text to show for the Undo Action
+     * @param snackbarBuilder   constructs the snackbar with custom styling
+     * @return the generated Snackbar
+     */
+    fun remove(positions: Set<Int>, actionText: String, snackbarBuilder: () -> Snackbar): Snackbar {
         if (history != null) {
             // Set a flag, if remove was called before the Snackbar
             // executed the commit -> Snackbar does not commit the new
@@ -101,16 +115,18 @@ class UndoHelper<Item : GenericItem>(
         for (position in positions) {
             history.items.add(adapter.getRelativeInfo(position))
         }
-        history.items.sortWith(Comparator { lhs, rhs -> Integer.valueOf(lhs.position).compareTo(rhs.position) })
+        history.items.sortWith { lhs, rhs -> Integer.valueOf(lhs.position).compareTo(rhs.position) }
 
         this.history = history
         doChange() // Do not execute when Snackbar shows up, instead change immediately
 
-        val snackBar = Snackbar.make(view, text, duration).addCallback(snackBarCallback)
-        snackBar.setAction(actionText) { undoChange() }
-        snackBar.show()
-        this.snackBar = snackBar
-        return snackBar
+        return snackbarBuilder.invoke()
+            .addCallback(snackBarCallback)
+            .setAction(actionText) { undoChange() }
+            .also {
+                it.show()
+                this.snackBar = it
+            }
     }
 
     private fun notifyCommit() {
