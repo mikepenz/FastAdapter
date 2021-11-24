@@ -2,12 +2,12 @@ package com.mikepenz.fastadapter.app.binding
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.IExpandable
 import com.mikepenz.fastadapter.IParentItem
 import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.app.databinding.IconItemBinding
+import com.mikepenz.fastadapter.app.utils.getThemeColor
 import com.mikepenz.fastadapter.binding.AbstractBindingItem
 import com.mikepenz.fastadapter.binding.BindingViewHolder
 import com.mikepenz.iconics.IconicsDrawable

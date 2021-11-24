@@ -49,7 +49,7 @@ internal fun <R> IItem<out RecyclerView.ViewHolder>?.ifExpandableParent(block: (
  */
 @FastAdapterDsl
 class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapter<Item>) :
-        IAdapterExtension<Item> {
+    IAdapterExtension<Item> {
 
     private val collapseAdapterPredicate = object : AdapterPredicate<Item> {
         private var allowedParents = ArraySet<IItem<*>>()
@@ -57,10 +57,10 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
         private var expandedItemsCount = 0
 
         override fun apply(
-                lastParentAdapter: IAdapter<Item>,
-                lastParentPosition: Int,
-                item: Item,
-                position: Int
+            lastParentAdapter: IAdapter<Item>,
+            lastParentPosition: Int,
+            item: Item,
+            position: Int
         ): Boolean {
             //we do not care about non visible items
             if (position == RecyclerView.NO_POSITION) {
@@ -153,10 +153,10 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
             return
         }
         val expandedItems = (0 until fastAdapter.itemCount).asSequence()
-                .mapNotNull { fastAdapter.getItem(it) }
-                .filter { it.isExpanded }
-                .map { it.identifier }
-                .toList()
+            .mapNotNull { fastAdapter.getItem(it) }
+            .filter { it.isExpanded }
+            .map { it.identifier }
+            .toList()
         //remember the collapsed states
         savedInstanceState.putLongArray(BUNDLE_EXPANDED + prefix, expandedItems.toLongArray())
     }
@@ -183,20 +183,20 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     }
 
     override fun onLongClick(
-            v: View,
-            pos: Int,
-            fastAdapter: FastAdapter<Item>,
-            item: Item
+        v: View,
+        pos: Int,
+        fastAdapter: FastAdapter<Item>,
+        item: Item
     ): Boolean {
         return false
     }
 
     override fun onTouch(
-            v: View,
-            event: MotionEvent,
-            position: Int,
-            fastAdapter: FastAdapter<Item>,
-            item: Item
+        v: View,
+        event: MotionEvent,
+        position: Int,
+        fastAdapter: FastAdapter<Item>,
+        item: Item
     ): Boolean {
         return false
     }
@@ -245,8 +245,8 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
                 (adapter as? IItemAdapter<*, *>)?.removeRange(position + 1, previousCount)
                 expandable.subItems.let { subItems ->
                     (adapter as? IItemAdapter<GenericItem, *>?)?.add(
-                            position + 1,
-                            subItems
+                        position + 1,
+                        subItems
                     )
                 }
             }
@@ -262,10 +262,10 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
         val result = fastAdapter.getItem(position).ifExpandableParent { child, parent ->
             //if it is a SubItem and has a parent, only return the expanded items on the same level
             parent.subItems.asSequence()
-                    .filter { it.isExpanded && it !== child }
-                    .mapNotNull { it as? Item? }
-                    .map { fastAdapter.getPosition(it) }
-                    .toList()
+                .filter { it.isExpanded && it !== child }
+                .mapNotNull { it as? Item? }
+                .map { fastAdapter.getPosition(it) }
+                .toList()
         }
         return result ?: getExpandedItemsRootLevel(position)
     }
@@ -333,12 +333,12 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
     fun collapse(position: Int, notifyItemChanged: Boolean = false) {
         val adapter = fastAdapter.getAdapter(position)
         (adapter as? IItemAdapter<*, *>?)?.removeRange(
-                position + 1,
-                collapseAdapterPredicate.collapse(position, fastAdapter)
+            position + 1,
+            collapseAdapterPredicate.collapse(position, fastAdapter)
         )
         //we need to notify to get the correct drawable if there is one showing the current state
         if (notifyItemChanged) {
-            fastAdapter.notifyItemChanged(position)
+            fastAdapter.notifyItemChanged(position, PAYLOAD_COLLAPSE)
         }
     }
 
@@ -356,7 +356,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
 
         //we need to notify to get the correct drawable if there is one showing the current state
         if (notifyItemChanged) {
-            fastAdapter.notifyItemChanged(position)
+            fastAdapter.notifyItemChanged(position, PAYLOAD_COLLAPSE)
         }
     }
 
@@ -389,8 +389,8 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
             if (adapter != null && adapter is IItemAdapter<*, *>) {
                 (expandable.subItems as? List<Item>?)?.let { subItems ->
                     (adapter as IItemAdapter<*, Item>).addInternal(
-                            position + 1,
-                            subItems
+                        position + 1,
+                        subItems
                     )
                 }
             }
@@ -400,7 +400,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
 
             //we need to notify to get the correct drawable if there is one showing the current state
             if (notifyItemChanged) {
-                fastAdapter.notifyItemChanged(position)
+                fastAdapter.notifyItemChanged(position, PAYLOAD_EXPAND)
             }
         }
     }
@@ -420,7 +420,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
         //we need to notify to get the correct drawable if there is one showing the current state
         if (notifyItemChanged) {
             val position = fastAdapter.getPosition(item.identifier)
-            fastAdapter.notifyItemChanged(position)
+            fastAdapter.notifyItemChanged(position, PAYLOAD_EXPAND)
         }
     }
 
@@ -438,7 +438,7 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
 
         //we need to notify to get the correct drawable if there is one showing the current state
         if (notifyItemChanged) {
-            fastAdapter.notifyItemChanged(position)
+            fastAdapter.notifyItemChanged(position, PAYLOAD_EXPAND)
         }
     }
 
@@ -451,11 +451,11 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
      */
     fun getExpandedItemsCount(from: Int, position: Int): Int {
         return (from until position)
-                .asSequence()
-                .mapNotNull { fastAdapter.getItem(it) as? IExpandable<*> }
-                .filter { it.isExpanded }
-                .map { it.subItems.size }
-                .sum()
+            .asSequence()
+            .mapNotNull { fastAdapter.getItem(it) as? IExpandable<*> }
+            .filter { it.isExpanded }
+            .map { it.subItems.size }
+            .sum()
     }
 
     /** Walks through the parents tree while parents are non-null and parents are IExpandable */
@@ -483,6 +483,16 @@ class ExpandableExtension<Item : GenericItem>(private val fastAdapter: FastAdapt
 
     companion object {
         private const val BUNDLE_EXPANDED = "bundle_expanded"
+
+        /**
+         * Payload indicating the item was clicked to expand
+         */
+        const val PAYLOAD_EXPAND = "fa_PAYLOAD_EXPAND"
+
+        /**
+         * Payload indicating the item was clicked to collapse
+         */
+        const val PAYLOAD_COLLAPSE = "fa_PAYLOAD_COLLAPSE"
 
         init {
             ExtensionsFactories.register(ExpandableExtensionFactory())

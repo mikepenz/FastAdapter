@@ -117,7 +117,6 @@ class SampleActivity : AppCompatActivity() {
                     21L -> Intent(this@SampleActivity, PagedActivity::class.java)
                     22L -> Intent(this@SampleActivity, DragAndDropActivity::class.java)
                     100L -> LibsBuilder()
-                            .withFields(R.string::class.java.fields)
                             .withActivityTitle(getString(R.string.open_source))
                             .withAboutIconShown(true)
                             .withVersionShown(true)

@@ -8,9 +8,9 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import coil.clear
 import coil.load
-import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.IItemVHFactory
 import com.mikepenz.fastadapter.app.R
+import com.mikepenz.fastadapter.app.utils.getThemeColor
 import com.mikepenz.fastadapter.items.BaseItem
 import com.mikepenz.fastadapter.items.BaseItemFactory
 import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils

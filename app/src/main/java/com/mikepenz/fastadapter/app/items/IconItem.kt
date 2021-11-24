@@ -3,11 +3,11 @@ package com.mikepenz.fastadapter.app.items
 import android.view.View
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.IExpandable
 import com.mikepenz.fastadapter.IParentItem
 import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.app.R
+import com.mikepenz.fastadapter.app.utils.getThemeColor
 import com.mikepenz.fastadapter.items.AbstractItem
 import com.mikepenz.iconics.IconicsDrawable
 import com.mikepenz.iconics.typeface.IIcon

@@ -12,19 +12,18 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
-import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.ISelectionListener
 import com.mikepenz.fastadapter.adapters.ItemAdapter
 import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.SimpleItem
+import com.mikepenz.fastadapter.app.utils.getThemeColor
 import com.mikepenz.fastadapter.helpers.ActionModeHelper
 import com.mikepenz.fastadapter.helpers.UndoHelper
 import com.mikepenz.fastadapter.select.SelectExtension
 import com.mikepenz.fastadapter.select.getSelectExtension
 import com.mikepenz.itemanimators.SlideDownAlphaAnimator
-import java.util.*
 
 class MultiselectSampleActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySampleBinding
@@ -75,7 +74,11 @@ class MultiselectSampleActivity : AppCompatActivity() {
 
         mFastAdapter.onClickListener = { v: View?, _: IAdapter<SimpleItem>, _: SimpleItem, _: Int ->
             if (v != null) {
-                Toast.makeText(v.context, "SelectedCount: " + selectExtension.selections.size + " ItemsCount: " + selectExtension.selectedItems.size, Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    v.context,
+                    "SelectedCount: " + selectExtension.selections.size + " ItemsCount: " + selectExtension.selectedItems.size,
+                    Toast.LENGTH_SHORT
+                ).show()
             }
             false
         }
@@ -84,7 +87,12 @@ class MultiselectSampleActivity : AppCompatActivity() {
             val actionMode = mActionModeHelper.onLongClick(this@MultiselectSampleActivity, position)
             if (actionMode != null) {
                 //we want color our CAB
-                findViewById<View>(R.id.action_mode_bar).setBackgroundColor(this@MultiselectSampleActivity.getThemeColor(R.attr.colorPrimary, ContextCompat.getColor(this, R.color.colorPrimary)))
+                findViewById<View>(R.id.action_mode_bar).setBackgroundColor(
+                    this@MultiselectSampleActivity.getThemeColor(
+                        R.attr.colorPrimary,
+                        ContextCompat.getColor(this, R.color.colorPrimary)
+                    )
+                )
             }
             //if we have no actionMode we do not consume the event
             actionMode != null
@@ -107,8 +115,7 @@ class MultiselectSampleActivity : AppCompatActivity() {
 
         //fill with some sample data
         val simpleItem = SimpleItem()
-        simpleItem
-                .withName("Header")
+        simpleItem.withName("Header")
         simpleItem.identifier = 2
         simpleItem.isSelectable = false
         headerAdapter.add(simpleItem)
@@ -157,14 +164,14 @@ class MultiselectSampleActivity : AppCompatActivity() {
 
         override fun onActionItemClicked(mode: ActionMode, item: MenuItem): Boolean {
             mUndoHelper.remove(findViewById(android.R.id.content), "Item removed", "Undo", Snackbar.LENGTH_LONG, selectExtension.selections)
-                    .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
-                        override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
-                            super.onDismissed(transientBottomBar, event)
-                            if (event != Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
-                                selectExtension.deselect()
-                            }
+                .addCallback(object : BaseTransientBottomBar.BaseCallback<Snackbar>() {
+                    override fun onDismissed(transientBottomBar: Snackbar?, event: Int) {
+                        super.onDismissed(transientBottomBar, event)
+                        if (event != Snackbar.Callback.DISMISS_EVENT_TIMEOUT) {
+                            selectExtension.deselect()
                         }
-                    })
+                    }
+                })
 
             //as we no longer have a selection so the actionMode can be finished
             mode.finish()

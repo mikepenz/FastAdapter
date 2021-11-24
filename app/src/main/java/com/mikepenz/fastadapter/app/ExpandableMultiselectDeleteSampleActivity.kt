@@ -10,13 +10,13 @@ import androidx.appcompat.view.ActionMode
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.michaelflisar.dragselectrecyclerview.DragSelectTouchListener
-import com.mikepenz.aboutlibraries.util.getThemeColor
 import com.mikepenz.fastadapter.*
 import com.mikepenz.fastadapter.adapters.FastItemAdapter
 import com.mikepenz.fastadapter.adapters.GenericFastItemAdapter
 import com.mikepenz.fastadapter.app.databinding.ActivitySampleBinding
 import com.mikepenz.fastadapter.app.items.HeaderSelectionItem
 import com.mikepenz.fastadapter.app.items.expandable.SimpleSubItem
+import com.mikepenz.fastadapter.app.utils.getThemeColor
 import com.mikepenz.fastadapter.expandable.ExpandableExtension
 import com.mikepenz.fastadapter.expandable.getExpandableExtension
 import com.mikepenz.fastadapter.helpers.ActionModeHelper
@@ -79,7 +79,12 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
             mRangeSelectorHelper.onLongClick(position)
             if (actionMode != null) {
                 //we want color our CAB
-                this@ExpandableMultiselectDeleteSampleActivity.findViewById<View>(R.id.action_mode_bar).setBackgroundColor(this@ExpandableMultiselectDeleteSampleActivity.getThemeColor(R.attr.colorPrimary, ContextCompat.getColor(this, R.color.colorPrimary)))
+                this@ExpandableMultiselectDeleteSampleActivity.findViewById<View>(R.id.action_mode_bar).setBackgroundColor(
+                    this@ExpandableMultiselectDeleteSampleActivity.getThemeColor(
+                        R.attr.colorPrimary,
+                        ContextCompat.getColor(this, R.color.colorPrimary)
+                    )
+                )
 
                 // start the drag selection
                 mDragSelectTouchListener.startDragSelection(position)
@@ -91,24 +96,24 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
 
         // provide a custom title provider that even shows the count of sub items
         mActionModeHelper = ActionModeHelper(fastItemAdapter, R.menu.cab, ActionBarCallBack())
-                .withTitleProvider(object : ActionModeHelper.ActionModeTitleProvider {
-                    override fun getTitle(selected: Int): String {
-                        return selected.toString() + "/" + SubItemUtil.countItems(fastItemAdapter.itemAdapter, false)
-                    }
-                })
+            .withTitleProvider(object : ActionModeHelper.ActionModeTitleProvider {
+                override fun getTitle(selected: Int): String {
+                    return selected.toString() + "/" + SubItemUtil.countItems(fastItemAdapter.itemAdapter, false)
+                }
+            })
 
         // this will take care of selecting range of items via long press on the first and afterwards on the last item
         mRangeSelectorHelper = RangeSelectorHelper(fastItemAdapter)
-                .withSavedInstanceState(savedInstanceState)
-                .withActionModeHelper(mActionModeHelper)
+            .withSavedInstanceState(savedInstanceState)
+            .withActionModeHelper(mActionModeHelper)
 
         // setup the drag select listener and add it to the RecyclerView
         mDragSelectTouchListener = DragSelectTouchListener()
-                .withSelectListener { start, end, isSelected ->
-                    mRangeSelectorHelper.selectRange(start, end, isSelected, true)
-                    // we handled the long press, so we reset the range selector
-                    mRangeSelectorHelper.reset()
-                }
+            .withSelectListener { start, end, isSelected ->
+                mRangeSelectorHelper.selectRange(start, end, isSelected, true)
+                // we handled the long press, so we reset the range selector
+                mRangeSelectorHelper.reset()
+            }
         binding.rv.addOnItemTouchListener(mDragSelectTouchListener)
 
         // do basic RecyclerView setup
@@ -123,9 +128,9 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
                 val expandableItem = HeaderSelectionItem()
                 expandableItem.withSubSelectionProvider { SubItemUtil.countSelectedSubItems(fastItemAdapter, expandableItem) }
                 expandableItem
-                        .withName("Test " + (i + 1))
-                        .withDescription("ID: " + (i + 1))
-                        .identifier = (i + 1).toLong()
+                    .withName("Test " + (i + 1))
+                    .withDescription("ID: " + (i + 1))
+                    .identifier = (i + 1).toLong()
                 //.withIsExpanded(true) don't use this in such a setup, use adapter.expand() to expand all items instead
 
                 //add subItems so we can showcase the collapsible functionality
@@ -133,9 +138,9 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
                 for (ii in 1..5) {
                     val sampleItem = SimpleSubItem()
                     sampleItem
-                            .withName("-- Test " + (i + 1) + "." + ii)
-                            .withDescription("ID: " + ((i + 1) * 100 + ii))
-                            .identifier = ((i + 1) * 100 + ii).toLong()
+                        .withName("-- Test " + (i + 1) + "." + ii)
+                        .withDescription("ID: " + ((i + 1) * 100 + ii))
+                        .identifier = ((i + 1) * 100 + ii).toLong()
                     subItems.add(sampleItem)
                 }
                 expandableItem.subItems = subItems
@@ -144,9 +149,9 @@ class ExpandableMultiselectDeleteSampleActivity : AppCompatActivity() {
             } else {
                 val sampleItem = SimpleSubItem()
                 sampleItem
-                        .withName("Test " + (i + 1))
-                        .withDescription("ID: " + (i + 1))
-                        .identifier = (i + 1).toLong()
+                    .withName("Test " + (i + 1))
+                    .withDescription("ID: " + (i + 1))
+                    .identifier = (i + 1).toLong()
                 items.add(sampleItem)
             }
         }
