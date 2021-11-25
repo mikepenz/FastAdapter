@@ -1,18 +1,12 @@
 package com.mikepenz.fastadapter.app.items.expandable
 
-import android.animation.ArgbEvaluator
-import android.animation.ValueAnimator
 import android.graphics.Color
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.StringRes
-import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.ClickListener
-import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IClickable
 import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.app.R
 import com.mikepenz.fastadapter.expandable.ExpandableExtension
