@@ -79,6 +79,19 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
     override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
 
+        val p = payloads.mapNotNull { it as? String }.lastOrNull()
+        if (p != null) {
+            // Check if this was an expanding or collapsing action by checking the payload.
+            // If it is we need to animate the changes
+            if (p == ExpandableExtension.PAYLOAD_EXPAND) {
+                ViewCompat.animate(holder.icon).rotation(0f).start()
+                return
+            } else if (p == ExpandableExtension.PAYLOAD_COLLAPSE) {
+                ViewCompat.animate(holder.icon).rotation(180f).start()
+                return
+            }
+        }
+
         //get the context
         val ctx = holder.itemView.context
 
@@ -90,23 +103,8 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
         //set the text for the description or hide
         StringHolder.applyToOrHide(description, holder.description)
 
-        if (subItems.isEmpty()) {
-            holder.icon.visibility = View.GONE
-        } else {
-            holder.icon.visibility = View.VISIBLE
-        }
-
-        // Check if this was an expanding or collapsing action by checking the payload.
-        // If it is we need to animate the changes
-        val isExpand = payloads.takeIf { it.isNotEmpty() }?.any { (it as? String) == ExpandableExtension.PAYLOAD_EXPAND} ?: false
-        val isCollapse = payloads.takeIf { it.isNotEmpty() }?.any { (it as? String) == ExpandableExtension.PAYLOAD_COLLAPSE} ?: false
-
-        when {
-            isExpand -> ViewCompat.animate(holder.icon).rotation(0f).start()
-            isCollapse -> ViewCompat.animate(holder.icon).rotation(180f).start()
-            isExpanded -> holder.icon.rotation = 0f
-            else -> holder.icon.rotation = 180f
-        }
+        holder.icon.visibility = if (subItems.isEmpty()) View.GONE else View.VISIBLE
+        holder.icon.rotation = if (isExpanded) 0f else 180f
     }
 
     override fun unbindView(holder: ViewHolder) {
