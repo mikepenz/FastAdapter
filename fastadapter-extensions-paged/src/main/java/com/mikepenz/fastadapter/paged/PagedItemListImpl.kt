@@ -39,7 +39,7 @@ open class PagedItemListImpl<Model, Item : GenericItem>(
 
     override fun get(position: Int): Item {
         return differ.getItem(position)?.let { getItem(it) } ?: run {
-            Log.w(TAG, "Position currently contains a placeholder")
+            Log.d(TAG, "Position currently contains a placeholder")
             placeholderInterceptor.invoke(position)
         }
     }
