@@ -79,12 +79,6 @@ repositories {
         url "https://oss.sonatype.org/content/repositories/snapshots/"
         content { includeGroup "com.mikepenz.thirdparty" }
     }
-    jcenter() {
-        content {
-            includeGroup "com.mopub"
-            includeGroup "com.mopub.volley"
-        }
-    }
 }
 
 dependencies {
@@ -148,20 +142,10 @@ dependencies {
 
     //used to load the images in the ImageListSample
     //https://github.com/coil-kt/coil
-    implementation 'io.coil-kt:coil:1.4.0'
+    implementation 'io.coil-kt:coil:2.2.1'
 
     //Used to provide the drag selection like google photos
     implementation 'com.github.MFlisar:DragSelectRecyclerView:0.3'
-
-    //mopub sdk to showcase the usage of the mopub adapter
-    implementation('com.mopub:mopub-sdk:4.11.0@aar') {
-        transitive = true
-        exclude group: "com.google.android.exoplayer"
-    }
-    implementation('com.mopub:mopub-sdk-native-static:4.11.0@aar') {
-        transitive = true
-        exclude group: "com.google.android.exoplayer"
-    }
 
     //Used to async operations
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
@@ -187,10 +171,9 @@ dependencies {
 buildscript {
     repositories {
         mavenCentral()
-        jcenter() { content { includeGroup "io.realm" } }
     }
 
     dependencies {
-        classpath "io.realm:realm-gradle-plugin:10.8.1"
+        classpath "io.realm:realm-gradle-plugin:10.12.0"
     }
 }
