@@ -32,3 +32,4 @@ proguard/
 !.idea/dictionaries
 
 *.DS_STORE
+/vendor/*

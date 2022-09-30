@@ -101,7 +101,7 @@ open class ItemFilter<Model, Item : GenericItem>(private val itemAdapter: ModelA
 
         //only fire when we are filtered, not in onReset
         if (originalItems != null) {
-            itemFilterListener?.itemsFiltered(constraint, results.values as List<Item>)
+            itemFilterListener?.itemsFiltered(constraint, results.values as? List<Item>)
         }
     }
 
