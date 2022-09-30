@@ -4,33 +4,33 @@ buildscript {
 
     ext {
         release = [
-                versionName: "5.6.0",
-                versionCode: 5060
+                versionName: "5.7.0",
+                versionCode: 5070
         ]
 
         setup = [
-                gradleTools: '7.0.3',
-                compileSdk : 31,
-                buildTools : "31.0.0",
+                gradleTools: '7.3.0',
+                compileSdk : 33,
+                buildTools : "33.0.0",
                 minSdk     : 16,
-                targetSdk  : 30
+                targetSdk  : 33
         ]
 
         versions = [
                 recyclerView    : '1.2.1',
-                material        : '1.4.0',
-                appcompat       : '1.4.0',
+                material        : '1.6.1',
+                appcompat       : '1.5.1',
                 drawerlayout    : '1.1.0',
                 constraintLayout: '2.1.0',
                 cardview        : '1.0.0',
-                kotlin          : '1.5.31',
+                kotlin          : '1.7.20',
                 iconics         : '5.2.8',
-                materialdrawer  : '8.4.5',
-                aboutlib        : '10.0.0-b01',
-                roboelectric    : '4.6.1',
+                materialdrawer  : '9.0.1',
+                aboutlib        : '10.5.0',
+                roboelectric    : '4.8.2',
                 detekt          : '1.18.1',
                 paging          : "2.1.2",
-                room            : "2.4.0-beta02",
+                room            : "2.4.3",
                 lifecycle       : "2.3.1"
         ]
     }
@@ -54,16 +54,6 @@ allprojects {
     repositories {
         mavenCentral()
         google()
-        maven {
-            // (mp) remove when available on maven center
-            url "https://maven.pkg.jetbrains.space/public/p/kotlinx-html/maven"
-            content { includeGroup "org.jetbrains.kotlinx" }
-        }
-    }
-
-    configurations.all {
-        resolutionStrategy.force "org.jetbrains.kotlinx:kotlinx-html-jvm:0.7.3"
-        // (mp) remove when available on maven center
     }
 }
 

@@ -67,30 +67,49 @@ class SampleActivity : AppCompatActivity() {
         //Create the drawer
         binding.slider.apply {
             addItems(
-                    PrimaryDrawerItem().withName(R.string.sample_icon_grid).withDescription(R.string.sample_icon_grid_descr).withSelectable(false).withIdentifier(8).withIcon(MaterialDesignIconic.Icon.gmi_grid),
-                    PrimaryDrawerItem().withName(R.string.sample_simple_item_list).withDescription(R.string.sample_simple_item_list_descr).withSelectable(false).withIdentifier(6).withIcon(MaterialDesignIconic.Icon.gmi_format_align_justify),
-                    PrimaryDrawerItem().withName(R.string.sample_image_list).withDescription(R.string.sample_image_list_descr).withSelectable(false).withIdentifier(5).withIcon(MaterialDesignIconic.Icon.gmi_wallpaper),
-                    PrimaryDrawerItem().withName(R.string.sample_multi_select).withDescription(R.string.sample_multi_select_descr).withSelectable(false).withIdentifier(1).withIcon(MaterialDesignIconic.Icon.gmi_select_all),
-                    PrimaryDrawerItem().withName(R.string.sample_collapsible).withDescription(R.string.sample_collapsible_descr).withSelectable(false).withIdentifier(2).withIcon(MaterialDesignIconic.Icon.gmi_check_all),
-                    PrimaryDrawerItem().withName(R.string.sample_sticky_header).withDescription(R.string.sample_sticky_header_descr).withSelectable(false).withIdentifier(3).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
-                    PrimaryDrawerItem().withName(R.string.sample_paged_list).withDescription(R.string.sample_paged_list_descr).withSelectable(false).withIdentifier(21).withIcon(MaterialDesignIconic.Icon.gmi_pages),
-                    PrimaryDrawerItem().withName(R.string.sample_advanced).withDescription(R.string.sample_advanced_descr).withSelectable(false).withIdentifier(4).withIcon(MaterialDesignIconic.Icon.gmi_coffee),
-                    PrimaryDrawerItem().withName(R.string.sample_model_item).withDescription(R.string.sample_model_item_descr).withSelectable(false).withIdentifier(7).withIcon(MaterialDesignIconic.Icon.gmi_font),
-                    PrimaryDrawerItem().withName(R.string.sample_multi_model_item).withDescription(R.string.sample_multi_model_item_descr).withSelectable(false).withIdentifier(9).withIcon(MaterialDesignIconic.Icon.gmi_format_list_numbered),
-                    PrimaryDrawerItem().withName(R.string.sample_checkbox_item).withDescription(R.string.sample_checkbox_item_descr).withSelectable(false).withIdentifier(10).withIcon(CommunityMaterial.Icon.cmd_checkbox_marked),
-                    PrimaryDrawerItem().withName(R.string.sample_radiobutton_item).withDescription(R.string.sample_radiobutton_item_descr).withSelectable(false).withIdentifier(11).withIcon(CommunityMaterial.Icon3.cmd_radiobox_marked),
-                    PrimaryDrawerItem().withName(R.string.sample_swipe_list).withDescription(R.string.sample_swipe_list_descr).withSelectable(false).withIdentifier(12).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
-                    PrimaryDrawerItem().withName(R.string.sample_swipe_drawer_list).withDescription(R.string.sample_swipe_drawer_list_descr).withSelectable(false).withIdentifier(13).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
-                    PrimaryDrawerItem().withName(R.string.sample_endless_scroll_list).withDescription(R.string.sample_endless_scroll_list_descr).withSelectable(false).withIdentifier(14).withIcon(MaterialDesignIconic.Icon.gmi_long_arrow_down),
-                    PrimaryDrawerItem().withName(R.string.sample_sort).withDescription(R.string.sample_sort_descr).withSelectable(false).withIdentifier(15).withIcon(MaterialDesignIconic.Icon.gmi_sort_by_alpha),
-                    PrimaryDrawerItem().withName(R.string.sample_mopub).withDescription(R.string.sample_mopub_descr).withSelectable(false).withIdentifier(16).withIcon(MaterialDesignIconic.Icon.gmi_accounts_list),
-                    PrimaryDrawerItem().withName(R.string.sample_realm_list).withDescription(R.string.sample_realm_list_descr).withSelectable(false).withIdentifier(17).withIcon(MaterialDesignIconic.Icon.gmi_format_color_text),
-                    PrimaryDrawerItem().withName(R.string.sample_collapsible_multi_select_delete).withDescription(R.string.sample_collapsible_multi_select_delete_descr).withSelectable(false).withIdentifier(18).withIcon(MaterialDesignIconic.Icon.gmi_check_all),
-                    PrimaryDrawerItem().withName(R.string.sample_sticky_header_mopub).withDescription(R.string.sample_sticky_header_mopub_descr).withSelectable(false).withIdentifier(19).withIcon(MaterialDesignIconic.Icon.gmi_accounts_list),
-                    PrimaryDrawerItem().withName(R.string.sample_diff_util).withDescription(R.string.sample_diff_util_descr).withSelectable(false).withIdentifier(20).withIcon(MaterialDesignIconic.Icon.gmi_refresh),
-                    PrimaryDrawerItem().withName(R.string.sample_drag_and_drop).withDescription(R.string.sample_drag_and_drop_descr).withSelectable(false).withIdentifier(22).withIcon(MaterialDesignIconic.Icon.gmi_reorder),
-                    DividerDrawerItem(),
-                    PrimaryDrawerItem().withName(R.string.open_source).withSelectable(false).withIdentifier(100).withIcon(MaterialDesignIconic.Icon.gmi_github)
+                PrimaryDrawerItem().withName(R.string.sample_icon_grid).withDescription(R.string.sample_icon_grid_descr).withSelectable(false).withIdentifier(8)
+                    .withIcon(MaterialDesignIconic.Icon.gmi_grid),
+                PrimaryDrawerItem().withName(R.string.sample_simple_item_list).withDescription(R.string.sample_simple_item_list_descr).withSelectable(false)
+                    .withIdentifier(6).withIcon(MaterialDesignIconic.Icon.gmi_format_align_justify),
+                PrimaryDrawerItem().withName(R.string.sample_image_list).withDescription(R.string.sample_image_list_descr).withSelectable(false)
+                    .withIdentifier(5).withIcon(MaterialDesignIconic.Icon.gmi_wallpaper),
+                PrimaryDrawerItem().withName(R.string.sample_multi_select).withDescription(R.string.sample_multi_select_descr).withSelectable(false)
+                    .withIdentifier(1).withIcon(MaterialDesignIconic.Icon.gmi_select_all),
+                PrimaryDrawerItem().withName(R.string.sample_collapsible).withDescription(R.string.sample_collapsible_descr).withSelectable(false)
+                    .withIdentifier(2).withIcon(MaterialDesignIconic.Icon.gmi_check_all),
+                PrimaryDrawerItem().withName(R.string.sample_sticky_header).withDescription(R.string.sample_sticky_header_descr).withSelectable(false)
+                    .withIdentifier(3).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
+                PrimaryDrawerItem().withName(R.string.sample_paged_list).withDescription(R.string.sample_paged_list_descr).withSelectable(false)
+                    .withIdentifier(21).withIcon(MaterialDesignIconic.Icon.gmi_pages),
+                PrimaryDrawerItem().withName(R.string.sample_advanced).withDescription(R.string.sample_advanced_descr).withSelectable(false).withIdentifier(4)
+                    .withIcon(MaterialDesignIconic.Icon.gmi_coffee),
+                PrimaryDrawerItem().withName(R.string.sample_model_item).withDescription(R.string.sample_model_item_descr).withSelectable(false)
+                    .withIdentifier(7).withIcon(MaterialDesignIconic.Icon.gmi_font),
+                PrimaryDrawerItem().withName(R.string.sample_multi_model_item).withDescription(R.string.sample_multi_model_item_descr).withSelectable(false)
+                    .withIdentifier(9).withIcon(MaterialDesignIconic.Icon.gmi_format_list_numbered),
+                PrimaryDrawerItem().withName(R.string.sample_checkbox_item).withDescription(R.string.sample_checkbox_item_descr).withSelectable(false)
+                    .withIdentifier(10).withIcon(CommunityMaterial.Icon.cmd_checkbox_marked),
+                PrimaryDrawerItem().withName(R.string.sample_radiobutton_item).withDescription(R.string.sample_radiobutton_item_descr).withSelectable(false)
+                    .withIdentifier(11).withIcon(CommunityMaterial.Icon3.cmd_radiobox_marked),
+                PrimaryDrawerItem().withName(R.string.sample_swipe_list).withDescription(R.string.sample_swipe_list_descr).withSelectable(false)
+                    .withIdentifier(12).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
+                PrimaryDrawerItem().withName(R.string.sample_swipe_drawer_list).withDescription(R.string.sample_swipe_drawer_list_descr).withSelectable(false)
+                    .withIdentifier(13).withIcon(MaterialDesignIconic.Icon.gmi_format_align_left),
+                PrimaryDrawerItem().withName(R.string.sample_endless_scroll_list).withDescription(R.string.sample_endless_scroll_list_descr)
+                    .withSelectable(false).withIdentifier(14).withIcon(MaterialDesignIconic.Icon.gmi_long_arrow_down),
+                PrimaryDrawerItem().withName(R.string.sample_sort).withDescription(R.string.sample_sort_descr).withSelectable(false).withIdentifier(15)
+                    .withIcon(MaterialDesignIconic.Icon.gmi_sort_by_alpha),
+                PrimaryDrawerItem().withName(R.string.sample_realm_list).withDescription(R.string.sample_realm_list_descr).withSelectable(false)
+                    .withIdentifier(17).withIcon(MaterialDesignIconic.Icon.gmi_format_color_text),
+                PrimaryDrawerItem().withName(R.string.sample_collapsible_multi_select_delete)
+                    .withDescription(R.string.sample_collapsible_multi_select_delete_descr).withSelectable(false).withIdentifier(18)
+                    .withIcon(MaterialDesignIconic.Icon.gmi_check_all),
+                PrimaryDrawerItem().withName(R.string.sample_diff_util).withDescription(R.string.sample_diff_util_descr).withSelectable(false)
+                    .withIdentifier(20).withIcon(MaterialDesignIconic.Icon.gmi_refresh),
+                PrimaryDrawerItem().withName(R.string.sample_drag_and_drop).withDescription(R.string.sample_drag_and_drop_descr).withSelectable(false)
+                    .withIdentifier(22).withIcon(MaterialDesignIconic.Icon.gmi_reorder),
+                DividerDrawerItem(),
+                PrimaryDrawerItem().withName(R.string.open_source).withSelectable(false).withIdentifier(100).withIcon(MaterialDesignIconic.Icon.gmi_github)
             )
             onDrawerItemClickListener = { v, drawerItem, position ->
                 val intent: Intent? = when (drawerItem.identifier) {
@@ -109,20 +128,19 @@ class SampleActivity : AppCompatActivity() {
                     13L -> Intent(this@SampleActivity, SwipeDrawerListActivity::class.java)
                     14L -> Intent(this@SampleActivity, EndlessScrollListActivity::class.java)
                     15L -> Intent(this@SampleActivity, SortActivity::class.java)
-                    16L -> Intent(this@SampleActivity, MopubAdsActivity::class.java)
                     17L -> Intent(this@SampleActivity, RealmActivity::class.java)
                     18L -> Intent(this@SampleActivity, ExpandableMultiselectDeleteSampleActivity::class.java)
-                    19L -> Intent(this@SampleActivity, StickyHeaderMopubAdsActivity::class.java)
                     20L -> Intent(this@SampleActivity, DiffUtilActivity::class.java)
                     21L -> Intent(this@SampleActivity, PagedActivity::class.java)
                     22L -> Intent(this@SampleActivity, DragAndDropActivity::class.java)
                     100L -> LibsBuilder()
-                            .withActivityTitle(getString(R.string.open_source))
-                            .withAboutIconShown(true)
-                            .withVersionShown(true)
-                            .withAboutVersionShown(true)
-                            .withEdgeToEdge(true)
-                            .intent(this@SampleActivity)
+                        .withActivityTitle(getString(R.string.open_source))
+                        .withAboutIconShown(true)
+                        .withVersionShown(true)
+                        .withAboutVersionShown(true)
+                        .withEdgeToEdge(true)
+                        .intent(this@SampleActivity)
+
                     else -> throw UnsupportedOperationException()
                 }
                 if (intent != null) {
@@ -180,8 +198,10 @@ class SampleActivity : AppCompatActivity() {
         inflater.inflate(R.menu.menu, menu)
         menu.findItem(R.id.item_add).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_plus_square).apply { colorInt = Color.BLACK; actionBar() }
         menu.findItem(R.id.item_delete).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_minus_square).apply { colorInt = Color.BLACK; actionBar() }
-        menu.findItem(R.id.item_change).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_settings_square).apply { colorInt = Color.BLACK; actionBar() }
-        menu.findItem(R.id.item_move).icon = IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_format_valign_bottom).apply { colorInt = Color.BLACK; actionBar() }
+        menu.findItem(R.id.item_change).icon =
+            IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_settings_square).apply { colorInt = Color.BLACK; actionBar() }
+        menu.findItem(R.id.item_move).icon =
+            IconicsDrawable(this, MaterialDesignIconic.Icon.gmi_format_valign_bottom).apply { colorInt = Color.BLACK; actionBar() }
         return true
     }
 
@@ -204,6 +224,7 @@ class SampleActivity : AppCompatActivity() {
                 mItemAdapter.add(firstVisiblePosition + 1, ImageDummyData.dummyItem)
                 return true
             }
+
             R.id.item_change -> {
                 for (pos in selectExtension.selections) {
                     val i = mItemAdapter.getAdapterItem(pos)
@@ -213,6 +234,7 @@ class SampleActivity : AppCompatActivity() {
                 }
                 return true
             }
+
             R.id.item_move -> {
                 val items = mItemAdapter.adapterItems
                 if (items.size > firstVisiblePosition + 3) {
@@ -220,14 +242,17 @@ class SampleActivity : AppCompatActivity() {
                 }
                 return true
             }
+
             R.id.item_delete -> {
                 selectExtension.deleteAllSelectedItems()
                 return true
             }
+
             android.R.id.home -> {
                 onBackPressed()
                 return true
             }
+
             else -> return super.onOptionsItemSelected(item)
         }
     }

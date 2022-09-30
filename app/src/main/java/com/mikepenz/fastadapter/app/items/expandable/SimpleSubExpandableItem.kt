@@ -7,11 +7,9 @@ import android.widget.TextView
 import androidx.annotation.StringRes
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.mikepenz.fastadapter.ClickListener
-import com.mikepenz.fastadapter.IAdapter
-import com.mikepenz.fastadapter.IClickable
 import com.mikepenz.fastadapter.ISubItem
 import com.mikepenz.fastadapter.app.R
+import com.mikepenz.fastadapter.expandable.ExpandableExtension
 import com.mikepenz.fastadapter.expandable.items.AbstractExpandableItem
 import com.mikepenz.fastadapter.ui.utils.FastAdapterUIUtils
 import com.mikepenz.materialdrawer.holder.StringHolder
@@ -19,40 +17,11 @@ import com.mikepenz.materialdrawer.holder.StringHolder
 /**
  * Created by mikepenz on 28.12.15.
  */
-open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableItem.ViewHolder>(), IClickable<SimpleSubExpandableItem>, ISubItem<SimpleSubExpandableItem.ViewHolder> {
+open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableItem.ViewHolder>(), ISubItem<SimpleSubExpandableItem.ViewHolder> {
 
     var header: String? = null
     var name: StringHolder? = null
     var description: StringHolder? = null
-
-    private var mOnClickListener: ClickListener<SimpleSubExpandableItem>? = null
-
-    //we define a clickListener in here so we can directly animate
-    /**
-     * we overwrite the item specific click listener so we can automatically animate within the item
-     *
-     * @return
-     */
-    @Suppress("SetterBackingFieldAssignment")
-    override var onItemClickListener: ClickListener<SimpleSubExpandableItem>? = { v: View?, adapter: IAdapter<SimpleSubExpandableItem>, item: SimpleSubExpandableItem, position: Int ->
-        if (item.subItems.isNotEmpty()) {
-            v?.findViewById<View>(R.id.material_drawer_icon)?.let {
-                if (!item.isExpanded) {
-                    ViewCompat.animate(it).rotation(180f).start()
-                } else {
-                    ViewCompat.animate(it).rotation(0f).start()
-                }
-            }
-        }
-        mOnClickListener?.invoke(v, adapter, item, position) ?: true
-    }
-        set(onClickListener) {
-            this.mOnClickListener = onClickListener // on purpose
-        }
-
-    override var onPreItemClickListener: ClickListener<SimpleSubExpandableItem>?
-        get() = null
-        set(_) {}
 
     //this might not be true for your application
     override var isSelectable: Boolean
@@ -110,6 +79,19 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
     override fun bindView(holder: ViewHolder, payloads: List<Any>) {
         super.bindView(holder, payloads)
 
+        val p = payloads.mapNotNull { it as? String }.lastOrNull()
+        if (p != null) {
+            // Check if this was an expanding or collapsing action by checking the payload.
+            // If it is we need to animate the changes
+            if (p == ExpandableExtension.PAYLOAD_EXPAND) {
+                ViewCompat.animate(holder.icon).rotation(0f).start()
+                return
+            } else if (p == ExpandableExtension.PAYLOAD_COLLAPSE) {
+                ViewCompat.animate(holder.icon).rotation(180f).start()
+                return
+            }
+        }
+
         //get the context
         val ctx = holder.itemView.context
 
@@ -121,17 +103,8 @@ open class SimpleSubExpandableItem : AbstractExpandableItem<SimpleSubExpandableI
         //set the text for the description or hide
         StringHolder.applyToOrHide(description, holder.description)
 
-        if (subItems.isEmpty()) {
-            holder.icon.visibility = View.GONE
-        } else {
-            holder.icon.visibility = View.VISIBLE
-        }
-
-        if (isExpanded) {
-            holder.icon.rotation = 0f
-        } else {
-            holder.icon.rotation = 180f
-        }
+        holder.icon.visibility = if (subItems.isEmpty()) View.GONE else View.VISIBLE
+        holder.icon.rotation = if (isExpanded) 0f else 180f
     }
 
     override fun unbindView(holder: ViewHolder) {

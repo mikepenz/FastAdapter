@@ -1,95 +1,110 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.mikepenz.fastadapter.app">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.mikepenz.fastadapter.app">
 
-    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
-        android:name="com.mikepenz.fastadapter.app.CustomApplication"
-        android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
-        android:label="@string/app_name"
-        android:networkSecurityConfig="@xml/network_security_config"
-        android:roundIcon="@mipmap/ic_launcher_round"
-        android:theme="@style/SampleApp.DayNight"
-        tools:ignore="GoogleAppIndexingWarning">
+            android:name="com.mikepenz.fastadapter.app.CustomApplication"
+            android:allowBackup="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:networkSecurityConfig="@xml/network_security_config"
+            android:roundIcon="@mipmap/ic_launcher_round"
+            android:theme="@style/SampleApp.DayNight"
+            tools:ignore="GoogleAppIndexingWarning">
 
         <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
+                android:name="org.apache.http.legacy"
+                android:required="false"/>
 
         <!-- android:supportsRtl="true" -->
-        <activity android:name="com.mikepenz.fastadapter.app.SampleActivity">
+        <activity android:name="com.mikepenz.fastadapter.app.SampleActivity"
+                  android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
         <activity
-            android:name="com.mikepenz.fastadapter.app.PagedActivity"
-            android:label="@string/sample_paged_list" />
+                android:name="com.mikepenz.fastadapter.app.PagedActivity"
+                android:label="@string/sample_paged_list"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.SimpleItemListActivity"
-            android:label="@string/sample_simple_item_list" />
+                android:name="com.mikepenz.fastadapter.app.SimpleItemListActivity"
+                android:label="@string/sample_simple_item_list"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.SwipeListActivity"
-            android:label="@string/sample_swipe_list" />
+                android:name="com.mikepenz.fastadapter.app.SwipeListActivity"
+                android:label="@string/sample_swipe_list"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.SwipeDrawerListActivity"
-            android:label="@string/sample_swipe_drawer_list" />
+                android:name="com.mikepenz.fastadapter.app.SwipeDrawerListActivity"
+                android:label="@string/sample_swipe_drawer_list"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.ImageListActivity"
-            android:label="@string/sample_image_list" />
+                android:name="com.mikepenz.fastadapter.app.ImageListActivity"
+                android:label="@string/sample_image_list"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.MultiselectSampleActivity"
-            android:label="@string/sample_multi_select" />
+                android:name="com.mikepenz.fastadapter.app.MultiselectSampleActivity"
+                android:label="@string/sample_multi_select"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.ExpandableSampleActivity"
-            android:label="@string/sample_collapsible" />
+                android:name="com.mikepenz.fastadapter.app.ExpandableSampleActivity"
+                android:label="@string/sample_collapsible"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.ExpandableMultiselectDeleteSampleActivity"
-            android:label="@string/sample_collapsible_multi_select_delete" />
+                android:name="com.mikepenz.fastadapter.app.ExpandableMultiselectDeleteSampleActivity"
+                android:label="@string/sample_collapsible_multi_select_delete"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.StickyHeaderSampleActivity"
-            android:label="@string/sample_sticky_header" />
+                android:name="com.mikepenz.fastadapter.app.StickyHeaderSampleActivity"
+                android:label="@string/sample_sticky_header"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.AdvancedSampleActivity"
-            android:label="@string/sample_advanced" />
+                android:name="com.mikepenz.fastadapter.app.AdvancedSampleActivity"
+                android:label="@string/sample_advanced"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.IconGridActivity"
-            android:label="@string/sample_icon_grid" />
+                android:name="com.mikepenz.fastadapter.app.IconGridActivity"
+                android:label="@string/sample_icon_grid"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.ModelItemActivity"
-            android:label="@string/sample_model_item" />
+                android:name="com.mikepenz.fastadapter.app.ModelItemActivity"
+                android:label="@string/sample_model_item"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.MultiTypeModelItemActivity"
-            android:label="@string/sample_multi_model_item" />
+                android:name="com.mikepenz.fastadapter.app.MultiTypeModelItemActivity"
+                android:label="@string/sample_multi_model_item"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.CheckBoxSampleActivity"
-            android:label="@string/sample_checkbox_item" />
+                android:name="com.mikepenz.fastadapter.app.CheckBoxSampleActivity"
+                android:label="@string/sample_checkbox_item"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.RadioButtonSampleActivity"
-            android:label="@string/sample_radiobutton_item" />
+                android:name="com.mikepenz.fastadapter.app.RadioButtonSampleActivity"
+                android:label="@string/sample_radiobutton_item"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.EndlessScrollListActivity"
-            android:label="@string/sample_endless_scroll_item" />
+                android:name="com.mikepenz.fastadapter.app.EndlessScrollListActivity"
+                android:label="@string/sample_endless_scroll_item"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.SortActivity"
-            android:label="@string/sample_sort" />
+                android:name="com.mikepenz.fastadapter.app.SortActivity"
+                android:label="@string/sample_sort"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.MopubAdsActivity"
-            android:label="@string/sample_mopub" />
+                android:name="com.mikepenz.fastadapter.app.RealmActivity"
+                android:label="@string/sample_realm_list"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.RealmActivity"
-            android:label="@string/sample_realm_list" />
+                android:name="com.mikepenz.fastadapter.app.DiffUtilActivity"
+                android:label="@string/sample_diff_util"
+                android:exported="false"/>
         <activity
-            android:name="com.mikepenz.fastadapter.app.StickyHeaderMopubAdsActivity"
-            android:label="@string/sample_sticky_header_mopub" />
-        <activity
-            android:name="com.mikepenz.fastadapter.app.DiffUtilActivity"
-            android:label="@string/sample_diff_util" />
-        <activity
-            android:name="com.mikepenz.fastadapter.app.DragAndDropActivity"
-            android:label="Drag &amp; Drop Sample" />
+                android:name="com.mikepenz.fastadapter.app.DragAndDropActivity"
+                android:label="Drag &amp; Drop Sample"
+                android:exported="false"/>
     </application>
 </manifest>
