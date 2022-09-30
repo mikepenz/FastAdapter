@@ -6,7 +6,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import coil.clear
+import coil.dispose
 import coil.load
 import com.mikepenz.fastadapter.IItemVHFactory
 import com.mikepenz.fastadapter.app.R
@@ -107,7 +107,7 @@ class SimpleImageItem : BaseItem<SimpleImageItem.ViewHolder>() {
 
     override fun unbindView(holder: ViewHolder) {
         super.unbindView(holder)
-        holder.imageView.clear()
+        holder.imageView.dispose()
         holder.imageView.setImageDrawable(null)
         holder.imageDescription.text = null
     }

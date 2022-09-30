@@ -36,10 +36,6 @@
     <string name="sample_endless_scroll_list_descr">EndlessScroll, Progress</string>
     <string name="sample_sort">Sort Sample</string>
     <string name="sample_sort_descr">Simply sort your items by providing a Comparator</string>
-    <string name="sample_mopub">Mopub Ads Sample</string>
-    <string name="sample_sticky_header_mopub">StickyHeader Mopub Ads Sample</string>
-    <string name="sample_mopub_descr">Simply mopub adapter usage example</string>
-    <string name="sample_sticky_header_mopub_descr">Simple sticky header mopub adapter usage example</string>
     <string name="sample_realm_list">Realm Sample</string>
     <string name="sample_realm_list_descr">Realm, Implement IItem interface</string>
     <string name="sample_diff_util">Diff Util Sample</string>

@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import android.view.ViewPropertyAnimator
 import android.widget.*
 import androidx.recyclerview.widget.RecyclerView
-import coil.clear
+import coil.dispose
 import coil.load
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.app.R
@@ -93,7 +93,7 @@ class ImageItem : AbstractItem<ImageItem.ViewHolder>() {
 
     override fun unbindView(holder: ViewHolder) {
         super.unbindView(holder)
-        holder.imageView.clear()
+        holder.imageView.dispose()
         holder.imageView.setImageDrawable(null)
     }
 
