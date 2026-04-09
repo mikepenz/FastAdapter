@@ -41,25 +41,82 @@ jobs:
         if: github.event_name  == 'pull_request'
         run: ./gradlew lintDebug
 
-      - name: Collect Lint SARIF reports
-        id: collect_sarif
-        if: (success() || failure()) && github.event_name == 'pull_request'
-        run: |
-          mkdir -p sarif-reports
-          find . -path '*/build/reports/lint-results*.sarif' | while read f; do
-            module=$(echo "$f" | sed 's|^\./||' | sed 's|/build/reports/.*||' | sed 's|/|-|g')
-            base=$(basename "$f" .sarif)
-            cp "$f" "sarif-reports/${module}-${base}.sarif"
-          done
-          count=$(find sarif-reports -name '*.sarif' | wc -l)
-          echo "count=${count}" >> "$GITHUB_OUTPUT"
-
-      - name: Upload Lint SARIF
-        if: (success() || failure()) && github.event_name == 'pull_request' && steps.collect_sarif.outputs.count != '0' && github.event.pull_request.head.repo.fork == false
+      - name: Upload Lint SARIF (fastadapter)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter/build/reports/lint-results-debug.sarif') != ''
         uses: github/codeql-action/upload-sarif@v4
         with:
-          sarif_file: 'sarif-reports'
-          category: android-lint
+          sarif_file: 'fastadapter/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter
+
+      - name: Upload Lint SARIF (fastadapter-extensions-binding)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-binding/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-binding/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-binding
+
+      - name: Upload Lint SARIF (fastadapter-extensions-diff)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-diff/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-diff/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-diff
+
+      - name: Upload Lint SARIF (fastadapter-extensions-drag)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-drag/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-drag/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-drag
+
+      - name: Upload Lint SARIF (fastadapter-extensions-expandable)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-expandable/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-expandable/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-expandable
+
+      - name: Upload Lint SARIF (fastadapter-extensions-paged)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-paged/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-paged/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-paged
+
+      - name: Upload Lint SARIF (fastadapter-extensions-scroll)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-scroll/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-scroll/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-scroll
+
+      - name: Upload Lint SARIF (fastadapter-extensions-swipe)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-swipe/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-swipe/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-swipe
+
+      - name: Upload Lint SARIF (fastadapter-extensions-ui)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-ui/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-ui/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-ui
+
+      - name: Upload Lint SARIF (fastadapter-extensions-utils)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-utils/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-utils/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-utils
+
+      - name: Upload Lint SARIF (app)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('app/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'app/build/reports/lint-results-debug.sarif'
+          category: android-lint-app
 
       - name: Detekt
         if: github.event_name  == 'pull_request'
