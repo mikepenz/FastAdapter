@@ -11,25 +11,28 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
         with:
           fetch-depth: 100
 
-      - uses: actions/setup-java@v3
+      - uses: actions/setup-java@v5
         with:
-          java-version: '11'
           distribution: 'zulu'
+          java-version: '17'
 
       - name: Validate gradle wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/actions/wrapper-validation@v6
 
       - name: Copy CI gradle.properties
         run: mkdir -p ~/.gradle ; cp .github/ci-gradle.properties ~/.gradle/gradle.properties
 
-      - name: Gradle Build Cache
-        uses: gradle/gradle-build-action@v2
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v6
 
       - name: Build Debug
         run: ./gradlew clean app:assembleDebug
@@ -38,24 +41,86 @@ jobs:
         if: github.event_name  == 'pull_request'
         run: ./gradlew lintDebug
 
+      - name: Upload Lint SARIF (fastadapter)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter
+
+      - name: Upload Lint SARIF (fastadapter-extensions-binding)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-binding/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-binding/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-binding
+
+      - name: Upload Lint SARIF (fastadapter-extensions-diff)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-diff/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-diff/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-diff
+
+      - name: Upload Lint SARIF (fastadapter-extensions-drag)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-drag/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-drag/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-drag
+
+      - name: Upload Lint SARIF (fastadapter-extensions-expandable)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-expandable/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-expandable/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-expandable
+
+      - name: Upload Lint SARIF (fastadapter-extensions-paged)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-paged/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-paged/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-paged
+
+      - name: Upload Lint SARIF (fastadapter-extensions-scroll)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-scroll/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-scroll/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-scroll
+
+      - name: Upload Lint SARIF (fastadapter-extensions-swipe)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-swipe/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-swipe/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-swipe
+
+      - name: Upload Lint SARIF (fastadapter-extensions-ui)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-ui/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-ui/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-ui
+
+      - name: Upload Lint SARIF (fastadapter-extensions-utils)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('fastadapter-extensions-utils/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'fastadapter-extensions-utils/build/reports/lint-results-debug.sarif'
+          category: android-lint-fastadapter-extensions-utils
+
+      - name: Upload Lint SARIF (app)
+        if: (success() || failure()) && github.event_name == 'pull_request' && github.event.pull_request.head.repo.fork == false && hashFiles('app/build/reports/lint-results-debug.sarif') != ''
+        uses: github/codeql-action/upload-sarif@v4
+        with:
+          sarif_file: 'app/build/reports/lint-results-debug.sarif'
+          category: android-lint-app
+
       - name: Detekt
         if: github.event_name  == 'pull_request'
         run: ./gradlew detekt
-
-      - name: Setup Ruby
-        if: github.event_name  == 'pull_request'
-        uses: ruby/setup-ruby@v1
-        with:
-          ruby-version: '3.0'
-          bundler-cache: true
-
-      - name: Run Danger
-        if: github.event_name  == 'pull_request'
-        run: |
-          gem install danger
-          bundle exec danger --dangerfile=Dangerfile --danger_id=danger-pr
-        env:
-          DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Prepare Keystore and Local.
         if: startsWith(github.ref, 'refs/tags/')
@@ -105,7 +170,7 @@ jobs:
           find . -name "*.aab" -type f -exec cp {} "artifacts" \;
 
       - name: Archive Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v7
         with:
           name: "App-Artifacts"
           path: artifacts/*

@@ -63,5 +63,20 @@ subprojects {
     dependencies {
         detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:${versions.detekt}"
     }
+
+    plugins.withId('com.android.library') {
+        android {
+            lintOptions {
+                sarifReport true
+            }
+        }
+    }
+    plugins.withId('com.android.application') {
+        android {
+            lintOptions {
+                sarifReport true
+            }
+        }
+    }
 }
 
